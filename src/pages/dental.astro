@@ -1,0 +1,121 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="AI Receptionist for Dental Practices | Never Miss a Patient Call | Averde AI"
+  description="Averde AI builds AI voice agents for dental practices. Answer patient calls 24/7, book appointments automatically, and recover missed revenue. Boulder, CO."
+>
+
+  <!-- HERO -->
+  <section class="bg-green-deep py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="max-w-3xl">
+        <div class="inline-flex items-center gap-2 bg-green-mid/50 text-sand text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
+          🦷 For Dental Practices
+        </div>
+        <h1 class="font-jakarta text-5xl md:text-6xl font-extrabold text-white-warm leading-tight tracking-tight mb-6">
+          Your Dental Practice Deserves a Receptionist That Never Sleeps
+        </h1>
+        <p class="text-cream/80 text-xl leading-relaxed mb-8">
+          AI voice agents that answer patient calls 24/7, book appointments automatically,
+          and handle FAQs — so your front desk can focus on patients in the chair.
+        </p>
+        <a href="/ai-audit" class="inline-flex items-center bg-sand text-green-deep font-semibold px-6 py-3.5 rounded-xl hover:bg-sand/90 transition-colors">
+          Get My Free Missed Call Audit
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAIN -->
+  <section class="bg-cream py-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-green-deep mb-10">Your Front Desk Can't Do It All</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {[
+          { icon: '📞', pain: 'After-hours calls go to voicemail', result: 'Patients call the practice down the street instead' },
+          { icon: '😤', pain: 'Front desk overwhelmed during peak hours', result: 'New patient calls go unanswered while staff manages check-ins' },
+          { icon: '📋', pain: 'Recall reminders handled inconsistently', result: 'Patients drift away without ever being contacted' },
+          { icon: '❓', pain: 'Same FAQs asked dozens of times daily', result: 'Staff time wasted on questions an AI can handle instantly' },
+        ].map(item => (
+          <div class="bg-white-warm rounded-2xl p-7">
+            <div class="text-2xl mb-3">{item.icon}</div>
+            <p class="font-jakarta font-semibold text-green-deep mb-1">{item.pain}</p>
+            <p class="text-muted text-sm">{item.result}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SOLUTION -->
+  <section class="bg-white-warm py-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-green-deep mb-4">What Your AI Dental Receptionist Does</h2>
+      <p class="text-muted text-lg mb-10">Your AI agent handles every call the way your best receptionist would — only 24/7.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {[
+          'Books new patient appointments around the clock',
+          'Answers insurance and billing FAQs automatically',
+          'Handles after-hours calls with full professionalism',
+          'Manages recall and hygiene appointment scheduling',
+          'Triages dental emergencies and escalates to on-call staff',
+          'Provides directions, hours, and services information',
+        ].map(item => (
+          <div class="flex items-start gap-3 bg-cream rounded-xl p-5">
+            <span class="text-green-sage mt-0.5">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#6B8F5E" fill-opacity="0.15"/><path d="M6 10l3 3 5-5" stroke="#6B8F5E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <p class="text-dark text-sm font-medium">{item}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ROI CALLOUT -->
+  <section class="bg-sand/20 py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      <div class="bg-sand rounded-3xl p-10 text-center">
+        <p class="text-green-deep font-semibold mb-3 text-sm uppercase tracking-wide">The math is clear</p>
+        <h2 class="font-jakarta text-2xl md:text-3xl font-bold text-green-deep mb-5">
+          A busy dental practice misses an average of 15 calls per day.
+        </h2>
+        <div class="grid grid-cols-3 gap-4 mb-6">
+          <div>
+            <p class="font-jakarta text-3xl font-extrabold text-green-deep">15</p>
+            <p class="text-sm text-green-mid">missed calls/day</p>
+          </div>
+          <div>
+            <p class="font-jakarta text-3xl font-extrabold text-green-deep">×$250</p>
+            <p class="text-sm text-green-mid">avg appointment</p>
+          </div>
+          <div>
+            <p class="font-jakarta text-3xl font-extrabold text-terracotta">$3,750</p>
+            <p class="text-sm text-green-mid">lost per day</p>
+          </div>
+        </div>
+        <p class="text-green-deep font-medium mb-6">
+          Your AI receptionist pays for itself with the <strong>first 2 appointments it books.</strong>
+        </p>
+        <a href="/ai-audit" class="inline-flex items-center bg-green-deep text-cream font-semibold px-6 py-3 rounded-xl hover:bg-green-mid transition-colors">
+          Calculate My Practice's ROI →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-green-deep py-20 text-center">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6">
+      <h2 class="font-jakarta text-3xl font-bold text-white-warm mb-5">See It in Action — Free</h2>
+      <p class="text-cream/70 mb-8">Book a free 30-minute Missed Call Audit. We'll show you the exact revenue your practice is losing and demo your AI receptionist.</p>
+      <a href="/ai-audit" class="inline-flex items-center bg-sand text-green-deep font-bold px-8 py-4 rounded-xl hover:bg-sand/90 transition-colors">
+        Book Free Audit
+      </a>
+      <p class="mt-4 text-cream/40 text-sm">No commitment. No credit card.</p>
+    </div>
+  </section>
+
+</BaseLayout>

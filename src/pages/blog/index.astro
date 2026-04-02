@@ -1,0 +1,90 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = [
+  {
+    title: 'How Much Revenue Are You Losing to Missed Calls? (Calculate It Now)',
+    excerpt: 'Most small business owners have no idea how many calls they miss each week — or what those missed calls are worth. Here\'s how to find out.',
+    category: 'Voice AI',
+    slug: '#',
+    soon: true,
+  },
+  {
+    title: 'AI Receptionist vs. Human Receptionist: The Real Cost Comparison for Small Business',
+    excerpt: 'A full-time receptionist costs $35,000–$50,000/year. An AI receptionist costs $297–$797/month. We break down exactly what you get for each.',
+    category: 'Pricing',
+    slug: '#',
+    soon: true,
+  },
+  {
+    title: '5 Signs Your Dental Practice Needs an AI Answering Service',
+    excerpt: 'If any of these sound familiar, you\'re almost certainly losing patients to practices that pick up the phone.',
+    category: 'Dental',
+    slug: '#',
+    soon: true,
+  },
+  {
+    title: 'Make.com vs Zapier: Which Automation Tool Is Right for Your Small Business?',
+    excerpt: 'Both tools connect your apps and automate workflows — but they\'re built for different needs. Here\'s how to choose.',
+    category: 'Automation',
+    slug: '#',
+    soon: true,
+  },
+];
+
+const categoryColors: Record<string, string> = {
+  'Voice AI': 'bg-green-sage/10 text-green-mid',
+  'Pricing': 'bg-sand/20 text-terracotta',
+  'Dental': 'bg-blue-50 text-blue-700',
+  'Automation': 'bg-purple-50 text-purple-700',
+};
+---
+
+<BaseLayout
+  title="AI Voice Agent Resources | Averde AI Blog"
+  description="Practical guides on AI voice agents, missed call recovery, and growing your service business. From Averde AI in Boulder, CO."
+>
+
+  <!-- HERO -->
+  <section class="bg-green-deep py-20 text-center">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <h1 class="font-jakarta text-5xl font-extrabold text-white-warm mb-5">Resources</h1>
+      <p class="text-cream/70 text-xl">Practical guides on AI voice agents, automation, and growing your service business.</p>
+    </div>
+  </section>
+
+  <!-- POSTS -->
+  <section class="bg-cream py-20">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {posts.map(post => (
+          <article class="bg-white-warm rounded-2xl p-8 flex flex-col">
+            <div class="flex items-center gap-2 mb-4">
+              <span class={`text-xs font-semibold px-2.5 py-1 rounded-full ${categoryColors[post.category] || 'bg-gray-100 text-gray-600'}`}>
+                {post.category}
+              </span>
+              {post.soon && (
+                <span class="text-xs font-medium text-muted bg-cream px-2.5 py-1 rounded-full border border-green-sage/20">
+                  Coming Soon
+                </span>
+              )}
+            </div>
+            <h2 class="font-jakarta text-xl font-bold text-green-deep mb-3 leading-snug flex-1">{post.title}</h2>
+            <p class="text-muted text-sm leading-relaxed mb-5">{post.excerpt}</p>
+            <span class="text-green-sage text-sm font-medium">Notify me when published →</span>
+          </article>
+        ))}
+      </div>
+
+      <!-- Subscribe nudge -->
+      <div class="mt-16 bg-green-deep rounded-3xl p-10 text-center">
+        <h2 class="font-jakarta text-2xl font-bold text-cream mb-3">Get notified when posts go live</h2>
+        <p class="text-cream/60 mb-6">Practical AI guides for small business owners — no fluff, no spam.</p>
+        <a href="mailto:mark@averde.ai?subject=Blog updates" class="inline-flex items-center bg-sand text-green-deep font-semibold px-6 py-3 rounded-xl hover:bg-sand/90 transition-colors">
+          Email mark@averde.ai to subscribe
+        </a>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>

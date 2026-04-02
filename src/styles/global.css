@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --green-deep: #1B3A1F;
+  --green-mid: #2D5A27;
+  --green-sage: #6B8F5E;
+  --sand: #C8A96E;
+  --terracotta: #A85C3A;
+  --cream: #F7F3ED;
+  --dark: #1A1A1A;
+  --muted: #6B7280;
+  --white-warm: #FEFCF9;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--cream);
+  color: var(--dark);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+@keyframes wave {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.25); }
+}
+
+.wave-bar {
+  animation: wave 1.4s ease-in-out infinite;
+  transform-origin: bottom;
+}
+.wave-bar:nth-child(1) { animation-delay: 0s; }
+.wave-bar:nth-child(2) { animation-delay: 0.14s; }
+.wave-bar:nth-child(3) { animation-delay: 0.28s; }
+.wave-bar:nth-child(4) { animation-delay: 0.42s; }
+.wave-bar:nth-child(5) { animation-delay: 0.56s; }
+.wave-bar:nth-child(6) { animation-delay: 0.70s; }
+.wave-bar:nth-child(7) { animation-delay: 0.84s; }
+.wave-bar:nth-child(8) { animation-delay: 0.98s; }
+.wave-bar:nth-child(9) { animation-delay: 1.12s; }
+.wave-bar:nth-child(10) { animation-delay: 1.26s; }
+
+/* Nav dropdown */
+.nav-dropdown { display: none; }
+.nav-item:hover .nav-dropdown { display: block; }
+
+/* Mobile nav toggle */
+#nav-toggle:checked ~ #nav-menu { display: flex; }
+
+/* Accordion (FAQ) */
+details summary { cursor: pointer; list-style: none; }
+details summary::-webkit-details-marker { display: none; }
+details[open] .summary-arrow { transform: rotate(180deg); }
+.summary-arrow { transition: transform 0.2s ease; }

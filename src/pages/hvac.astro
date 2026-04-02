@@ -1,0 +1,110 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="AI Answering Service for HVAC & Contractors | 24/7 Emergency Call Handling | Averde AI"
+  description="Averde AI builds AI voice agents for HVAC and contractor businesses. Triage emergencies, book service calls, and never miss a job — 24/7. Boulder, CO."
+>
+
+  <!-- HERO -->
+  <section class="bg-green-deep py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="max-w-3xl">
+        <div class="inline-flex items-center gap-2 bg-green-mid/50 text-sand text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
+          🔧 For HVAC & Contractors
+        </div>
+        <h1 class="font-jakarta text-5xl md:text-6xl font-extrabold text-white-warm leading-tight tracking-tight mb-6">
+          Emergency Call at 2am? Your AI Agent Has It Covered
+        </h1>
+        <p class="text-cream/80 text-xl leading-relaxed mb-8">
+          AI voice agents that triage emergency calls, dispatch with priority, and book service
+          appointments automatically — so you never lose a job to a competitor who picked up first.
+        </p>
+        <a href="/ai-audit" class="inline-flex items-center bg-sand text-green-deep font-semibold px-6 py-3.5 rounded-xl hover:bg-sand/90 transition-colors">
+          Get My Free Missed Call Audit
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAIN -->
+  <section class="bg-cream py-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-green-deep mb-10">
+        The Phone Is Your #1 Sales Channel — And You're Missing It
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {[
+          { icon: '🚧', pain: 'Techs can\'t answer during jobs', result: 'Calls ring out while your crew is on-site — customers call your competitor' },
+          { icon: '🌙', pain: 'No one covers after-hours emergencies', result: 'A broken AC in July or frozen pipes in January goes to whoever answers' },
+          { icon: '🗺️', pain: 'Out-of-area calls waste your time', result: 'Staff spends minutes on callers you can\'t service' },
+          { icon: '📆', pain: 'Manual scheduling creates double-bookings', result: 'Missed appointments and unhappy customers from coordination errors' },
+        ].map(item => (
+          <div class="bg-white-warm rounded-2xl p-7">
+            <div class="text-2xl mb-3">{item.icon}</div>
+            <p class="font-jakarta font-semibold text-green-deep mb-1">{item.pain}</p>
+            <p class="text-muted text-sm">{item.result}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SOLUTION -->
+  <section class="bg-white-warm py-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-green-deep mb-4">What Your AI Field Service Agent Does</h2>
+      <p class="text-muted text-lg mb-10">Trained on your services, your service area, and your scheduling — built to run your phones like a pro dispatcher.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {[
+          'Triages emergency vs. standard service calls',
+          'Confirms service area before booking',
+          'Books jobs directly into your calendar',
+          'Escalates true emergencies to your on-call tech',
+          'Answers service, parts, and pricing FAQs',
+          'Captures full caller info for every lead',
+        ].map(item => (
+          <div class="flex items-start gap-3 bg-cream rounded-xl p-5">
+            <span class="text-green-sage mt-0.5">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#6B8F5E" fill-opacity="0.15"/><path d="M6 10l3 3 5-5" stroke="#6B8F5E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <p class="text-dark text-sm font-medium">{item}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ROI CALLOUT -->
+  <section class="bg-sand/20 py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      <div class="bg-green-deep rounded-3xl p-10 text-center text-cream">
+        <p class="text-sand font-semibold mb-3 text-sm uppercase tracking-wide">Real numbers</p>
+        <h2 class="font-jakarta text-2xl md:text-3xl font-bold mb-5">
+          The average HVAC service call is worth $300–$800. How many are you missing?
+        </h2>
+        <p class="text-cream/70 mb-6 max-w-xl mx-auto">
+          Traditional after-hours answering services cost $400–$600/month and provide a human operator
+          who doesn't know your business. Your AI agent costs less, knows everything, and never calls in sick.
+        </p>
+        <a href="/ai-audit" class="inline-flex items-center bg-sand text-green-deep font-bold px-6 py-3 rounded-xl hover:bg-sand/90 transition-colors">
+          See My ROI Estimate →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-green-deep py-20 text-center">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6">
+      <h2 class="font-jakarta text-3xl font-bold text-white-warm mb-5">Stop Losing Jobs After Hours</h2>
+      <p class="text-cream/70 mb-8">Book a free Missed Call Audit. We'll quantify what you're losing and show you exactly what your AI dispatcher would do differently.</p>
+      <a href="/ai-audit" class="inline-flex items-center bg-sand text-green-deep font-bold px-8 py-4 rounded-xl hover:bg-sand/90 transition-colors">
+        Book Free Audit
+      </a>
+      <p class="mt-4 text-cream/40 text-sm">No commitment. No credit card.</p>
+    </div>
+  </section>
+
+</BaseLayout>

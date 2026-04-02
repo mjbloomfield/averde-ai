@@ -1,0 +1,117 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Free Missed Call Audit | Find Out How Much Revenue You're Losing | Averde AI"
+  description="Book a free 30-minute Missed Call Audit with Averde AI. We'll calculate exactly how much revenue your business is losing to unanswered calls — and show you how to fix it."
+>
+
+  <!-- HERO -->
+  <section class="bg-green-deep py-16 text-center">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <div class="inline-flex items-center gap-2 bg-sand/20 text-sand text-xs font-semibold px-3 py-1.5 rounded-full mb-5">
+        100% Free · No Credit Card · No Sales Pressure
+      </div>
+      <h1 class="font-jakarta text-4xl md:text-5xl font-extrabold text-white-warm leading-tight mb-5">
+        Find Out Exactly How Much Revenue You're Losing to Missed Calls
+      </h1>
+      <p class="text-cream/70 text-lg">
+        In 30 minutes, you'll have a clear picture of the problem — and a concrete plan to fix it.
+      </p>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <section class="bg-cream py-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+
+        <!-- LEFT: What You Get -->
+        <div>
+          <h2 class="font-jakarta text-2xl font-bold text-green-deep mb-7">In 30 minutes, you'll know:</h2>
+          <ul class="space-y-4 mb-10">
+            {[
+              'How many calls your business is currently missing',
+              'The exact dollar value of those missed calls',
+              'What an AI voice agent would cost vs. what it would recover',
+              'A live demo of what your custom agent would sound like',
+              'A clear implementation plan — no obligation to continue',
+            ].map(item => (
+              <li class="flex items-start gap-3">
+                <span class="flex-shrink-0 mt-1">
+                  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                    <circle cx="11" cy="11" r="11" fill="#2D5A27" fill-opacity="0.12"/>
+                    <path d="M7 11l3 3 5-5" stroke="#2D5A27" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                <span class="text-dark font-medium">{item}</span>
+              </li>
+            ))}
+          </ul>
+
+          <!-- Trust Signals -->
+          <div class="bg-white-warm rounded-2xl p-6 space-y-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-green-sage/10 rounded-full flex items-center justify-center text-lg">👤</div>
+              <div>
+                <p class="font-semibold text-green-deep text-sm">Led personally by Mark Bloomfield</p>
+                <p class="text-muted text-xs">Founder of Averde AI — not a sales rep</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-green-sage/10 rounded-full flex items-center justify-center text-lg">📍</div>
+              <div>
+                <p class="font-semibold text-green-deep text-sm">Boulder, CO · Serving businesses nationwide</p>
+                <p class="text-muted text-xs">Fully remote setup — works anywhere in the US</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-green-sage/10 rounded-full flex items-center justify-center text-lg">🏭</div>
+              <div>
+                <p class="font-semibold text-green-deep text-sm">Dental · HVAC · Real Estate · And more</p>
+                <p class="text-muted text-xs">Specialized experience in your industry</p>
+              </div>
+            </div>
+          </div>
+
+          <p class="mt-6 text-muted text-sm">
+            Or reach out directly: <a href="mailto:mark@averde.ai" class="text-green-mid font-medium hover:text-green-deep">mark@averde.ai</a>
+          </p>
+        </div>
+
+        <!-- RIGHT: TidyCal Embed -->
+        <div>
+          <div class="bg-white-warm rounded-3xl p-6 shadow-sm">
+            <p class="font-jakarta font-bold text-green-deep text-lg mb-1">Book Your Free 30-Minute Audit</p>
+            <p class="text-muted text-sm mb-5">Pick a time that works for you — we'll confirm by email.</p>
+            <div class="tidycal-embed" data-path="199qry1"></div>
+            <script src="https://asset-tidycal.b-cdn.net/js/embed.js" async></script>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT HAPPENS AFTER -->
+  <section class="bg-white-warm py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+      <h2 class="font-jakarta text-2xl font-bold text-green-deep mb-8">What happens after the audit?</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {[
+          { icon: '📊', title: 'You get the numbers', body: 'A clear breakdown of missed calls, estimated revenue impact, and ROI projection for your specific business.' },
+          { icon: '🎧', title: 'You hear your agent', body: 'We demo a prototype of your AI agent — trained on your business — so you can hear exactly what your callers would experience.' },
+          { icon: '✅', title: 'You decide', body: 'No pressure. If it makes sense for your business, we can be live in 5 days. If not, you\'ve still got a valuable audit at no cost.' },
+        ].map(item => (
+          <div class="bg-cream rounded-2xl p-7">
+            <div class="text-3xl mb-3">{item.icon}</div>
+            <h3 class="font-jakarta font-bold text-green-deep mb-2">{item.title}</h3>
+            <p class="text-muted text-sm leading-relaxed">{item.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>

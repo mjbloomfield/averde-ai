@@ -1,0 +1,167 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const plans = [
+  {
+    name: 'Starter',
+    price: '$297',
+    period: '/month',
+    setup: '$1,500 setup fee (waived with 6-month commitment)',
+    desc: 'Perfect for businesses getting started with AI call handling.',
+    featured: false,
+    features: [
+      '1 AI voice agent',
+      'Up to 200 calls/month',
+      'Calendar booking integration',
+      'Dedicated phone number',
+      'Monthly performance report',
+      'Call transcripts',
+      'Email support',
+    ],
+    cta: 'Get Started',
+    ctaHref: '/ai-audit',
+  },
+  {
+    name: 'Growth',
+    price: '$497',
+    period: '/month',
+    setup: 'Setup included',
+    desc: 'Our most popular plan for established businesses ready to scale.',
+    featured: true,
+    features: [
+      '1 AI voice agent',
+      'Unlimited calls',
+      'Calendar + CRM integration',
+      'Custom voice personality',
+      'Dedicated phone number',
+      'Bi-weekly performance report',
+      'Call transcripts',
+      'Priority support (4-hour response)',
+      'Quarterly strategy review with Mark',
+    ],
+    cta: 'Get Started',
+    ctaHref: '/ai-audit',
+  },
+  {
+    name: 'Pro',
+    price: '$797',
+    period: '/month',
+    setup: 'Setup included',
+    desc: 'For high-volume businesses that want the full stack.',
+    featured: false,
+    features: [
+      '2 AI voice agents',
+      'Unlimited calls',
+      'Full integration suite (CRM, calendar, Make.com)',
+      'Custom voice + custom greetings',
+      'Dedicated phone numbers',
+      'Weekly report + full transcripts',
+      'Dedicated Slack channel',
+      'Monthly strategy call with Mark',
+    ],
+    cta: "Let's Talk",
+    ctaHref: '/contact',
+  },
+];
+---
+
+<BaseLayout
+  title="AI Voice Agent Pricing for Small Business | Averde AI"
+  description="Simple, transparent pricing for AI voice agents. Plans start at $297/month. Setup included. 30-day money-back guarantee. Serving dental, HVAC, and real estate businesses."
+>
+
+  <!-- HERO -->
+  <section class="bg-green-deep py-20 text-center">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <h1 class="font-jakarta text-5xl md:text-6xl font-extrabold text-white-warm leading-tight mb-5">
+        Simple Pricing.<br />Real Results.
+      </h1>
+      <p class="text-cream/70 text-xl">
+        All plans include setup, a dedicated phone number, calendar integration, and monthly reports. No hidden fees.
+      </p>
+    </div>
+  </section>
+
+  <!-- PRICING CARDS -->
+  <section class="bg-cream py-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+        {plans.map(plan => (
+          <div class={`rounded-3xl p-8 flex flex-col h-full ${plan.featured ? 'bg-green-deep text-cream ring-2 ring-sand' : 'bg-white-warm'}`}>
+            {plan.featured && (
+              <div class="inline-flex self-start items-center bg-sand text-green-deep text-xs font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-wide">
+                Most Popular
+              </div>
+            )}
+            <h2 class={`font-jakarta text-2xl font-bold mb-1 ${plan.featured ? 'text-cream' : 'text-green-deep'}`}>{plan.name}</h2>
+            <p class={`text-sm mb-5 ${plan.featured ? 'text-cream/60' : 'text-muted'}`}>{plan.desc}</p>
+            <div class="flex items-end gap-1 mb-2">
+              <span class={`font-jakarta text-5xl font-extrabold ${plan.featured ? 'text-cream' : 'text-green-deep'}`}>{plan.price}</span>
+              <span class={`text-sm mb-2 ${plan.featured ? 'text-cream/60' : 'text-muted'}`}>{plan.period}</span>
+            </div>
+            <p class={`text-xs mb-7 ${plan.featured ? 'text-sand/80' : 'text-muted'}`}>{plan.setup}</p>
+            <ul class="space-y-3 mb-8 flex-1">
+              {plan.features.map(f => (
+                <li class="flex items-start gap-2.5">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="mt-0.5 flex-shrink-0">
+                    <circle cx="9" cy="9" r="9" fill={plan.featured ? '#C8A96E' : '#6B8F5E'} fill-opacity="0.2"/>
+                    <path d="M5 9l3 3 5-5" stroke={plan.featured ? '#C8A96E' : '#6B8F5E'} stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span class={`text-sm ${plan.featured ? 'text-cream/80' : 'text-dark'}`}>{f}</span>
+                </li>
+              ))}
+            </ul>
+            <a
+              href={plan.ctaHref}
+              class={`block text-center font-semibold py-3.5 rounded-xl transition-colors ${
+                plan.featured
+                  ? 'bg-sand text-green-deep hover:bg-sand/90'
+                  : 'bg-green-deep text-cream hover:bg-green-mid'
+              }`}
+            >
+              {plan.cta}
+            </a>
+          </div>
+        ))}
+      </div>
+
+      <!-- Guarantee & Terms -->
+      <div class="mt-10 text-center space-y-2">
+        <p class="text-muted text-sm">
+          ✓ 30-day money-back guarantee &nbsp;·&nbsp; ✓ No long-term contracts &nbsp;·&nbsp; ✓ Cancel with 30 days notice
+        </p>
+        <p class="text-muted text-sm">All plans are billed monthly. Annual billing available — ask for details.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADD-ON: AUDIT -->
+  <section class="bg-white-warm py-16">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <div class="bg-sand/20 border border-sand/40 rounded-3xl p-10 text-center">
+        <p class="text-sand font-bold text-sm uppercase tracking-wide mb-3">Start here</p>
+        <h2 class="font-jakarta text-2xl md:text-3xl font-bold text-green-deep mb-4">
+          Missed Call Audit — <span class="line-through text-muted font-normal">$297</span> <span class="text-green-mid">Free</span>
+        </h2>
+        <p class="text-muted mb-6 max-w-lg mx-auto">
+          30-minute audit of your current call handling with a custom ROI projection and live demo of your AI agent.
+          Credited toward setup if you sign up.
+        </p>
+        <a
+          href="/ai-audit"
+          class="inline-flex items-center bg-green-deep text-cream font-semibold px-6 py-3.5 rounded-xl hover:bg-green-mid transition-colors"
+        >
+          Book My Free Audit →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ MINI -->
+  <section class="bg-cream py-16">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+      <p class="text-muted">Not sure which plan is right? <a href="/contact" class="text-green-mid font-semibold hover:text-green-deep">Send us a message</a> or <a href="/ai-audit" class="text-green-mid font-semibold hover:text-green-deep">book a call</a> — we'll help you figure it out.</p>
+    </div>
+  </section>
+
+</BaseLayout>

@@ -1,0 +1,50 @@
+---
+interface Props {
+  light?: boolean;
+  size?: 'sm' | 'md' | 'lg';
+}
+const { light = false, size = 'md' } = Astro.props;
+
+const textColor = light ? '#F7F3ED' : '#1B3A1F';
+const barColor = light ? '#C8A96E' : '#6B8F5E';
+
+const sizes = {
+  sm: { bars: 14, text: '18px', gap: '8px' },
+  md: { bars: 18, text: '22px', gap: '10px' },
+  lg: { bars: 24, text: '28px', gap: '12px' },
+};
+const s = sizes[size];
+const barHeights = [0.4, 0.65, 1, 0.75, 0.45, 0.8, 0.55];
+const barWidth = Math.round(s.bars * 0.22);
+---
+
+<a href="/" class="flex items-center gap-2 no-underline" style={`gap: ${s.gap}`} aria-label="Averde AI home">
+  <svg
+    width={barHeights.length * (barWidth + 2)}
+    height={s.bars}
+    viewBox={`0 0 ${barHeights.length * (barWidth + 2)} ${s.bars}`}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+  >
+    {barHeights.map((h, i) => {
+      const barH = Math.round(h * s.bars);
+      const x = i * (barWidth + 2);
+      const y = s.bars - barH;
+      return (
+        <rect
+          x={x}
+          y={y}
+          width={barWidth}
+          height={barH}
+          rx={Math.round(barWidth / 2)}
+          fill={barColor}
+          class="wave-bar"
+        />
+      );
+    })}
+  </svg>
+  <span style={`font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: ${s.text}; color: ${textColor}; letter-spacing: -0.02em;`}>
+    averde <span style={`color: ${barColor}; font-weight: 600;`}>ai</span>
+  </span>
+</a>

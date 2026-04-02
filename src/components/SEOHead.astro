@@ -1,0 +1,55 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  isHome?: boolean;
+}
+const { title, description, canonical, isHome = false } = Astro.props;
+const url = canonical || Astro.url.href;
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "Averde AI",
+  "description": "AI voice agents for small businesses. Never miss another call.",
+  "url": "https://averde.ai",
+  "email": "mark@averde.ai",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Boulder",
+    "addressRegion": "CO",
+    "addressCountry": "US"
+  },
+  "areaServed": "US",
+  "founder": {
+    "@type": "Person",
+    "name": "Mark Bloomfield"
+  }
+};
+---
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={url} />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content={url} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:site_name" content="Averde AI" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+{isHome && (
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+)}

@@ -1,0 +1,136 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="About Averde AI | Mark Bloomfield | Boulder, CO"
+  description="Meet Mark Bloomfield, founder of Averde AI. AI voice agents for small businesses, built in Boulder, CO. Learn our story, our mission, and meet Olive — our Chief Canine Officer."
+>
+
+  <!-- HERO -->
+  <section class="bg-green-deep py-20">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+      <h1 class="font-jakarta text-5xl md:text-6xl font-extrabold text-white-warm leading-tight mb-5">
+        We're Not a Tech Giant.<br />We're Your AI Partner.
+      </h1>
+      <p class="text-cream/70 text-xl max-w-2xl mx-auto">
+        Small business owners deserve access to the same AI technology that big companies use — without the enterprise price tag or the runaround.
+      </p>
+    </div>
+  </section>
+
+  <!-- MARK -->
+  <section class="bg-cream py-20">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-14 items-center">
+        <div>
+          <img
+            src="/images/mark-headshot.jpg"
+            alt="Mark Bloomfield, founder of Averde AI"
+            width="480"
+            height="600"
+            loading="lazy"
+            class="rounded-3xl w-full object-cover shadow-lg"
+          />
+        </div>
+        <div>
+          <p class="text-sand font-semibold text-sm uppercase tracking-widest mb-3">Founder</p>
+          <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-green-deep mb-5">Mark Bloomfield</h2>
+          <div class="space-y-4 text-muted leading-relaxed">
+            <p>
+              I spent years as a composites research engineer and sustainability consultant before the AI revolution changed everything. When I saw what voice AI could do for small businesses — the dental offices losing patients to voicemail after hours, the HVAC company missing emergency calls while techs were on jobs, the realtor who couldn't answer during showings — I knew there was a better way.
+            </p>
+            <p>
+              Averde AI exists to make that technology accessible, affordable, and actually useful for the businesses that need it most. Not enterprises with seven-figure tech budgets. The dentist with three chairs. The HVAC owner running four trucks. The agent juggling six listings.
+            </p>
+            <p>
+              I'm based in Boulder, Colorado — and I work with businesses across the country. Every client works directly with me, not a junior account manager.
+            </p>
+          </div>
+          <div class="mt-6 pt-6 border-t border-green-sage/20">
+            <p class="text-green-deep font-medium italic">
+              "Averde is a portmanteau of 'aver' — to state with confidence — and 'verde' — green, growing. We believe every small business deserves AI that works as hard as they do."
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OLIVE -->
+  <section class="bg-white-warm py-20">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-14 items-center">
+        <div class="order-2 md:order-1">
+          <p class="text-sand font-semibold text-sm uppercase tracking-widest mb-3">Chief Canine Officer</p>
+          <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-green-deep mb-5">Olive</h2>
+          <div class="space-y-4 text-muted leading-relaxed">
+            <p>
+              Every great company needs a CCO. Olive brings unwavering enthusiasm, exceptional listening skills, and zero tolerance for mediocrity — especially when it comes to treats.
+            </p>
+            <p>
+              She supervises all quality control, attends every strategy session (usually from the floor), and reminds us that the best businesses are built on loyalty, showing up every day, and being genuinely happy to hear from customers.
+            </p>
+            <p>
+              Olive also serves as a reminder of what this work is really about: giving small business owners back the time and peace of mind to spend on what matters most.
+            </p>
+          </div>
+        </div>
+        <div class="order-1 md:order-2">
+          <img
+            src="/images/olive.jpg"
+            alt="Olive, Chief Canine Officer at Averde AI"
+            width="480"
+            height="600"
+            loading="lazy"
+            class="rounded-3xl w-full object-cover shadow-lg"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUES -->
+  <section class="bg-cream py-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-green-deep mb-12 text-center">What We Stand For</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {[
+          {
+            icon: '🔍',
+            title: 'Transparency',
+            body: 'We show you the numbers. You\'ll know exactly what you\'re getting, what it costs, and what results to expect. No jargon, no smoke and mirrors.',
+          },
+          {
+            icon: '⚡',
+            title: 'Simplicity',
+            body: 'AI doesn\'t have to be complicated. We handle every technical detail so you never have to think about infrastructure, APIs, or integrations.',
+          },
+          {
+            icon: '📈',
+            title: 'Results',
+            body: 'We measure success in calls answered, appointments booked, and revenue recovered. If it\'s not working, we fix it — that\'s the whole point.',
+          },
+        ].map(v => (
+          <div class="bg-white-warm rounded-2xl p-8 text-center">
+            <div class="text-4xl mb-4">{v.icon}</div>
+            <h3 class="font-jakarta text-xl font-bold text-green-deep mb-3">{v.title}</h3>
+            <p class="text-muted leading-relaxed">{v.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-green-deep py-20 text-center">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6">
+      <h2 class="font-jakarta text-3xl font-bold text-white-warm mb-5">Ready to Work Together?</h2>
+      <p class="text-cream/70 mb-8">Start with a free Missed Call Audit — 30 minutes with me, no commitment required.</p>
+      <a href="/ai-audit" class="inline-flex items-center bg-sand text-green-deep font-bold px-8 py-4 rounded-xl hover:bg-sand/90 transition-colors">
+        Book Your Free Audit
+      </a>
+    </div>
+  </section>
+
+</BaseLayout>

@@ -1,0 +1,127 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Contact Averde AI | Book a Call | Boulder, CO"
+  description="Get in touch with Averde AI. Book a free Missed Call Audit, ask a question, or just say hi. Based in Boulder, CO — serving small businesses nationwide."
+>
+
+  <!-- HERO -->
+  <section class="bg-green-deep py-20 text-center">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <h1 class="font-jakarta text-5xl font-extrabold text-white-warm mb-5">Let's Talk</h1>
+      <p class="text-cream/70 text-xl">Whether you have a quick question or want to book your free audit, we're here.</p>
+    </div>
+  </section>
+
+  <!-- MAIN -->
+  <section class="bg-cream py-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+
+        <!-- LEFT: Contact Info -->
+        <div>
+          <h2 class="font-jakarta text-2xl font-bold text-green-deep mb-6">Get in touch</h2>
+          <div class="space-y-5 mb-10">
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 bg-green-sage/10 rounded-full flex items-center justify-center text-lg flex-shrink-0">📧</div>
+              <div>
+                <p class="font-semibold text-green-deep">Email</p>
+                <a href="mailto:mark@averde.ai" class="text-green-mid hover:text-green-deep transition-colors">mark@averde.ai</a>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 bg-green-sage/10 rounded-full flex items-center justify-center text-lg flex-shrink-0">📍</div>
+              <div>
+                <p class="font-semibold text-green-deep">Location</p>
+                <p class="text-muted">Boulder, Colorado</p>
+                <p class="text-muted text-sm">Serving businesses nationwide — setup is fully remote</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-sand/20 border border-sand/40 rounded-2xl p-6">
+            <p class="font-semibold text-green-deep mb-2">The fastest way to connect</p>
+            <p class="text-muted text-sm mb-4">Book a free 30-minute Missed Call Audit. We'll answer all your questions on the call and show you a live demo.</p>
+            <a href="/ai-audit" class="inline-flex items-center bg-green-deep text-cream font-semibold px-5 py-2.5 rounded-xl text-sm hover:bg-green-mid transition-colors">
+              Book Free Audit →
+            </a>
+          </div>
+
+          <!-- Simple contact form -->
+          <div class="mt-10">
+            <h3 class="font-jakarta text-xl font-bold text-green-deep mb-5">Or send a message</h3>
+            <form
+              name="contact"
+              method="POST"
+              data-netlify="true"
+              class="space-y-4"
+            >
+              <input type="hidden" name="form-name" value="contact" />
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="name" class="block text-sm font-medium text-dark mb-1.5">Name *</label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    required
+                    class="w-full bg-white-warm border border-green-sage/30 rounded-xl px-4 py-2.5 text-dark text-sm focus:outline-none focus:border-green-sage focus:ring-1 focus:ring-green-sage/30"
+                  />
+                </div>
+                <div>
+                  <label for="email" class="block text-sm font-medium text-dark mb-1.5">Email *</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    class="w-full bg-white-warm border border-green-sage/30 rounded-xl px-4 py-2.5 text-dark text-sm focus:outline-none focus:border-green-sage focus:ring-1 focus:ring-green-sage/30"
+                  />
+                </div>
+              </div>
+              <div>
+                <label for="company" class="block text-sm font-medium text-dark mb-1.5">Company / Practice</label>
+                <input
+                  type="text"
+                  id="company"
+                  name="company"
+                  class="w-full bg-white-warm border border-green-sage/30 rounded-xl px-4 py-2.5 text-dark text-sm focus:outline-none focus:border-green-sage focus:ring-1 focus:ring-green-sage/30"
+                />
+              </div>
+              <div>
+                <label for="message" class="block text-sm font-medium text-dark mb-1.5">Message *</label>
+                <textarea
+                  id="message"
+                  name="message"
+                  required
+                  rows={4}
+                  class="w-full bg-white-warm border border-green-sage/30 rounded-xl px-4 py-2.5 text-dark text-sm focus:outline-none focus:border-green-sage focus:ring-1 focus:ring-green-sage/30 resize-none"
+                ></textarea>
+              </div>
+              <button
+                type="submit"
+                class="w-full bg-green-deep text-cream font-semibold py-3 rounded-xl hover:bg-green-mid transition-colors text-sm"
+              >
+                Send Message
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- RIGHT: TidyCal -->
+        <div>
+          <h2 class="font-jakarta text-2xl font-bold text-green-deep mb-6">Book a Call</h2>
+          <div class="bg-white-warm rounded-3xl p-6 shadow-sm">
+            <p class="text-muted text-sm mb-5">Pick a time for your free 30-minute Missed Call Audit.</p>
+            <div class="tidycal-embed" data-path="199qry1"></div>
+            <script src="https://asset-tidycal.b-cdn.net/js/embed.js" async></script>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>

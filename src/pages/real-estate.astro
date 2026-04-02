@@ -1,0 +1,110 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="AI Lead Qualifier for Real Estate Agents | Never Miss a Buyer Call | Averde AI"
+  description="Averde AI builds AI voice agents for real estate agents. Qualify leads instantly, schedule showings 24/7, and be the first to respond — every time. Boulder, CO."
+>
+
+  <!-- HERO -->
+  <section class="bg-green-deep py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="max-w-3xl">
+        <div class="inline-flex items-center gap-2 bg-green-mid/50 text-sand text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
+          🏠 For Real Estate Agents
+        </div>
+        <h1 class="font-jakarta text-5xl md:text-6xl font-extrabold text-white-warm leading-tight tracking-tight mb-6">
+          Be the First Agent to Respond — Every Single Time
+        </h1>
+        <p class="text-cream/80 text-xl leading-relaxed mb-8">
+          AI voice agents that qualify leads, schedule showings, and follow up 24/7 — so you never
+          lose a buyer to a faster-responding agent again.
+        </p>
+        <a href="/ai-audit" class="inline-flex items-center bg-sand text-green-deep font-semibold px-6 py-3.5 rounded-xl hover:bg-sand/90 transition-colors">
+          Get My Free Missed Call Audit
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAIN -->
+  <section class="bg-cream py-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-green-deep mb-10">
+        Speed Wins in Real Estate — And You're Getting Beaten
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {[
+          { icon: '⏱️', pain: 'Leads go cold in minutes', result: '78% of buyers choose the first agent who responds. If that\'s not you, they\'re gone.' },
+          { icon: '🏡', pain: 'Can\'t answer during showings', result: 'You\'re with one client — and losing three others to voicemail.' },
+          { icon: '🌙', pain: 'Buyers browse listings after hours', result: 'The call comes in at 9pm. No one answers. Lead disappears.' },
+          { icon: '🤷', pain: 'Inconsistent lead follow-up across your team', result: 'Different agents handle leads differently — some close, most don\'t.' },
+        ].map(item => (
+          <div class="bg-white-warm rounded-2xl p-7">
+            <div class="text-2xl mb-3">{item.icon}</div>
+            <p class="font-jakarta font-semibold text-green-deep mb-1">{item.pain}</p>
+            <p class="text-muted text-sm">{item.result}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SOLUTION -->
+  <section class="bg-white-warm py-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-green-deep mb-4">What Your AI Real Estate Agent Does</h2>
+      <p class="text-muted text-lg mb-10">Pre-screens every lead, schedules every showing, and makes sure you only spend time with serious buyers.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {[
+          'Answers calls instantly — during showings, after hours, weekends',
+          'Qualifies buyers: timeline, budget, pre-approval status',
+          'Schedules showings directly into your calendar',
+          'Answers listing FAQs: price, features, neighborhood',
+          'Captures seller leads with custom intake flow',
+          'Syncs all lead info to your CRM automatically',
+        ].map(item => (
+          <div class="flex items-start gap-3 bg-cream rounded-xl p-5">
+            <span class="text-green-sage mt-0.5">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#6B8F5E" fill-opacity="0.15"/><path d="M6 10l3 3 5-5" stroke="#6B8F5E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <p class="text-dark text-sm font-medium">{item}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ROI CALLOUT -->
+  <section class="bg-sand/20 py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      <div class="bg-sand rounded-3xl p-10 text-center">
+        <p class="text-green-deep font-semibold mb-3 text-sm uppercase tracking-wide">The math</p>
+        <h2 class="font-jakarta text-2xl md:text-3xl font-bold text-green-deep mb-5">
+          One extra closing per month more than covers your entire year of AI.
+        </h2>
+        <p class="text-green-mid mb-6 max-w-xl mx-auto">
+          At an average commission of $8,000–$15,000 per transaction, your AI agent pays for itself
+          with a single lead it saves from voicemail. Everything after that is pure upside.
+        </p>
+        <a href="/ai-audit" class="inline-flex items-center bg-green-deep text-cream font-bold px-6 py-3 rounded-xl hover:bg-green-mid transition-colors">
+          See What I'm Losing →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-green-deep py-20 text-center">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6">
+      <h2 class="font-jakarta text-3xl font-bold text-white-warm mb-5">Stop Losing Leads to Faster Agents</h2>
+      <p class="text-cream/70 mb-8">Book your free Missed Call Audit. We'll show you exactly how many leads you're losing and what a 24/7 AI agent would change.</p>
+      <a href="/ai-audit" class="inline-flex items-center bg-sand text-green-deep font-bold px-8 py-4 rounded-xl hover:bg-sand/90 transition-colors">
+        Book Free Audit
+      </a>
+      <p class="mt-4 text-cream/40 text-sm">No commitment. No credit card.</p>
+    </div>
+  </section>
+
+</BaseLayout>
