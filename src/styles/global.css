@@ -51,10 +51,6 @@ h1, h2, h3, h4, h5, h6 {
 .wave-bar:nth-child(9) { animation-delay: 1.12s; }
 .wave-bar:nth-child(10) { animation-delay: 1.26s; }
 
-/* Nav dropdown */
-.nav-dropdown { display: none; }
-.nav-item:hover .nav-dropdown { display: block; }
-
 /* Mobile nav toggle */
 #nav-toggle:checked ~ #nav-menu { display: flex; }
 

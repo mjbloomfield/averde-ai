@@ -19,17 +19,47 @@ const isActive = (path: string) => currentPath === path || currentPath.startsWit
       </a>
 
       <!-- Industries Dropdown -->
-      <div class="nav-item relative">
-        <button class="text-sm font-medium text-dark hover:text-green-mid flex items-center gap-1 transition-colors">
+      <div class="relative" id="industries-menu">
+        <button
+          id="industries-btn"
+          class="text-sm font-medium text-dark hover:text-green-mid flex items-center gap-1 transition-colors"
+          aria-expanded="false"
+          aria-haspopup="true"
+        >
           Industries
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="mt-0.5"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="mt-0.5" id="industries-chevron"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
-        <div class="nav-dropdown absolute top-full left-0 mt-2 w-48 bg-white-warm rounded-xl shadow-lg border border-green-sage/20 py-2 z-50">
-          <a href="/dental" class="block px-4 py-2 text-sm text-dark hover:bg-cream hover:text-green-mid transition-colors">🦷 Dental Practices</a>
-          <a href="/hvac" class="block px-4 py-2 text-sm text-dark hover:bg-cream hover:text-green-mid transition-colors">🔧 HVAC & Contractors</a>
-          <a href="/real-estate" class="block px-4 py-2 text-sm text-dark hover:bg-cream hover:text-green-mid transition-colors">🏠 Real Estate</a>
+        <div
+          id="industries-dropdown"
+          class="hidden absolute top-full left-0 pt-2 w-48 z-50"
+        >
+          <div class="bg-white-warm rounded-xl shadow-lg border border-green-sage/20 py-2">
+            <a href="/dental" class="block px-4 py-2.5 text-sm text-dark hover:bg-cream hover:text-green-mid transition-colors">🦷 Dental Practices</a>
+            <a href="/hvac" class="block px-4 py-2.5 text-sm text-dark hover:bg-cream hover:text-green-mid transition-colors">🔧 HVAC & Contractors</a>
+            <a href="/real-estate" class="block px-4 py-2.5 text-sm text-dark hover:bg-cream hover:text-green-mid transition-colors">🏠 Real Estate</a>
+          </div>
         </div>
       </div>
+
+      <script>
+        const btn = document.getElementById('industries-btn')!;
+        const dropdown = document.getElementById('industries-dropdown')!;
+        const chevron = document.getElementById('industries-chevron')!;
+
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = !dropdown.classList.contains('hidden');
+          dropdown.classList.toggle('hidden', isOpen);
+          btn.setAttribute('aria-expanded', String(!isOpen));
+          chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
+        });
+
+        document.addEventListener('click', () => {
+          dropdown.classList.add('hidden');
+          btn.setAttribute('aria-expanded', 'false');
+          chevron.style.transform = '';
+        });
+      </script>
 
       <a
         href="/pricing"
