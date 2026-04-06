@@ -4,7 +4,7 @@ export default config({
   storage: {
     kind: 'github',
     repo: {
-      owner: process.env.GITHUB_OWNER as string,
+      owner: 'mjbloomfield',
       name: 'averde-ai',
     },
   },
