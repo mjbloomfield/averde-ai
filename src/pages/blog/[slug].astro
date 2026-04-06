@@ -1,0 +1,81 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map(post => ({ params: { slug: post.slug } }));
+}
+
+const { slug } = Astro.params;
+const post = await getEntry('blog', slug as string);
+if (!post) return Astro.redirect('/blog');
+
+const { Content } = await post.render();
+
+const categoryColors: Record<string, string> = {
+  'Voice AI': 'bg-green-sage/10 text-green-mid',
+  'Pricing': 'bg-sand/20 text-terracotta',
+  'Dental': 'bg-blue-50 text-blue-700',
+  'HVAC': 'bg-orange-50 text-orange-700',
+  'Plumbing': 'bg-cyan-50 text-cyan-700',
+  'Real Estate': 'bg-purple-50 text-purple-700',
+  'Automation': 'bg-purple-50 text-purple-700',
+  'Case Study': 'bg-green-50 text-green-700',
+};
+---
+
+<BaseLayout
+  title={`${post.data.title} | Averde AI`}
+  description={post.data.seoDescription || post.data.excerpt}
+>
+
+  <div class="bg-cream min-h-screen">
+    <!-- Header -->
+    <div class="bg-green-deep py-16">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6">
+        <a href="/blog" class="text-cream/60 text-sm hover:text-cream mb-6 inline-block">← Back to Resources</a>
+        <div class="flex items-center gap-3 mb-5">
+          <span class={`text-xs font-semibold px-2.5 py-1 rounded-full ${categoryColors[post.data.category] || 'bg-white/10 text-white'}`}>
+            {post.data.category}
+          </span>
+          {post.data.publishedDate && (
+            <span class="text-cream/60 text-sm">
+              {new Date(post.data.publishedDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+            </span>
+          )}
+        </div>
+        <h1 class="font-jakarta text-4xl font-extrabold text-white-warm leading-tight mb-4">
+          {post.data.title}
+        </h1>
+        <p class="text-cream/70 text-lg">{post.data.excerpt}</p>
+        {post.data.author && (
+          <p class="text-cream/50 text-sm mt-4">By {post.data.author}</p>
+        )}
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 py-16">
+      <div class="bg-white-warm rounded-2xl p-8 sm:p-12 prose prose-lg max-w-none
+        prose-headings:font-jakarta prose-headings:text-green-deep
+        prose-p:text-dark prose-p:leading-relaxed
+        prose-a:text-green-mid prose-a:no-underline hover:prose-a:underline
+        prose-strong:text-green-deep
+        prose-li:text-dark
+        prose-h2:text-2xl prose-h3:text-xl">
+        <Content />
+      </div>
+
+      <!-- CTA -->
+      <div class="mt-12 bg-green-deep rounded-2xl p-8 text-center">
+        <h2 class="font-jakarta text-xl font-bold text-cream mb-2">Ready to stop missing calls?</h2>
+        <p class="text-cream/60 text-sm mb-5">Get a free AI audit and see exactly how many calls your business is losing.</p>
+        <a href="/ai-audit" class="inline-flex items-center bg-sand text-green-deep font-semibold px-6 py-3 rounded-xl hover:bg-sand/90 transition-colors text-sm">
+          Book Your Free AI Audit →
+        </a>
+      </div>
+    </div>
+  </div>
+
+</BaseLayout>
