@@ -7,22 +7,31 @@ import type { APIContext } from 'astro'
 const keystaticHandler = makeHandler({ config })
 
 export async function ALL(context: APIContext) {
-  const request = context.request
-  const url = new URL(request.url)
+  const url = new URL(context.request.url)
 
-  // Vercel's internal routing passes request.url with an ephemeral internal port.
-  // Use x-forwarded-host/proto headers to reconstruct the correct public URL.
-  // x-forwarded-host may include a port (e.g. "www.averde.ai:59082") — strip it
-  const rawHost = request.headers.get('x-forwarded-host') || url.hostname
-  const host = rawHost.split(':')[0]
-  const proto = request.headers.get('x-forwarded-proto')?.split(',')[0].trim() || 'https'
-  const publicUrl = new URL(url.pathname + url.search, `${proto}://${host}`)
+  // Astro's Vercel adapter falls back to req.socket.remotePort when
+  // x-forwarded-port is absent, injecting a random ephemeral port into the URL.
+  // Keystatic uses request.url to build the OAuth redirect_uri, so we must fix it.
+  const publicUrl = new URL(
+    url.pathname + url.search,
+    'https://www.averde.ai'
+  )
 
   const fixedRequest = new Request(publicUrl.toString(), {
-    method: request.method,
-    headers: request.headers,
-    body: request.method === 'GET' || request.method === 'HEAD' ? null : request.body,
+    method: context.request.method,
+    headers: context.request.headers,
+    body: context.request.method === 'GET' || context.request.method === 'HEAD'
+      ? null
+      : context.request.body,
   })
 
-  return keystaticHandler({ ...context, request: fixedRequest })
+  // Direct mutation — spread may not override non-enumerable or getter-backed props
+  Object.defineProperty(context, 'request', {
+    value: fixedRequest,
+    writable: true,
+    configurable: true,
+    enumerable: true,
+  })
+
+  return keystaticHandler(context)
 }
