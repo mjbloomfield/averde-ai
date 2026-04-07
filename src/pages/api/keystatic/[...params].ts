@@ -7,6 +7,7 @@ import type { APIContext } from 'astro'
 const keystaticHandler = makeHandler({ config })
 
 export async function ALL(context: APIContext) {
+  console.log('[keystatic] CUSTOM HANDLER RUNNING, url:', context.request.url)
   const url = new URL(context.request.url)
 
   // Astro's Vercel adapter falls back to req.socket.remotePort when
