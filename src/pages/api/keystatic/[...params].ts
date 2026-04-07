@@ -12,8 +12,10 @@ export async function ALL(context: APIContext) {
 
   // Vercel's internal routing passes request.url with an ephemeral internal port.
   // Use x-forwarded-host/proto headers to reconstruct the correct public URL.
-  const host = request.headers.get('x-forwarded-host') || url.hostname
-  const proto = request.headers.get('x-forwarded-proto') || 'https'
+  // x-forwarded-host may include a port (e.g. "www.averde.ai:59082") — strip it
+  const rawHost = request.headers.get('x-forwarded-host') || url.hostname
+  const host = rawHost.split(':')[0]
+  const proto = request.headers.get('x-forwarded-proto')?.split(',')[0].trim() || 'https'
   const publicUrl = new URL(url.pathname + url.search, `${proto}://${host}`)
 
   const fixedRequest = new Request(publicUrl.toString(), {
