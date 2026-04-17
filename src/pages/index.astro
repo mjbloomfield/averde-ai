@@ -3,94 +3,145 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout
-  title="AI Voice Agents for Small Business | Averde AI | Boulder, CO"
-  description="Averde AI builds AI voice agents that answer your phone 24/7 — booking appointments, qualifying leads, and handling calls for dental, HVAC, and real estate businesses."
+  title="AI for Small Business | Averde AI | Boulder, CO"
+  description="Averde AI helps service providers and small businesses understand AI, deploy proven tools like AI voice agents, and build custom solutions — all without the jargon."
   isHome={true}
 >
 
   <!-- HERO -->
-  <section class="relative bg-green-deep overflow-hidden">
-    <!-- Animated waveform background -->
-    <div class="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none" aria-hidden="true">
-      <div class="flex items-end gap-2">
-        {Array.from({length: 32}).map((_, i) => {
-          const heights = [20,35,55,40,70,50,30,60,45,25,65,38,72,42,28,58,34,68,46,22,54,36,66,48,26,62,44,32,52,38,70,30];
-          return (
-            <div
-              class="wave-bar bg-green-sage rounded-full"
-              style={`width: 6px; height: ${heights[i % heights.length]}px;`}
-            />
-          );
-        })}
-      </div>
-    </div>
-
-    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 py-24 md:py-32">
+  <section class="bg-white-warm pt-20 pb-24 md:pt-28 md:pb-32 border-b border-cream">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
       <div class="max-w-3xl">
-        <div class="inline-flex items-center gap-2 bg-green-mid/50 text-sand text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
-          <span class="w-1.5 h-1.5 bg-sand rounded-full animate-pulse"></span>
-          AI Voice Agents for Small Business
+        <div class="inline-flex items-center gap-2 bg-terracotta/10 text-terracotta text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
+          <span class="w-1.5 h-1.5 bg-terracotta rounded-full"></span>
+          AI for Small Business &nbsp;·&nbsp; Boulder, CO
         </div>
-        <h1 class="font-jakarta text-5xl md:text-6xl lg:text-7xl font-extrabold text-white-warm leading-[1.05] tracking-tight mb-6">
-          Never Miss<br />Another Call
+        <h1 class="font-jakarta text-5xl md:text-6xl lg:text-7xl font-extrabold text-dark leading-[1.05] tracking-tight mb-6">
+          Your business,<br />
+          <span class="text-terracotta">amplified</span> by AI.
         </h1>
-        <p class="text-lg md:text-xl text-cream/80 leading-relaxed mb-8 max-w-2xl">
-          AI voice agents that answer your phone 24/7 — qualifying leads, booking appointments,
-          and handling FAQs automatically. Built for small businesses that can't afford to miss a customer.
+        <p class="text-lg md:text-xl text-muted leading-relaxed mb-8 max-w-2xl">
+          We help service providers and small businesses cut through the AI hype — teaching you what actually matters, deploying proven tools like our AI voice agent, and building custom solutions around the way you work.
         </p>
         <div class="flex flex-col sm:flex-row gap-3">
           <a
             href="/ai-audit"
-            class="inline-flex items-center justify-center bg-sand text-green-deep font-semibold px-6 py-3.5 rounded-xl hover:bg-sand/90 transition-colors text-base"
+            class="inline-flex items-center justify-center bg-terracotta text-white-warm font-semibold px-6 py-3.5 rounded-xl hover:bg-terracotta/90 transition-colors text-base"
           >
-            Get My Free Missed Call Audit
+            Get My Free AI Audit
           </a>
           <a
             href="/how-it-works"
-            class="inline-flex items-center justify-center border border-cream/30 text-cream font-medium px-6 py-3.5 rounded-xl hover:bg-white/5 transition-colors text-base"
+            class="inline-flex items-center justify-center border border-dark/20 text-dark font-medium px-6 py-3.5 rounded-xl hover:bg-cream transition-colors text-base"
           >
-            See How It Works →
+            See What We Do →
           </a>
         </div>
-        <p class="mt-5 text-xs text-cream/40">
-          Live in 5 business days &nbsp;·&nbsp; 30-day money-back guarantee &nbsp;·&nbsp; Boulder, CO
+        <p class="mt-5 text-xs text-muted/60">
+          Live in 5 business days &nbsp;·&nbsp; 30-day money-back guarantee &nbsp;·&nbsp; No jargon
         </p>
       </div>
     </div>
   </section>
 
-  <!-- PAIN STATS -->
+  <!-- WHAT WE DO — 3 PILLARS -->
   <section class="bg-cream py-20">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
       <div class="max-w-2xl mb-12">
-        <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-green-deep leading-tight mb-4">
-          Every Missed Call Is Revenue Walking Out the Door
+        <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-dark leading-tight mb-4">
+          Three ways we help your business
         </h2>
         <p class="text-muted text-lg">
-          Most small businesses don't realize how much they're losing — until they see the numbers.
+          Whether you're just starting to explore AI or ready to build something custom, we meet you where you are.
         </p>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
-          { stat: '62%', label: 'of calls to small businesses go unanswered' },
-          { stat: '$200–$500', label: 'average value of a single missed service appointment' },
-          { stat: '80%', label: 'of callers who can\'t reach you will call a competitor instead' },
+          {
+            num: '01',
+            icon: '🧠',
+            title: 'Learn AI',
+            body: 'Understand what AI can realistically do for your specific business, what to skip, and where to start. No fluff — just practical clarity.',
+            tag: 'Strategy & Education',
+          },
+          {
+            num: '02',
+            icon: '⚡',
+            title: 'Deploy AI Tools',
+            body: 'We implement proven AI solutions built for service businesses — including our flagship AI voice agent — and have you live in days, not months.',
+            tag: 'Implementation',
+          },
+          {
+            num: '03',
+            icon: '🛠️',
+            title: 'Build Custom AI',
+            body: 'For problems unique to your business, we design and build AI tools from scratch — trained on your data, your workflows, your voice.',
+            tag: 'Custom Development',
+          },
         ].map(item => (
-          <div class="bg-white-warm rounded-2xl p-7 border-l-4 border-green-sage">
-            <p class="font-jakarta text-4xl font-extrabold text-green-deep mb-2">{item.stat}</p>
-            <p class="text-muted text-base leading-snug">{item.label}</p>
+          <div class="bg-white-warm rounded-2xl p-8 border border-cream">
+            <div class="text-3xl mb-4">{item.icon}</div>
+            <p class="text-xs font-semibold text-terracotta uppercase tracking-wider mb-2">{item.tag}</p>
+            <h3 class="font-jakarta text-xl font-bold text-dark mb-3">{item.title}</h3>
+            <p class="text-muted leading-relaxed text-sm">{item.body}</p>
           </div>
         ))}
       </div>
     </div>
   </section>
 
-  <!-- SOLUTION -->
+  <!-- VOICE AI SPOTLIGHT -->
+  <section class="bg-green-deep py-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
+        <div>
+          <div class="inline-flex items-center gap-2 bg-green-mid/60 text-green-sage text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
+            <span class="w-1.5 h-1.5 bg-green-sage rounded-full animate-pulse"></span>
+            Flagship Product
+          </div>
+          <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-white-warm leading-tight mb-4">
+            Never miss another call
+          </h2>
+          <p class="text-cream/75 text-lg leading-relaxed mb-8">
+            Our AI voice agent answers your phone 24/7 — qualifying leads, booking appointments, and handling FAQs automatically. It sounds human, works every night and weekend, and never puts a caller on hold.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <a
+              href="/how-it-works"
+              class="inline-flex items-center justify-center bg-sand text-green-deep font-semibold px-6 py-3.5 rounded-xl hover:bg-sand/90 transition-colors text-base"
+            >
+              See How It Works
+            </a>
+            <a
+              href="/pricing"
+              class="inline-flex items-center justify-center border border-cream/30 text-cream font-medium px-6 py-3.5 rounded-xl hover:bg-white/5 transition-colors text-base"
+            >
+              View Pricing →
+            </a>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 gap-4">
+          {[
+            { stat: '62%', label: 'of calls to small businesses go unanswered' },
+            { stat: '$200–500', label: 'average value of a missed service appointment' },
+            { stat: '80%', label: 'of callers who can\'t reach you call a competitor instead' },
+          ].map(item => (
+            <div class="bg-green-mid/50 rounded-xl p-5 border-l-4 border-sand">
+              <p class="font-jakarta text-3xl font-extrabold text-sand mb-1">{item.stat}</p>
+              <p class="text-cream/70 text-sm leading-snug">{item.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VOICE AGENT FEATURES -->
   <section class="bg-white-warm py-20">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
       <div class="text-center max-w-2xl mx-auto mb-14">
-        <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-green-deep mb-4">
-          Meet Your AI Receptionist
+        <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-dark mb-4">
+          What your AI receptionist does
         </h2>
         <p class="text-muted text-lg">Sounds human. Works 24/7. Books appointments automatically.</p>
       </div>
@@ -104,7 +155,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           {
             icon: '📅',
             title: 'Books Appointments',
-            body: 'Syncs with your calendar and books appointments directly during the call. No back-and-forth, no double-bookings.',
+            body: 'Syncs with your calendar and books directly during the call. No back-and-forth, no double-bookings.',
           },
           {
             icon: '🗣️',
@@ -114,7 +165,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         ].map(card => (
           <div class="bg-cream rounded-2xl p-8 text-center">
             <div class="text-4xl mb-4">{card.icon}</div>
-            <h3 class="font-jakarta text-xl font-bold text-green-deep mb-3">{card.title}</h3>
+            <h3 class="font-jakarta text-xl font-bold text-dark mb-3">{card.title}</h3>
             <p class="text-muted leading-relaxed">{card.body}</p>
           </div>
         ))}
@@ -122,79 +173,80 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
   </section>
 
-  <!-- INDUSTRIES -->
+  <!-- HOW WE WORK -->
   <section class="bg-cream py-20">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
-      <div class="max-w-2xl mb-12">
-        <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-green-deep mb-4">
-          Built for Your Industry
-        </h2>
-        <p class="text-muted text-lg">Every business is different. Your AI agent is built specifically for how your industry works.</p>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {[
-          { icon: '🦷', title: 'Dental Practices', desc: 'Never lose a patient to voicemail again. Book appointments, handle insurance questions, and manage recalls 24/7.', href: '/dental' },
-          { icon: '🔧', title: 'HVAC & Contractors', desc: 'Emergency calls answered. Jobs booked. Your AI agent triages urgency and dispatches correctly every time.', href: '/hvac' },
-          { icon: '🏠', title: 'Real Estate Agents', desc: 'Be the first to respond — every single time. Qualify leads, schedule showings, and capture buyers before competitors do.', href: '/real-estate' },
-        ].map(card => (
-          <a
-            href={card.href}
-            class="group block bg-green-deep rounded-2xl p-8 text-cream hover:bg-green-mid transition-colors"
-          >
-            <div class="text-4xl mb-5">{card.icon}</div>
-            <h3 class="font-jakarta text-xl font-bold mb-3">{card.title}</h3>
-            <p class="text-cream/70 leading-relaxed mb-5 text-sm">{card.desc}</p>
-            <span class="text-sand text-sm font-semibold group-hover:gap-2 flex items-center gap-1.5 transition-all">
-              Learn more <span class="group-hover:translate-x-1 transition-transform">→</span>
-            </span>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- HOW IT WORKS -->
-  <section class="bg-white-warm py-20">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
       <div class="text-center max-w-2xl mx-auto mb-14">
-        <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-green-deep mb-4">
-          Live in 5 Business Days
+        <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-dark mb-4">
+          How we work together
         </h2>
-        <p class="text-muted text-lg">From first conversation to fully deployed agent — faster than you'd expect.</p>
+        <p class="text-muted text-lg">Simple process. Fast results. You stay focused on your business.</p>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         {[
-          { num: '01', title: 'Free Missed Call Audit', body: 'We analyze your call data and show you exactly how much revenue you\'re losing — and what your ROI would look like.' },
-          { num: '02', title: 'We Build Your Agent', body: 'Custom voice, your business knowledge, integrated with your calendar. We handle everything technical.' },
-          { num: '03', title: 'Your Phone Gets Answered', body: 'Every call handled professionally and automatically, 24/7. You focus on the work. We handle the phone.' },
+          { num: '01', title: 'Free AI Audit', body: 'We learn your business, identify where AI can help most, and show you a clear plan — including what to skip.' },
+          { num: '02', title: 'We Build & Deploy', body: 'Whether it\'s a voice agent, a custom tool, or an education session, we handle everything technical.' },
+          { num: '03', title: 'You Get Results', body: 'Calls get answered, time gets freed up, and your business runs smarter. We stay on hand for ongoing support.' },
         ].map(step => (
           <div class="relative">
-            <div class="text-6xl font-extrabold text-green-sage/20 font-jakarta mb-3 leading-none">{step.num}</div>
-            <h3 class="font-jakarta text-xl font-bold text-green-deep mb-3">{step.title}</h3>
+            <div class="text-6xl font-extrabold text-terracotta/15 font-jakarta mb-3 leading-none">{step.num}</div>
+            <h3 class="font-jakarta text-xl font-bold text-dark mb-3">{step.title}</h3>
             <p class="text-muted leading-relaxed">{step.body}</p>
           </div>
         ))}
       </div>
       <div class="mt-12 text-center">
-        <a href="/how-it-works" class="text-green-mid font-semibold hover:text-green-deep transition-colors">
+        <a href="/how-it-works" class="text-terracotta font-semibold hover:text-terracotta/80 transition-colors">
           See the full process →
         </a>
       </div>
     </div>
   </section>
 
+  <!-- INDUSTRIES -->
+  <section class="bg-white-warm py-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="max-w-2xl mb-12">
+        <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-dark mb-4">
+          Built for service businesses
+        </h2>
+        <p class="text-muted text-lg">Every industry has its own rhythms. Your AI is trained on yours.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {[
+          { icon: '🦷', title: 'Dental Practices', desc: 'Book appointments, handle recalls, answer insurance questions — 24/7, without pulling staff away from patients.', href: '/dental' },
+          { icon: '🔧', title: 'HVAC & Contractors', desc: 'Emergency calls answered. Jobs booked. Your AI agent triages urgency and dispatches correctly every time.', href: '/hvac' },
+          { icon: '🏠', title: 'Real Estate Agents', desc: 'Be the first to respond. Qualify leads, schedule showings, and capture buyers before competitors do.', href: '/real-estate' },
+        ].map(card => (
+          <a
+            href={card.href}
+            class="group block bg-cream rounded-2xl p-8 border border-cream hover:border-terracotta/30 transition-colors"
+          >
+            <div class="text-4xl mb-5">{card.icon}</div>
+            <h3 class="font-jakarta text-xl font-bold text-dark mb-3">{card.title}</h3>
+            <p class="text-muted leading-relaxed mb-5 text-sm">{card.desc}</p>
+            <span class="text-terracotta text-sm font-semibold flex items-center gap-1.5">
+              Learn more <span class="group-hover:translate-x-1 transition-transform">→</span>
+            </span>
+          </a>
+        ))}
+      </div>
+      <p class="mt-6 text-sm text-muted/70 text-center">More industries coming soon. Work in a different field? <a href="/contact" class="text-terracotta hover:underline">Let's talk.</a></p>
+    </div>
+  </section>
+
   <!-- PRICING TEASER -->
-  <section class="bg-green-mid py-16">
+  <section class="bg-terracotta py-16">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 text-center">
-      <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-cream mb-4">
-        Simple, Transparent Pricing
+      <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-white-warm mb-4">
+        Simple, transparent pricing
       </h2>
-      <p class="text-cream/70 text-lg mb-8">
-        Plans start at $297/month. Setup included. 30-day money-back guarantee.
+      <p class="text-white-warm/75 text-lg mb-8">
+        Voice agent plans start at $297/month. Setup included. 30-day money-back guarantee.
       </p>
       <a
         href="/pricing"
-        class="inline-flex items-center bg-sand text-green-deep font-semibold px-6 py-3.5 rounded-xl hover:bg-sand/90 transition-colors"
+        class="inline-flex items-center bg-white-warm text-terracotta font-semibold px-6 py-3.5 rounded-xl hover:bg-cream transition-colors"
       >
         See All Plans →
       </a>
@@ -202,21 +254,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   </section>
 
   <!-- FINAL CTA -->
-  <section class="bg-green-deep py-24">
+  <section class="bg-cream py-24">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 text-center">
-      <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-white-warm mb-5">
-        Ready to Find Out How Much You're Losing?
+      <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-dark mb-5">
+        Not sure where AI fits in your business?
       </h2>
-      <p class="text-cream/70 text-lg mb-8">
-        The Missed Call Audit is free. In 30 minutes, you'll know exactly what AI can do for your business.
+      <p class="text-muted text-lg mb-8">
+        The free AI Audit is a 30-minute conversation. We'll show you exactly where AI can help, what it'll cost, and what to expect — no pressure, no jargon.
       </p>
       <a
         href="/ai-audit"
-        class="inline-flex items-center bg-sand text-green-deep font-bold px-8 py-4 rounded-xl text-base hover:bg-sand/90 transition-colors"
+        class="inline-flex items-center bg-terracotta text-white-warm font-bold px-8 py-4 rounded-xl text-base hover:bg-terracotta/90 transition-colors"
       >
-        Book Your Free Audit
+        Book Your Free AI Audit
       </a>
-      <p class="mt-4 text-cream/40 text-sm">No commitment. No credit card. Just clarity.</p>
+      <p class="mt-4 text-muted/50 text-sm">No commitment. No credit card. Just clarity.</p>
     </div>
   </section>
 

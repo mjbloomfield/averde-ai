@@ -5,15 +5,15 @@
 @tailwind utilities;
 
 :root {
-  --green-deep: #1B3A1F;
-  --green-mid: #2D5A27;
-  --green-sage: #6B8F5E;
-  --sand: #C8A96E;
-  --terracotta: #A85C3A;
-  --cream: #F7F3ED;
-  --dark: #1A1A1A;
-  --muted: #6B7280;
-  --white-warm: #FEFCF9;
+  --green-deep: #2B4020;
+  --green-mid: #4A7A3C;
+  --green-sage: #8FAF82;
+  --sand: #D49846;
+  --terracotta: #C4714A;
+  --cream: #FEF7EA;
+  --dark: #1E1610;
+  --muted: #7A6A58;
+  --white-warm: #FFFCF5;
 }
 
 html {

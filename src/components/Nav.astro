@@ -13,16 +13,16 @@ const isActive = (path: string) => currentPath === path || currentPath.startsWit
     <div class="hidden md:flex items-center gap-6">
       <a
         href="/how-it-works"
-        class={`text-sm font-medium transition-colors hover:text-green-mid ${isActive('/how-it-works') ? 'text-green-deep border-b-2 border-green-sage pb-0.5' : 'text-dark'}`}
+        class={`text-sm font-medium transition-colors hover:text-terracotta ${isActive('/how-it-works') ? 'text-dark border-b-2 border-terracotta pb-0.5' : 'text-dark'}`}
       >
-        How It Works
+        Services
       </a>
 
       <!-- Industries Dropdown -->
       <div class="relative" id="industries-menu">
         <button
           id="industries-btn"
-          class="text-sm font-medium text-dark hover:text-green-mid flex items-center gap-1 transition-colors"
+          class="text-sm font-medium text-dark hover:text-terracotta flex items-center gap-1 transition-colors"
           aria-expanded="false"
           aria-haspopup="true"
         >
@@ -31,12 +31,12 @@ const isActive = (path: string) => currentPath === path || currentPath.startsWit
         </button>
         <div
           id="industries-dropdown"
-          class="hidden absolute top-full left-0 pt-2 w-48 z-50"
+          class="hidden absolute top-full left-0 pt-2 w-52 z-50"
         >
-          <div class="bg-white-warm rounded-xl shadow-lg border border-green-sage/20 py-2">
-            <a href="/dental" class="block px-4 py-2.5 text-sm text-dark hover:bg-cream hover:text-green-mid transition-colors">🦷 Dental Practices</a>
-            <a href="/hvac" class="block px-4 py-2.5 text-sm text-dark hover:bg-cream hover:text-green-mid transition-colors">🔧 HVAC & Contractors</a>
-            <a href="/real-estate" class="block px-4 py-2.5 text-sm text-dark hover:bg-cream hover:text-green-mid transition-colors">🏠 Real Estate</a>
+          <div class="bg-white-warm rounded-xl shadow-lg border border-muted/15 py-2">
+            <a href="/dental" class="block px-4 py-2.5 text-sm text-dark hover:bg-cream hover:text-terracotta transition-colors">🦷 Dental Practices</a>
+            <a href="/hvac" class="block px-4 py-2.5 text-sm text-dark hover:bg-cream hover:text-terracotta transition-colors">🔧 HVAC & Contractors</a>
+            <a href="/real-estate" class="block px-4 py-2.5 text-sm text-dark hover:bg-cream hover:text-terracotta transition-colors">🏠 Real Estate</a>
           </div>
         </div>
       </div>
@@ -63,19 +63,19 @@ const isActive = (path: string) => currentPath === path || currentPath.startsWit
 
       <a
         href="/pricing"
-        class={`text-sm font-medium transition-colors hover:text-green-mid ${isActive('/pricing') ? 'text-green-deep border-b-2 border-green-sage pb-0.5' : 'text-dark'}`}
+        class={`text-sm font-medium transition-colors hover:text-terracotta ${isActive('/pricing') ? 'text-dark border-b-2 border-terracotta pb-0.5' : 'text-dark'}`}
       >
         Pricing
       </a>
       <a
         href="/about"
-        class={`text-sm font-medium transition-colors hover:text-green-mid ${isActive('/about') ? 'text-green-deep border-b-2 border-green-sage pb-0.5' : 'text-dark'}`}
+        class={`text-sm font-medium transition-colors hover:text-terracotta ${isActive('/about') ? 'text-dark border-b-2 border-terracotta pb-0.5' : 'text-dark'}`}
       >
         About
       </a>
       <a
         href="/blog"
-        class={`text-sm font-medium transition-colors hover:text-green-mid ${isActive('/blog') ? 'text-green-deep border-b-2 border-green-sage pb-0.5' : 'text-dark'}`}
+        class={`text-sm font-medium transition-colors hover:text-terracotta ${isActive('/blog') ? 'text-dark border-b-2 border-terracotta pb-0.5' : 'text-dark'}`}
       >
         Blog
       </a>
@@ -85,9 +85,9 @@ const isActive = (path: string) => currentPath === path || currentPath.startsWit
     <div class="hidden md:block">
       <a
         href="/ai-audit"
-        class="inline-flex items-center gap-1.5 bg-sand text-green-deep text-sm font-semibold px-4 py-2 rounded-lg hover:bg-sand/90 transition-colors"
+        class="inline-flex items-center gap-1.5 bg-terracotta text-white-warm text-sm font-semibold px-4 py-2 rounded-lg hover:bg-terracotta/90 transition-colors"
       >
-        Book Free Audit
+        Free AI Audit
       </a>
     </div>
 
@@ -102,13 +102,13 @@ const isActive = (path: string) => currentPath === path || currentPath.startsWit
   <!-- Mobile Menu -->
   <input type="checkbox" id="nav-toggle" class="hidden" />
   <div id="nav-menu" class="hidden flex-col md:hidden bg-white-warm border-t border-green-sage/10 px-4 pb-4 gap-1">
-    <a href="/how-it-works" class="block py-2.5 text-sm font-medium text-dark hover:text-green-mid border-b border-cream">How It Works</a>
-    <a href="/dental" class="block py-2.5 text-sm font-medium text-dark hover:text-green-mid border-b border-cream">🦷 Dental Practices</a>
-    <a href="/hvac" class="block py-2.5 text-sm font-medium text-dark hover:text-green-mid border-b border-cream">🔧 HVAC & Contractors</a>
-    <a href="/real-estate" class="block py-2.5 text-sm font-medium text-dark hover:text-green-mid border-b border-cream">🏠 Real Estate</a>
-    <a href="/pricing" class="block py-2.5 text-sm font-medium text-dark hover:text-green-mid border-b border-cream">Pricing</a>
-    <a href="/about" class="block py-2.5 text-sm font-medium text-dark hover:text-green-mid border-b border-cream">About</a>
-    <a href="/blog" class="block py-2.5 text-sm font-medium text-dark hover:text-green-mid">Blog</a>
-    <a href="/ai-audit" class="mt-3 block text-center bg-sand text-green-deep text-sm font-semibold px-4 py-3 rounded-lg">Book Free Audit</a>
+    <a href="/how-it-works" class="block py-2.5 text-sm font-medium text-dark hover:text-terracotta border-b border-cream">Services</a>
+    <a href="/dental" class="block py-2.5 text-sm font-medium text-dark hover:text-terracotta border-b border-cream">🦷 Dental Practices</a>
+    <a href="/hvac" class="block py-2.5 text-sm font-medium text-dark hover:text-terracotta border-b border-cream">🔧 HVAC & Contractors</a>
+    <a href="/real-estate" class="block py-2.5 text-sm font-medium text-dark hover:text-terracotta border-b border-cream">🏠 Real Estate</a>
+    <a href="/pricing" class="block py-2.5 text-sm font-medium text-dark hover:text-terracotta border-b border-cream">Pricing</a>
+    <a href="/about" class="block py-2.5 text-sm font-medium text-dark hover:text-terracotta border-b border-cream">About</a>
+    <a href="/blog" class="block py-2.5 text-sm font-medium text-dark hover:text-terracotta">Blog</a>
+    <a href="/ai-audit" class="mt-3 block text-center bg-terracotta text-white-warm text-sm font-semibold px-4 py-3 rounded-lg">Free AI Audit</a>
   </div>
 </header>
