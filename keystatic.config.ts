@@ -2,11 +2,10 @@ import { config, fields, collection, singleton } from '@keystatic/core';
 
 export default config({
   storage: {
-    kind: 'github',
-    repo: {
-      owner: 'mjbloomfield',
-      name: 'averde-ai',
-    },
+    kind: 'cloud',
+  },
+  cloud: {
+    project: 'averde-ai/averde-ai',
   },
 
   // =============================================
