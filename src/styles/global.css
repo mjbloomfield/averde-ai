@@ -1,10 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Source+Serif+4:wght@400;500;600&family=Inter+Tight:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
+  /* Brand palette (unchanged) */
   --green-deep: #2B4020;
   --green-mid: #4A7A3C;
   --green-sage: #8FAF82;
@@ -14,32 +15,56 @@
   --dark: #1E1610;
   --muted: #7A6A58;
   --white-warm: #FFFCF5;
+
+  /* New design-system ink ramp */
+  --ink-900: #1E1610;
+  --ink-700: #4a3b2c;
+  --ink-600: #7A6A58;
+
+  /* Easings */
+  --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
 }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
   background-color: var(--cream);
   color: var(--dark);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 17px;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  position: relative;
 }
 
+/* Subtle paper grain overlay — fixed, non-interactive */
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.12 0 0 0 0 0.06 0 0 0 0.35 0'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='0.5'/></svg>");
+  background-size: 280px;
+  opacity: .35;
+  mix-blend-mode: multiply;
+}
+body > * { position: relative; z-index: 1; }
+
+/* Headings now use Fraunces by default */
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--dark);
 }
 
+/* Existing animations & helpers — unchanged */
 @keyframes wave {
   0%, 100% { transform: scaleY(1); }
   50% { transform: scaleY(0.25); }
 }
 
-.wave-bar {
-  animation: wave 1.4s ease-in-out infinite;
-  transform-origin: bottom;
-}
+.wave-bar { animation: wave 1.4s ease-in-out infinite; transform-origin: bottom; }
 .wave-bar:nth-child(1) { animation-delay: 0s; }
 .wave-bar:nth-child(2) { animation-delay: 0.14s; }
 .wave-bar:nth-child(3) { animation-delay: 0.28s; }
@@ -51,10 +76,8 @@ h1, h2, h3, h4, h5, h6 {
 .wave-bar:nth-child(9) { animation-delay: 1.12s; }
 .wave-bar:nth-child(10) { animation-delay: 1.26s; }
 
-/* Mobile nav toggle */
 #nav-toggle:checked ~ #nav-menu { display: flex; }
 
-/* Accordion (FAQ) */
 details summary { cursor: pointer; list-style: none; }
 details summary::-webkit-details-marker { display: none; }
 details[open] .summary-arrow { transform: rotate(180deg); }
