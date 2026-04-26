@@ -1,5 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
+
+const reader = createReader(process.cwd(), keystaticConfig);
+const h = await reader.singletons.home.read() ?? {};
 ---
 
 <BaseLayout
@@ -12,17 +17,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
-        <span class="eyebrow">Free 30-min AI audit · No jargon</span>
-        <h1>AI for small business, explained by someone who <em>actually runs one.</em></h1>
-        <p class="hero-sub">
-          Averde helps service businesses and small firms cut through the AI noise — with practical advice,
-          deployed tools, and custom builds that fit how you actually work. No jargon, no hype.
-        </p>
+        <span class="eyebrow">{h.heroEyebrow}</span>
+        <h1>{h.heroHeadlineStart} <em>{h.heroHeadlineEmphasis}</em></h1>
+        <p class="hero-sub">{h.heroSubheadline}</p>
         <div class="hero-ctas">
-          <a href="/ai-audit" class="btn btn-primary">Get my free AI audit</a>
-          <a href="/how-it-works" class="btn btn-ghost">See what we do →</a>
+          <a href="/ai-audit" class="btn btn-primary">{h.heroPrimaryCta}</a>
+          <a href="/how-it-works" class="btn btn-ghost">{h.heroSecondaryCta}</a>
         </div>
-        <div class="hero-meta">Live in 5 business days · 30-day money-back · Boulder, CO</div>
+        <div class="hero-meta">{h.heroMeta}</div>
       </div>
       <div class="hero-art-wrap">
         <div class="hero-art">
@@ -39,16 +41,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
   </section>
 
-  <!-- THREE PILLARS + Voice AI folded in -->
+  <!-- THREE PILLARS -->
   <section class="section section-alt">
     <div class="wrap">
       <div class="section-head">
-        <span class="eyebrow">What we do</span>
-        <h2>Three ways we help your business put AI to work.</h2>
-        <p class="dek">
-          Whether you're just starting to explore AI, ready to deploy proven tools, or want
-          something built just for you — we meet you where you are.
-        </p>
+        <span class="eyebrow">{h.pillarsEyebrow}</span>
+        <h2>{h.pillarsHeadline}</h2>
+        <p class="dek">{h.pillarsDek}</p>
       </div>
 
       <div class="pillars">
@@ -60,18 +59,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <path d="M16 12 L 16 20" opacity=".6"/>
             <path d="M13 16 L 19 16" opacity=".6"/>
           </svg>
-          <h3>Learn AI</h3>
-          <p class="pillar-body">
-            Understand what AI can realistically do for your business, what to skip, and where
-            to start. Plain English, real examples.
-          </p>
+          <h3>{h.pillar1Title}</h3>
+          <p class="pillar-body">{h.pillar1Body}</p>
           <div class="pillar-services">
             <strong>Services</strong>
             <ul>
-              <li>Free 30-min AI audit</li>
-              <li>Team workshops · half or full day</li>
-              <li>Quarterly industry briefings</li>
-              <li>Leadership advisory retainer</li>
+              {(h.pillar1Services ?? []).map((s: string) => <li>{s}</li>)}
             </ul>
           </div>
         </article>
@@ -81,19 +74,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <svg class="pillar-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M6 16 L 12 10 L 12 14 L 20 14 L 20 10 L 26 16 L 20 22 L 20 18 L 12 18 L 12 22 Z"/>
           </svg>
-          <h3>Deploy AI Tools</h3>
-          <p class="pillar-body">
-            Proven AI solutions, implemented on your stack in days — not months. Including our
-            flagship voice agent.
-          </p>
+          <h3>{h.pillar2Title}</h3>
+          <p class="pillar-body">{h.pillar2Body}</p>
           <div class="pillar-services">
             <strong>Services</strong>
             <ul>
-              <li>AI voice agent (answer every call)</li>
-              <li>Lead-response automation</li>
-              <li>CRM &amp; intake workflows</li>
-              <li>Meeting notes &amp; follow-ups</li>
-              <li>Document &amp; quote drafting</li>
+              {(h.pillar2Services ?? []).map((s: string) => <li>{s}</li>)}
             </ul>
           </div>
         </article>
@@ -107,34 +93,25 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <path d="M13 10 L 22 10 L 22 19"/>
             <path d="M6 6 L 8 8 M 12 6 L 8 8 M 8 4 L 8 8" opacity=".5"/>
           </svg>
-          <h3>Build Custom AI</h3>
-          <p class="pillar-body">
-            When off-the-shelf won't cut it: bespoke AI built around your data, your workflows,
-            your team's language.
-          </p>
+          <h3>{h.pillar3Title}</h3>
+          <p class="pillar-body">{h.pillar3Body}</p>
           <div class="pillar-services">
             <strong>Services</strong>
             <ul>
-              <li>Custom AI agents on your data</li>
-              <li>"Ask your SOPs" knowledge base</li>
-              <li>Workflow integrations (Zapier / n8n)</li>
-              <li>Fractional Head of AI</li>
+              {(h.pillar3Services ?? []).map((s: string) => <li>{s}</li>)}
             </ul>
           </div>
         </article>
       </div>
 
-      <!-- Voice agent now an inline strip under "Deploy" -->
+      <!-- Voice agent strip -->
       <div class="inline-voice">
         <div>
-          <span class="eyebrow eyebrow-light">Flagship · under "Deploy"</span>
-          <h3>Never miss another call.</h3>
-          <p>
-            Our voice agent answers your phone 24/7 — qualifying leads, booking appointments,
-            handling FAQs. Sounds human. Works every night, weekend, and holiday.
-          </p>
+          <span class="eyebrow eyebrow-light">{h.voiceEyebrow}</span>
+          <h3>{h.voiceHeadline}</h3>
+          <p>{h.voiceBody}</p>
           <div class="iv-ctas">
-            <a href="/how-it-works" class="btn btn-sand">See how it works</a>
+            <a href="/how-it-works" class="btn btn-sand">{h.voicePrimaryCta}</a>
             <a href="/pricing" class="btn btn-ghost btn-ghost-on-dark">View pricing →</a>
           </div>
         </div>
@@ -160,24 +137,24 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <section class="section">
     <div class="wrap">
       <div class="section-head">
-        <span class="eyebrow">How we work</span>
-        <h2>Simple process. Fast results. You stay focused on your business.</h2>
+        <span class="eyebrow">{h.processEyebrow}</span>
+        <h2>{h.processHeadline}</h2>
       </div>
       <div class="process">
         <div class="step">
           <div class="step-num">01</div>
-          <h3>Free AI audit</h3>
-          <p>We learn your business, find the one or two places AI can actually help, and show you a clear plan — including what to skip.</p>
+          <h3>{h.step1Title}</h3>
+          <p>{h.step1Body}</p>
         </div>
         <div class="step">
           <div class="step-num">02</div>
-          <h3>We build &amp; deploy</h3>
-          <p>Voice agent, custom tool, workshop — we handle everything technical. You get a working solution, not a slide deck.</p>
+          <h3>{h.step2Title}</h3>
+          <p>{h.step2Body}</p>
         </div>
         <div class="step">
           <div class="step-num">03</div>
-          <h3>You get results</h3>
-          <p>Calls answered, time freed, your business running smarter. We stay on hand for ongoing support.</p>
+          <h3>{h.step3Title}</h3>
+          <p>{h.step3Body}</p>
         </div>
       </div>
     </div>
@@ -187,17 +164,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <section class="section section-alt">
     <div class="wrap">
       <div class="section-head">
-        <span class="eyebrow">Built for</span>
-        <h2>Service businesses with their own rhythms.</h2>
-        <p class="dek">We focus on industries where a missed call is a missed customer — and where AI can carry real weight.</p>
+        <span class="eyebrow">{h.industriesEyebrow}</span>
+        <h2>{h.industriesHeadline}</h2>
+        <p class="dek">{h.industriesDek}</p>
       </div>
       <div class="industries">
         <a href="/dental" class="ind">
           <svg class="ind-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M10 6 C 8 6, 6 8, 6 12 C 6 18, 9 26, 12 26 C 14 26, 14 22, 16 22 C 18 22, 18 26, 20 26 C 23 26, 26 18, 26 12 C 26 8, 24 6, 22 6 C 20 6, 18 8, 16 8 C 14 8, 12 6, 10 6 Z"/>
           </svg>
-          <h3>Dental practices</h3>
-          <p>Bookings, recalls, insurance questions — answered 24/7 without pulling staff off the floor.</p>
+          <h3>{h.dentalTitle}</h3>
+          <p>{h.dentalDesc}</p>
           <span class="ind-cta">Learn more →</span>
         </a>
         <a href="/hvac" class="ind">
@@ -205,16 +182,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <path d="M13 4 L 19 4 L 19 10 L 24 10 L 28 14 L 28 20 L 24 24 L 19 24 L 19 28 L 13 28 L 13 22 L 8 22 L 4 18 L 4 12 L 8 8 L 13 8 Z"/>
             <circle cx="16" cy="16" r="3"/>
           </svg>
-          <h3>HVAC &amp; contractors</h3>
-          <p>Emergency calls triaged. Jobs booked. Your agent knows when to dispatch — and when to gather more info.</p>
+          <h3>{h.hvacTitle}</h3>
+          <p>{h.hvacDesc}</p>
           <span class="ind-cta">Learn more →</span>
         </a>
         <a href="/real-estate" class="ind">
           <svg class="ind-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 16 L 16 6 L 28 16 L 26 16 L 26 26 L 18 26 L 18 20 L 14 20 L 14 26 L 6 26 L 6 16 Z"/>
           </svg>
-          <h3>Real estate agents</h3>
-          <p>Be the first to respond. Qualify leads, schedule showings, and capture buyers before the competition.</p>
+          <h3>{h.realEstateTitle}</h3>
+          <p>{h.realEstateDesc}</p>
           <span class="ind-cta">Learn more →</span>
         </a>
       </div>
@@ -228,10 +205,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <!-- TESTIMONIAL -->
   <section class="testi">
     <div class="testi-inner">
-      <blockquote>
-        "Mark set up our voice agent in four days. It books as many appointments in a weekend
-        as my front desk used to handle in a week — and it's cheaper than one hour of my time."
-      </blockquote>
+      <blockquote>{h.quoteText}</blockquote>
       <svg class="ornament" width="120" height="16" viewBox="0 0 320 20" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" aria-hidden="true">
         <line x1="8" y1="10" x2="140" y2="10"/>
         <g transform="translate(160 10)">
@@ -240,21 +214,18 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         </g>
         <line x1="180" y1="10" x2="312" y2="10"/>
       </svg>
-      <div class="cite-name">Dr. Priya Ramanathan</div>
-      <div class="cite-role">Owner · Harbor Dental · Boulder, CO</div>
+      <div class="cite-name">{h.quoteName}</div>
+      <div class="cite-role">{h.quoteRole}</div>
     </div>
   </section>
 
   <!-- FINAL CTA -->
   <section class="final-cta">
     <div class="wrap">
-      <h2>Not sure where AI fits in your business?</h2>
-      <p class="dek">
-        The free AI Audit is a 30-minute conversation. We'll show you exactly where AI can help,
-        what it'll cost, and what to expect — no pressure, no jargon.
-      </p>
-      <a href="/ai-audit" class="btn btn-primary btn-lg">Book your free AI audit</a>
-      <div class="micro">No commitment · No credit card · Just clarity</div>
+      <h2>{h.ctaHeadline}</h2>
+      <p class="dek">{h.ctaDek}</p>
+      <a href="/ai-audit" class="btn btn-primary btn-lg">{h.ctaPrimaryCta}</a>
+      <div class="micro">{h.ctaMicro}</div>
     </div>
   </section>
 
@@ -262,15 +233,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <style>
   /* ---------------------------------------------------------------
-     Averde AI — homepage redesign (scoped to this page)
-     Drop-in: relies on the new tokens added to global.css.
+     Averde AI — homepage (scoped styles)
   --------------------------------------------------------------- */
 
-  /* layout */
   .wrap { max-width: 1180px; margin: 0 auto; padding: 0 40px; }
   @media (max-width: 720px) { .wrap { padding: 0 24px; } }
 
-  /* eyebrow */
   .eyebrow {
     font-family: 'Inter Tight', system-ui, sans-serif;
     font-size: 12px; font-weight: 600;
@@ -284,7 +252,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
   .eyebrow-light { color: var(--sand); }
 
-  /* buttons */
   .btn {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 14px 22px; border-radius: 8px;
@@ -403,7 +370,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     border: 1px solid rgba(122,106,88,.2);
     border-radius: 12px;
     transition: box-shadow 250ms cubic-bezier(0.2,0.7,0.1,1);
-    position: relative;
   }
   .section-alt .pillar { background: var(--white-warm); }
   .pillar:hover { box-shadow: 0 12px 32px rgba(30,22,16,.1); }

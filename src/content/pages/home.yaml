@@ -1,0 +1,69 @@
+heroEyebrow: 'Free 30-min AI audit · No jargon'
+heroHeadlineStart: 'AI for small business, explained by someone who'
+heroHeadlineEmphasis: 'actually runs one.'
+heroSubheadline: 'Averde helps service businesses and small firms cut through the AI noise — with practical advice, deployed tools, and custom builds that fit how you actually work. No jargon, no hype.'
+heroPrimaryCta: 'Get my free AI audit'
+heroSecondaryCta: 'See what we do →'
+heroMeta: 'Live in 5 business days · 30-day money-back · Boulder, CO'
+
+pillarsEyebrow: 'What we do'
+pillarsHeadline: 'Three ways we help your business put AI to work.'
+pillarsDek: "Whether you're just starting to explore AI, ready to deploy proven tools, or want something built just for you — we meet you where you are."
+
+pillar1Title: 'Learn AI'
+pillar1Body: 'Understand what AI can realistically do for your business, what to skip, and where to start. Plain English, real examples.'
+pillar1Services:
+  - 'Free 30-min AI audit'
+  - 'Team workshops · half or full day'
+  - 'Quarterly industry briefings'
+  - 'Leadership advisory retainer'
+
+pillar2Title: 'Deploy AI Tools'
+pillar2Body: 'Proven AI solutions, implemented on your stack in days — not months. Including our flagship voice agent.'
+pillar2Services:
+  - 'AI voice agent (answer every call)'
+  - 'Lead-response automation'
+  - 'CRM & intake workflows'
+  - 'Meeting notes & follow-ups'
+  - 'Document & quote drafting'
+
+pillar3Title: 'Build Custom AI'
+pillar3Body: "When off-the-shelf won't cut it: bespoke AI built around your data, your workflows, your team's language."
+pillar3Services:
+  - 'Custom AI agents on your data'
+  - '"Ask your SOPs" knowledge base'
+  - 'Workflow integrations (Zapier / n8n)'
+  - 'Fractional Head of AI'
+
+voiceEyebrow: 'Flagship · Voice AI'
+voiceHeadline: 'Never miss another call.'
+voiceBody: 'Our voice agent answers your phone 24/7 — qualifying leads, booking appointments, handling FAQs. Sounds human. Works every night, weekend, and holiday.'
+voicePrimaryCta: 'See how it works'
+
+processEyebrow: 'How we work'
+processHeadline: 'Simple process. Fast results. You stay focused on your business.'
+step1Title: 'Free AI audit'
+step1Body: "We learn your business, find the one or two places AI can actually help, and show you a clear plan — including what to skip."
+step2Title: 'We build & deploy'
+step2Body: 'Voice agent, custom tool, workshop — we handle everything technical. You get a working solution, not a slide deck.'
+step3Title: 'You get results'
+step3Body: 'Calls answered, time freed, your business running smarter. We stay on hand for ongoing support.'
+
+industriesEyebrow: 'Built for'
+industriesHeadline: 'Service businesses with their own rhythms.'
+industriesDek: 'We focus on industries where a missed call is a missed customer — and where AI can carry real weight.'
+dentalTitle: 'Dental practices'
+dentalDesc: 'Bookings, recalls, insurance questions — answered 24/7 without pulling staff off the floor.'
+hvacTitle: 'HVAC & contractors'
+hvacDesc: 'Emergency calls triaged. Jobs booked. Your agent knows when to dispatch — and when to gather more info.'
+realEstateTitle: 'Real estate agents'
+realEstateDesc: 'Be the first to respond. Qualify leads, schedule showings, and capture buyers before the competition.'
+
+quoteText: '"Mark set up our voice agent in four days. It books as many appointments in a weekend as my front desk used to handle in a week — and it''s cheaper than one hour of my time."'
+quoteName: 'Dr. Priya Ramanathan'
+quoteRole: 'Owner · Harbor Dental · Boulder, CO'
+
+ctaHeadline: 'Not sure where AI fits in your business?'
+ctaDek: "The free AI Audit is a 30-minute conversation. We'll show you exactly where AI can help, what it'll cost, and what to expect — no pressure, no jargon."
+ctaPrimaryCta: 'Book your free AI audit'
+ctaMicro: 'No commitment · No credit card · Just clarity'
