@@ -3,255 +3,309 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout
-  title="AI for Small Business | Averde AI | Boulder, CO"
-  description="Averde AI helps service providers and small businesses understand AI, deploy proven tools like AI voice agents, and build custom solutions — all without the jargon."
+  title="Mark Bloomfield — Your Personal AI Guy | Averde AI"
+  description="Mark Bloomfield helps small businesses and service providers cut through the AI noise. Free tools, $27 playbooks, strategy sessions, and custom builds. Boulder, CO."
   isHome={true}
 >
 
-  <!-- HERO -->
+  <!-- HERO — paper bg with visible wood grain -->
   <section class="hero">
+    <!-- wood plank strip -->
+    <div class="wood-strip" aria-hidden="true"></div>
     <div class="wrap hero-grid">
-      <div>
-        <span class="eyebrow">Free 30-min AI audit · No jargon</span>
-        <h1>AI for small business, explained by someone who <em>actually runs one.</em></h1>
+      <div class="hero-text">
+        <span class="tag">Boulder, CO · Serving businesses nationwide</span>
+        <h1>Your Personal<br/><em>AI Guy.</em></h1>
         <p class="hero-sub">
-          Averde helps service businesses and small firms cut through the AI noise — with practical advice,
-          deployed tools, and custom builds that fit how you actually work. No jargon, no hype.
+          I'm Mark Bloomfield — engineer, founder, and the person who explains AI to small
+          businesses without the jargon or the hype. I help you figure out what's real,
+          what's worth it, and how to actually make it work for you.
         </p>
         <div class="hero-ctas">
           <a href="/ai-audit" class="btn btn-primary">Get my free AI audit</a>
-          <a href="/how-it-works" class="btn btn-ghost">See what we do →</a>
+          <a href="#tools" class="btn btn-ghost">See free resources →</a>
         </div>
-        <div class="hero-meta">Live in 5 business days · 30-day money-back · Boulder, CO</div>
+        <div class="hero-trust">
+          <span>Free AI audit · No credit card</span>
+          <span class="dot">·</span>
+          <span>Results in 30 min</span>
+          <span class="dot">·</span>
+          <span>Boulder, CO</span>
+        </div>
       </div>
-      <div class="hero-art-wrap">
-        <div class="hero-art">
-          <div class="hero-caption">
-            <div class="hero-caption-name">Mark Bloomfield</div>
-            <div class="hero-caption-role">Founder · Averde AI</div>
+      <div class="hero-card-wrap">
+        <div class="hero-card">
+          <div class="hero-card-img">
+            <div class="hero-card-caption">
+              <div class="caption-name">Mark Bloomfield</div>
+              <div class="caption-role">Founder · Averde AI</div>
+            </div>
+          </div>
+          <div class="hero-card-body">
+            <div class="hero-card-tag">What I do</div>
+            <ul class="hero-card-list">
+              <li>Explain AI — plain English, no fluff</li>
+              <li>Deploy tools that fit your business</li>
+              <li>Build custom AI on your data</li>
+            </ul>
           </div>
         </div>
-        <div class="hero-sticker">
-          <div class="hero-sticker-num">30</div>
-          <div class="hero-sticker-label">Min free audit</div>
+        <div class="hero-badge">
+          <div class="hero-badge-num">30</div>
+          <div class="hero-badge-lbl">Min free audit</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- THREE PILLARS + Voice AI folded in -->
-  <section class="section section-bone">
+  <!-- FREE TOOLS — dark walnut with visible wood grain -->
+  <section class="section wood-dark" id="tools">
     <div class="wrap">
-      <div class="section-head">
-        <span class="eyebrow">What we do</span>
-        <h2>Three ways we help your business put AI to work.</h2>
-        <p class="dek">
-          Whether you're just starting to explore AI, ready to deploy proven tools, or want
-          something built just for you — we meet you where you are.
+      <div class="section-head-split">
+        <div>
+          <span class="eyebrow eyebrow-light">Start here — no cost</span>
+          <h2 class="light">Free tools to<br/>get you oriented.</h2>
+        </div>
+        <p class="dek-light">
+          Not ready to buy anything yet? Good. These free resources will show you
+          exactly where AI can help your business — and where it can't.
         </p>
       </div>
-
-      <div class="pillars">
-        <article class="pillar">
-          <div class="pillar-num">01 · Strategy</div>
-          <svg class="pillar-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M16 4 C 10 4, 6 9, 6 14 C 6 18, 9 20, 9 23 L 9 26 C 9 27, 10 28, 11 28 L 21 28 C 22 28, 23 27, 23 26 L 23 23 C 23 20, 26 18, 26 14 C 26 9, 22 4, 16 4 Z"/>
-            <path d="M12 28 L 20 28"/>
-            <path d="M16 12 L 16 20" opacity=".6"/>
-            <path d="M13 16 L 19 16" opacity=".6"/>
-          </svg>
-          <h3>Learn AI</h3>
-          <p class="pillar-body">
-            Understand what AI can realistically do for your business, what to skip, and where
-            to start. Plain English, real examples.
-          </p>
-          <div class="pillar-services">
-            <strong>Services</strong>
-            <ul>
-              <li>Free 30-min AI audit</li>
-              <li>Team workshops · half or full day</li>
-              <li>Quarterly industry briefings</li>
-              <li>Leadership advisory retainer</li>
-            </ul>
+      <div class="tools-grid">
+        <a href="/ai-audit" class="tool-card">
+          <div class="tool-icon">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="14" cy="14" r="10"/>
+              <path d="M14 9v5l3 3"/>
+            </svg>
           </div>
-        </article>
-
-        <article class="pillar">
-          <div class="pillar-num">02 · Implementation</div>
-          <svg class="pillar-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M6 16 L 12 10 L 12 14 L 20 14 L 20 10 L 26 16 L 20 22 L 20 18 L 12 18 L 12 22 Z"/>
-          </svg>
-          <h3>Deploy AI Tools</h3>
-          <p class="pillar-body">
-            Proven AI solutions, implemented on your stack in days — not months. Including our
-            flagship voice agent.
-          </p>
-          <div class="pillar-services">
-            <strong>Services</strong>
-            <ul>
-              <li>AI voice agent (answer every call)</li>
-              <li>Lead-response automation</li>
-              <li>CRM &amp; intake workflows</li>
-              <li>Meeting notes &amp; follow-ups</li>
-              <li>Document &amp; quote drafting</li>
-            </ul>
+          <div class="tool-tag">30-min call · Free</div>
+          <h3>Free AI Audit</h3>
+          <p>30 minutes with me. I'll map out exactly where AI can help your business, what it'll cost, and what to expect — no pitch, no pressure.</p>
+          <span class="tool-cta">Book your audit →</span>
+        </a>
+        <a href="#quiz" class="tool-card">
+          <div class="tool-icon">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 8h16M6 13h12M6 18h8"/>
+            </svg>
           </div>
-        </article>
-
-        <article class="pillar">
-          <div class="pillar-num">03 · Custom</div>
-          <svg class="pillar-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="10" cy="10" r="3"/>
-            <circle cx="22" cy="22" r="3"/>
-            <path d="M10 13 L 10 20 L 19 20"/>
-            <path d="M13 10 L 22 10 L 22 19"/>
-            <path d="M6 6 L 8 8 M 12 6 L 8 8 M 8 4 L 8 8" opacity=".5"/>
-          </svg>
-          <h3>Build Custom AI</h3>
-          <p class="pillar-body">
-            When off-the-shelf won't cut it: bespoke AI built around your data, your workflows,
-            your team's language.
-          </p>
-          <div class="pillar-services">
-            <strong>Services</strong>
-            <ul>
-              <li>Custom AI agents on your data</li>
-              <li>"Ask your SOPs" knowledge base</li>
-              <li>Workflow integrations (Zapier / n8n)</li>
-              <li>Fractional Head of AI</li>
-            </ul>
+          <div class="tool-tag">2-min quiz · Free</div>
+          <h3>AI Readiness Quiz</h3>
+          <p>Answer 8 quick questions and get a personalised AI readiness score — with specific recommendations for your type of business.</p>
+          <span class="tool-cta">Take the quiz →</span>
+        </a>
+        <a href="#calculator" class="tool-card">
+          <div class="tool-icon">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="6" y="4" width="16" height="20" rx="2"/>
+              <path d="M10 10h8M10 14h5M10 18h3"/>
+            </svg>
           </div>
-        </article>
-      </div>
-
-      <!-- Voice agent — the "blue shelf" / single feature accent -->
-      <div class="inline-voice">
-        <div>
-          <span class="eyebrow eyebrow-light">Flagship · under "Deploy"</span>
-          <h3>Never miss another call.</h3>
-          <p>
-            Our voice agent answers your phone 24/7 — qualifying leads, booking appointments,
-            handling FAQs. Sounds human. Works every night, weekend, and holiday.
-          </p>
-          <div class="iv-ctas">
-            <a href="/how-it-works" class="btn btn-cream">See how it works</a>
-            <a href="/pricing" class="btn btn-ghost btn-ghost-on-blue">View pricing →</a>
-          </div>
-        </div>
-        <div class="stats">
-          <div class="stat">
-            <div class="stat-num">62%</div>
-            <div class="stat-label">of calls to small businesses go unanswered</div>
-          </div>
-          <div class="stat">
-            <div class="stat-num">$200–500</div>
-            <div class="stat-label">average value of a missed service appointment</div>
-          </div>
-          <div class="stat">
-            <div class="stat-num">80%</div>
-            <div class="stat-label">of callers who can't reach you call a competitor instead</div>
-          </div>
-        </div>
+          <div class="tool-tag">Instant · Free</div>
+          <h3>Missed Call Calculator</h3>
+          <p>Enter your average job value and how many calls you miss per week. I'll show you the exact revenue you're leaving on the table.</p>
+          <span class="tool-cta">Calculate my loss →</span>
+        </a>
       </div>
     </div>
   </section>
 
-  <!-- PROCESS -->
-  <section class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <span class="eyebrow">How we work</span>
-        <h2>Simple process. Fast results. You stay focused on your business.</h2>
-      </div>
-      <div class="process">
-        <div class="step">
-          <div class="step-num">01</div>
-          <h3>Free AI audit</h3>
-          <p>We learn your business, find the one or two places AI can actually help, and show you a clear plan — including what to skip.</p>
-        </div>
-        <div class="step">
-          <div class="step-num">02</div>
-          <h3>We build &amp; deploy</h3>
-          <p>Voice agent, custom tool, workshop — we handle everything technical. You get a working solution, not a slide deck.</p>
-        </div>
-        <div class="step">
-          <div class="step-num">03</div>
-          <h3>You get results</h3>
-          <p>Calls answered, time freed, your business running smarter. We stay on hand for ongoing support.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- INDUSTRIES -->
+  <!-- $27 PLAYBOOKS — bone bg -->
   <section class="section section-bone">
     <div class="wrap">
       <div class="section-head">
-        <span class="eyebrow">Built for</span>
-        <h2>Service businesses with their own rhythms.</h2>
-        <p class="dek">We focus on industries where a missed call is a missed customer — and where AI can carry real weight.</p>
+        <span class="eyebrow">Start with something concrete</span>
+        <h2>Industry AI Playbooks — $27</h2>
+        <p class="dek">
+          A step-by-step guide to the AI tools that actually move the needle in your industry.
+          Built around how your business runs — not generic advice.
+        </p>
       </div>
-      <div class="industries">
-        <a href="/dental" class="ind">
-          <svg class="ind-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <div class="playbooks-grid">
+        <a href="/dental" class="playbook">
+          <div class="playbook-industry">Dental Practices</div>
+          <svg class="playbook-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
             <path d="M10 6 C 8 6, 6 8, 6 12 C 6 18, 9 26, 12 26 C 14 26, 14 22, 16 22 C 18 22, 18 26, 20 26 C 23 26, 26 18, 26 12 C 26 8, 24 6, 22 6 C 20 6, 18 8, 16 8 C 14 8, 12 6, 10 6 Z"/>
           </svg>
-          <h3>Dental practices</h3>
-          <p>Bookings, recalls, insurance questions — answered 24/7 without pulling staff off the floor.</p>
-          <span class="ind-cta">Learn more →</span>
+          <h3>The Dental Practice AI Playbook</h3>
+          <p>AI tools for scheduling, recalls, insurance FAQs, and front-desk overflow — written for practice owners, not IT departments.</p>
+          <div class="playbook-includes">
+            <strong>What's inside</strong>
+            <ul>
+              <li>The 3 AI tools every dental practice should have first</li>
+              <li>How to answer calls 24/7 without adding staff</li>
+              <li>Reducing no-shows with automated reminders</li>
+              <li>Step-by-step setup guide — no tech skills needed</li>
+            </ul>
+          </div>
+          <div class="playbook-buy">
+            <span class="price">$27</span>
+            <span class="buy-cta">Get the Playbook →</span>
+          </div>
         </a>
-        <a href="/hvac" class="ind">
-          <svg class="ind-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+
+        <a href="/hvac" class="playbook">
+          <div class="playbook-industry">HVAC &amp; Contractors</div>
+          <svg class="playbook-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
             <path d="M13 4 L 19 4 L 19 10 L 24 10 L 28 14 L 28 20 L 24 24 L 19 24 L 19 28 L 13 28 L 13 22 L 8 22 L 4 18 L 4 12 L 8 8 L 13 8 Z"/>
             <circle cx="16" cy="16" r="3"/>
           </svg>
-          <h3>HVAC &amp; contractors</h3>
-          <p>Emergency calls triaged. Jobs booked. Your agent knows when to dispatch — and when to gather more info.</p>
-          <span class="ind-cta">Learn more →</span>
+          <h3>The HVAC &amp; Contractor AI Playbook</h3>
+          <p>How to handle emergency calls at 2am, dispatch smarter, book jobs while your techs are on-site, and stop losing work to competitors who picked up first.</p>
+          <div class="playbook-includes">
+            <strong>What's inside</strong>
+            <ul>
+              <li>24/7 emergency triage — without hiring an answering service</li>
+              <li>Scheduling and dispatch automation that actually works</li>
+              <li>How to qualify and capture leads from every missed call</li>
+              <li>The $300 tool that recovers a job a week</li>
+            </ul>
+          </div>
+          <div class="playbook-buy">
+            <span class="price">$27</span>
+            <span class="buy-cta">Get the Playbook →</span>
+          </div>
         </a>
-        <a href="/real-estate" class="ind">
-          <svg class="ind-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+
+        <a href="/real-estate" class="playbook">
+          <div class="playbook-industry">Real Estate Agents</div>
+          <svg class="playbook-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 16 L 16 6 L 28 16 L 26 16 L 26 26 L 18 26 L 18 20 L 14 20 L 14 26 L 6 26 L 6 16 Z"/>
           </svg>
-          <h3>Real estate agents</h3>
-          <p>Be the first to respond. Qualify leads, schedule showings, and capture buyers before the competition.</p>
-          <span class="ind-cta">Learn more →</span>
+          <h3>The Real Estate Agent AI Playbook</h3>
+          <p>Be the first agent to respond — every time. Tools for qualifying leads instantly, scheduling showings 24/7, and following up without lifting a finger.</p>
+          <div class="playbook-includes">
+            <strong>What's inside</strong>
+            <ul>
+              <li>How to respond to every buyer lead in under 60 seconds</li>
+              <li>AI screening questions that filter serious buyers from tire-kickers</li>
+              <li>Showing scheduling automation that syncs to your calendar</li>
+              <li>The follow-up sequence that books more listings</li>
+            </ul>
+          </div>
+          <div class="playbook-buy">
+            <span class="price">$27</span>
+            <span class="buy-cta">Get the Playbook →</span>
+          </div>
         </a>
       </div>
-      <p class="ind-foot">
-        More industries coming soon. Different field?
-        <a href="/contact">Let's talk.</a>
-      </p>
     </div>
   </section>
 
-  <!-- TESTIMONIAL -->
+  <!-- DEEPER SERVICES — paper bg -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Ready to go deeper</span>
+        <h2>When you're ready to actually build something.</h2>
+        <p class="dek">From a focused strategy session to a full custom AI build — I work with you directly, at every stage.</p>
+      </div>
+      <div class="services-ladder">
+        <div class="service-row">
+          <div class="service-step">Step 2</div>
+          <div class="service-content">
+            <div class="service-head">
+              <h3>Strategy Session</h3>
+              <span class="service-price">$250 – $500</span>
+            </div>
+            <p>A focused 90-minute working session where we map out your AI roadmap — what to build, what to buy off the shelf, and what to skip entirely. You leave with a prioritized action plan.</p>
+          </div>
+          <a href="/ai-audit" class="service-cta-btn">Book a session →</a>
+        </div>
+
+        <div class="service-row">
+          <div class="service-step">Step 3</div>
+          <div class="service-content">
+            <div class="service-head">
+              <h3>AI-Ready Website &amp; SEO Overhaul</h3>
+              <span class="service-price">From $1,200</span>
+            </div>
+            <p>Your website rebuilt to rank in AI search (ChatGPT, Perplexity, Google AI Overviews) — not just Google. Structured data, AEO content, and local AI citations all included.</p>
+          </div>
+          <a href="/contact" class="service-cta-btn">Get a quote →</a>
+        </div>
+
+        <div class="service-row">
+          <div class="service-step">Step 4</div>
+          <div class="service-content">
+            <div class="service-head">
+              <h3>Voice Agent — AI Receptionist</h3>
+              <span class="service-price">From $297/mo</span>
+            </div>
+            <p>An AI that answers your phone 24/7 — qualifying leads, booking appointments, handling FAQs. Sounds human. Deployed in 5 business days.</p>
+          </div>
+          <a href="/how-it-works" class="service-cta-btn">See how it works →</a>
+        </div>
+
+        <div class="service-row">
+          <div class="service-step">Step 5</div>
+          <div class="service-content">
+            <div class="service-head">
+              <h3>Custom AI Builds</h3>
+              <span class="service-price">Quote-based</span>
+            </div>
+            <p>Bespoke AI built around your data, your workflows, and your team's way of working. From internal knowledge bases to multi-step automations that replace hours of manual work.</p>
+          </div>
+          <a href="/contact" class="service-cta-btn">Let's talk →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIAL — walnut wood section -->
   <section class="testi">
+    <div class="wood-overlay" aria-hidden="true"></div>
     <div class="testi-inner">
+      <svg width="32" height="24" viewBox="0 0 32 24" fill="none" aria-hidden="true" style="margin-bottom:24px;opacity:.4">
+        <path d="M0 24 C0 14 4 6 14 0L16 4 C10 8 8 12 8 16v8H0Z M18 24 C18 14 22 6 32 0L34 4 C28 8 26 12 26 16v8H18Z" fill="#C99356"/>
+      </svg>
       <blockquote>
         "Mark set up our voice agent in four days. It books as many appointments in a weekend
         as my front desk used to handle in a week — and it's cheaper than one hour of my time."
       </blockquote>
-      <svg class="ornament" width="120" height="16" viewBox="0 0 320 20" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" aria-hidden="true">
-        <line x1="8" y1="10" x2="140" y2="10"/>
-        <g transform="translate(160 10)">
-          <path d="M-10 0 L0 -6 L10 0 L0 6 Z"/>
-          <circle cx="0" cy="0" r="1.5" fill="currentColor"/>
-        </g>
-        <line x1="180" y1="10" x2="312" y2="10"/>
-      </svg>
       <div class="cite-name">Dr. Priya Ramanathan</div>
       <div class="cite-role">Owner · Harbor Dental · Boulder, CO</div>
+    </div>
+  </section>
+
+  <!-- ABOUT MARK — light section with wood accent -->
+  <section class="section section-bone">
+    <div class="wrap about-grid">
+      <div class="about-wood-panel" aria-hidden="true">
+        <div class="about-wood-inner">
+          <div class="about-caption">
+            <div class="about-caption-name">Mark Bloomfield</div>
+            <div class="about-caption-title">Your Personal AI Guy</div>
+          </div>
+        </div>
+      </div>
+      <div class="about-text">
+        <span class="eyebrow">Why work with me</span>
+        <h2>I'm not a consultant who learned AI last year.</h2>
+        <p>
+          I spent years as a composites research engineer and sustainability consultant
+          before the AI wave hit. When I saw what it could do for small businesses — not
+          the hype, the actual practical tools — I built Averde to make it accessible.
+        </p>
+        <p>
+          Every client works directly with me. I figure out what you actually need,
+          skip the things you don't, and build or deploy it fast. Based in Boulder, CO.
+          Working with businesses everywhere.
+        </p>
+        <a href="/about" class="btn btn-primary" style="margin-top:8px">Meet Mark →</a>
+      </div>
     </div>
   </section>
 
   <!-- FINAL CTA -->
   <section class="final-cta">
     <div class="wrap">
-      <h2>Not sure where AI fits in your business?</h2>
+      <span class="eyebrow" style="justify-content:center;margin-bottom:20px">The simplest place to start</span>
+      <h2>Not sure where AI fits?<br/>Start with the free audit.</h2>
       <p class="dek">
-        The free AI Audit is a 30-minute conversation. We'll show you exactly where AI can help,
-        what it'll cost, and what to expect — no pressure, no jargon.
+        30 minutes. I'll map out exactly where AI can help your specific business,
+        what it costs, and what to realistically expect. No jargon. No pressure.
       </p>
       <a href="/ai-audit" class="btn btn-primary btn-lg">Book your free AI audit</a>
       <div class="micro">No commitment · No credit card · Just clarity</div>
@@ -262,369 +316,459 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <style>
   /* ---------------------------------------------------------------
-     Averde AI — homepage v2 (reclaimed-wood palette)
-     Drop-in: relies on the new tokens added to global.css.
+     Homepage — Mark Bloomfield personal brand
+     Wood-forward design with clear funnel
   --------------------------------------------------------------- */
 
-  /* layout */
   .wrap { max-width: 1180px; margin: 0 auto; padding: 0 40px; }
   @media (max-width: 720px) { .wrap { padding: 0 24px; } }
 
-  /* eyebrow */
+  /* ---- SVG wood-grain data URI (reused across sections) ---- */
+  /* Low X / high Y turbulence = horizontal wood grain lines */
+  :root {
+    --wood-grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='500' height='500'><filter id='wg'><feTurbulence type='turbulence' baseFrequency='0.018 0.72' numOctaves='4' seed='12' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 0.55 0 0 0 0 0.33 0 0 0 0 0.12 0 0 0 1 0'/></filter><rect width='500' height='500' filter='url(%23wg)'/></svg>");
+  }
+
+  /* ---- EYEBROW ---- */
   .eyebrow {
     font-family: 'Inter Tight', system-ui, sans-serif;
-    font-size: 12px; font-weight: 600;
-    letter-spacing: 0.16em; text-transform: uppercase;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
     color: var(--rust);
-    display: inline-flex; align-items: center; gap: 8px;
-    white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 10px;
   }
-  .eyebrow::before {
-    content: ""; width: 20px; height: 1px;
-    background: currentColor;
-  }
-  .eyebrow-light { color: var(--aged-cream); opacity: .9; }
+  .eyebrow::before { content: ""; width: 18px; height: 1px; background: currentColor; }
+  .eyebrow-light { color: var(--honey-100); }
+  .eyebrow-light::before { background: var(--honey-100); }
 
-  /* buttons */
+  /* ---- BUTTONS ---- */
   .btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 14px 22px; border-radius: 6px;
+    display: inline-flex; align-items: center;
+    padding: 13px 22px; border-radius: 5px;
     font-family: 'Inter Tight', sans-serif;
     font-size: 14px; font-weight: 600; letter-spacing: 0.01em;
     white-space: nowrap; text-decoration: none;
-    border: 1px solid transparent; cursor: pointer;
-    transition: all 200ms cubic-bezier(0.2,0.7,0.1,1);
+    border: 1.5px solid transparent; cursor: pointer;
+    transition: all 180ms ease;
   }
   .btn-primary { background: var(--walnut-700); color: var(--paper); }
   .btn-primary:hover { background: var(--charcoal); }
-  .btn-ghost { background: transparent; color: var(--ink); border-color: rgba(31,26,18,.25); }
-  .btn-ghost:hover { background: rgba(31,26,18,.05); border-color: rgba(31,26,18,.5); }
-  .btn-ghost-on-blue { color: var(--paper); border-color: rgba(244,236,219,.35); }
-  .btn-ghost-on-blue:hover { background: rgba(255,255,255,.08); border-color: rgba(244,236,219,.7); }
-  .btn-cream { background: var(--paper); color: var(--blue-600); }
-  .btn-cream:hover { background: var(--aged-cream); }
-  .btn-lg { padding: 16px 28px; font-size: 15px; }
+  .btn-ghost { background: transparent; color: var(--ink); border-color: rgba(31,26,18,.3); }
+  .btn-ghost:hover { background: rgba(31,26,18,.05); }
+  .btn-lg { padding: 16px 30px; font-size: 15px; }
 
-  /* HERO */
+  /* ---- HERO ---- */
   .hero {
-    padding: 64px 0 96px;
-    background:
-      radial-gradient(ellipse 900px 600px at 88% -10%, rgba(201,147,86,.28), transparent 60%),
-      radial-gradient(ellipse 700px 500px at 8% 30%, rgba(168,98,55,.10), transparent 60%);
+    padding: 0 0 80px;
+    background: var(--paper);
+    position: relative; overflow: hidden;
+  }
+  /* Visible wood-plank strip across top of hero */
+  .wood-strip {
+    height: 180px;
+    background-color: var(--walnut-500);
+    background-image: var(--wood-grain);
+    background-size: 500px;
+    background-blend-mode: multiply;
+    opacity: 0.9;
+    margin-bottom: 0;
+    position: relative;
+  }
+  .wood-strip::after {
+    content: "";
+    position: absolute; bottom: -1px; left: 0; right: 0; height: 40px;
+    background: linear-gradient(to bottom, transparent, var(--paper));
   }
   .hero-grid {
-    display: grid; grid-template-columns: 1.35fr 1fr;
-    gap: 72px; align-items: center;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 64px; align-items: start;
+    margin-top: -80px; position: relative; z-index: 2;
+    padding-top: 0;
+  }
+  .hero-text { padding-top: 16px; }
+  .tag {
+    display: inline-block;
+    background: var(--aged-cream);
+    border: 1px solid var(--driftwood);
+    border-radius: 3px;
+    padding: 4px 10px;
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--smoke);
+    margin-bottom: 20px;
   }
   .hero h1 {
     font-family: 'Fraunces', Georgia, serif;
-    font-size: clamp(3rem, 6vw, 5.5rem);
-    font-weight: 300; letter-spacing: -0.025em; line-height: 1.05;
-    color: var(--ink); margin: 22px 0 22px; text-wrap: balance;
+    font-size: clamp(3.5rem, 7vw, 6rem);
+    font-weight: 300; letter-spacing: -0.03em; line-height: 0.95;
+    color: var(--ink); margin: 0 0 24px; text-wrap: balance;
   }
-  .hero h1 em { font-style: italic; font-weight: 400; color: var(--rust); }
+  .hero h1 em { font-style: italic; color: var(--rust); display: block; }
   .hero-sub {
     font-family: 'Source Serif 4', Georgia, serif;
-    font-size: 19px; line-height: 1.6; color: var(--ink-700);
-    max-width: 54ch; margin: 0 0 32px;
+    font-size: 18px; line-height: 1.65; color: var(--ink-700);
+    max-width: 48ch; margin: 0 0 32px;
   }
-  .hero-ctas { display: flex; gap: 10px; margin-bottom: 28px; flex-wrap: wrap; }
-  .hero-meta {
+  .hero-ctas { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+  .hero-trust {
     font-family: 'Inter Tight', sans-serif;
-    font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--smoke);
+    font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--smoke); display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
   }
-  .hero-art-wrap { position: relative; }
-  .hero-art {
-    position: relative; aspect-ratio: 4/5; border-radius: 12px;
-    background:
-      radial-gradient(ellipse 70% 60% at 30% 30%, var(--walnut-300), var(--walnut-700) 75%);
-    box-shadow: 0 16px 40px rgba(31,26,18,.22); overflow: hidden;
-    border: 1px solid rgba(31,26,18,.2);
-  }
-  .hero-art::after {
-    content: ""; position: absolute; inset: 0;
-    background:
-      radial-gradient(circle at 65% 35%, rgba(201,147,86,.45), transparent 50%),
-      linear-gradient(180deg, transparent 55%, rgba(31,26,18,.7));
-  }
-  .hero-caption {
-    position: absolute; left: 20px; bottom: 20px;
-    background: var(--paper); border-radius: 6px;
-    padding: 10px 14px; box-shadow: 0 4px 12px rgba(31,26,18,.12); z-index: 2;
-  }
-  .hero-caption-name {
-    font-family: 'Fraunces', serif;
-    font-size: 15px; font-weight: 600; color: var(--ink);
-  }
-  .hero-caption-role {
-    font-family: 'Inter Tight', sans-serif;
-    font-size: 11px; letter-spacing: 0.06em;
-    color: var(--smoke); margin-top: 2px; white-space: nowrap;
-  }
-  .hero-sticker {
-    position: absolute; top: -14px; right: -14px;
-    width: 108px; height: 108px; border-radius: 999px;
-    background: var(--honey-300); color: var(--walnut-700);
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    box-shadow: 0 4px 12px rgba(31,26,18,.18);
-    transform: rotate(-6deg); text-align: center; z-index: 3;
-    border: 1px solid var(--honey-500);
-  }
-  .hero-sticker-num {
-    font-family: 'Fraunces', serif;
-    font-size: 32px; font-weight: 500; line-height: 1;
-  }
-  .hero-sticker-label {
-    font-family: 'Inter Tight', sans-serif;
-    font-size: 9px; text-transform: uppercase; letter-spacing: .14em;
-    margin-top: 4px; max-width: 74px; line-height: 1.3; font-weight: 600;
-    white-space: nowrap;
-  }
-  @media (max-width: 860px) {
-    .hero-grid { grid-template-columns: 1fr; gap: 48px; }
-  }
+  .hero-trust .dot { color: var(--driftwood); }
 
-  /* SECTIONS */
-  .section { padding: 104px 0; }
-  .section-bone { background: var(--bone); }
-  .section h2 {
-    font-family: 'Fraunces', serif;
-    font-size: clamp(2.25rem, 3.6vw, 3rem);
-    font-weight: 500; letter-spacing: -0.02em; line-height: 1.05;
-    color: var(--ink); max-width: 22ch; margin: 18px 0 0;
-    text-wrap: balance;
-  }
-  .section-head { margin-bottom: 56px; max-width: 760px; }
-  .section-head .dek {
-    font-family: 'Source Serif 4', serif;
-    font-size: 19px; color: var(--ink-700);
-    margin: 16px 0 0; max-width: 56ch;
-  }
-
-  /* PILLARS */
-  .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-  .pillar {
-    padding: 34px 30px 36px;
-    background: var(--paper);
+  /* Hero card — the photo placeholder with wood frame */
+  .hero-card-wrap { position: relative; padding-top: 24px; }
+  .hero-card {
+    border-radius: 8px; overflow: hidden;
     border: 1px solid var(--driftwood);
-    border-radius: 10px;
-    transition: box-shadow 250ms cubic-bezier(0.2,0.7,0.1,1);
+    box-shadow: 0 20px 48px rgba(31,26,18,.2), 0 4px 8px rgba(31,26,18,.1);
+  }
+  .hero-card-img {
+    aspect-ratio: 4/3;
+    background-color: var(--walnut-700);
+    background-image: var(--wood-grain);
+    background-size: 500px;
+    background-blend-mode: multiply;
     position: relative;
   }
-  .pillar:hover { box-shadow: 0 12px 32px rgba(31,26,18,.12); }
-  .pillar-num {
-    font-family: 'Fraunces', serif;
-    font-size: 14px; color: var(--rust);
-    letter-spacing: 0.1em; margin-bottom: 24px;
-    display: flex; align-items: center; gap: 10px;
+  .hero-card-img::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(160deg, rgba(201,147,86,.25) 0%, transparent 50%, rgba(31,26,18,.5) 100%);
   }
-  .pillar-num::after {
-    content: ""; flex: 1; height: 1px;
-    background: rgba(168,98,55,.3);
+  .hero-card-caption {
+    position: absolute; bottom: 16px; left: 16px;
+    background: var(--paper); border-radius: 4px;
+    padding: 8px 12px;
+    box-shadow: 0 4px 12px rgba(31,26,18,.15); z-index: 2;
   }
-  .pillar-icon {
-    width: 40px; height: 40px;
-    color: var(--rust); margin-bottom: 20px;
+  .caption-name {
+    font-family: 'Fraunces', serif; font-size: 14px; font-weight: 600; color: var(--ink);
   }
-  .pillar h3 {
-    font-family: 'Fraunces', serif;
-    font-size: 26px; font-weight: 500;
-    letter-spacing: -0.01em; margin: 0 0 12px;
-    color: var(--ink);
+  .caption-role {
+    font-family: 'Inter Tight', sans-serif; font-size: 10px;
+    letter-spacing: 0.06em; color: var(--smoke); margin-top: 2px;
   }
-  .pillar-body {
-    font-family: 'Source Serif 4', serif;
-    font-size: 16px; line-height: 1.6;
-    color: var(--ink-700); margin: 0 0 22px;
+  .hero-card-body {
+    background: var(--aged-cream);
+    border-top: 1px solid var(--driftwood);
+    padding: 18px 22px;
   }
-  .pillar-services {
-    font-family: 'Inter Tight', sans-serif;
-    font-size: 13px; color: var(--ink-700);
-    border-top: 1px dashed rgba(123,110,91,.5);
-    padding-top: 18px;
+  .hero-card-tag {
+    font-family: 'Inter Tight', sans-serif; font-size: 10px;
+    font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--rust); margin-bottom: 10px;
   }
-  .pillar-services strong {
-    color: var(--ink); font-weight: 600;
-    display: block; margin-bottom: 8px;
-    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
-  }
-  .pillar-services ul {
+  .hero-card-list {
     list-style: none; padding: 0; margin: 0;
     display: flex; flex-direction: column; gap: 6px;
   }
-  .pillar-services li { padding-left: 16px; position: relative; }
-  .pillar-services li::before {
-    content: "·"; color: var(--rust);
-    position: absolute; left: 4px;
-    font-weight: 800; font-size: 18px; line-height: 1.1;
+  .hero-card-list li {
+    font-family: 'Source Serif 4', serif; font-size: 14px; color: var(--ink-700);
+    padding-left: 14px; position: relative;
+  }
+  .hero-card-list li::before {
+    content: "·"; position: absolute; left: 2px;
+    color: var(--rust); font-weight: 800; font-size: 16px; line-height: 1.1;
+  }
+  .hero-badge {
+    position: absolute; top: 0; right: -12px;
+    width: 96px; height: 96px; border-radius: 999px;
+    background: var(--honey-300); color: var(--walnut-700);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(31,26,18,.2);
+    transform: rotate(-8deg); text-align: center;
+    border: 1px solid var(--honey-500);
+  }
+  .hero-badge-num { font-family: 'Fraunces', serif; font-size: 30px; font-weight: 500; line-height: 1; }
+  .hero-badge-lbl {
+    font-family: 'Inter Tight', sans-serif; font-size: 8px;
+    text-transform: uppercase; letter-spacing: .12em; font-weight: 700;
+    margin-top: 3px; max-width: 64px; line-height: 1.3;
   }
   @media (max-width: 860px) {
-    .pillars { grid-template-columns: 1fr; }
+    .hero-grid { grid-template-columns: 1fr; gap: 40px; margin-top: -40px; }
+    .wood-strip { height: 120px; }
   }
 
-  /* INLINE VOICE STRIP — the "blue shelf" */
-  .inline-voice {
-    background: var(--blue-400); color: var(--paper);
-    border-radius: 12px; padding: 44px 48px;
-    margin-top: 28px;
-    display: grid; grid-template-columns: 1.3fr 1fr; gap: 48px;
-    align-items: center;
-    box-shadow: 0 12px 32px rgba(31,26,18,.18);
-    position: relative; overflow: hidden;
-  }
-  .inline-voice::before {
-    content: ""; position: absolute; inset: 0; pointer-events: none;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 0.95 0 0 0 0 0.85 0 0 0 0.18 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
-    background-size: 280px;
-    mix-blend-mode: overlay; opacity: .8;
-  }
-  .inline-voice > * { position: relative; z-index: 1; }
-  .inline-voice h3 {
+  /* ---- SECTIONS ---- */
+  .section { padding: 96px 0; }
+  .section-bone { background: var(--bone); }
+  .section-head { margin-bottom: 52px; max-width: 760px; }
+  .section-head h2, h2 {
     font-family: 'Fraunces', serif;
-    font-size: 34px; font-weight: 500;
-    color: var(--paper); margin: 14px 0 14px;
-    letter-spacing: -0.02em; line-height: 1.1;
+    font-size: clamp(2rem, 3.5vw, 2.75rem);
+    font-weight: 500; letter-spacing: -0.02em; line-height: 1.1;
+    color: var(--ink); margin: 16px 0 0; text-wrap: balance;
   }
-  .inline-voice p {
+  .dek {
     font-family: 'Source Serif 4', serif;
-    font-size: 16px; line-height: 1.6;
-    color: rgba(244,236,219,.85);
-    margin: 0 0 20px; max-width: 48ch;
-  }
-  .iv-ctas { display: flex; gap: 10px; flex-wrap: wrap; }
-  .stats { display: grid; gap: 12px; }
-  .stat {
-    padding: 16px 20px;
-    background: rgba(244,236,219,.10);
-    border-left: 2px solid var(--honey-300);
-    border-radius: 4px;
-  }
-  .stat-num {
-    font-family: 'Fraunces', serif;
-    font-size: 28px; font-weight: 500;
-    color: var(--honey-50); letter-spacing: -0.02em; line-height: 1;
-  }
-  .stat-label {
-    font-family: 'Source Serif 4', serif;
-    font-size: 13px; color: rgba(244,236,219,.78);
-    margin-top: 4px; line-height: 1.35;
-  }
-  @media (max-width: 860px) {
-    .inline-voice { grid-template-columns: 1fr; padding: 32px 28px; }
+    font-size: 18px; color: var(--ink-700);
+    margin: 14px 0 0; max-width: 54ch; line-height: 1.6;
   }
 
-  /* PROCESS */
-  .process { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; }
-  .step-num {
-    font-family: 'Fraunces', serif;
-    font-size: 64px; font-weight: 300;
-    color: rgba(168,98,55,.22); line-height: 1;
-    margin-bottom: 12px; letter-spacing: -0.03em;
+  /* ---- WOOD DARK SECTION (tools) ---- */
+  .wood-dark {
+    background-color: var(--walnut-700);
+    background-image: var(--wood-grain);
+    background-size: 500px;
+    background-blend-mode: multiply;
+    position: relative;
   }
-  .step h3 {
-    font-family: 'Fraunces', serif;
-    font-size: 22px; font-weight: 500;
-    margin: 0 0 10px; color: var(--ink);
+  .section-head-split {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 48px; align-items: end; margin-bottom: 52px;
   }
-  .step p {
+  .section-head-split h2.light {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2rem, 3.5vw, 2.75rem);
+    font-weight: 500; letter-spacing: -0.02em; line-height: 1.1;
+    color: var(--paper); margin: 16px 0 0; text-wrap: balance;
+  }
+  .dek-light {
     font-family: 'Source Serif 4', serif;
-    font-size: 16px; line-height: 1.55;
-    color: var(--ink-700); margin: 0; max-width: 36ch;
+    font-size: 17px; color: rgba(244,236,219,.72);
+    line-height: 1.65; max-width: 46ch;
+    margin: 0; align-self: end;
   }
-  @media (max-width: 860px) {
-    .process { grid-template-columns: 1fr; gap: 36px; }
-  }
+  @media (max-width: 720px) { .section-head-split { grid-template-columns: 1fr; } }
 
-  /* INDUSTRIES */
-  .industries { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-  .ind {
-    display: block; text-decoration: none; color: inherit;
-    padding: 28px 28px 26px;
+  .tools-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  }
+  .tool-card {
+    display: flex; flex-direction: column;
+    background: rgba(244,236,219,.07);
+    border: 1px solid rgba(244,236,219,.15);
+    border-radius: 8px;
+    padding: 28px 26px 24px;
+    text-decoration: none; color: var(--paper);
+    transition: background 200ms ease, border-color 200ms ease;
+  }
+  .tool-card:hover {
+    background: rgba(244,236,219,.12);
+    border-color: rgba(201,147,86,.5);
+  }
+  .tool-icon {
+    width: 44px; height: 44px; border-radius: 8px;
+    background: rgba(201,147,86,.15);
+    border: 1px solid rgba(201,147,86,.3);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--honey-300); margin-bottom: 16px; flex-shrink: 0;
+  }
+  .tool-tag {
+    font-family: 'Inter Tight', sans-serif; font-size: 10px;
+    font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--honey-300); margin-bottom: 8px;
+  }
+  .tool-card h3 {
+    font-family: 'Fraunces', serif; font-size: 20px; font-weight: 500;
+    color: var(--paper); margin: 0 0 10px; line-height: 1.2;
+  }
+  .tool-card p {
+    font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 1.6;
+    color: rgba(244,236,219,.72); margin: 0; flex: 1;
+  }
+  .tool-cta {
+    font-family: 'Inter Tight', sans-serif; font-size: 12px; font-weight: 700;
+    letter-spacing: 0.06em; color: var(--honey-300);
+    margin-top: 18px; display: block;
+  }
+  @media (max-width: 860px) { .tools-grid { grid-template-columns: 1fr; } }
+
+  /* ---- PLAYBOOKS ---- */
+  .playbooks-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+  }
+  .playbook {
+    display: flex; flex-direction: column;
     background: var(--paper);
     border: 1px solid var(--driftwood);
-    border-radius: 10px;
-    transition: all 250ms cubic-bezier(0.2,0.7,0.1,1);
+    border-radius: 8px;
+    padding: 28px 26px 24px;
+    text-decoration: none; color: inherit;
+    transition: box-shadow 200ms ease, border-color 200ms ease;
+    position: relative;
   }
-  .ind:hover { border-color: var(--rust); background: var(--aged-cream); }
-  .ind-icon {
-    width: 32px; height: 32px;
-    color: var(--walnut-500); margin-bottom: 18px;
+  .playbook:hover { box-shadow: 0 12px 32px rgba(31,26,18,.12); border-color: var(--rust); }
+  /* wood-grain top bar per playbook card */
+  .playbook::before {
+    content: "";
+    display: block; height: 6px; width: 100%;
+    background-color: var(--walnut-500);
+    background-image: var(--wood-grain);
+    background-size: 400px;
+    background-blend-mode: multiply;
+    border-radius: 8px 8px 0 0;
+    position: absolute; top: 0; left: 0; right: 0;
   }
-  .ind h3 {
-    font-family: 'Fraunces', serif;
-    font-size: 22px; font-weight: 500;
-    margin: 0 0 10px; color: var(--ink);
+  .playbook-industry {
+    font-family: 'Inter Tight', sans-serif; font-size: 10px;
+    font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--rust); margin-top: 14px; margin-bottom: 14px;
   }
-  .ind p {
-    font-family: 'Source Serif 4', serif;
-    font-size: 15px; line-height: 1.55;
+  .playbook-icon {
+    width: 32px; height: 32px; color: var(--walnut-500); margin-bottom: 14px;
+  }
+  .playbook h3 {
+    font-family: 'Fraunces', serif; font-size: 20px; font-weight: 500;
+    color: var(--ink); margin: 0 0 10px; line-height: 1.2;
+  }
+  .playbook > p {
+    font-family: 'Source Serif 4', serif; font-size: 14px; line-height: 1.6;
     color: var(--ink-700); margin: 0 0 18px;
   }
-  .ind-cta {
-    font-family: 'Inter Tight', sans-serif;
-    font-size: 13px; font-weight: 600;
+  .playbook-includes {
+    border-top: 1px dashed rgba(123,110,91,.4);
+    padding-top: 16px; margin-bottom: 20px; flex: 1;
+    font-family: 'Inter Tight', sans-serif; font-size: 12.5px; color: var(--ink-700);
+  }
+  .playbook-includes strong {
+    display: block; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--smoke);
+    margin-bottom: 10px;
+  }
+  .playbook-includes ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 7px; }
+  .playbook-includes li { padding-left: 14px; position: relative; }
+  .playbook-includes li::before {
+    content: "·"; position: absolute; left: 2px;
+    color: var(--rust); font-weight: 800; font-size: 16px; line-height: 1.1;
+  }
+  .playbook-buy {
+    display: flex; align-items: center; justify-content: space-between;
+    border-top: 1px solid var(--bone); padding-top: 16px;
+  }
+  .price {
+    font-family: 'Fraunces', serif; font-size: 28px; font-weight: 500;
+    color: var(--ink); letter-spacing: -0.02em;
+  }
+  .buy-cta {
+    font-family: 'Inter Tight', sans-serif; font-size: 12px; font-weight: 700;
+    letter-spacing: 0.06em; color: var(--rust);
+  }
+  @media (max-width: 860px) { .playbooks-grid { grid-template-columns: 1fr; } }
+
+  /* ---- SERVICE LADDER ---- */
+  .services-ladder { display: flex; flex-direction: column; gap: 0; }
+  .service-row {
+    display: grid; grid-template-columns: 80px 1fr auto;
+    gap: 32px; align-items: center;
+    padding: 28px 0;
+    border-top: 1px solid var(--bone);
+  }
+  .service-row:last-child { border-bottom: 1px solid var(--bone); }
+  .service-step {
+    font-family: 'Inter Tight', sans-serif; font-size: 10px;
+    font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
     color: var(--rust);
+    display: flex; flex-direction: column; align-items: flex-start;
   }
-  .ind-foot {
-    margin-top: 28px;
-    font-family: 'Inter Tight', sans-serif;
-    font-size: 13px; color: var(--smoke);
+  .service-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 6px; flex-wrap: wrap; }
+  .service-content h3 {
+    font-family: 'Fraunces', serif; font-size: 20px; font-weight: 500;
+    color: var(--ink); margin: 0;
   }
-  .ind-foot a { color: var(--rust); text-decoration: none; }
-  .ind-foot a:hover { text-decoration: underline; }
-  @media (max-width: 860px) {
-    .industries { grid-template-columns: 1fr; }
+  .service-price {
+    font-family: 'Inter Tight', sans-serif; font-size: 13px; font-weight: 600;
+    color: var(--rust); white-space: nowrap;
+  }
+  .service-content p {
+    font-family: 'Source Serif 4', serif; font-size: 15px; line-height: 1.6;
+    color: var(--ink-700); margin: 0;
+  }
+  .service-cta-btn {
+    font-family: 'Inter Tight', sans-serif; font-size: 13px; font-weight: 700;
+    letter-spacing: 0.04em; color: var(--rust); text-decoration: none;
+    white-space: nowrap;
+    padding: 8px 16px; border: 1.5px solid rgba(168,98,55,.3); border-radius: 4px;
+    transition: all 180ms ease;
+  }
+  .service-cta-btn:hover { background: rgba(168,98,55,.06); border-color: var(--rust); }
+  @media (max-width: 720px) {
+    .service-row { grid-template-columns: 1fr; gap: 12px; }
   }
 
-  /* TESTIMONIAL — "evening" walnut room */
+  /* ---- TESTIMONIAL — walnut wood ---- */
   .testi {
-    background: var(--walnut-700); color: var(--paper);
-    padding: 104px 40px; text-align: center;
+    background-color: var(--walnut-700);
+    background-image: var(--wood-grain);
+    background-size: 500px;
+    background-blend-mode: multiply;
+    padding: 96px 40px; text-align: center;
     position: relative; overflow: hidden;
   }
-  .testi::before {
-    content: ""; position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse 600px 400px at 50% 0%, rgba(201,147,86,.18), transparent 60%);
-    pointer-events: none;
+  .wood-overlay {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 800px 500px at 50% 0%, rgba(201,147,86,.2), transparent 60%);
   }
-  .testi-inner { max-width: 820px; margin: 0 auto; position: relative; }
+  .testi-inner { max-width: 780px; margin: 0 auto; position: relative; z-index: 1; }
   .testi blockquote {
     font-family: 'Fraunces', serif;
-    font-size: clamp(1.5rem, 2.4vw, 2.25rem);
+    font-size: clamp(1.4rem, 2.2vw, 2rem);
     font-style: italic; font-weight: 300;
-    line-height: 1.35; letter-spacing: -0.01em;
+    line-height: 1.4; letter-spacing: -0.01em;
     color: var(--paper); margin: 0 0 24px;
     text-wrap: balance;
   }
-  .ornament { color: var(--honey-300); display: inline-block; margin: 10px 0; }
-  .cite-name { font-family: 'Fraunces', serif; font-size: 17px; margin-top: 20px; color: var(--paper); }
+  .cite-name { font-family: 'Fraunces', serif; font-size: 16px; color: var(--paper); margin-top: 20px; }
   .cite-role {
-    font-family: 'Inter Tight', sans-serif;
-    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    font-family: 'Inter Tight', sans-serif; font-size: 11px;
+    letter-spacing: 0.14em; text-transform: uppercase;
     color: rgba(201,147,86,.85); margin-top: 4px;
   }
 
-  /* FINAL CTA */
-  .final-cta {
-    padding: 104px 0; text-align: center; background: var(--aged-cream);
+  /* ---- ABOUT ---- */
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1.2fr;
+    gap: 64px; align-items: center;
   }
+  .about-wood-panel {
+    border-radius: 8px; overflow: hidden;
+    border: 1px solid var(--driftwood);
+    box-shadow: 0 16px 40px rgba(31,26,18,.15);
+  }
+  .about-wood-inner {
+    aspect-ratio: 3/4;
+    background-color: var(--walnut-500);
+    background-image: var(--wood-grain);
+    background-size: 500px;
+    background-blend-mode: multiply;
+    position: relative;
+  }
+  .about-wood-inner::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(160deg, rgba(201,147,86,.2) 0%, transparent 50%, rgba(31,26,18,.55) 100%);
+  }
+  .about-caption {
+    position: absolute; bottom: 20px; left: 20px; right: 20px;
+    background: var(--paper); border-radius: 4px; padding: 12px 16px;
+    box-shadow: 0 4px 12px rgba(31,26,18,.15); z-index: 2;
+  }
+  .about-caption-name { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 600; color: var(--ink); }
+  .about-caption-title {
+    font-family: 'Inter Tight', sans-serif; font-size: 10px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--rust); margin-top: 3px;
+  }
+  .about-text h2 { margin-bottom: 20px; }
+  .about-text p {
+    font-family: 'Source Serif 4', serif; font-size: 17px; line-height: 1.65;
+    color: var(--ink-700); margin: 0 0 16px;
+  }
+  @media (max-width: 860px) { .about-grid { grid-template-columns: 1fr; } }
+
+  /* ---- FINAL CTA ---- */
+  .final-cta { padding: 96px 0; text-align: center; background: var(--aged-cream); }
   .final-cta h2 {
-    font-family: 'Fraunces', serif;
-    font-size: clamp(2.25rem, 3.6vw, 3rem);
-    font-weight: 500; margin: 0 auto 16px;
-    max-width: 22ch; color: var(--ink); text-wrap: balance;
+    font-size: clamp(2rem, 3.5vw, 2.75rem); margin: 0 auto 16px; max-width: 18ch;
   }
-  .final-cta .dek {
-    font-family: 'Source Serif 4', serif;
-    font-size: 18px; color: var(--ink-700);
-    max-width: 52ch; margin: 0 auto 32px;
-  }
+  .final-cta .dek { margin: 0 auto 32px; }
   .micro {
-    font-family: 'Inter Tight', sans-serif;
-    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    font-family: 'Inter Tight', sans-serif; font-size: 11px;
+    letter-spacing: 0.12em; text-transform: uppercase;
     color: var(--smoke); margin-top: 18px;
   }
 </style>
