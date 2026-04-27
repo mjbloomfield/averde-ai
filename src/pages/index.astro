@@ -1,10 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { createReader } from '@keystatic/core/reader';
-import keystaticConfig from '../../keystatic.config';
-
-const reader = createReader(process.cwd(), keystaticConfig);
-const h = await reader.singletons.home.read() ?? {};
 ---
 
 <BaseLayout
@@ -17,14 +12,17 @@ const h = await reader.singletons.home.read() ?? {};
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
-        <span class="eyebrow">{h.heroEyebrow}</span>
-        <h1>{h.heroHeadlineStart} <em>{h.heroHeadlineEmphasis}</em></h1>
-        <p class="hero-sub">{h.heroSubheadline}</p>
+        <span class="eyebrow">Free 30-min AI audit · No jargon</span>
+        <h1>AI for small business, explained by someone who <em>actually runs one.</em></h1>
+        <p class="hero-sub">
+          Averde helps service businesses and small firms cut through the AI noise — with practical advice,
+          deployed tools, and custom builds that fit how you actually work. No jargon, no hype.
+        </p>
         <div class="hero-ctas">
-          <a href="/ai-audit" class="btn btn-primary">{h.heroPrimaryCta}</a>
-          <a href="/how-it-works" class="btn btn-ghost">{h.heroSecondaryCta}</a>
+          <a href="/ai-audit" class="btn btn-primary">Get my free AI audit</a>
+          <a href="/how-it-works" class="btn btn-ghost">See what we do →</a>
         </div>
-        <div class="hero-meta">{h.heroMeta}</div>
+        <div class="hero-meta">Live in 5 business days · 30-day money-back · Boulder, CO</div>
       </div>
       <div class="hero-art-wrap">
         <div class="hero-art">
@@ -41,13 +39,16 @@ const h = await reader.singletons.home.read() ?? {};
     </div>
   </section>
 
-  <!-- THREE PILLARS -->
-  <section class="section section-alt">
+  <!-- THREE PILLARS + Voice AI folded in -->
+  <section class="section section-bone">
     <div class="wrap">
       <div class="section-head">
-        <span class="eyebrow">{h.pillarsEyebrow}</span>
-        <h2>{h.pillarsHeadline}</h2>
-        <p class="dek">{h.pillarsDek}</p>
+        <span class="eyebrow">What we do</span>
+        <h2>Three ways we help your business put AI to work.</h2>
+        <p class="dek">
+          Whether you're just starting to explore AI, ready to deploy proven tools, or want
+          something built just for you — we meet you where you are.
+        </p>
       </div>
 
       <div class="pillars">
@@ -59,12 +60,18 @@ const h = await reader.singletons.home.read() ?? {};
             <path d="M16 12 L 16 20" opacity=".6"/>
             <path d="M13 16 L 19 16" opacity=".6"/>
           </svg>
-          <h3>{h.pillar1Title}</h3>
-          <p class="pillar-body">{h.pillar1Body}</p>
+          <h3>Learn AI</h3>
+          <p class="pillar-body">
+            Understand what AI can realistically do for your business, what to skip, and where
+            to start. Plain English, real examples.
+          </p>
           <div class="pillar-services">
             <strong>Services</strong>
             <ul>
-              {(h.pillar1Services ?? []).map((s: string) => <li>{s}</li>)}
+              <li>Free 30-min AI audit</li>
+              <li>Team workshops · half or full day</li>
+              <li>Quarterly industry briefings</li>
+              <li>Leadership advisory retainer</li>
             </ul>
           </div>
         </article>
@@ -74,12 +81,19 @@ const h = await reader.singletons.home.read() ?? {};
           <svg class="pillar-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M6 16 L 12 10 L 12 14 L 20 14 L 20 10 L 26 16 L 20 22 L 20 18 L 12 18 L 12 22 Z"/>
           </svg>
-          <h3>{h.pillar2Title}</h3>
-          <p class="pillar-body">{h.pillar2Body}</p>
+          <h3>Deploy AI Tools</h3>
+          <p class="pillar-body">
+            Proven AI solutions, implemented on your stack in days — not months. Including our
+            flagship voice agent.
+          </p>
           <div class="pillar-services">
             <strong>Services</strong>
             <ul>
-              {(h.pillar2Services ?? []).map((s: string) => <li>{s}</li>)}
+              <li>AI voice agent (answer every call)</li>
+              <li>Lead-response automation</li>
+              <li>CRM &amp; intake workflows</li>
+              <li>Meeting notes &amp; follow-ups</li>
+              <li>Document &amp; quote drafting</li>
             </ul>
           </div>
         </article>
@@ -93,26 +107,35 @@ const h = await reader.singletons.home.read() ?? {};
             <path d="M13 10 L 22 10 L 22 19"/>
             <path d="M6 6 L 8 8 M 12 6 L 8 8 M 8 4 L 8 8" opacity=".5"/>
           </svg>
-          <h3>{h.pillar3Title}</h3>
-          <p class="pillar-body">{h.pillar3Body}</p>
+          <h3>Build Custom AI</h3>
+          <p class="pillar-body">
+            When off-the-shelf won't cut it: bespoke AI built around your data, your workflows,
+            your team's language.
+          </p>
           <div class="pillar-services">
             <strong>Services</strong>
             <ul>
-              {(h.pillar3Services ?? []).map((s: string) => <li>{s}</li>)}
+              <li>Custom AI agents on your data</li>
+              <li>"Ask your SOPs" knowledge base</li>
+              <li>Workflow integrations (Zapier / n8n)</li>
+              <li>Fractional Head of AI</li>
             </ul>
           </div>
         </article>
       </div>
 
-      <!-- Voice agent strip -->
+      <!-- Voice agent — the "blue shelf" / single feature accent -->
       <div class="inline-voice">
         <div>
-          <span class="eyebrow eyebrow-light">{h.voiceEyebrow}</span>
-          <h3>{h.voiceHeadline}</h3>
-          <p>{h.voiceBody}</p>
+          <span class="eyebrow eyebrow-light">Flagship · under "Deploy"</span>
+          <h3>Never miss another call.</h3>
+          <p>
+            Our voice agent answers your phone 24/7 — qualifying leads, booking appointments,
+            handling FAQs. Sounds human. Works every night, weekend, and holiday.
+          </p>
           <div class="iv-ctas">
-            <a href="/how-it-works" class="btn btn-sand">{h.voicePrimaryCta}</a>
-            <a href="/pricing" class="btn btn-ghost btn-ghost-on-dark">View pricing →</a>
+            <a href="/how-it-works" class="btn btn-cream">See how it works</a>
+            <a href="/pricing" class="btn btn-ghost btn-ghost-on-blue">View pricing →</a>
           </div>
         </div>
         <div class="stats">
@@ -137,44 +160,44 @@ const h = await reader.singletons.home.read() ?? {};
   <section class="section">
     <div class="wrap">
       <div class="section-head">
-        <span class="eyebrow">{h.processEyebrow}</span>
-        <h2>{h.processHeadline}</h2>
+        <span class="eyebrow">How we work</span>
+        <h2>Simple process. Fast results. You stay focused on your business.</h2>
       </div>
       <div class="process">
         <div class="step">
           <div class="step-num">01</div>
-          <h3>{h.step1Title}</h3>
-          <p>{h.step1Body}</p>
+          <h3>Free AI audit</h3>
+          <p>We learn your business, find the one or two places AI can actually help, and show you a clear plan — including what to skip.</p>
         </div>
         <div class="step">
           <div class="step-num">02</div>
-          <h3>{h.step2Title}</h3>
-          <p>{h.step2Body}</p>
+          <h3>We build &amp; deploy</h3>
+          <p>Voice agent, custom tool, workshop — we handle everything technical. You get a working solution, not a slide deck.</p>
         </div>
         <div class="step">
           <div class="step-num">03</div>
-          <h3>{h.step3Title}</h3>
-          <p>{h.step3Body}</p>
+          <h3>You get results</h3>
+          <p>Calls answered, time freed, your business running smarter. We stay on hand for ongoing support.</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- INDUSTRIES -->
-  <section class="section section-alt">
+  <section class="section section-bone">
     <div class="wrap">
       <div class="section-head">
-        <span class="eyebrow">{h.industriesEyebrow}</span>
-        <h2>{h.industriesHeadline}</h2>
-        <p class="dek">{h.industriesDek}</p>
+        <span class="eyebrow">Built for</span>
+        <h2>Service businesses with their own rhythms.</h2>
+        <p class="dek">We focus on industries where a missed call is a missed customer — and where AI can carry real weight.</p>
       </div>
       <div class="industries">
         <a href="/dental" class="ind">
           <svg class="ind-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M10 6 C 8 6, 6 8, 6 12 C 6 18, 9 26, 12 26 C 14 26, 14 22, 16 22 C 18 22, 18 26, 20 26 C 23 26, 26 18, 26 12 C 26 8, 24 6, 22 6 C 20 6, 18 8, 16 8 C 14 8, 12 6, 10 6 Z"/>
           </svg>
-          <h3>{h.dentalTitle}</h3>
-          <p>{h.dentalDesc}</p>
+          <h3>Dental practices</h3>
+          <p>Bookings, recalls, insurance questions — answered 24/7 without pulling staff off the floor.</p>
           <span class="ind-cta">Learn more →</span>
         </a>
         <a href="/hvac" class="ind">
@@ -182,16 +205,16 @@ const h = await reader.singletons.home.read() ?? {};
             <path d="M13 4 L 19 4 L 19 10 L 24 10 L 28 14 L 28 20 L 24 24 L 19 24 L 19 28 L 13 28 L 13 22 L 8 22 L 4 18 L 4 12 L 8 8 L 13 8 Z"/>
             <circle cx="16" cy="16" r="3"/>
           </svg>
-          <h3>{h.hvacTitle}</h3>
-          <p>{h.hvacDesc}</p>
+          <h3>HVAC &amp; contractors</h3>
+          <p>Emergency calls triaged. Jobs booked. Your agent knows when to dispatch — and when to gather more info.</p>
           <span class="ind-cta">Learn more →</span>
         </a>
         <a href="/real-estate" class="ind">
           <svg class="ind-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 16 L 16 6 L 28 16 L 26 16 L 26 26 L 18 26 L 18 20 L 14 20 L 14 26 L 6 26 L 6 16 Z"/>
           </svg>
-          <h3>{h.realEstateTitle}</h3>
-          <p>{h.realEstateDesc}</p>
+          <h3>Real estate agents</h3>
+          <p>Be the first to respond. Qualify leads, schedule showings, and capture buyers before the competition.</p>
           <span class="ind-cta">Learn more →</span>
         </a>
       </div>
@@ -205,7 +228,10 @@ const h = await reader.singletons.home.read() ?? {};
   <!-- TESTIMONIAL -->
   <section class="testi">
     <div class="testi-inner">
-      <blockquote>{h.quoteText}</blockquote>
+      <blockquote>
+        "Mark set up our voice agent in four days. It books as many appointments in a weekend
+        as my front desk used to handle in a week — and it's cheaper than one hour of my time."
+      </blockquote>
       <svg class="ornament" width="120" height="16" viewBox="0 0 320 20" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" aria-hidden="true">
         <line x1="8" y1="10" x2="140" y2="10"/>
         <g transform="translate(160 10)">
@@ -214,18 +240,21 @@ const h = await reader.singletons.home.read() ?? {};
         </g>
         <line x1="180" y1="10" x2="312" y2="10"/>
       </svg>
-      <div class="cite-name">{h.quoteName}</div>
-      <div class="cite-role">{h.quoteRole}</div>
+      <div class="cite-name">Dr. Priya Ramanathan</div>
+      <div class="cite-role">Owner · Harbor Dental · Boulder, CO</div>
     </div>
   </section>
 
   <!-- FINAL CTA -->
   <section class="final-cta">
     <div class="wrap">
-      <h2>{h.ctaHeadline}</h2>
-      <p class="dek">{h.ctaDek}</p>
-      <a href="/ai-audit" class="btn btn-primary btn-lg">{h.ctaPrimaryCta}</a>
-      <div class="micro">{h.ctaMicro}</div>
+      <h2>Not sure where AI fits in your business?</h2>
+      <p class="dek">
+        The free AI Audit is a 30-minute conversation. We'll show you exactly where AI can help,
+        what it'll cost, and what to expect — no pressure, no jargon.
+      </p>
+      <a href="/ai-audit" class="btn btn-primary btn-lg">Book your free AI audit</a>
+      <div class="micro">No commitment · No credit card · Just clarity</div>
     </div>
   </section>
 
@@ -233,46 +262,56 @@ const h = await reader.singletons.home.read() ?? {};
 
 <style>
   /* ---------------------------------------------------------------
-     Averde AI — homepage (scoped styles)
+     Averde AI — homepage v2 (reclaimed-wood palette)
+     Drop-in: relies on the new tokens added to global.css.
   --------------------------------------------------------------- */
 
+  /* layout */
   .wrap { max-width: 1180px; margin: 0 auto; padding: 0 40px; }
   @media (max-width: 720px) { .wrap { padding: 0 24px; } }
 
+  /* eyebrow */
   .eyebrow {
     font-family: 'Inter Tight', system-ui, sans-serif;
     font-size: 12px; font-weight: 600;
     letter-spacing: 0.16em; text-transform: uppercase;
-    color: var(--terracotta);
+    color: var(--rust);
     display: inline-flex; align-items: center; gap: 8px;
+    white-space: nowrap;
   }
   .eyebrow::before {
     content: ""; width: 20px; height: 1px;
     background: currentColor;
   }
-  .eyebrow-light { color: var(--sand); }
+  .eyebrow-light { color: var(--aged-cream); opacity: .9; }
 
+  /* buttons */
   .btn {
     display: inline-flex; align-items: center; gap: 8px;
-    padding: 14px 22px; border-radius: 8px;
+    padding: 14px 22px; border-radius: 6px;
     font-family: 'Inter Tight', sans-serif;
     font-size: 14px; font-weight: 600; letter-spacing: 0.01em;
     white-space: nowrap; text-decoration: none;
     border: 1px solid transparent; cursor: pointer;
     transition: all 200ms cubic-bezier(0.2,0.7,0.1,1);
   }
-  .btn-primary { background: var(--green-deep); color: var(--white-warm); }
-  .btn-primary:hover { background: #1d2d15; }
-  .btn-ghost { background: transparent; color: var(--dark); border-color: rgba(30,22,16,.25); }
-  .btn-ghost:hover { background: rgba(30,22,16,.05); border-color: rgba(30,22,16,.5); }
-  .btn-ghost-on-dark { color: var(--white-warm); border-color: rgba(254,247,234,.3); }
-  .btn-ghost-on-dark:hover { background: rgba(255,255,255,.06); border-color: rgba(254,247,234,.6); }
-  .btn-sand { background: var(--sand); color: var(--green-deep); }
-  .btn-sand:hover { background: #c88a3a; }
+  .btn-primary { background: var(--walnut-700); color: var(--paper); }
+  .btn-primary:hover { background: var(--charcoal); }
+  .btn-ghost { background: transparent; color: var(--ink); border-color: rgba(31,26,18,.25); }
+  .btn-ghost:hover { background: rgba(31,26,18,.05); border-color: rgba(31,26,18,.5); }
+  .btn-ghost-on-blue { color: var(--paper); border-color: rgba(244,236,219,.35); }
+  .btn-ghost-on-blue:hover { background: rgba(255,255,255,.08); border-color: rgba(244,236,219,.7); }
+  .btn-cream { background: var(--paper); color: var(--blue-600); }
+  .btn-cream:hover { background: var(--aged-cream); }
   .btn-lg { padding: 16px 28px; font-size: 15px; }
 
   /* HERO */
-  .hero { padding: 64px 0 96px; }
+  .hero {
+    padding: 64px 0 96px;
+    background:
+      radial-gradient(ellipse 900px 600px at 88% -10%, rgba(201,147,86,.28), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 8% 30%, rgba(168,98,55,.10), transparent 60%);
+  }
   .hero-grid {
     display: grid; grid-template-columns: 1.35fr 1fr;
     gap: 72px; align-items: center;
@@ -281,56 +320,57 @@ const h = await reader.singletons.home.read() ?? {};
     font-family: 'Fraunces', Georgia, serif;
     font-size: clamp(3rem, 6vw, 5.5rem);
     font-weight: 300; letter-spacing: -0.025em; line-height: 1.05;
-    color: var(--dark); margin: 22px 0 22px; text-wrap: balance;
+    color: var(--ink); margin: 22px 0 22px; text-wrap: balance;
   }
-  .hero h1 em { font-style: italic; font-weight: 400; color: var(--terracotta); }
+  .hero h1 em { font-style: italic; font-weight: 400; color: var(--rust); }
   .hero-sub {
     font-family: 'Source Serif 4', Georgia, serif;
-    font-size: 19px; line-height: 1.6; color: var(--ink-700, #4a3b2c);
+    font-size: 19px; line-height: 1.6; color: var(--ink-700);
     max-width: 54ch; margin: 0 0 32px;
   }
   .hero-ctas { display: flex; gap: 10px; margin-bottom: 28px; flex-wrap: wrap; }
   .hero-meta {
     font-family: 'Inter Tight', sans-serif;
     font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--muted);
+    color: var(--smoke);
   }
   .hero-art-wrap { position: relative; }
   .hero-art {
-    position: relative; aspect-ratio: 4/5; border-radius: 14px;
-    background: radial-gradient(ellipse 70% 60% at 30% 30%, var(--green-mid), var(--green-deep) 75%);
-    box-shadow: 0 16px 40px rgba(30,22,16,.18); overflow: hidden;
-    border: 1px solid rgba(30,22,16,.15);
+    position: relative; aspect-ratio: 4/5; border-radius: 12px;
+    background:
+      radial-gradient(ellipse 70% 60% at 30% 30%, var(--walnut-300), var(--walnut-700) 75%);
+    box-shadow: 0 16px 40px rgba(31,26,18,.22); overflow: hidden;
+    border: 1px solid rgba(31,26,18,.2);
   }
   .hero-art::after {
     content: ""; position: absolute; inset: 0;
     background:
-      radial-gradient(circle at 60% 35%, rgba(212,152,70,.4), transparent 50%),
-      linear-gradient(180deg, transparent 55%, rgba(30,22,16,.7));
+      radial-gradient(circle at 65% 35%, rgba(201,147,86,.45), transparent 50%),
+      linear-gradient(180deg, transparent 55%, rgba(31,26,18,.7));
   }
   .hero-caption {
     position: absolute; left: 20px; bottom: 20px;
-    background: var(--white-warm); border-radius: 8px;
-    padding: 10px 14px; box-shadow: 0 4px 12px rgba(30,22,16,.1); z-index: 2;
+    background: var(--paper); border-radius: 6px;
+    padding: 10px 14px; box-shadow: 0 4px 12px rgba(31,26,18,.12); z-index: 2;
   }
   .hero-caption-name {
     font-family: 'Fraunces', serif;
-    font-size: 15px; font-weight: 600; color: var(--dark);
+    font-size: 15px; font-weight: 600; color: var(--ink);
   }
   .hero-caption-role {
     font-family: 'Inter Tight', sans-serif;
     font-size: 11px; letter-spacing: 0.06em;
-    color: var(--muted); margin-top: 2px; white-space: nowrap;
+    color: var(--smoke); margin-top: 2px; white-space: nowrap;
   }
   .hero-sticker {
     position: absolute; top: -14px; right: -14px;
     width: 108px; height: 108px; border-radius: 999px;
-    background: var(--sand); color: var(--green-deep);
+    background: var(--honey-300); color: var(--walnut-700);
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    box-shadow: 0 4px 12px rgba(30,22,16,.15);
+    box-shadow: 0 4px 12px rgba(31,26,18,.18);
     transform: rotate(-6deg); text-align: center; z-index: 3;
-    border: 1px solid #bf8435;
+    border: 1px solid var(--honey-500);
   }
   .hero-sticker-num {
     font-family: 'Fraunces', serif;
@@ -340,6 +380,7 @@ const h = await reader.singletons.home.read() ?? {};
     font-family: 'Inter Tight', sans-serif;
     font-size: 9px; text-transform: uppercase; letter-spacing: .14em;
     margin-top: 4px; max-width: 74px; line-height: 1.3; font-weight: 600;
+    white-space: nowrap;
   }
   @media (max-width: 860px) {
     .hero-grid { grid-template-columns: 1fr; gap: 48px; }
@@ -347,18 +388,18 @@ const h = await reader.singletons.home.read() ?? {};
 
   /* SECTIONS */
   .section { padding: 104px 0; }
-  .section-alt { background: var(--white-warm); }
+  .section-bone { background: var(--bone); }
   .section h2 {
     font-family: 'Fraunces', serif;
     font-size: clamp(2.25rem, 3.6vw, 3rem);
     font-weight: 500; letter-spacing: -0.02em; line-height: 1.05;
-    color: var(--dark); max-width: 22ch; margin: 18px 0 0;
+    color: var(--ink); max-width: 22ch; margin: 18px 0 0;
     text-wrap: balance;
   }
   .section-head { margin-bottom: 56px; max-width: 760px; }
   .section-head .dek {
     font-family: 'Source Serif 4', serif;
-    font-size: 19px; color: var(--ink-700, #4a3b2c);
+    font-size: 19px; color: var(--ink-700);
     margin: 16px 0 0; max-width: 56ch;
   }
 
@@ -366,46 +407,46 @@ const h = await reader.singletons.home.read() ?? {};
   .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
   .pillar {
     padding: 34px 30px 36px;
-    background: var(--cream);
-    border: 1px solid rgba(122,106,88,.2);
-    border-radius: 12px;
+    background: var(--paper);
+    border: 1px solid var(--driftwood);
+    border-radius: 10px;
     transition: box-shadow 250ms cubic-bezier(0.2,0.7,0.1,1);
+    position: relative;
   }
-  .section-alt .pillar { background: var(--white-warm); }
-  .pillar:hover { box-shadow: 0 12px 32px rgba(30,22,16,.1); }
+  .pillar:hover { box-shadow: 0 12px 32px rgba(31,26,18,.12); }
   .pillar-num {
     font-family: 'Fraunces', serif;
-    font-size: 14px; color: var(--terracotta);
+    font-size: 14px; color: var(--rust);
     letter-spacing: 0.1em; margin-bottom: 24px;
     display: flex; align-items: center; gap: 10px;
   }
   .pillar-num::after {
     content: ""; flex: 1; height: 1px;
-    background: rgba(196,113,74,.3);
+    background: rgba(168,98,55,.3);
   }
   .pillar-icon {
     width: 40px; height: 40px;
-    color: var(--terracotta); margin-bottom: 20px;
+    color: var(--rust); margin-bottom: 20px;
   }
   .pillar h3 {
     font-family: 'Fraunces', serif;
     font-size: 26px; font-weight: 500;
     letter-spacing: -0.01em; margin: 0 0 12px;
-    color: var(--dark);
+    color: var(--ink);
   }
   .pillar-body {
     font-family: 'Source Serif 4', serif;
     font-size: 16px; line-height: 1.6;
-    color: var(--ink-700, #4a3b2c); margin: 0 0 22px;
+    color: var(--ink-700); margin: 0 0 22px;
   }
   .pillar-services {
     font-family: 'Inter Tight', sans-serif;
-    font-size: 13px; color: var(--ink-700, #4a3b2c);
-    border-top: 1px dashed rgba(122,106,88,.3);
+    font-size: 13px; color: var(--ink-700);
+    border-top: 1px dashed rgba(123,110,91,.5);
     padding-top: 18px;
   }
   .pillar-services strong {
-    color: var(--dark); font-weight: 600;
+    color: var(--ink); font-weight: 600;
     display: block; margin-bottom: 8px;
     font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
   }
@@ -415,7 +456,7 @@ const h = await reader.singletons.home.read() ?? {};
   }
   .pillar-services li { padding-left: 16px; position: relative; }
   .pillar-services li::before {
-    content: "·"; color: var(--terracotta);
+    content: "·"; color: var(--rust);
     position: absolute; left: 4px;
     font-weight: 800; font-size: 18px; line-height: 1.1;
   }
@@ -423,43 +464,51 @@ const h = await reader.singletons.home.read() ?? {};
     .pillars { grid-template-columns: 1fr; }
   }
 
-  /* INLINE VOICE STRIP */
+  /* INLINE VOICE STRIP — the "blue shelf" */
   .inline-voice {
-    background: var(--green-deep); color: var(--white-warm);
-    border-radius: 14px; padding: 44px 48px;
+    background: var(--blue-400); color: var(--paper);
+    border-radius: 12px; padding: 44px 48px;
     margin-top: 28px;
     display: grid; grid-template-columns: 1.3fr 1fr; gap: 48px;
     align-items: center;
-    box-shadow: 0 12px 32px rgba(30,22,16,.15);
+    box-shadow: 0 12px 32px rgba(31,26,18,.18);
+    position: relative; overflow: hidden;
   }
+  .inline-voice::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 0.95 0 0 0 0 0.85 0 0 0 0.18 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+    background-size: 280px;
+    mix-blend-mode: overlay; opacity: .8;
+  }
+  .inline-voice > * { position: relative; z-index: 1; }
   .inline-voice h3 {
     font-family: 'Fraunces', serif;
     font-size: 34px; font-weight: 500;
-    color: var(--white-warm); margin: 14px 0 14px;
+    color: var(--paper); margin: 14px 0 14px;
     letter-spacing: -0.02em; line-height: 1.1;
   }
   .inline-voice p {
     font-family: 'Source Serif 4', serif;
     font-size: 16px; line-height: 1.6;
-    color: rgba(254,247,234,.78);
+    color: rgba(244,236,219,.85);
     margin: 0 0 20px; max-width: 48ch;
   }
   .iv-ctas { display: flex; gap: 10px; flex-wrap: wrap; }
   .stats { display: grid; gap: 12px; }
   .stat {
     padding: 16px 20px;
-    background: rgba(143,175,130,.12);
-    border-left: 2px solid var(--sand);
+    background: rgba(244,236,219,.10);
+    border-left: 2px solid var(--honey-300);
     border-radius: 4px;
   }
   .stat-num {
     font-family: 'Fraunces', serif;
     font-size: 28px; font-weight: 500;
-    color: var(--sand); letter-spacing: -0.02em; line-height: 1;
+    color: var(--honey-50); letter-spacing: -0.02em; line-height: 1;
   }
   .stat-label {
     font-family: 'Source Serif 4', serif;
-    font-size: 13px; color: rgba(254,247,234,.72);
+    font-size: 13px; color: rgba(244,236,219,.78);
     margin-top: 4px; line-height: 1.35;
   }
   @media (max-width: 860px) {
@@ -471,18 +520,18 @@ const h = await reader.singletons.home.read() ?? {};
   .step-num {
     font-family: 'Fraunces', serif;
     font-size: 64px; font-weight: 300;
-    color: rgba(196,113,74,.2); line-height: 1;
+    color: rgba(168,98,55,.22); line-height: 1;
     margin-bottom: 12px; letter-spacing: -0.03em;
   }
   .step h3 {
     font-family: 'Fraunces', serif;
     font-size: 22px; font-weight: 500;
-    margin: 0 0 10px; color: var(--dark);
+    margin: 0 0 10px; color: var(--ink);
   }
   .step p {
     font-family: 'Source Serif 4', serif;
     font-size: 16px; line-height: 1.55;
-    color: var(--ink-700, #4a3b2c); margin: 0; max-width: 36ch;
+    color: var(--ink-700); margin: 0; max-width: 36ch;
   }
   @media (max-width: 860px) {
     .process { grid-template-columns: 1fr; gap: 36px; }
@@ -493,82 +542,89 @@ const h = await reader.singletons.home.read() ?? {};
   .ind {
     display: block; text-decoration: none; color: inherit;
     padding: 28px 28px 26px;
-    background: var(--cream);
-    border: 1px solid rgba(122,106,88,.2);
-    border-radius: 12px;
+    background: var(--paper);
+    border: 1px solid var(--driftwood);
+    border-radius: 10px;
     transition: all 250ms cubic-bezier(0.2,0.7,0.1,1);
   }
-  .ind:hover { border-color: var(--terracotta); background: var(--white-warm); }
+  .ind:hover { border-color: var(--rust); background: var(--aged-cream); }
   .ind-icon {
     width: 32px; height: 32px;
-    color: var(--green-mid); margin-bottom: 18px;
+    color: var(--walnut-500); margin-bottom: 18px;
   }
   .ind h3 {
     font-family: 'Fraunces', serif;
     font-size: 22px; font-weight: 500;
-    margin: 0 0 10px; color: var(--dark);
+    margin: 0 0 10px; color: var(--ink);
   }
   .ind p {
     font-family: 'Source Serif 4', serif;
     font-size: 15px; line-height: 1.55;
-    color: var(--ink-700, #4a3b2c); margin: 0 0 18px;
+    color: var(--ink-700); margin: 0 0 18px;
   }
   .ind-cta {
     font-family: 'Inter Tight', sans-serif;
     font-size: 13px; font-weight: 600;
-    color: var(--terracotta);
+    color: var(--rust);
   }
   .ind-foot {
     margin-top: 28px;
     font-family: 'Inter Tight', sans-serif;
-    font-size: 13px; color: var(--muted);
+    font-size: 13px; color: var(--smoke);
   }
-  .ind-foot a { color: var(--terracotta); text-decoration: none; }
+  .ind-foot a { color: var(--rust); text-decoration: none; }
   .ind-foot a:hover { text-decoration: underline; }
   @media (max-width: 860px) {
     .industries { grid-template-columns: 1fr; }
   }
 
-  /* TESTIMONIAL */
+  /* TESTIMONIAL — "evening" walnut room */
   .testi {
-    background: var(--dark); color: var(--white-warm);
+    background: var(--walnut-700); color: var(--paper);
     padding: 104px 40px; text-align: center;
+    position: relative; overflow: hidden;
   }
-  .testi-inner { max-width: 820px; margin: 0 auto; }
+  .testi::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 600px 400px at 50% 0%, rgba(201,147,86,.18), transparent 60%);
+    pointer-events: none;
+  }
+  .testi-inner { max-width: 820px; margin: 0 auto; position: relative; }
   .testi blockquote {
     font-family: 'Fraunces', serif;
     font-size: clamp(1.5rem, 2.4vw, 2.25rem);
     font-style: italic; font-weight: 300;
     line-height: 1.35; letter-spacing: -0.01em;
-    color: var(--white-warm); margin: 0 0 24px;
+    color: var(--paper); margin: 0 0 24px;
     text-wrap: balance;
   }
-  .ornament { color: var(--terracotta); display: inline-block; margin: 10px 0; }
-  .cite-name { font-family: 'Fraunces', serif; font-size: 17px; margin-top: 20px; }
+  .ornament { color: var(--honey-300); display: inline-block; margin: 10px 0; }
+  .cite-name { font-family: 'Fraunces', serif; font-size: 17px; margin-top: 20px; color: var(--paper); }
   .cite-role {
     font-family: 'Inter Tight', sans-serif;
     font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
-    color: rgba(143,175,130,.8); margin-top: 4px;
+    color: rgba(201,147,86,.85); margin-top: 4px;
   }
 
   /* FINAL CTA */
   .final-cta {
-    padding: 104px 0; text-align: center; background: var(--white-warm);
+    padding: 104px 0; text-align: center; background: var(--aged-cream);
   }
   .final-cta h2 {
     font-family: 'Fraunces', serif;
     font-size: clamp(2.25rem, 3.6vw, 3rem);
     font-weight: 500; margin: 0 auto 16px;
-    max-width: 22ch; color: var(--dark); text-wrap: balance;
+    max-width: 22ch; color: var(--ink); text-wrap: balance;
   }
   .final-cta .dek {
     font-family: 'Source Serif 4', serif;
-    font-size: 18px; color: var(--ink-700, #4a3b2c);
+    font-size: 18px; color: var(--ink-700);
     max-width: 52ch; margin: 0 auto 32px;
   }
   .micro {
     font-family: 'Inter Tight', sans-serif;
     font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--muted); margin-top: 18px;
+    color: var(--smoke); margin-top: 18px;
   }
 </style>

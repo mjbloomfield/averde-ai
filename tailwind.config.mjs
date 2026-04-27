@@ -4,15 +4,31 @@ export default {
   theme: {
     extend: {
       colors: {
-        'green-deep': '#2B4020',
-        'green-mid': '#4A7A3C',
-        'green-sage': '#8FAF82',
-        'sand': '#D49846',
-        'terracotta': '#C4714A',
-        'cream': '#FEF7EA',
-        'dark': '#1E1610',
-        'muted': '#7A6A58',
-        'white-warm': '#FFFCF5',
+        // Reclaimed-wood palette
+        'green-deep':  '#2A1B11',   // walnut-700
+        'green-mid':   '#4F3522',   // walnut-500
+        'green-sage':  '#B7A990',   // driftwood
+        'sand':        '#C99356',   // honey-300
+        'terracotta':  '#A86237',   // rust
+        'cream':       '#F4ECDB',   // paper
+        'dark':        '#1F1A12',   // ink
+        'muted':       '#7A6A58',
+        'white-warm':  '#F4ECDB',   // paper
+        // Extended palette
+        'honey-50':    '#F6E8D0',
+        'honey-100':   '#E8C896',
+        'honey-300':   '#C99356',
+        'honey-500':   '#9C6A33',
+        'walnut-300':  '#7A5238',
+        'walnut-500':  '#4F3522',
+        'walnut-700':  '#2A1B11',
+        'bone':        '#E5DBC9',
+        'driftwood':   '#B7A990',
+        'blue-shelf':  '#6E8E97',
+        'blue-shelf-light': '#9CB6BD',
+        'rust':        '#A86237',
+        'paper':       '#F4ECDB',
+        'aged-cream':  '#EDE3D0',
       },
       fontFamily: {
         jakarta: ['"Plus Jakarta Sans"', 'sans-serif'],
