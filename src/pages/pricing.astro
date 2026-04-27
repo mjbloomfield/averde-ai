@@ -73,7 +73,7 @@ const plans = [
   <!-- HERO -->
   <section class="bg-green-deep py-20 text-center">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
-      <h1 class="font-jakarta text-5xl md:text-6xl font-extrabold text-white-warm leading-tight mb-5">
+      <h1 class="text-5xl md:text-6xl font-extrabold text-white-warm leading-tight mb-5">
         Simple Pricing.<br />Real Results.
       </h1>
       <p class="text-cream/70 text-xl">
@@ -93,10 +93,10 @@ const plans = [
                 Most Popular
               </div>
             )}
-            <h2 class={`font-jakarta text-2xl font-bold mb-1 ${plan.featured ? 'text-cream' : 'text-green-deep'}`}>{plan.name}</h2>
+            <h2 class={`text-2xl font-bold mb-1 ${plan.featured ? 'text-cream' : 'text-green-deep'}`}>{plan.name}</h2>
             <p class={`text-sm mb-5 ${plan.featured ? 'text-cream/60' : 'text-muted'}`}>{plan.desc}</p>
             <div class="flex items-end gap-1 mb-2">
-              <span class={`font-jakarta text-5xl font-extrabold ${plan.featured ? 'text-cream' : 'text-green-deep'}`}>{plan.price}</span>
+              <span class={`text-5xl font-extrabold ${plan.featured ? 'text-cream' : 'text-green-deep'}`}>{plan.price}</span>
               <span class={`text-sm mb-2 ${plan.featured ? 'text-cream/60' : 'text-muted'}`}>{plan.period}</span>
             </div>
             <p class={`text-xs mb-7 ${plan.featured ? 'text-sand/80' : 'text-muted'}`}>{plan.setup}</p>
@@ -104,8 +104,8 @@ const plans = [
               {plan.features.map(f => (
                 <li class="flex items-start gap-2.5">
                   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="mt-0.5 flex-shrink-0">
-                    <circle cx="9" cy="9" r="9" fill={plan.featured ? '#C8A96E' : '#6B8F5E'} fill-opacity="0.2"/>
-                    <path d="M5 9l3 3 5-5" stroke={plan.featured ? '#C8A96E' : '#6B8F5E'} stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="9" cy="9" r="9" fill="#C99356" fill-opacity="0.2"/>
+                    <path d="M5 9l3 3 5-5" stroke="#C99356" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                   <span class={`text-sm ${plan.featured ? 'text-cream/80' : 'text-dark'}`}>{f}</span>
                 </li>
@@ -140,7 +140,7 @@ const plans = [
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
       <div class="bg-sand/20 border border-sand/40 rounded-3xl p-10 text-center">
         <p class="text-sand font-bold text-sm uppercase tracking-wide mb-3">Start here</p>
-        <h2 class="font-jakarta text-2xl md:text-3xl font-bold text-green-deep mb-4">
+        <h2 class="text-2xl md:text-3xl font-bold text-green-deep mb-4">
           Missed Call Audit — <span class="line-through text-muted font-normal">$297</span> <span class="text-green-mid">Free</span>
         </h2>
         <p class="text-muted mb-6 max-w-lg mx-auto">

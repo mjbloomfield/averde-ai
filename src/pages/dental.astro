@@ -12,9 +12,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
       <div class="max-w-3xl">
         <div class="inline-flex items-center gap-2 bg-green-mid/50 text-sand text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
-          🦷 For Dental Practices
+          For Dental Practices
         </div>
-        <h1 class="font-jakarta text-5xl md:text-6xl font-extrabold text-white-warm leading-tight tracking-tight mb-6">
+        <h1 class="text-5xl md:text-6xl font-extrabold text-white-warm leading-tight tracking-tight mb-6">
           Your Dental Practice Deserves a Receptionist That Never Sleeps
         </h1>
         <p class="text-cream/80 text-xl leading-relaxed mb-8">
@@ -31,17 +31,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <!-- PAIN -->
   <section class="bg-cream py-20">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
-      <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-green-deep mb-10">Your Front Desk Can't Do It All</h2>
+      <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-10">Your Front Desk Can't Do It All</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         {[
-          { icon: '📞', pain: 'After-hours calls go to voicemail', result: 'Patients call the practice down the street instead' },
-          { icon: '😤', pain: 'Front desk overwhelmed during peak hours', result: 'New patient calls go unanswered while staff manages check-ins' },
-          { icon: '📋', pain: 'Recall reminders handled inconsistently', result: 'Patients drift away without ever being contacted' },
-          { icon: '❓', pain: 'Same FAQs asked dozens of times daily', result: 'Staff time wasted on questions an AI can handle instantly' },
+          { pain: 'After-hours calls go to voicemail', result: 'Patients call the practice down the street instead' },
+          { pain: 'Front desk overwhelmed during peak hours', result: 'New patient calls go unanswered while staff manages check-ins' },
+          { pain: 'Recall reminders handled inconsistently', result: 'Patients drift away without ever being contacted' },
+          { pain: 'Same FAQs asked dozens of times daily', result: 'Staff time wasted on questions an AI can handle instantly' },
         ].map(item => (
-          <div class="bg-white-warm rounded-2xl p-7">
-            <div class="text-2xl mb-3">{item.icon}</div>
-            <p class="font-jakarta font-semibold text-green-deep mb-1">{item.pain}</p>
+          <div class="bg-white-warm rounded-2xl p-7 border-l-2 border-sand/40">
+            <p class="font-semibold text-green-deep mb-1">{item.pain}</p>
             <p class="text-muted text-sm">{item.result}</p>
           </div>
         ))}
@@ -52,7 +51,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <!-- SOLUTION -->
   <section class="bg-white-warm py-20">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
-      <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-green-deep mb-4">What Your AI Dental Receptionist Does</h2>
+      <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-4">What Your AI Dental Receptionist Does</h2>
       <p class="text-muted text-lg mb-10">Your AI agent handles every call the way your best receptionist would — only 24/7.</p>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {[
@@ -65,7 +64,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         ].map(item => (
           <div class="flex items-start gap-3 bg-cream rounded-xl p-5">
             <span class="text-green-sage mt-0.5">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#6B8F5E" fill-opacity="0.15"/><path d="M6 10l3 3 5-5" stroke="#6B8F5E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#C99356" fill-opacity="0.15"/><path d="M6 10l3 3 5-5" stroke="#C99356" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </span>
             <p class="text-dark text-sm font-medium">{item}</p>
           </div>
@@ -79,20 +78,20 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <div class="max-w-4xl mx-auto px-4 sm:px-6">
       <div class="bg-sand rounded-3xl p-10 text-center">
         <p class="text-green-deep font-semibold mb-3 text-sm uppercase tracking-wide">The math is clear</p>
-        <h2 class="font-jakarta text-2xl md:text-3xl font-bold text-green-deep mb-5">
+        <h2 class="text-2xl md:text-3xl font-bold text-green-deep mb-5">
           A busy dental practice misses an average of 15 calls per day.
         </h2>
         <div class="grid grid-cols-3 gap-4 mb-6">
           <div>
-            <p class="font-jakarta text-3xl font-extrabold text-green-deep">15</p>
+            <p class="text-3xl font-extrabold text-green-deep">15</p>
             <p class="text-sm text-green-mid">missed calls/day</p>
           </div>
           <div>
-            <p class="font-jakarta text-3xl font-extrabold text-green-deep">×$250</p>
+            <p class="text-3xl font-extrabold text-green-deep">×$250</p>
             <p class="text-sm text-green-mid">avg appointment</p>
           </div>
           <div>
-            <p class="font-jakarta text-3xl font-extrabold text-terracotta">$3,750</p>
+            <p class="text-3xl font-extrabold text-terracotta">$3,750</p>
             <p class="text-sm text-green-mid">lost per day</p>
           </div>
         </div>
@@ -109,7 +108,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <!-- CTA -->
   <section class="bg-green-deep py-20 text-center">
     <div class="max-w-2xl mx-auto px-4 sm:px-6">
-      <h2 class="font-jakarta text-3xl font-bold text-white-warm mb-5">See It in Action — Free</h2>
+      <h2 class="text-3xl font-bold text-white-warm mb-5">See It in Action — Free</h2>
       <p class="text-cream/70 mb-8">Book a free 30-minute Missed Call Audit. We'll show you the exact revenue your practice is losing and demo your AI receptionist.</p>
       <a href="/ai-audit" class="inline-flex items-center bg-sand text-green-deep font-bold px-8 py-4 rounded-xl hover:bg-sand/90 transition-colors">
         Book Free Audit

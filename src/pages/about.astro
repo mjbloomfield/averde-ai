@@ -10,7 +10,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <!-- HERO -->
   <section class="bg-green-deep py-20">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-      <h1 class="font-jakarta text-5xl md:text-6xl font-extrabold text-white-warm leading-tight mb-5">
+      <h1 class="text-5xl md:text-6xl font-extrabold text-white-warm leading-tight mb-5">
         We're Not a Tech Giant.<br />We're Your AI Partner.
       </h1>
       <p class="text-cream/70 text-xl max-w-2xl mx-auto">
@@ -35,7 +35,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         </div>
         <div>
           <p class="text-sand font-semibold text-sm uppercase tracking-widest mb-3">Founder</p>
-          <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-green-deep mb-5">Mark Bloomfield</h2>
+          <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-5">Mark Bloomfield</h2>
           <div class="space-y-4 text-muted leading-relaxed">
             <p>
               I spent years as a composites research engineer and sustainability consultant before the AI revolution changed everything. When I saw what voice AI could do for small businesses — the dental offices losing patients to voicemail after hours, the HVAC company missing emergency calls while techs were on jobs, the realtor who couldn't answer during showings — I knew there was a better way.
@@ -63,7 +63,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <div class="grid grid-cols-1 md:grid-cols-2 gap-14 items-center">
         <div class="order-2 md:order-1">
           <p class="text-sand font-semibold text-sm uppercase tracking-widest mb-3">Chief Canine Officer</p>
-          <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-green-deep mb-5">Olive</h2>
+          <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-5">Olive</h2>
           <div class="space-y-4 text-muted leading-relaxed">
             <p>
               Every great company needs a CCO. Olive brings unwavering enthusiasm, exceptional listening skills, and zero tolerance for mediocrity — especially when it comes to treats.
@@ -93,28 +93,28 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <!-- VALUES -->
   <section class="bg-cream py-20">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
-      <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-green-deep mb-12 text-center">What We Stand For</h2>
+      <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-12 text-center">What We Stand For</h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         {[
           {
-            icon: '🔍',
+            icon: `<svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="12" cy="12" r="8" stroke="#C99356" stroke-width="1.8"/><path d="M18 18l4 4" stroke="#C99356" stroke-width="1.8" stroke-linecap="round"/></svg>`,
             title: 'Transparency',
-            body: 'We show you the numbers. You\'ll know exactly what you\'re getting, what it costs, and what results to expect. No jargon, no smoke and mirrors.',
+            body: "We show you the numbers. You'll know exactly what you're getting, what it costs, and what results to expect. No jargon, no smoke and mirrors.",
           },
           {
-            icon: '⚡',
+            icon: `<svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M14 4v4M14 20v4M4 14h4M20 14h4M7 7l2.8 2.8M18.2 18.2l2.8 2.8M7 21l2.8-2.8M18.2 9.8l2.8-2.8" stroke="#C99356" stroke-width="1.8" stroke-linecap="round"/></svg>`,
             title: 'Simplicity',
-            body: 'AI doesn\'t have to be complicated. We handle every technical detail so you never have to think about infrastructure, APIs, or integrations.',
+            body: "AI doesn't have to be complicated. We handle every technical detail so you never have to think about infrastructure, APIs, or integrations.",
           },
           {
-            icon: '📈',
+            icon: `<svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M6 20V14M11 20V10M16 20V6M21 20V12" stroke="#C99356" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
             title: 'Results',
-            body: 'We measure success in calls answered, appointments booked, and revenue recovered. If it\'s not working, we fix it — that\'s the whole point.',
+            body: "We measure success in calls answered, appointments booked, and revenue recovered. If it's not working, we fix it — that's the whole point.",
           },
         ].map(v => (
           <div class="bg-white-warm rounded-2xl p-8 text-center">
-            <div class="text-4xl mb-4">{v.icon}</div>
-            <h3 class="font-jakarta text-xl font-bold text-green-deep mb-3">{v.title}</h3>
+            <div class="flex justify-center mb-4" set:html={v.icon} />
+            <h3 class="text-xl font-bold text-green-deep mb-3">{v.title}</h3>
             <p class="text-muted leading-relaxed">{v.body}</p>
           </div>
         ))}
@@ -125,7 +125,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <!-- CTA -->
   <section class="bg-green-deep py-20 text-center">
     <div class="max-w-2xl mx-auto px-4 sm:px-6">
-      <h2 class="font-jakarta text-3xl font-bold text-white-warm mb-5">Ready to Work Together?</h2>
+      <h2 class="text-3xl font-bold text-white-warm mb-5">Ready to Work Together?</h2>
       <p class="text-cream/70 mb-8">Start with a free Missed Call Audit — 30 minutes with me, no commitment required.</p>
       <a href="/ai-audit" class="inline-flex items-center bg-sand text-green-deep font-bold px-8 py-4 rounded-xl hover:bg-sand/90 transition-colors">
         Book Your Free Audit

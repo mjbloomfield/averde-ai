@@ -3,32 +3,65 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 const faqs = [
   {
-    q: 'Will callers know they\'re talking to an AI?',
-    a: 'Possibly — the technology is remarkably natural, and most callers don\'t notice or don\'t mind. You can also choose to have your agent introduce itself as a virtual assistant. We\'ll help you decide what\'s right for your business and your state\'s disclosure requirements.',
+    q: "Will callers know they're talking to an AI?",
+    a: "Possibly — the technology is remarkably natural, and most callers don't notice or don't mind. You can also choose to have your agent introduce itself as a virtual assistant. We'll help you decide what's right for your business and your state's disclosure requirements.",
   },
   {
-    q: 'What if the AI doesn\'t know the answer?',
-    a: 'Your agent will gracefully offer to take a message, warm-transfer to your cell, or direct the caller to follow up by email — whichever you prefer. You\'ll also get a full transcript of every call, so nothing slips through.',
+    q: "What if the AI doesn't know the answer?",
+    a: "Your agent will gracefully offer to take a message, warm-transfer to your cell, or direct the caller to follow up by email — whichever you prefer. You'll also get a full transcript of every call, so nothing slips through.",
   },
   {
-    q: 'Can I change what the agent says after it\'s live?',
-    a: 'Yes, any time. Send us an email or message and we\'ll update your agent within 24 hours. Adding new services, changing hours, updating your FAQs — all easy.',
+    q: "Can I change what the agent says after it's live?",
+    a: "Yes, any time. Send us an email or message and we'll update your agent within 24 hours. Adding new services, changing hours, updating your FAQs — all easy.",
   },
   {
-    q: 'Does it work with my existing phone number?',
-    a: 'Yes. We set up call forwarding on your existing number (for after-hours or overflow), or provision a dedicated new local or toll-free number — your choice.',
+    q: "Does it work with my existing phone number?",
+    a: "Yes. We set up call forwarding on your existing number (for after-hours or overflow), or provision a dedicated new local or toll-free number — your choice.",
   },
   {
-    q: 'What calendar and booking tools does it integrate with?',
-    a: 'Google Calendar, Calendly, TidyCal, and Cal.com natively. If you use something else, we can usually connect it via Make.com or Zapier. Just ask.',
+    q: "What calendar and booking tools does it integrate with?",
+    a: "Google Calendar, Calendly, TidyCal, and Cal.com natively. If you use something else, we can usually connect it via Make.com or Zapier. Just ask.",
   },
   {
-    q: 'Do you serve businesses outside Boulder?',
-    a: 'Yes — setup and support are fully remote. We work with businesses anywhere in the United States.',
+    q: "Do you serve businesses outside Boulder?",
+    a: "Yes — setup and support are fully remote. We work with businesses anywhere in the United States.",
   },
   {
-    q: 'What if I want to cancel?',
-    a: '30 days notice, no penalties, no questions. We\'re confident you won\'t want to — but we\'d never lock you in.',
+    q: "What if I want to cancel?",
+    a: "30 days notice, no penalties, no questions. We're confident you won't want to — but we'd never lock you in.",
+  },
+];
+
+const included = [
+  {
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="5" y="2" width="14" height="20" rx="2" stroke="#C99356" stroke-width="1.6"/><path d="M9 7h6M9 11h6M9 15h4" stroke="#C99356" stroke-width="1.4" stroke-linecap="round"/></svg>`,
+    title: 'Dedicated Phone Number',
+    body: 'Local or toll-free number provisioned in your area code.',
+  },
+  {
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#C99356" stroke-width="1.6"/><path d="M3 9h18M8 2v4M16 2v4" stroke="#C99356" stroke-width="1.4" stroke-linecap="round"/></svg>`,
+    title: 'Calendar Integration',
+    body: 'Google Calendar, Calendly, TidyCal — books directly during calls.',
+  },
+  {
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 20V13M9 20V9M14 20V5M19 20V11" stroke="#C99356" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    title: 'Monthly Reports',
+    body: 'Calls answered, appointments booked, trends, and insights.',
+  },
+  {
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 4v2M12 18v2M4 12H2M22 12h-2M6.3 6.3l-1.4-1.4M19.1 19.1l-1.4-1.4M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4" stroke="#C99356" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="12" r="4" stroke="#C99356" stroke-width="1.5"/></svg>`,
+    title: 'Ongoing Updates',
+    body: 'Change your hours, add services, update scripts — anytime.',
+  },
+  {
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="11" width="18" height="11" rx="2" stroke="#C99356" stroke-width="1.6"/><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="#C99356" stroke-width="1.6" stroke-linecap="round"/></svg>`,
+    title: 'Call Transcripts',
+    body: 'Full written record of every call for your review.',
+  },
+  {
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#C99356" stroke-width="1.6"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#C99356" stroke-width="1.6" stroke-linecap="round"/></svg>`,
+    title: 'Direct Access to Mark',
+    body: "You're not dealing with a ticket queue. You're working with the founder.",
   },
 ];
 ---
@@ -41,7 +74,7 @@ const faqs = [
   <!-- HERO -->
   <section class="bg-green-deep py-20">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-      <h1 class="font-jakarta text-5xl md:text-6xl font-extrabold text-white-warm leading-tight mb-5">
+      <h1 class="text-5xl md:text-6xl font-extrabold text-white-warm leading-tight mb-5">
         From First Call to Live Agent in 5 Days
       </h1>
       <p class="text-cream/70 text-xl">No long onboarding. No technical complexity on your end. Just a phone that gets answered.</p>
@@ -57,40 +90,40 @@ const faqs = [
             num: '01',
             day: 'Day 0',
             title: 'Free Missed Call Audit',
-            body: '30 minutes with Mark. We look at your current call handling, estimate how many calls you\'re missing, and project the revenue impact. You\'ll also get a live demo of what your AI agent would sound like. No commitment required.',
+            body: "30 minutes with Mark. We look at your current call handling, estimate how many calls you're missing, and project the revenue impact. You'll also get a live demo of what your AI agent would sound like. No commitment required.",
           },
           {
             num: '02',
             day: 'Day 1',
             title: 'Agent Design',
-            body: 'We map your call flows: what questions callers typically ask, what actions they need, how your scheduling works, what to do with emergencies. You review and approve before we build anything.',
+            body: "We map your call flows: what questions callers typically ask, what actions they need, how your scheduling works, what to do with emergencies. You review and approve before we build anything.",
           },
           {
             num: '03',
             day: 'Days 2–3',
             title: 'Build & Train',
-            body: 'We build your agent — custom voice, your business knowledge baked in, calendar fully integrated. Your agent knows your services, your hours, your pricing, and how you want calls handled.',
+            body: "We build your agent — custom voice, your business knowledge baked in, calendar fully integrated. Your agent knows your services, your hours, your pricing, and how you want calls handled.",
           },
           {
             num: '04',
             day: 'Day 4',
             title: 'Testing',
-            body: 'We run 50+ test calls covering every scenario. You listen and give feedback. We refine until it sounds exactly right. Nothing goes live until you approve it.',
+            body: "We run 50+ test calls covering every scenario. You listen and give feedback. We refine until it sounds exactly right. Nothing goes live until you approve it.",
           },
           {
             num: '05',
             day: 'Day 5',
             title: 'Go Live',
-            body: 'Your dedicated phone number is active. Calls start getting answered. You get a real-time dashboard and your first report within the week.',
+            body: "Your dedicated phone number is active. Calls start getting answered. You get a real-time dashboard and your first report within the week.",
           },
         ].map(step => (
           <div class="flex gap-8 items-start">
             <div class="flex-shrink-0 w-16 text-right">
-              <span class="font-jakarta text-4xl font-extrabold text-green-sage/30">{step.num}</span>
+              <span class="text-4xl font-extrabold text-green-sage/30" style="font-family: 'Fraunces', serif">{step.num}</span>
             </div>
             <div class="flex-1 pb-12 border-b border-green-sage/20 last:border-0 last:pb-0">
               <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-1">{step.day}</p>
-              <h3 class="font-jakarta text-2xl font-bold text-green-deep mb-3">{step.title}</h3>
+              <h3 class="text-2xl font-bold text-green-deep mb-3">{step.title}</h3>
               <p class="text-muted leading-relaxed">{step.body}</p>
             </div>
           </div>
@@ -102,19 +135,12 @@ const faqs = [
   <!-- WHAT'S INCLUDED -->
   <section class="bg-white-warm py-20">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
-      <h2 class="font-jakarta text-3xl md:text-4xl font-bold text-green-deep mb-10 text-center">What Every Client Gets</h2>
+      <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-10 text-center">What Every Client Gets</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {[
-          { icon: '📱', title: 'Dedicated Phone Number', body: 'Local or toll-free number provisioned in your area code.' },
-          { icon: '📅', title: 'Calendar Integration', body: 'Google Calendar, Calendly, TidyCal — books directly during calls.' },
-          { icon: '📊', title: 'Monthly Reports', body: 'Calls answered, appointments booked, trends, and insights.' },
-          { icon: '🔄', title: 'Ongoing Updates', body: 'Change your hours, add services, update scripts — anytime.' },
-          { icon: '🔒', title: 'Call Transcripts', body: 'Full written record of every call for your review.' },
-          { icon: '👤', title: 'Direct Access to Mark', body: 'You\'re not dealing with a ticket queue. You\'re working with the founder.' },
-        ].map(item => (
+        {included.map(item => (
           <div class="bg-cream rounded-2xl p-6">
-            <div class="text-3xl mb-3">{item.icon}</div>
-            <h3 class="font-jakarta font-bold text-green-deep mb-2">{item.title}</h3>
+            <div class="mb-3" set:html={item.icon} />
+            <h3 class="font-bold text-green-deep mb-2">{item.title}</h3>
             <p class="text-muted text-sm">{item.body}</p>
           </div>
         ))}
@@ -125,11 +151,11 @@ const faqs = [
   <!-- FAQ -->
   <section class="bg-cream py-20">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
-      <h2 class="font-jakarta text-3xl font-bold text-green-deep mb-10 text-center">Common Questions</h2>
+      <h2 class="text-3xl font-bold text-green-deep mb-10 text-center">Common Questions</h2>
       <div class="space-y-3">
         {faqs.map(faq => (
           <details class="bg-white-warm rounded-2xl px-6 group">
-            <summary class="flex items-center justify-between py-5 font-jakarta font-semibold text-green-deep cursor-pointer">
+            <summary class="flex items-center justify-between py-5 font-semibold text-green-deep cursor-pointer">
               {faq.q}
               <span class="summary-arrow text-green-sage ml-4 flex-shrink-0">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 7l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -145,7 +171,7 @@ const faqs = [
   <!-- CTA -->
   <section class="bg-green-deep py-20 text-center">
     <div class="max-w-2xl mx-auto px-4 sm:px-6">
-      <h2 class="font-jakarta text-3xl font-bold text-white-warm mb-5">Ready to Get Started?</h2>
+      <h2 class="text-3xl font-bold text-white-warm mb-5">Ready to Get Started?</h2>
       <p class="text-cream/70 mb-8">The audit is free and takes 30 minutes. You'll leave knowing exactly what's possible.</p>
       <a href="/ai-audit" class="inline-flex items-center bg-sand text-green-deep font-bold px-8 py-4 rounded-xl hover:bg-sand/90 transition-colors">
         Book Your Free Missed Call Audit

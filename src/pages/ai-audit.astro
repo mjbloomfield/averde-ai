@@ -13,7 +13,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <div class="inline-flex items-center gap-2 bg-sand/20 text-sand text-xs font-semibold px-3 py-1.5 rounded-full mb-5">
         100% Free · No Credit Card · No Sales Pressure
       </div>
-      <h1 class="font-jakarta text-4xl md:text-5xl font-extrabold text-white-warm leading-tight mb-5">
+      <h1 class="text-4xl md:text-5xl font-extrabold text-white-warm leading-tight mb-5">
         Find Out Exactly How Much Revenue You're Losing to Missed Calls
       </h1>
       <p class="text-cream/70 text-lg">
@@ -29,7 +29,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
         <!-- LEFT: What You Get -->
         <div>
-          <h2 class="font-jakarta text-2xl font-bold text-green-deep mb-7">In 30 minutes, you'll know:</h2>
+          <h2 class="text-2xl font-bold text-green-deep mb-7">In 30 minutes, you'll know:</h2>
           <ul class="space-y-4 mb-10">
             {[
               'How many calls your business is currently missing',
@@ -41,8 +41,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
               <li class="flex items-start gap-3">
                 <span class="flex-shrink-0 mt-1">
                   <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                    <circle cx="11" cy="11" r="11" fill="#2D5A27" fill-opacity="0.12"/>
-                    <path d="M7 11l3 3 5-5" stroke="#2D5A27" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="11" cy="11" r="11" fill="#C99356" fill-opacity="0.12"/>
+                    <path d="M7 11l3 3 5-5" stroke="#C99356" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 </span>
                 <span class="text-dark font-medium">{item}</span>
@@ -53,21 +53,27 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <!-- Trust Signals -->
           <div class="bg-white-warm rounded-2xl p-6 space-y-4">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-green-sage/10 rounded-full flex items-center justify-center text-lg">👤</div>
+              <div class="w-10 h-10 bg-sand/10 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="6" r="3" stroke="#C99356" stroke-width="1.5"/><path d="M3 16c0-3 2.7-5 6-5s6 2 6 5" stroke="#C99356" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </div>
               <div>
                 <p class="font-semibold text-green-deep text-sm">Led personally by Mark Bloomfield</p>
                 <p class="text-muted text-xs">Founder of Averde AI — not a sales rep</p>
               </div>
             </div>
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-green-sage/10 rounded-full flex items-center justify-center text-lg">📍</div>
+              <div class="w-10 h-10 bg-sand/10 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2C6.24 2 4 4.24 4 7c0 3.75 5 9 5 9s5-5.25 5-9c0-2.76-2.24-5-5-5z" stroke="#C99356" stroke-width="1.5"/><circle cx="9" cy="7" r="1.5" stroke="#C99356" stroke-width="1.3"/></svg>
+              </div>
               <div>
                 <p class="font-semibold text-green-deep text-sm">Boulder, CO · Serving businesses nationwide</p>
                 <p class="text-muted text-xs">Fully remote setup — works anywhere in the US</p>
               </div>
             </div>
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-green-sage/10 rounded-full flex items-center justify-center text-lg">🏭</div>
+              <div class="w-10 h-10 bg-sand/10 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="7" width="14" height="9" rx="1.5" stroke="#C99356" stroke-width="1.5"/><path d="M5 7V5a4 4 0 0 1 8 0v2" stroke="#C99356" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </div>
               <div>
                 <p class="font-semibold text-green-deep text-sm">Dental · HVAC · Real Estate · And more</p>
                 <p class="text-muted text-xs">Specialized experience in your industry</p>
@@ -83,7 +89,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <!-- RIGHT: TidyCal Embed -->
         <div>
           <div class="bg-white-warm rounded-3xl p-6 shadow-sm">
-            <p class="font-jakarta font-bold text-green-deep text-lg mb-1">Book Your Free 30-Minute Audit</p>
+            <p class="font-bold text-green-deep text-lg mb-1">Book Your Free 30-Minute Audit</p>
             <p class="text-muted text-sm mb-5">Pick a time that works for you — we'll confirm by email.</p>
             <div class="tidycal-embed" data-path="199qry1"></div>
             <script src="https://asset-tidycal.b-cdn.net/js/embed.js" async></script>
@@ -97,16 +103,28 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <!-- WHAT HAPPENS AFTER -->
   <section class="bg-white-warm py-16">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-      <h2 class="font-jakarta text-2xl font-bold text-green-deep mb-8">What happens after the audit?</h2>
+      <h2 class="text-2xl font-bold text-green-deep mb-8">What happens after the audit?</h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
-          { icon: '📊', title: 'You get the numbers', body: 'A clear breakdown of missed calls, estimated revenue impact, and ROI projection for your specific business.' },
-          { icon: '🎧', title: 'You hear your agent', body: 'We demo a prototype of your AI agent — trained on your business — so you can hear exactly what your callers would experience.' },
-          { icon: '✅', title: 'You decide', body: 'No pressure. If it makes sense for your business, we can be live in 5 days. If not, you\'ve still got a valuable audit at no cost.' },
+          {
+            num: '01',
+            title: 'You get the numbers',
+            body: 'A clear breakdown of missed calls, estimated revenue impact, and ROI projection for your specific business.',
+          },
+          {
+            num: '02',
+            title: 'You hear your agent',
+            body: "We demo a prototype of your AI agent — trained on your business — so you can hear exactly what your callers would experience.",
+          },
+          {
+            num: '03',
+            title: 'You decide',
+            body: "No pressure. If it makes sense for your business, we can be live in 5 days. If not, you've still got a valuable audit at no cost.",
+          },
         ].map(item => (
-          <div class="bg-cream rounded-2xl p-7">
-            <div class="text-3xl mb-3">{item.icon}</div>
-            <h3 class="font-jakarta font-bold text-green-deep mb-2">{item.title}</h3>
+          <div class="bg-cream rounded-2xl p-7 text-left">
+            <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">{item.num}</p>
+            <h3 class="font-bold text-green-deep mb-2">{item.title}</h3>
             <p class="text-muted text-sm leading-relaxed">{item.body}</p>
           </div>
         ))}
