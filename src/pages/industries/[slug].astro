@@ -4,7 +4,9 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
   const industries = await getCollection('industries');
-  return industries.map(ind => ({ params: { slug: ind.id } }));
+  return industries
+    .filter(ind => ind.data.published !== false)
+    .map(ind => ({ params: { slug: ind.id } }));
 }
 
 const { slug } = Astro.params;

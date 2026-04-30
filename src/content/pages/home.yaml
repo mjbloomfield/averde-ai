@@ -13,19 +13,22 @@ toolsEyebrow: 'Start here — no cost'
 toolsHeadline: 'Free tools to get you oriented.'
 toolsDek: "Not ready to buy anything yet? Good. These free resources will show you exactly where AI can help your business — and where it can't."
 tools:
-  - icon: clock
+  - published: true
+    icon: clock
     tag: '30-min call · Free'
     title: 'Free AI Audit'
     description: "30 minutes with me. I'll map out exactly where AI can help your business, what it'll cost, and what to expect — no pitch, no pressure."
     ctaLabel: 'Book your audit →'
     ctaHref: '/ai-audit'
-  - icon: checklist
+  - published: true
+    icon: checklist
     tag: '2-min quiz · Free'
     title: 'AI Readiness Quiz'
     description: 'Answer 8 quick questions and get a personalised AI readiness score — with specific recommendations for your type of business.'
     ctaLabel: 'Take the quiz →'
     ctaHref: '#quiz'
-  - icon: calculator
+  - published: true
+    icon: calculator
     tag: 'Instant · Free'
     title: 'Missed Call Calculator'
     description: "Enter your average job value and how many calls you miss per week. I'll show you the exact revenue you're leaving on the table."
@@ -36,22 +39,26 @@ servicesEyebrow: 'Ready to go deeper'
 servicesHeadline: "When you're ready to actually build something."
 servicesDek: 'From a focused strategy session to a full custom AI build — I work with you directly, at every stage.'
 services:
-  - title: 'Strategy Session'
+  - published: true
+    title: 'Strategy Session'
     price: '$250 – $500'
     description: "A focused 90-minute working session where we map out your AI roadmap — what to build, what to buy off the shelf, and what to skip entirely. You leave with a prioritized action plan."
     ctaLabel: 'Book a session →'
     ctaHref: '/ai-audit'
-  - title: 'AI-Ready Website & SEO Overhaul'
+  - published: true
+    title: 'AI-Ready Website & SEO Overhaul'
     price: 'From $1,200'
     description: "Your website rebuilt to rank in AI search (ChatGPT, Perplexity, Google AI Overviews) — not just Google. Structured data, AEO content, and local AI citations all included."
     ctaLabel: 'Get a quote →'
     ctaHref: '/contact'
-  - title: 'Voice Agent — AI Receptionist'
+  - published: true
+    title: 'Voice Agent — AI Receptionist'
     price: 'From $297/mo'
     description: "An AI that answers your phone 24/7 — qualifying leads, booking appointments, handling FAQs. Sounds human. Deployed in 5 business days."
     ctaLabel: 'See how it works →'
     ctaHref: '/how-it-works'
-  - title: 'Custom AI Builds'
+  - published: true
+    title: 'Custom AI Builds'
     price: 'Quote-based'
     description: "Bespoke AI built around your data, your workflows, and your team's way of working. From internal knowledge bases to multi-step automations that replace hours of manual work."
     ctaLabel: "Let's talk →"

@@ -5,7 +5,9 @@ import { getCollection } from 'astro:content';
 const currentPath = Astro.url.pathname;
 const isActive = (path: string) => currentPath === path || currentPath.startsWith(path + '/');
 
-const industries = (await getCollection('industries')).sort((a, b) => a.data.name.localeCompare(b.data.name));
+const industries = (await getCollection('industries'))
+  .filter(i => i.data.published !== false)
+  .sort((a, b) => a.data.name.localeCompare(b.data.name));
 ---
 
 <header class="sticky top-0 z-50 bg-white-warm shadow-sm border-b border-green-sage/10">

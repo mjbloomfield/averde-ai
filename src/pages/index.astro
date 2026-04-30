@@ -16,11 +16,11 @@ const heroCardItems      = home?.heroCardItems      ?? ['Explain AI — plain En
 const toolsEyebrow   = home?.toolsEyebrow   ?? 'Start here — no cost';
 const toolsHeadline  = home?.toolsHeadline  ?? 'Free tools to get you oriented.';
 const toolsDek       = home?.toolsDek       ?? '';
-const tools = home?.tools ?? [
-  { icon: 'clock',      tag: '30-min call · Free', title: 'Free AI Audit',          description: '', ctaLabel: 'Book your audit →',     ctaHref: '/ai-audit' },
-  { icon: 'checklist',  tag: '2-min quiz · Free',  title: 'AI Readiness Quiz',      description: '', ctaLabel: 'Take the quiz →',        ctaHref: '#quiz' },
-  { icon: 'calculator', tag: 'Instant · Free',      title: 'Missed Call Calculator', description: '', ctaLabel: 'Calculate my loss →',    ctaHref: '#calculator' },
-];
+const tools = (home?.tools ?? [
+  { published: true, icon: 'clock',      tag: '30-min call · Free', title: 'Free AI Audit',          description: '', ctaLabel: 'Book your audit →',     ctaHref: '/ai-audit' },
+  { published: true, icon: 'checklist',  tag: '2-min quiz · Free',  title: 'AI Readiness Quiz',      description: '', ctaLabel: 'Take the quiz →',        ctaHref: '#quiz' },
+  { published: true, icon: 'calculator', tag: 'Instant · Free',      title: 'Missed Call Calculator', description: '', ctaLabel: 'Calculate my loss →',    ctaHref: '#calculator' },
+]).filter((t: { published?: boolean }) => t.published !== false);
 const iconSvgs: Record<string, string> = {
   clock:      `<svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="14" r="10"/><path d="M14 9v5l3 3"/></svg>`,
   checklist:  `<svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h16M6 13h12M6 18h8"/></svg>`,
@@ -33,12 +33,12 @@ const iconSvgs: Record<string, string> = {
 const servicesEyebrow  = home?.servicesEyebrow  ?? 'Ready to go deeper';
 const servicesHeadline = home?.servicesHeadline ?? "When you're ready to actually build something.";
 const servicesDek      = home?.servicesDek      ?? '';
-const services = home?.services ?? [
+const services = (home?.services ?? [
   { title: 'Strategy Session',           price: '$250 – $500',    description: '', ctaLabel: 'Book a session →',     ctaHref: '/ai-audit' },
   { title: 'AI-Ready Website & SEO',     price: 'From $1,200',    description: '', ctaLabel: 'Get a quote →',         ctaHref: '/contact' },
   { title: 'Voice Agent — AI Receptionist', price: 'From $297/mo', description: '', ctaLabel: 'See how it works →', ctaHref: '/how-it-works' },
-  { title: 'Custom AI Builds',           price: 'Quote-based',    description: '', ctaLabel: "Let's talk →",          ctaHref: '/contact' },
-];
+  { published: true, title: 'Custom AI Builds', price: 'Quote-based', description: '', ctaLabel: "Let's talk →", ctaHref: '/contact' },
+]).filter((s: { published?: boolean }) => s.published !== false);
 
 const quoteText  = home?.quoteText  ?? '';
 const quoteName  = home?.quoteName  ?? 'Dr. Priya Ramanathan';

@@ -16,6 +16,7 @@ const industries = defineCollection({
   type: 'data',
   schema: z.object({
     name: z.string(),
+    published: z.boolean().default(true),
     seoTitle: z.string(),
     seoDescription: z.string(),
     heroEyebrow: z.string(),

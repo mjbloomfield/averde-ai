@@ -18,6 +18,7 @@ export default config({
       format: { data: 'yaml' },
       schema: {
         name: fields.slug({ name: { label: 'Industry name (also used in URL)' } }),
+        published: fields.checkbox({ label: 'Published (visible on site)', defaultValue: true }),
         seoTitle: fields.text({ label: 'SEO page title' }),
         seoDescription: fields.text({ label: 'SEO meta description', multiline: true }),
         heroEyebrow: fields.text({ label: 'Hero — eyebrow tag', description: 'e.g. "For Dental Practices"' }),
@@ -157,6 +158,7 @@ export default config({
         }),
         tools: fields.array(
           fields.object({
+            published: fields.checkbox({ label: 'Visible on site', defaultValue: true }),
             icon: fields.select({
               label: 'Icon',
               options: [
@@ -177,7 +179,7 @@ export default config({
           }),
           {
             label: 'Free tools cards',
-            itemLabel: props => props.fields.title.value || 'New tool',
+            itemLabel: props => `${props.fields.published.value ? '✓' : '○'} ${props.fields.title.value || 'New tool'}`,
           }
         ),
 
@@ -197,6 +199,7 @@ export default config({
         }),
         services: fields.array(
           fields.object({
+            published:   fields.checkbox({ label: 'Visible on site', defaultValue: true }),
             title:       fields.text({ label: 'Service title' }),
             price:       fields.text({ label: 'Price' }),
             description: fields.text({ label: 'Description', multiline: true }),
@@ -206,7 +209,7 @@ export default config({
           {
             label: 'Services ladder (steps 2 – 5)',
             itemLabel: props =>
-              `${props.fields.title.value || 'Untitled'} — ${props.fields.price.value || ''}`,
+              `${props.fields.published.value ? '✓' : '○'} ${props.fields.title.value || 'Untitled'} — ${props.fields.price.value || ''}`,
           }
         ),
 
