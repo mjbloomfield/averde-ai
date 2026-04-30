@@ -1,5 +1,45 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
+
+const reader = createReader(process.cwd(), keystaticConfig);
+const home = await reader.singletons.home.read();
+
+const heroHeadline       = home?.heroHeadline       ?? 'Your Personal';
+const heroEmphasis       = home?.heroHeadlineEmphasis ?? 'AI Guy.';
+const heroSub            = home?.heroSub            ?? '';
+const heroPrimaryCta     = home?.heroPrimaryCta     ?? 'Get my free AI audit';
+const heroSecondaryCta   = home?.heroSecondaryCta   ?? 'See free resources →';
+const heroCardItems      = home?.heroCardItems      ?? ['Explain AI — plain English, no fluff', 'Deploy tools that fit your business', 'Build custom AI on your data'];
+
+const toolsEyebrow   = home?.toolsEyebrow   ?? 'Start here — no cost';
+const toolsHeadline  = home?.toolsHeadline  ?? 'Free tools to get you oriented.';
+const toolsDek       = home?.toolsDek       ?? '';
+
+const servicesEyebrow  = home?.servicesEyebrow  ?? 'Ready to go deeper';
+const servicesHeadline = home?.servicesHeadline ?? "When you're ready to actually build something.";
+const servicesDek      = home?.servicesDek      ?? '';
+const services = home?.services ?? [
+  { title: 'Strategy Session',           price: '$250 – $500',    description: '', ctaLabel: 'Book a session →',     ctaHref: '/ai-audit' },
+  { title: 'AI-Ready Website & SEO',     price: 'From $1,200',    description: '', ctaLabel: 'Get a quote →',         ctaHref: '/contact' },
+  { title: 'Voice Agent — AI Receptionist', price: 'From $297/mo', description: '', ctaLabel: 'See how it works →', ctaHref: '/how-it-works' },
+  { title: 'Custom AI Builds',           price: 'Quote-based',    description: '', ctaLabel: "Let's talk →",          ctaHref: '/contact' },
+];
+
+const quoteText  = home?.quoteText  ?? '';
+const quoteName  = home?.quoteName  ?? 'Dr. Priya Ramanathan';
+const quoteRole  = home?.quoteRole  ?? 'Owner · Harbor Dental · Boulder, CO';
+
+const aboutEyebrow  = home?.aboutEyebrow  ?? 'Why work with me';
+const aboutHeadline = home?.aboutHeadline ?? "I'm not a consultant who learned AI last year.";
+const aboutBio1     = home?.aboutBio1     ?? '';
+const aboutBio2     = home?.aboutBio2     ?? '';
+
+const ctaHeadline = home?.ctaHeadline ?? 'Not sure where AI fits?\nStart with the free audit.';
+const ctaDek      = home?.ctaDek      ?? '';
+const ctaButton   = home?.ctaButton   ?? 'Book your free AI audit';
+const ctaMicro    = home?.ctaMicro    ?? 'No commitment · No credit card · Just clarity';
 ---
 
 <BaseLayout
@@ -15,15 +55,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <div class="wrap hero-grid">
       <div class="hero-text">
         <span class="tag">Boulder, CO · Serving businesses nationwide</span>
-        <h1>Your Personal<br/><em>AI Guy.</em></h1>
-        <p class="hero-sub">
-          I'm Mark Bloomfield — engineer, founder, and the person who explains AI to small
-          businesses without the jargon or the hype. I help you figure out what's real,
-          what's worth it, and how to actually make it work for you.
-        </p>
+        <h1>{heroHeadline}<br/><em>{heroEmphasis}</em></h1>
+        <p class="hero-sub">{heroSub}</p>
         <div class="hero-ctas">
-          <a href="/ai-audit" class="btn btn-primary">Get my free AI audit</a>
-          <a href="#tools" class="btn btn-ghost">See free resources →</a>
+          <a href="/ai-audit" class="btn btn-primary">{heroPrimaryCta}</a>
+          <a href="#tools" class="btn btn-ghost">{heroSecondaryCta}</a>
         </div>
         <div class="hero-trust">
           <span>Free AI audit · No credit card</span>
@@ -44,9 +80,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <div class="hero-card-body">
             <div class="hero-card-tag">What I do</div>
             <ul class="hero-card-list">
-              <li>Explain AI — plain English, no fluff</li>
-              <li>Deploy tools that fit your business</li>
-              <li>Build custom AI on your data</li>
+              {heroCardItems.map((item: string) => <li>{item}</li>)}
             </ul>
           </div>
         </div>
@@ -63,13 +97,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <div class="wrap">
       <div class="section-head-split">
         <div>
-          <span class="eyebrow eyebrow-light">Start here — no cost</span>
-          <h2 class="light">Free tools to<br/>get you oriented.</h2>
+          <span class="eyebrow eyebrow-light">{toolsEyebrow}</span>
+          <h2 class="light" set:html={toolsHeadline.replace('\n', '<br/>')}></h2>
         </div>
-        <p class="dek-light">
-          Not ready to buy anything yet? Good. These free resources will show you
-          exactly where AI can help your business — and where it can't.
-        </p>
+        <p class="dek-light">{toolsDek}</p>
       </div>
       <div class="tools-grid">
         <a href="/ai-audit" class="tool-card">
@@ -197,58 +228,24 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <section class="section">
     <div class="wrap">
       <div class="section-head">
-        <span class="eyebrow">Ready to go deeper</span>
-        <h2>When you're ready to actually build something.</h2>
-        <p class="dek">From a focused strategy session to a full custom AI build — I work with you directly, at every stage.</p>
+        <span class="eyebrow">{servicesEyebrow}</span>
+        <h2>{servicesHeadline}</h2>
+        <p class="dek">{servicesDek}</p>
       </div>
       <div class="services-ladder">
-        <div class="service-row">
-          <div class="service-step">Step 2</div>
-          <div class="service-content">
-            <div class="service-head">
-              <h3>Strategy Session</h3>
-              <span class="service-price">$250 – $500</span>
+        {services.map((svc: { title: string; price: string; description: string; ctaLabel: string; ctaHref: string }, i: number) => (
+          <div class="service-row">
+            <div class="service-step">Step {i + 2}</div>
+            <div class="service-content">
+              <div class="service-head">
+                <h3>{svc.title}</h3>
+                <span class="service-price">{svc.price}</span>
+              </div>
+              <p>{svc.description}</p>
             </div>
-            <p>A focused 90-minute working session where we map out your AI roadmap — what to build, what to buy off the shelf, and what to skip entirely. You leave with a prioritized action plan.</p>
+            <a href={svc.ctaHref} class="service-cta-btn">{svc.ctaLabel}</a>
           </div>
-          <a href="/ai-audit" class="service-cta-btn">Book a session →</a>
-        </div>
-
-        <div class="service-row">
-          <div class="service-step">Step 3</div>
-          <div class="service-content">
-            <div class="service-head">
-              <h3>AI-Ready Website &amp; SEO Overhaul</h3>
-              <span class="service-price">From $1,200</span>
-            </div>
-            <p>Your website rebuilt to rank in AI search (ChatGPT, Perplexity, Google AI Overviews) — not just Google. Structured data, AEO content, and local AI citations all included.</p>
-          </div>
-          <a href="/contact" class="service-cta-btn">Get a quote →</a>
-        </div>
-
-        <div class="service-row">
-          <div class="service-step">Step 4</div>
-          <div class="service-content">
-            <div class="service-head">
-              <h3>Voice Agent — AI Receptionist</h3>
-              <span class="service-price">From $297/mo</span>
-            </div>
-            <p>An AI that answers your phone 24/7 — qualifying leads, booking appointments, handling FAQs. Sounds human. Deployed in 5 business days.</p>
-          </div>
-          <a href="/how-it-works" class="service-cta-btn">See how it works →</a>
-        </div>
-
-        <div class="service-row">
-          <div class="service-step">Step 5</div>
-          <div class="service-content">
-            <div class="service-head">
-              <h3>Custom AI Builds</h3>
-              <span class="service-price">Quote-based</span>
-            </div>
-            <p>Bespoke AI built around your data, your workflows, and your team's way of working. From internal knowledge bases to multi-step automations that replace hours of manual work.</p>
-          </div>
-          <a href="/contact" class="service-cta-btn">Let's talk →</a>
-        </div>
+        ))}
       </div>
     </div>
   </section>
@@ -260,12 +257,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <svg width="32" height="24" viewBox="0 0 32 24" fill="none" aria-hidden="true" style="margin-bottom:24px;opacity:.4">
         <path d="M0 24 C0 14 4 6 14 0L16 4 C10 8 8 12 8 16v8H0Z M18 24 C18 14 22 6 32 0L34 4 C28 8 26 12 26 16v8H18Z" fill="#C99356"/>
       </svg>
-      <blockquote>
-        "Mark set up our voice agent in four days. It books as many appointments in a weekend
-        as my front desk used to handle in a week — and it's cheaper than one hour of my time."
-      </blockquote>
-      <div class="cite-name">Dr. Priya Ramanathan</div>
-      <div class="cite-role">Owner · Harbor Dental · Boulder, CO</div>
+      <blockquote>{quoteText}</blockquote>
+      <div class="cite-name">{quoteName}</div>
+      <div class="cite-role">{quoteRole}</div>
     </div>
   </section>
 
@@ -281,18 +275,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         </div>
       </div>
       <div class="about-text">
-        <span class="eyebrow">Why work with me</span>
-        <h2>I'm not a consultant who learned AI last year.</h2>
-        <p>
-          I spent years as a composites research engineer and sustainability consultant
-          before the AI wave hit. When I saw what it could do for small businesses — not
-          the hype, the actual practical tools — I built Averde to make it accessible.
-        </p>
-        <p>
-          Every client works directly with me. I figure out what you actually need,
-          skip the things you don't, and build or deploy it fast. Based in Boulder, CO.
-          Working with businesses everywhere.
-        </p>
+        <span class="eyebrow">{aboutEyebrow}</span>
+        <h2>{aboutHeadline}</h2>
+        <p>{aboutBio1}</p>
+        <p>{aboutBio2}</p>
         <a href="/about" class="btn btn-primary" style="margin-top:8px">Meet Mark →</a>
       </div>
     </div>
@@ -302,13 +288,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <section class="final-cta">
     <div class="wrap">
       <span class="eyebrow" style="justify-content:center;margin-bottom:20px">The simplest place to start</span>
-      <h2>Not sure where AI fits?<br/>Start with the free audit.</h2>
-      <p class="dek">
-        30 minutes. I'll map out exactly where AI can help your specific business,
-        what it costs, and what to realistically expect. No jargon. No pressure.
-      </p>
-      <a href="/ai-audit" class="btn btn-primary btn-lg">Book your free AI audit</a>
-      <div class="micro">No commitment · No credit card · Just clarity</div>
+      <h2 set:html={ctaHeadline.replace('\n', '<br/>')}></h2>
+      <p class="dek">{ctaDek}</p>
+      <a href="/ai-audit" class="btn btn-primary btn-lg">{ctaButton}</a>
+      <div class="micro">{ctaMicro}</div>
     </div>
   </section>
 

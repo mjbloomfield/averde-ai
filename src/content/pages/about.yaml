@@ -1,0 +1,12 @@
+heroHeadline: 'Engineer. Founder. Your personal AI guy.'
+heroDek: "I don't do jargon. I don't do hype. I help small businesses figure out what AI is actually worth doing — and then I build it."
+bioIntro: "Before I started Averde, I spent years doing serious technical work — composites research engineering, sustainability consulting. I learned how to think about complex systems, how to separate what's real from what sounds good, and how to explain both to non-technical people."
+bioBackground: "When the AI wave hit, I saw two things: a lot of hype aimed at enterprises, and a massive gap for small businesses. The tools existed. The use cases were real. But there was nobody translating it. So I built Averde to be that person."
+bioApproach: "Every engagement is with me directly. No junior consultants, no offshore delivery teams. I scope it, build it, and support it. If it doesn't fit your business, I'll tell you that too."
+values:
+  - title: 'No jargon'
+    description: "If I can't explain it in plain English, I don't build it."
+  - title: 'Fast to results'
+    description: "I ship working tools, not slide decks. Most projects are live in days."
+  - title: 'Honest scope'
+    description: "I'll tell you what AI can't do for your business just as readily as what it can."

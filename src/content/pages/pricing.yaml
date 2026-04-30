@@ -1,0 +1,48 @@
+heroHeadline: 'Simple, honest pricing.'
+heroDek: 'Start free. Step up when you need more.'
+plans:
+  - name: 'Strategy Session'
+    price: '$250 – $500'
+    description: 'A focused 90-minute working session. Walk away with a clear AI action plan.'
+    ctaLabel: 'Book a session'
+    featured: false
+    features:
+      - '90-minute 1:1 with Mark'
+      - 'Full AI opportunity audit'
+      - 'Prioritized action plan'
+      - 'Tools & vendor recommendations'
+      - 'Follow-up Q&A by email'
+  - name: 'Voice Agent'
+    price: 'From $297/mo'
+    description: 'AI receptionist that answers calls, books appointments, and handles FAQs 24/7.'
+    ctaLabel: 'Get started'
+    featured: true
+    features:
+      - 'Live in 5 business days'
+      - '24/7 call answering'
+      - 'Appointment booking'
+      - 'Lead qualification'
+      - 'Monthly reporting'
+      - 'Ongoing support from Mark'
+  - name: 'AI-Ready Website'
+    price: 'From $1,200'
+    description: 'Website rebuilt to rank in AI search — ChatGPT, Perplexity, and Google AI Overviews.'
+    ctaLabel: 'Get a quote'
+    featured: false
+    features:
+      - 'Full site rebuild'
+      - 'AI/AEO content strategy'
+      - 'Structured data & schema markup'
+      - 'Local AI citation setup'
+      - '90-day post-launch support'
+  - name: 'Custom AI Build'
+    price: 'Quote-based'
+    description: 'Bespoke AI built around your data, your workflows, your team.'
+    ctaLabel: "Let's talk"
+    featured: false
+    features:
+      - 'Custom scoping call'
+      - 'Built on your data & tools'
+      - 'Integrations (Zapier, n8n, APIs)'
+      - 'Internal knowledge bases'
+      - 'Fractional Head of AI option'
