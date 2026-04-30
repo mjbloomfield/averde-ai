@@ -323,10 +323,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   .wrap { max-width: 1180px; margin: 0 auto; padding: 0 40px; }
   @media (max-width: 720px) { .wrap { padding: 0 24px; } }
 
-  /* ---- SVG wood-grain data URI (reused across sections) ---- */
-  /* Low X / high Y turbulence = horizontal wood grain lines */
+  /* ---- Real wood photo variables ---- */
   :root {
-    --wood-grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='500' height='500'><filter id='wg'><feTurbulence type='turbulence' baseFrequency='0.018 0.72' numOctaves='4' seed='12' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 0.55 0 0 0 0 0.33 0 0 0 0 0.12 0 0 0 1 0'/></filter><rect width='500' height='500' filter='url(%23wg)'/></svg>");
+    --wood-planks: url('/images/textures/wood-planks-warm.jpg');
+    --wood-headshot: url('/images/textures/mark-headshot.jpg');
   }
 
   /* ---- EYEBROW ---- */
@@ -366,10 +366,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   /* Visible wood-plank strip across top of hero */
   .wood-strip {
     height: 180px;
-    background-color: var(--walnut-500);
-    background-image: var(--wood-grain);
-    background-size: 500px;
-    background-blend-mode: multiply;
+    background-image: var(--wood-planks);
+    background-size: cover;
+    background-position: center 30%;
     opacity: 0.9;
     margin-bottom: 0;
     position: relative;
@@ -427,10 +426,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
   .hero-card-img {
     aspect-ratio: 4/3;
-    background-color: var(--walnut-700);
-    background-image: var(--wood-grain);
-    background-size: 500px;
-    background-blend-mode: multiply;
+    background-image: var(--wood-headshot);
+    background-size: cover;
+    background-position: center top;
     position: relative;
   }
   .hero-card-img::after {
@@ -513,8 +511,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   /* ---- WOOD DARK SECTION (tools) ---- */
   .wood-dark {
     background-color: var(--walnut-700);
-    background-image: var(--wood-grain);
-    background-size: 500px;
+    background-image: var(--wood-planks);
+    background-size: cover;
+    background-position: center;
     background-blend-mode: multiply;
     position: relative;
   }
@@ -594,14 +593,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     position: relative;
   }
   .playbook:hover { box-shadow: 0 12px 32px rgba(31,26,18,.12); border-color: var(--rust); }
-  /* wood-grain top bar per playbook card */
+  /* real wood top bar per playbook card */
   .playbook::before {
     content: "";
     display: block; height: 6px; width: 100%;
-    background-color: var(--walnut-500);
-    background-image: var(--wood-grain);
-    background-size: 400px;
-    background-blend-mode: multiply;
+    background-image: var(--wood-planks);
+    background-size: cover;
+    background-position: center 40%;
     border-radius: 8px 8px 0 0;
     position: absolute; top: 0; left: 0; right: 0;
   }
@@ -691,11 +689,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     .service-row { grid-template-columns: 1fr; gap: 12px; }
   }
 
-  /* ---- TESTIMONIAL — walnut wood ---- */
+  /* ---- TESTIMONIAL — real walnut plank photo ---- */
   .testi {
     background-color: var(--walnut-700);
-    background-image: var(--wood-grain);
-    background-size: 500px;
+    background-image: var(--wood-planks);
+    background-size: cover;
+    background-position: center;
     background-blend-mode: multiply;
     padding: 96px 40px; text-align: center;
     position: relative; overflow: hidden;
@@ -732,10 +731,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
   .about-wood-inner {
     aspect-ratio: 3/4;
-    background-color: var(--walnut-500);
-    background-image: var(--wood-grain);
-    background-size: 500px;
-    background-blend-mode: multiply;
+    background-image: var(--wood-headshot);
+    background-size: cover;
+    background-position: center top;
     position: relative;
   }
   .about-wood-inner::after {
