@@ -16,6 +16,19 @@ const heroCardItems      = home?.heroCardItems      ?? ['Explain AI — plain En
 const toolsEyebrow   = home?.toolsEyebrow   ?? 'Start here — no cost';
 const toolsHeadline  = home?.toolsHeadline  ?? 'Free tools to get you oriented.';
 const toolsDek       = home?.toolsDek       ?? '';
+const tools = home?.tools ?? [
+  { icon: 'clock',      tag: '30-min call · Free', title: 'Free AI Audit',          description: '', ctaLabel: 'Book your audit →',     ctaHref: '/ai-audit' },
+  { icon: 'checklist',  tag: '2-min quiz · Free',  title: 'AI Readiness Quiz',      description: '', ctaLabel: 'Take the quiz →',        ctaHref: '#quiz' },
+  { icon: 'calculator', tag: 'Instant · Free',      title: 'Missed Call Calculator', description: '', ctaLabel: 'Calculate my loss →',    ctaHref: '#calculator' },
+];
+const iconSvgs: Record<string, string> = {
+  clock:      `<svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="14" r="10"/><path d="M14 9v5l3 3"/></svg>`,
+  checklist:  `<svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h16M6 13h12M6 18h8"/></svg>`,
+  calculator: `<svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="16" height="20" rx="2"/><path d="M10 10h8M10 14h5M10 18h3"/></svg>`,
+  phone:      `<svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6a2 2 0 012-2h2l2 5-2.5 1.5a11 11 0 005 5L16 13l5 2v2a2 2 0 01-2 2C9 19 6 10 6 6z"/></svg>`,
+  chart:      `<svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20l5-5 4 4 7-7"/><path d="M6 4v16h16"/></svg>`,
+  star:       `<svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4l2.5 7h7l-5.5 4 2 7-6-4-6 4 2-7L4 11h7z"/></svg>`,
+};
 
 const servicesEyebrow  = home?.servicesEyebrow  ?? 'Ready to go deeper';
 const servicesHeadline = home?.servicesHeadline ?? "When you're ready to actually build something.";
@@ -103,41 +116,15 @@ const ctaMicro    = home?.ctaMicro    ?? 'No commitment · No credit card · Jus
         <p class="dek-light">{toolsDek}</p>
       </div>
       <div class="tools-grid">
-        <a href="/ai-audit" class="tool-card">
-          <div class="tool-icon">
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="14" cy="14" r="10"/>
-              <path d="M14 9v5l3 3"/>
-            </svg>
-          </div>
-          <div class="tool-tag">30-min call · Free</div>
-          <h3>Free AI Audit</h3>
-          <p>30 minutes with me. I'll map out exactly where AI can help your business, what it'll cost, and what to expect — no pitch, no pressure.</p>
-          <span class="tool-cta">Book your audit →</span>
-        </a>
-        <a href="#quiz" class="tool-card">
-          <div class="tool-icon">
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M6 8h16M6 13h12M6 18h8"/>
-            </svg>
-          </div>
-          <div class="tool-tag">2-min quiz · Free</div>
-          <h3>AI Readiness Quiz</h3>
-          <p>Answer 8 quick questions and get a personalised AI readiness score — with specific recommendations for your type of business.</p>
-          <span class="tool-cta">Take the quiz →</span>
-        </a>
-        <a href="#calculator" class="tool-card">
-          <div class="tool-icon">
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="6" y="4" width="16" height="20" rx="2"/>
-              <path d="M10 10h8M10 14h5M10 18h3"/>
-            </svg>
-          </div>
-          <div class="tool-tag">Instant · Free</div>
-          <h3>Missed Call Calculator</h3>
-          <p>Enter your average job value and how many calls you miss per week. I'll show you the exact revenue you're leaving on the table.</p>
-          <span class="tool-cta">Calculate my loss →</span>
-        </a>
+        {tools.map((tool: { icon: string; tag: string; title: string; description: string; ctaLabel: string; ctaHref: string }) => (
+          <a href={tool.ctaHref} class="tool-card">
+            <div class="tool-icon" set:html={iconSvgs[tool.icon] ?? iconSvgs.clock}></div>
+            <div class="tool-tag">{tool.tag}</div>
+            <h3>{tool.title}</h3>
+            <p>{tool.description}</p>
+            <span class="tool-cta">{tool.ctaLabel}</span>
+          </a>
+        ))}
       </div>
     </div>
   </section>
@@ -154,7 +141,7 @@ const ctaMicro    = home?.ctaMicro    ?? 'No commitment · No credit card · Jus
         </p>
       </div>
       <div class="playbooks-grid">
-        <a href="/dental" class="playbook">
+        <a href="/industries/dental" class="playbook">
           <div class="playbook-industry">Dental Practices</div>
           <svg class="playbook-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
             <path d="M10 6 C 8 6, 6 8, 6 12 C 6 18, 9 26, 12 26 C 14 26, 14 22, 16 22 C 18 22, 18 26, 20 26 C 23 26, 26 18, 26 12 C 26 8, 24 6, 22 6 C 20 6, 18 8, 16 8 C 14 8, 12 6, 10 6 Z"/>
@@ -176,7 +163,7 @@ const ctaMicro    = home?.ctaMicro    ?? 'No commitment · No credit card · Jus
           </div>
         </a>
 
-        <a href="/hvac" class="playbook">
+        <a href="/industries/hvac" class="playbook">
           <div class="playbook-industry">HVAC &amp; Contractors</div>
           <svg class="playbook-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
             <path d="M13 4 L 19 4 L 19 10 L 24 10 L 28 14 L 28 20 L 24 24 L 19 24 L 19 28 L 13 28 L 13 22 L 8 22 L 4 18 L 4 12 L 8 8 L 13 8 Z"/>
@@ -199,7 +186,7 @@ const ctaMicro    = home?.ctaMicro    ?? 'No commitment · No credit card · Jus
           </div>
         </a>
 
-        <a href="/real-estate" class="playbook">
+        <a href="/industries/real-estate" class="playbook">
           <div class="playbook-industry">Real Estate Agents</div>
           <svg class="playbook-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 16 L 16 6 L 28 16 L 26 16 L 26 26 L 18 26 L 18 20 L 14 20 L 14 26 L 6 26 L 6 16 Z"/>

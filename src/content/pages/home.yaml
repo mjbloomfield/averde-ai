@@ -12,6 +12,25 @@ heroCardItems:
 toolsEyebrow: 'Start here — no cost'
 toolsHeadline: 'Free tools to get you oriented.'
 toolsDek: "Not ready to buy anything yet? Good. These free resources will show you exactly where AI can help your business — and where it can't."
+tools:
+  - icon: clock
+    tag: '30-min call · Free'
+    title: 'Free AI Audit'
+    description: "30 minutes with me. I'll map out exactly where AI can help your business, what it'll cost, and what to expect — no pitch, no pressure."
+    ctaLabel: 'Book your audit →'
+    ctaHref: '/ai-audit'
+  - icon: checklist
+    tag: '2-min quiz · Free'
+    title: 'AI Readiness Quiz'
+    description: 'Answer 8 quick questions and get a personalised AI readiness score — with specific recommendations for your type of business.'
+    ctaLabel: 'Take the quiz →'
+    ctaHref: '#quiz'
+  - icon: calculator
+    tag: 'Instant · Free'
+    title: 'Missed Call Calculator'
+    description: "Enter your average job value and how many calls you miss per week. I'll show you the exact revenue you're leaving on the table."
+    ctaLabel: 'Calculate my loss →'
+    ctaHref: '#calculator'
 
 servicesEyebrow: 'Ready to go deeper'
 servicesHeadline: "When you're ready to actually build something."

@@ -9,6 +9,58 @@ export default config({
   },
 
   collections: {
+
+    // ── INDUSTRY PAGES ────────────────────────────────────────────────────────
+    industries: collection({
+      label: 'Industry Pages',
+      slugField: 'name',
+      path: 'src/content/industries/*',
+      format: { data: 'yaml' },
+      schema: {
+        name: fields.slug({ name: { label: 'Industry name (also used in URL)' } }),
+        seoTitle: fields.text({ label: 'SEO page title' }),
+        seoDescription: fields.text({ label: 'SEO meta description', multiline: true }),
+        heroEyebrow: fields.text({ label: 'Hero — eyebrow tag', description: 'e.g. "For Dental Practices"' }),
+        heroHeadline: fields.text({ label: 'Hero — headline', multiline: true }),
+        heroDek: fields.text({ label: 'Hero — subheadline', multiline: true }),
+        heroCta: fields.text({ label: 'Hero — CTA button label', defaultValue: 'Get My Free Missed Call Audit' }),
+        painHeadline: fields.text({ label: 'Pain section — headline' }),
+        painPoints: fields.array(
+          fields.object({
+            pain: fields.text({ label: 'Problem' }),
+            result: fields.text({ label: 'Consequence / impact', multiline: true }),
+          }),
+          {
+            label: 'Pain points',
+            itemLabel: props => props.fields.pain.value || 'New pain point',
+          }
+        ),
+        solutionHeadline: fields.text({ label: 'Solution section — headline' }),
+        solutionDek: fields.text({ label: 'Solution section — subheadline', multiline: true }),
+        capabilities: fields.array(
+          fields.text({ label: 'Capability' }),
+          {
+            label: 'What the AI does — capability list',
+            itemLabel: props => props.value || 'New capability',
+          }
+        ),
+        roiHeadline: fields.text({ label: 'ROI section — headline', multiline: true }),
+        roiBody: fields.text({ label: 'ROI section — body text', multiline: true }),
+        roiStats: fields.array(
+          fields.object({
+            stat: fields.text({ label: 'Statistic (e.g. "15" or "×$250")' }),
+            label: fields.text({ label: 'Label (e.g. "missed calls/day")' }),
+          }),
+          {
+            label: 'ROI stats grid (leave empty for text-only layout)',
+            itemLabel: props => `${props.fields.stat.value} — ${props.fields.label.value}`,
+          }
+        ),
+        ctaHeadline: fields.text({ label: 'Bottom CTA — headline' }),
+        ctaDek: fields.text({ label: 'Bottom CTA — paragraph', multiline: true }),
+      },
+    }),
+
     blog: collection({
       label: 'Blog Posts',
       slugField: 'title',
@@ -103,6 +155,31 @@ export default config({
           multiline: true,
           defaultValue: "Not ready to buy anything yet? Good. These free resources will show you exactly where AI can help your business — and where it can't.",
         }),
+        tools: fields.array(
+          fields.object({
+            icon: fields.select({
+              label: 'Icon',
+              options: [
+                { label: 'Clock', value: 'clock' },
+                { label: 'Checklist', value: 'checklist' },
+                { label: 'Calculator', value: 'calculator' },
+                { label: 'Phone', value: 'phone' },
+                { label: 'Chart', value: 'chart' },
+                { label: 'Star', value: 'star' },
+              ],
+              defaultValue: 'clock',
+            }),
+            tag: fields.text({ label: 'Tag (e.g. "30-min call · Free")' }),
+            title: fields.text({ label: 'Tool name' }),
+            description: fields.text({ label: 'Description', multiline: true }),
+            ctaLabel: fields.text({ label: 'Link label' }),
+            ctaHref: fields.text({ label: 'Link URL' }),
+          }),
+          {
+            label: 'Free tools cards',
+            itemLabel: props => props.fields.title.value || 'New tool',
+          }
+        ),
 
         // Services ladder
         servicesEyebrow: fields.text({
