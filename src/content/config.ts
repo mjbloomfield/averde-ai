@@ -6,7 +6,7 @@ const blog = defineCollection({
     title: z.string(),
     excerpt: z.string(),
     category: z.string(),
-    publishedDate: z.string().optional(),
+    publishedDate: z.coerce.string().optional(),
     author: z.string().default('Mark Bloomfield'),
     seoDescription: z.string().optional(),
   }),
