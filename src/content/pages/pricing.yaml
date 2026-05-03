@@ -1,6 +1,20 @@
 heroHeadline: 'Simple, honest pricing.'
-heroDek: 'Start free. Step up when you need more.'
+heroDek: 'Start with the free audit. Step up when you need more.'
 plans:
+  - name: 'AI-Ready Website'
+    price: 'From $1,200'
+    description: "Get found in ChatGPT, Perplexity, and Google AI Overviews — not just regular Google search. The biggest shift in how customers find local businesses since the smartphone."
+    ctaLabel: 'Get a quote'
+    featured: true
+    features:
+      - 'Full site rebuild on a modern, fast stack'
+      - 'AEO-optimized copy across every page'
+      - 'FAQ + LocalBusiness schema markup'
+      - 'AI-search visibility report (before & after)'
+      - 'Google Business Profile optimization'
+      - 'Local AI citation setup (Apple Maps, Bing, etc.)'
+      - 'Content audit + 3-month content plan'
+      - '90-day post-launch optimization support'
   - name: 'Strategy Session'
     price: '$250 – $500'
     description: 'A focused 90-minute working session. Walk away with a clear AI action plan.'
@@ -13,10 +27,10 @@ plans:
       - 'Tools & vendor recommendations'
       - 'Follow-up Q&A by email'
   - name: 'Voice Agent'
-    price: 'From $297/mo'
-    description: 'AI receptionist that answers calls, books appointments, and handles FAQs 24/7.'
-    ctaLabel: 'Get started'
-    featured: true
+    price: ''
+    description: "AI receptionist that answers calls, books appointments, and handles FAQs 24/7. A great add-on once your AI-Ready Website is bringing in the right calls."
+    ctaLabel: 'Get a quote'
+    featured: false
     features:
       - 'Live in 5 business days'
       - '24/7 call answering'
@@ -24,17 +38,6 @@ plans:
       - 'Lead qualification'
       - 'Monthly reporting'
       - 'Ongoing support from Mark'
-  - name: 'AI-Ready Website'
-    price: 'From $1,200'
-    description: 'Website rebuilt to rank in AI search — ChatGPT, Perplexity, and Google AI Overviews.'
-    ctaLabel: 'Get a quote'
-    featured: false
-    features:
-      - 'Full site rebuild'
-      - 'AI/AEO content strategy'
-      - 'Structured data & schema markup'
-      - 'Local AI citation setup'
-      - '90-day post-launch support'
   - name: 'Custom AI Build'
     price: 'Quote-based'
     description: 'Bespoke AI built around your data, your workflows, your team.'

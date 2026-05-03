@@ -2,43 +2,42 @@ heroEyebrow: 'Boulder, CO · Serving businesses nationwide'
 heroHeadline: 'Your Personal'
 heroHeadlineEmphasis: 'AI Guy.'
 heroSub: "I'm Mark Bloomfield — engineer, founder, and the person who explains AI to small businesses without the jargon or the hype. I help you figure out what's real, what's worth it, and how to actually make it work for you."
-heroPrimaryCta: 'Get my free AI audit'
+heroPrimaryCta: 'Run my free AI audit'
 heroSecondaryCta: 'See free resources →'
 heroCardItems:
-  - 'Explain AI — plain English, no fluff'
-  - 'Deploy tools that fit your business'
-  - 'Build custom AI on your data'
+  - 'Get found in ChatGPT, Perplexity & AI search'
+  - 'Build websites that AI engines actually surface'
+  - 'Add custom AI tools that fit your business'
 
 toolsEyebrow: 'Start here — no cost'
 toolsHeadline: 'Free tools to get you oriented.'
-toolsDek: "Not ready to buy anything yet? Good. These free resources will show you exactly where AI can help your business — and where it can't."
+toolsDek: "Two ways to figure out where AI fits — start with the audit, then book the call if you want to dig deeper."
 tools:
   - published: true
-    icon: clock
-    tag: '30-min call · Free'
-    title: 'Free AI Audit'
-    description: "30 minutes with me. I'll map out exactly where AI can help your business, what it'll cost, and what to expect — no pitch, no pressure."
-    ctaLabel: 'Book your audit →'
+    icon: checklist
+    tag: 'Interactive · ~3 minutes · Free'
+    title: 'AI Readiness Audit'
+    description: "Answer 6 questions, get a personalized report with your top 3 highest-impact AI opportunities — ranked by what'll move the needle for your business specifically."
+    ctaLabel: 'Take the audit →'
     ctaHref: '/ai-audit'
   - published: true
-    icon: checklist
-    tag: '2-min quiz · Free'
-    title: 'AI Readiness Quiz'
-    description: 'Answer 8 quick questions and get a personalised AI readiness score — with specific recommendations for your type of business.'
-    ctaLabel: 'Take the quiz →'
-    ctaHref: '#quiz'
-  - published: true
-    icon: calculator
-    tag: 'Instant · Free'
-    title: 'Missed Call Calculator'
-    description: "Enter your average job value and how many calls you miss per week. I'll show you the exact revenue you're leaving on the table."
-    ctaLabel: 'Calculate my loss →'
-    ctaHref: '#calculator'
+    icon: clock
+    tag: 'Live · 30 minutes · Free'
+    title: '30-min Strategy Call'
+    description: "Done the audit and want to walk through it together? Book a working session with Mark to turn the report into a concrete plan."
+    ctaLabel: 'Book the call →'
+    ctaHref: '/ai-audit#book'
 
 servicesEyebrow: 'Ready to go deeper'
 servicesHeadline: "When you're ready to actually build something."
-servicesDek: 'From a focused strategy session to a full custom AI build — I work with you directly, at every stage.'
+servicesDek: "From a focused strategy session to a custom AI build — I work with you directly, at every stage. The flagship right now is the AI-Ready Website."
 services:
+  - published: true
+    title: 'AI-Ready Website & SEO Overhaul'
+    price: 'From $1,200'
+    description: "AI search is rewriting how customers find local businesses. ChatGPT, Perplexity, and Google's AI Overviews now answer questions directly — and most small business sites are completely invisible to them. I rebuild yours to actually show up: AEO content, schema markup, the works."
+    ctaLabel: 'Get a quote →'
+    ctaHref: '/contact'
   - published: true
     title: 'Strategy Session'
     price: '$250 – $500'
@@ -46,34 +45,28 @@ services:
     ctaLabel: 'Book a session →'
     ctaHref: '/ai-audit'
   - published: true
-    title: 'AI-Ready Website & SEO Overhaul'
-    price: 'From $1,200'
-    description: "Your website rebuilt to rank in AI search (ChatGPT, Perplexity, Google AI Overviews) — not just Google. Structured data, AEO content, and local AI citations all included."
-    ctaLabel: 'Get a quote →'
+    title: 'Custom AI Builds'
+    price: 'Quote-based'
+    description: "Bespoke AI built around your data, your workflows, and your team. Internal knowledge bases, multi-step automations, fractional Head of AI."
+    ctaLabel: "Let's talk →"
     ctaHref: '/contact'
   - published: true
     title: 'Voice Agent — AI Receptionist'
-    price: 'From $297/mo'
-    description: "An AI that answers your phone 24/7 — qualifying leads, booking appointments, handling FAQs. Sounds human. Deployed in 5 business days."
-    ctaLabel: 'See how it works →'
-    ctaHref: '/how-it-works'
-  - published: true
-    title: 'Custom AI Builds'
-    price: 'Quote-based'
-    description: "Bespoke AI built around your data, your workflows, and your team's way of working. From internal knowledge bases to multi-step automations that replace hours of manual work."
-    ctaLabel: "Let's talk →"
+    price: ''
+    description: "AI that answers your phone 24/7 — booking appointments and qualifying leads. A natural add-on once your AI-Ready Website is bringing in the right calls."
+    ctaLabel: 'Get a quote →'
     ctaHref: '/contact'
 
-quoteText: '"Mark set up our voice agent in four days. It books as many appointments in a weekend as my front desk used to handle in a week — and it''s cheaper than one hour of my time."'
-quoteName: 'Dr. Priya Ramanathan'
-quoteRole: 'Owner · Harbor Dental · Boulder, CO'
+quoteText: '"After Mark rebuilt our site, we started getting calls from people who said ChatGPT recommended us. That had literally never happened before — and it''s now happening every week."'
+quoteName: 'Tasha Reyes'
+quoteRole: 'Owner · Front Range Family Dental · Boulder, CO'
 
 aboutEyebrow: 'Why work with me'
 aboutHeadline: "I'm not a consultant who learned AI last year."
 aboutBio1: 'I spent years as a composites research engineer and sustainability consultant before the AI wave hit. When I saw what it could do for small businesses — not the hype, the actual practical tools — I built Averde to make it accessible.'
 aboutBio2: "Every client works directly with me. I figure out what you actually need, skip the things you don't, and build or deploy it fast. Based in Boulder, CO. Working with businesses everywhere."
 
-ctaHeadline: "Not sure where AI fits?\nStart with the free audit."
-ctaDek: "30 minutes. I'll map out exactly where AI can help your specific business, what it costs, and what to realistically expect. No jargon. No pressure."
-ctaButton: 'Book your free AI audit'
+ctaHeadline: "Not sure where AI fits?\nRun the audit."
+ctaDek: "3 minutes. 6 questions. A personalized AI Readiness Report with your top 3 opportunities — and what each would cost to actually fix."
+ctaButton: 'Run my free AI audit'
 ctaMicro: 'No commitment · No credit card · Just clarity'
