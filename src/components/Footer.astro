@@ -1,5 +1,10 @@
 ---
 import Logo from './Logo.astro';
+import { getCollection } from 'astro:content';
+
+const industries = (await getCollection('industries'))
+  .filter(i => i.data.published !== false)
+  .sort((a, b) => a.data.name.localeCompare(b.data.name));
 ---
 
 <footer class="bg-green-deep text-cream">
@@ -23,9 +28,9 @@ import Logo from './Logo.astro';
         <div>
           <h4 class="text-xs font-semibold uppercase tracking-widest text-cream/40 mb-4">Industries</h4>
           <ul class="space-y-2">
-            <li><a href="/dental" class="text-sm text-cream/70 hover:text-sand transition-colors">Dental Practices</a></li>
-            <li><a href="/hvac" class="text-sm text-cream/70 hover:text-sand transition-colors">HVAC & Contractors</a></li>
-            <li><a href="/real-estate" class="text-sm text-cream/70 hover:text-sand transition-colors">Real Estate</a></li>
+            {industries.map(ind => (
+              <li><a href={`/industries/${ind.id}`} class="text-sm text-cream/70 hover:text-sand transition-colors">{ind.data.name}</a></li>
+            ))}
           </ul>
         </div>
         <div>
@@ -44,13 +49,13 @@ import Logo from './Logo.astro';
       <div class="bg-green-mid rounded-2xl p-6">
         <p class="text-sm font-semibold text-sand mb-2">Start for free</p>
         <h4 class="font-bold text-cream text-lg leading-snug mb-3">
-          Find out exactly where AI can help your business
+          See where AI moves the needle for your business
         </h4>
         <a
           href="/ai-audit"
           class="inline-block bg-sand text-green-deep text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-sand/90 transition-colors"
         >
-          Book Free AI Audit →
+          Run my free AI audit →
         </a>
       </div>
     </div>
