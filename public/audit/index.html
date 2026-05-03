@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI Readiness Audit | Averde AI</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;500;600&family=Source+Serif+4:wght@400;500;600&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --honey-50:#F6E8D0; --honey-100:#E8C896; --honey-300:#C99356; --honey-500:#9C6A33; --honey-700:#6B4520;
+    --walnut-300:#7A5238; --walnut-500:#4F3522; --walnut-700:#2A1B11;
+    --bone:#E5DBC9; --driftwood:#B7A990; --smoke:#7B6E5B;
+    --paper:#F4ECDB; --ink:#1F1A12; --ink-700:#48392A; --muted:#7A6A58;
+    --aged-cream:#EDE3D0;
+    --blue-200:#9CB6BD; --blue-400:#6E8E97; --blue-600:#4B6770;
+    --rust:#A86237;
+  }
+  html, body { background:var(--paper); color:var(--ink); font-family:'Source Serif 4',Georgia,serif; }
+  h1,h2,h3,h4 { font-family:'Fraunces',Georgia,serif; letter-spacing:-0.02em; line-height:1.15; font-weight:500; }
+  .brand-btn { background:var(--walnut-700); color:var(--paper); transition:all 0.18s; font-family:'Inter Tight',sans-serif; font-weight:600; letter-spacing:0.01em; }
+  .brand-btn:hover { background:var(--walnut-500); }
+  .brand-btn:disabled { opacity:0.4; cursor:not-allowed; }
+  .ghost-btn { color:var(--ink-700); transition:all 0.18s; font-family:'Inter Tight',sans-serif; font-weight:500; }
+  .ghost-btn:hover { color:var(--walnut-700); }
+  .card { background:#fff; border:1px solid var(--bone); }
+  .input { background:#fff; border:1.5px solid var(--driftwood); border-radius:10px; padding:13px 16px; width:100%; font-family:'Source Serif 4',serif; font-size:16px; color:var(--ink); transition:border 0.15s; }
+  .input:focus { outline:none; border-color:var(--honey-300); }
+  .chip { background:#fff; border:1.5px solid var(--driftwood); border-radius:999px; padding:9px 16px; cursor:pointer; transition:all 0.15s; font-size:14px; font-family:'Inter Tight',sans-serif; font-weight:500; color:var(--ink-700); display:inline-block; user-select:none; }
+  .chip:hover { border-color:var(--honey-300); color:var(--ink); }
+  .chip.selected { background:var(--walnut-700); color:var(--paper); border-color:var(--walnut-700); }
+  .progress { background:var(--bone); height:4px; border-radius:99px; overflow:hidden; }
+  .progress-bar { background:var(--honey-300); height:100%; transition:width 0.4s ease; }
+  .label { font-family:'Inter Tight',sans-serif; font-size:13px; font-weight:600; color:var(--ink-700); text-transform:uppercase; letter-spacing:0.08em; }
+  .eyebrow { font-family:'Inter Tight',sans-serif; font-size:11px; font-weight:600; color:var(--honey-500); text-transform:uppercase; letter-spacing:0.14em; }
+  .grade-A { color:#3a6f4d; } .grade-B { color:#5b7a5e; }
+  .grade-C { color:var(--honey-500); } .grade-D { color:var(--rust); } .grade-F { color:#7c2d12; }
+  .check-row { display:flex; align-items:flex-start; gap:12px; padding:14px 16px; border:1.5px solid var(--bone); border-radius:12px; cursor:pointer; transition:all 0.15s; background:#fff; }
+  .check-row:hover { border-color:var(--honey-300); }
+  .check-row.selected { border-color:var(--walnut-700); background:var(--aged-cream); }
+  .check-box { flex-shrink:0; width:20px; height:20px; border:1.5px solid var(--driftwood); border-radius:5px; margin-top:2px; display:flex; align-items:center; justify-content:center; }
+  .check-row.selected .check-box { background:var(--walnut-700); border-color:var(--walnut-700); }
+  .radio-row { display:flex; align-items:center; gap:12px; padding:14px 16px; border:1.5px solid var(--bone); border-radius:12px; cursor:pointer; transition:all 0.15s; background:#fff; }
+  .radio-row:hover { border-color:var(--honey-300); }
+  .radio-row.selected { border-color:var(--walnut-700); background:var(--aged-cream); }
+  .radio-dot { flex-shrink:0; width:18px; height:18px; border:1.5px solid var(--driftwood); border-radius:999px; display:flex; align-items:center; justify-content:center; }
+  .radio-row.selected .radio-dot { border-color:var(--walnut-700); }
+  .radio-row.selected .radio-dot::after { content:''; width:9px; height:9px; border-radius:999px; background:var(--walnut-700); }
+  select.input { appearance:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%237B6E5B' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>"); background-repeat:no-repeat; background-position:right 16px center; padding-right:40px; }
+  .score-ring { stroke-linecap:round; transform:rotate(-90deg); transform-origin:center; }
+  .fade-in { animation: fadeIn 0.35s ease both; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(6px);} to { opacity:1; transform:translateY(0);} }
+</style>
+</head>
+<body class="min-h-screen">
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useMemo, useEffect } = React;
+
+const INDUSTRIES = [
+  'Dental practice','HVAC / Heating & Cooling','Real estate brokerage',
+  'Med spa / Aesthetic medicine','Veterinary clinic','Law firm',
+  'Home services (plumbing, roofing, landscaping)','Auto repair / Body shop',
+  'Restaurant / Hospitality','Fitness / Gym',
+  'Accounting / Financial advisor','Construction / Contractor',
+  'E-commerce / DTC brand','Other'
+];
+
+const TOOL_CATEGORIES = [
+  { name: 'CRM',                tools: ['HubSpot','Salesforce','Pipedrive','GoHighLevel','Zoho','None / Spreadsheets'] },
+  { name: 'Scheduling',         tools: ['Calendly','TidyCal','Cal.com','Acuity','Industry-specific','None'] },
+  { name: 'Accounting',         tools: ['QuickBooks','Xero','FreshBooks','Wave','None'] },
+  { name: 'Email & Marketing',  tools: ['Mailchimp','Klaviyo','ActiveCampaign','ConvertKit','None'] },
+  { name: 'Internal Comms',     tools: ['Slack','MS Teams','Discord','Email only'] },
+  { name: 'AI tools in use',    tools: ['ChatGPT','Claude','Perplexity','Custom GPTs','Zapier / Make AI','Voice agent','None'] },
+];
+
+const PAIN_POINTS = [
+  { id:'calls',      label:'Phone calls going unanswered' },
+  { id:'leads',      label:'Lead follow-up dropping through the cracks' },
+  { id:'data',       label:'Manual data entry between systems' },
+  { id:'questions',  label:'Same customer questions answered over and over' },
+  { id:'quotes',     label:'Quoting / proposal generation takes too long' },
+  { id:'scheduling', label:'Scheduling complexity, no-shows, or double-bookings' },
+  { id:'content',    label:'Content & marketing creation eats time' },
+  { id:'reporting',  label:'No clear visibility into what\'s actually working' },
+  { id:'hiring',     label:'Hiring or training overhead is a drag on growth' },
+  { id:'visibility', label:'Competitors show up online when we don\'t' },
+];
+
+const GOALS = [
+  'Get more qualified leads',
+  'Free up my time / reduce admin',
+  'Win more deals from existing leads',
+  'Cut software or staff costs',
+  'Add new revenue streams',
+  'Just understand what AI can actually do for us',
+];
+
+const HIGH_VISIBILITY_INDUSTRIES = [
+  'Dental practice','HVAC / Heating & Cooling','Real estate brokerage','Law firm',
+  'Med spa / Aesthetic medicine','Home services (plumbing, roofing, landscaping)',
+  'Auto repair / Body shop','Veterinary clinic','Accounting / Financial advisor',
+  'Construction / Contractor','Restaurant / Hospitality','Fitness / Gym'
+];
+
+// ---------- Scoring ----------
+function compute(data) {
+  // Visibility (35%)
+  let visibility = 55;
+  if (data.website && data.website.length > 4) visibility += 5;
+  if (data.keywords && data.keywords.trim().split(/[,\n]/).filter(Boolean).length >= 2) visibility += 5;
+  if (HIGH_VISIBILITY_INDUSTRIES.includes(data.industry)) visibility -= 18; // service biz often invisible to AI
+  if (data.pains.includes('visibility')) visibility -= 8;
+  visibility = Math.max(18, Math.min(88, visibility));
+
+  // Stack (30%)
+  const realToolCount = Object.entries(data.tools).filter(([cat,tool]) =>
+    tool && !['None','None / Spreadsheets','Email only'].includes(tool)
+  ).length;
+  let stack = 28 + realToolCount * 9;
+  const aiTool = data.tools['AI tools in use'];
+  if (aiTool && aiTool !== 'None') stack += 12;
+  if (data.tools['CRM'] && data.tools['CRM'] !== 'None / Spreadsheets' &&
+      data.tools['Scheduling'] && data.tools['Scheduling'] !== 'None') stack += 4;
+  if (data.pains.includes('data')) stack -= 8; // disconnected stack signal
+  stack = Math.max(15, Math.min(94, stack));
+
+  // Opportunity density (35%) — more pains = bigger ROI surface
+  let opportunity = 28 + data.pains.length * 8;
+  opportunity = Math.max(22, Math.min(96, opportunity));
+
+  const overall = Math.round(visibility * 0.35 + stack * 0.30 + opportunity * 0.35);
+  const grade = overall >= 82 ? 'A' : overall >= 70 ? 'B' : overall >= 55 ? 'C' : overall >= 40 ? 'D' : 'F';
+
+  return { overall, grade, visibility: Math.round(visibility), stack: Math.round(stack), opportunity: Math.round(opportunity) };
+}
+
+function buildOpportunities(data, scores) {
+  const ops = [];
+  const firstKeyword = (data.keywords || '').split(/[,\n]/)[0].trim() || 'businesses like yours';
+
+  if (scores.visibility < 70 && HIGH_VISIBILITY_INDUSTRIES.includes(data.industry)) {
+    ops.push({
+      rank: 'High impact',
+      title: 'Get findable in AI search',
+      why: `When a buyer asks ChatGPT or Perplexity about "${firstKeyword}," you almost certainly aren't in the answer. Every AI-search query you miss is a buyer who learns about a competitor instead of you.`,
+      service: 'AI-Ready Website rebuild',
+      effort: '3–4 weeks',
+      invest: 'From $1,200',
+    });
+  }
+
+  if (data.pains.includes('data') || (Object.keys(data.tools).length >= 3 && !data.tools['AI tools in use'])) {
+    ops.push({
+      rank: 'High ROI',
+      title: 'Connect your tools so they stop fighting each other',
+      why: 'You\'re paying for tools that should already talk to each other. Manual re-entry between systems is the #1 hidden cost in small businesses — and the easiest one to remove.',
+      service: 'Custom AI / Automation build',
+      effort: '2–6 weeks',
+      invest: 'Typically $1,500–$5,000',
+    });
+  }
+
+  if (data.pains.includes('calls')) {
+    ops.push({
+      rank: 'Quick win',
+      title: 'Stop letting missed calls become missed revenue',
+      why: 'Most service businesses miss 15+ calls a day. An AI receptionist answers every one — books, qualifies, handles FAQs, escalates emergencies. Live in a week.',
+      service: 'Voice Agent (add-on service)',
+      effort: '5 business days',
+      invest: 'Get a quote',
+    });
+  }
+
+  if (data.pains.includes('questions') || data.pains.includes('content')) {
+    ops.push({
+      rank: 'Compounding',
+      title: 'Build an AI that absorbs your team\'s knowledge',
+      why: 'Your team spends hours every week answering the same questions — for customers, for new hires, for each other. A custom AI trained on your docs answers in your voice, on demand.',
+      service: 'Custom AI build',
+      effort: '3–6 weeks',
+      invest: 'Quote-based',
+    });
+  }
+
+  if (data.pains.includes('quotes')) {
+    ops.push({
+      rank: 'Time recovery',
+      title: 'Cut quoting time from hours to minutes',
+      why: 'Custom proposals and quotes are some of the highest-leverage tasks for AI. Trained on your past work, an AI can draft a 90%-there proposal in seconds.',
+      service: 'Custom AI build',
+      effort: '2–4 weeks',
+      invest: 'Quote-based',
+    });
+  }
+
+  if (data.goal === 'Just understand what AI can actually do for us' ||
+      (data.tools['AI tools in use'] === 'None')) {
+    ops.push({
+      rank: 'Foundational',
+      title: 'Get a clear-headed AI roadmap',
+      why: 'Before you spend on tools, you need 90 minutes with someone who can tell you what to do, what to skip, and in what order. No 50-page strategy doc. Just answers.',
+      service: 'Strategy Session',
+      effort: '90 minutes',
+      invest: '$250 – $500',
+    });
+  }
+
+  if (ops.length === 0) {
+    ops.push({
+      rank: 'Next move',
+      title: 'Schedule a strategy session',
+      why: 'You\'ve got real foundations. The next move is figuring out which AI bets compound and which add noise. Worth 90 minutes.',
+      service: 'Strategy Session',
+      effort: '90 minutes',
+      invest: '$250 – $500',
+    });
+  }
+
+  return ops.slice(0, 3);
+}
+
+// ---------- Components ----------
+
+function ProgressBar({ step, total }) {
+  const pct = (step / total) * 100;
+  return (
+    <div>
+      <div className="flex justify-between mb-2">
+        <span className="label">Step {Math.min(step+1, total)} of {total}</span>
+        <span className="label">{Math.round(pct)}%</span>
+      </div>
+      <div className="progress"><div className="progress-bar" style={{width: pct + '%'}} /></div>
+    </div>
+  );
+}
+
+function StepWrap({ eyebrow, title, dek, children, onBack, onNext, nextDisabled, nextLabel }) {
+  return (
+    <div className="fade-in">
+      {eyebrow && <p className="eyebrow mb-3">{eyebrow}</p>}
+      <h2 className="text-3xl md:text-4xl mb-3">{title}</h2>
+      {dek && <p className="text-[var(--muted)] mb-8 text-lg">{dek}</p>}
+      <div className="mb-10">{children}</div>
+      <div className="flex items-center justify-between pt-6 border-t border-[var(--bone)]">
+        {onBack ? <button className="ghost-btn text-sm" onClick={onBack}>← Back</button> : <div />}
+        <button className="brand-btn px-7 py-3 rounded-xl text-sm" onClick={onNext} disabled={nextDisabled}>
+          {nextLabel || 'Continue →'}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const [step, setStep] = useState(0);
+  const [data, setData] = useState({
+    name: '', website: '', industry: '', city: '',
+    keywords: '',
+    tools: {},
+    pains: [],
+    goal: '',
+    email: '',
+  });
+
+  const TOTAL = 6; // intake steps (excluding welcome and report)
+  const set = (k, v) => setData(d => ({ ...d, [k]: v }));
+  const toggleTool = (cat, tool) =>
+    setData(d => ({ ...d, tools: { ...d.tools, [cat]: d.tools[cat] === tool ? null : tool } }));
+  const togglePain = (id) =>
+    setData(d => ({ ...d, pains: d.pains.includes(id) ? d.pains.filter(p => p !== id) : [...d.pains, id] }));
+  const next = () => setStep(s => s + 1);
+  const back = () => setStep(s => Math.max(s - 1, 0));
+
+  const scores = useMemo(() => step >= TOTAL+1 ? compute(data) : null, [step, data]);
+  const ops = useMemo(() => scores ? buildOpportunities(data, scores) : [], [scores, data]);
+
+  // 'idle' | 'sending' | 'sent' | 'failed'
+  const [sendStatus, setSendStatus] = useState('idle');
+  useEffect(() => {
+    if (step !== TOTAL + 1) return;
+    if (sendStatus !== 'idle') return;
+    if (!scores || !data.email) return;
+    setSendStatus('sending');
+    fetch('/api/audit-lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...data, scores, opportunities: ops }),
+    })
+      .then(r => setSendStatus(r.ok ? 'sent' : 'failed'))
+      .catch(() => setSendStatus('failed'));
+  }, [step, scores, ops, data, sendStatus]);
+
+  // ---------- Welcome ----------
+  if (step === 0) {
+    return (
+      <Shell>
+        <div className="fade-in text-center">
+          <p className="eyebrow mb-4">Free · 6 questions · ~3 minutes</p>
+          <h1 className="text-4xl md:text-5xl mb-5">Find out where AI moves your business.</h1>
+          <p className="text-[var(--muted)] text-lg mb-10 max-w-xl mx-auto">
+            Answer 6 quick questions. Get a personalized AI Readiness Report — with the top 3 things you should do next, ranked by impact.
+          </p>
+          <button className="brand-btn px-8 py-4 rounded-xl" onClick={next}>Start the audit →</button>
+          <p className="text-[var(--smoke)] text-sm mt-6">Built by Mark Bloomfield · Founder of Averde AI · Boulder, CO</p>
+        </div>
+      </Shell>
+    );
+  }
+
+  // ---------- Step 1: Basics ----------
+  if (step === 1) {
+    const valid = data.name && data.industry && data.city;
+    return (
+      <Shell progress={<ProgressBar step={0} total={TOTAL} />}>
+        <StepWrap
+          eyebrow="The basics"
+          title="Tell me about your business."
+          dek="Just enough to make the rest of the audit specific to you."
+          onNext={next}
+          nextDisabled={!valid}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
+              <label className="label block mb-2">Business name</label>
+              <input className="input" value={data.name} onChange={e=>set('name', e.target.value)} placeholder="Harbor Dental" />
+            </div>
+            <div>
+              <label className="label block mb-2">Website (if you have one)</label>
+              <input className="input" value={data.website} onChange={e=>set('website', e.target.value)} placeholder="harbordental.com" />
+            </div>
+            <div>
+              <label className="label block mb-2">Industry</label>
+              <select className="input" value={data.industry} onChange={e=>set('industry', e.target.value)}>
+                <option value="">Choose one…</option>
+                {INDUSTRIES.map(i => <option key={i} value={i}>{i}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="label block mb-2">City / region you serve</label>
+              <input className="input" value={data.city} onChange={e=>set('city', e.target.value)} placeholder="Boulder, CO" />
+            </div>
+          </div>
+        </StepWrap>
+      </Shell>
+    );
+  }
+
+  // ---------- Step 2: AI search target ----------
+  if (step === 2) {
+    return (
+      <Shell progress={<ProgressBar step={1} total={TOTAL} />}>
+        <StepWrap
+          eyebrow="AI search visibility"
+          title="What do you most want to be found for?"
+          dek="When a potential customer asks ChatGPT or Perplexity for help, what would they type? List 1–3 phrases."
+          onBack={back}
+          onNext={next}
+          nextDisabled={!data.keywords.trim()}
+        >
+          <textarea
+            className="input"
+            rows="4"
+            value={data.keywords}
+            onChange={e=>set('keywords', e.target.value)}
+            placeholder={'family dentist in Boulder\nemergency dental Boulder CO\nInvisalign provider Boulder'}
+          />
+          <p className="text-[var(--smoke)] text-sm mt-3">
+            Tip: think how a real customer would phrase it — not how you describe yourself.
+          </p>
+        </StepWrap>
+      </Shell>
+    );
+  }
+
+  // ---------- Step 3: Stack ----------
+  if (step === 3) {
+    return (
+      <Shell progress={<ProgressBar step={2} total={TOTAL} />}>
+        <StepWrap
+          eyebrow="Your tech stack"
+          title="What's running your business today?"
+          dek="Pick the closest match in each category. Skip categories that don't apply."
+          onBack={back}
+          onNext={next}
+        >
+          <div className="space-y-7">
+            {TOOL_CATEGORIES.map(cat => (
+              <div key={cat.name}>
+                <p className="label mb-3">{cat.name}</p>
+                <div className="flex flex-wrap gap-2">
+                  {cat.tools.map(t => (
+                    <span key={t}
+                      className={"chip " + (data.tools[cat.name] === t ? 'selected' : '')}
+                      onClick={() => toggleTool(cat.name, t)}>{t}</span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </StepWrap>
+      </Shell>
+    );
+  }
+
+  // ---------- Step 4: Pain points ----------
+  if (step === 4) {
+    return (
+      <Shell progress={<ProgressBar step={3} total={TOTAL} />}>
+        <StepWrap
+          eyebrow="Where it hurts"
+          title="Where are you bleeding time or revenue?"
+          dek="Check everything that applies. Be honest — this is what shapes your top 3 recommendations."
+          onBack={back}
+          onNext={next}
+          nextDisabled={data.pains.length === 0}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {PAIN_POINTS.map(p => (
+              <div key={p.id}
+                className={"check-row " + (data.pains.includes(p.id) ? 'selected' : '')}
+                onClick={() => togglePain(p.id)}>
+                <div className="check-box">
+                  {data.pains.includes(p.id) && (
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                      <path d="M2 6.5l2.5 2.5L10 3.5" stroke="#F4ECDB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  )}
+                </div>
+                <span className="text-[var(--ink)]">{p.label}</span>
+              </div>
+            ))}
+          </div>
+        </StepWrap>
+      </Shell>
+    );
+  }
+
+  // ---------- Step 5: Goal ----------
+  if (step === 5) {
+    return (
+      <Shell progress={<ProgressBar step={4} total={TOTAL} />}>
+        <StepWrap
+          eyebrow="Your 12-month goal"
+          title="What would matter most over the next year?"
+          dek="Pick the one outcome that, if you nailed it, would make this year a win."
+          onBack={back}
+          onNext={next}
+          nextDisabled={!data.goal}
+        >
+          <div className="space-y-3">
+            {GOALS.map(g => (
+              <div key={g}
+                className={"radio-row " + (data.goal === g ? 'selected' : '')}
+                onClick={() => set('goal', g)}>
+                <div className="radio-dot" />
+                <span className="text-[var(--ink)]">{g}</span>
+              </div>
+            ))}
+          </div>
+        </StepWrap>
+      </Shell>
+    );
+  }
+
+  // ---------- Step 6: Email ----------
+  if (step === 6) {
+    const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email);
+    return (
+      <Shell progress={<ProgressBar step={5} total={TOTAL} />}>
+        <StepWrap
+          eyebrow="One last thing"
+          title="Where should I send your report?"
+          dek="I'll also send a calendar link so you can claim your free 30-min review call with me, where we walk through the report together."
+          onBack={back}
+          onNext={next}
+          nextDisabled={!validEmail}
+          nextLabel="See my AI Readiness Report →"
+        >
+          <input className="input" type="email" value={data.email}
+            onChange={e=>set('email', e.target.value)} placeholder="you@yourbusiness.com" />
+          <p className="text-[var(--smoke)] text-sm mt-3">
+            No spam. I send your report, the calendar link, and one short follow-up. That's it.
+          </p>
+        </StepWrap>
+      </Shell>
+    );
+  }
+
+  // ---------- Report ----------
+  return (
+    <Shell wide>
+      <div className="fade-in">
+        <p className="eyebrow mb-3 text-center">Your AI Readiness Report</p>
+        <h1 className="text-3xl md:text-5xl text-center mb-4">{data.name}</h1>
+        <p className="text-[var(--muted)] text-center mb-12 text-lg">
+          {data.industry} · {data.city}
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-12">
+          <ScoreCard label="AI Search Visibility" score={scores.visibility} />
+          <ScoreCard label="Stack Maturity" score={scores.stack} />
+          <ScoreCard label="Opportunity Density" score={scores.opportunity} />
+        </div>
+
+        <div className="card rounded-3xl p-8 md:p-10 mb-12 flex flex-col md:flex-row items-center gap-8">
+          <ScoreRing score={scores.overall} grade={scores.grade} />
+          <div className="flex-1">
+            <p className="eyebrow mb-2">Overall AI Readiness</p>
+            <h2 className="text-3xl mb-3">{interpretGrade(scores.grade)}</h2>
+            <p className="text-[var(--muted)]">{interpretBody(scores, data)}</p>
+          </div>
+        </div>
+
+        <div className="mb-12">
+          <p className="eyebrow mb-3 text-center">Top 3 things to do next</p>
+          <h2 className="text-3xl md:text-4xl text-center mb-10">Your highest-impact moves.</h2>
+          <div className="space-y-5">
+            {ops.map((op, i) => (
+              <div key={i} className="card rounded-2xl p-7 md:p-8 flex flex-col md:flex-row gap-6">
+                <div className="md:w-12 md:flex-shrink-0">
+                  <span className="text-4xl text-[var(--driftwood)]" style={{fontFamily: "'Fraunces', serif"}}>0{i+1}</span>
+                </div>
+                <div className="flex-1">
+                  <p className="eyebrow mb-2">{op.rank}</p>
+                  <h3 className="text-2xl mb-3">{op.title}</h3>
+                  <p className="text-[var(--ink-700)] mb-5">{op.why}</p>
+                  <div className="flex flex-wrap gap-x-8 gap-y-2 text-sm">
+                    <div><span className="label block">Service</span><span className="text-[var(--ink)]">{op.service}</span></div>
+                    <div><span className="label block">Timeline</span><span className="text-[var(--ink)]">{op.effort}</span></div>
+                    <div><span className="label block">Investment</span><span className="text-[var(--ink)]">{op.invest}</span></div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="card rounded-3xl p-10 text-center" style={{background:'var(--walnut-700)', color:'var(--paper)'}}>
+          <h2 className="text-3xl md:text-4xl mb-4 text-[var(--paper)]">Ready to walk through this together?</h2>
+          <p className="mb-8 text-[var(--bone)] max-w-xl mx-auto">
+            Book your free 30-minute review call. We'll go through this report together, answer your questions, and figure out the right first move for your business.
+          </p>
+          <a href="/ai-audit#book" className="inline-block px-8 py-4 rounded-xl font-semibold"
+             style={{background:'var(--honey-300)', color:'var(--walnut-700)', fontFamily:"'Inter Tight',sans-serif"}}>
+            Book your free review call →
+          </a>
+          <p className="text-[var(--driftwood)] text-sm mt-5">
+            {sendStatus === 'sent' && <span>✓ Sent to {data.email}</span>}
+            {sendStatus === 'sending' && <span>Sending to {data.email}…</span>}
+            {sendStatus === 'failed' && <span>Couldn't email {data.email} — but your report is here.</span>}
+            {sendStatus === 'idle' && <span>Sent to {data.email}</span>}
+            {' · 30 minutes · No commitment'}
+          </p>
+        </div>
+
+        <div className="mt-10 text-center">
+          <button className="ghost-btn text-sm" onClick={() => { setStep(0); setData({name:'',website:'',industry:'',city:'',keywords:'',tools:{},pains:[],goal:'',email:''}); setSendStatus('idle'); }}>
+            ← Start over
+          </button>
+        </div>
+      </div>
+    </Shell>
+  );
+}
+
+function Shell({ children, progress, wide }) {
+  return (
+    <div className="min-h-screen py-10 md:py-16 px-4">
+      <div className={(wide ? "max-w-4xl" : "max-w-2xl") + " mx-auto"}>
+        <div className="text-center mb-8">
+          <span className="text-2xl" style={{fontFamily:"'Fraunces',serif", color:'var(--walnut-700)', fontWeight:500, letterSpacing:'-0.02em'}}>
+            Averde<span style={{color:'var(--honey-500)'}}>.</span>
+          </span>
+        </div>
+        {progress && <div className="mb-8">{progress}</div>}
+        <div className="card rounded-3xl p-8 md:p-12">{children}</div>
+      </div>
+    </div>
+  );
+}
+
+function ScoreCard({ label, score }) {
+  const grade = score >= 82 ? 'A' : score >= 70 ? 'B' : score >= 55 ? 'C' : score >= 40 ? 'D' : 'F';
+  return (
+    <div className="card rounded-2xl p-6 text-center">
+      <p className="label mb-3">{label}</p>
+      <p className={"text-5xl mb-1 grade-" + grade} style={{fontFamily:"'Fraunces',serif", fontWeight:500}}>{score}</p>
+      <p className={"text-sm grade-" + grade} style={{fontFamily:"'Inter Tight',sans-serif", fontWeight:600}}>Grade {grade}</p>
+    </div>
+  );
+}
+
+function ScoreRing({ score, grade }) {
+  const r = 56, c = 2 * Math.PI * r;
+  const offset = c - (score / 100) * c;
+  const colorMap = { A:'#3a6f4d', B:'#5b7a5e', C:'#9C6A33', D:'#A86237', F:'#7c2d12' };
+  const color = colorMap[grade] || '#9C6A33';
+  return (
+    <div className="relative" style={{width:140, height:140}}>
+      <svg width="140" height="140">
+        <circle cx="70" cy="70" r={r} fill="none" stroke="#E5DBC9" strokeWidth="10" />
+        <circle cx="70" cy="70" r={r} fill="none" stroke={color} strokeWidth="10"
+          strokeDasharray={c} strokeDashoffset={offset} className="score-ring" style={{transition:'stroke-dashoffset 0.8s ease'}} />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className="text-4xl" style={{fontFamily:"'Fraunces',serif", color, fontWeight:500}}>{score}</span>
+        <span className="text-xs" style={{fontFamily:"'Inter Tight',sans-serif", fontWeight:600, color}}>Grade {grade}</span>
+      </div>
+    </div>
+  );
+}
+
+function interpretGrade(g) {
+  return ({
+    A: 'You\'re ahead of the pack.',
+    B: 'You\'ve got real momentum.',
+    C: 'You\'re sitting on a lot of leverage.',
+    D: 'There\'s significant room to move.',
+    F: 'You\'re leaving real money on the table.',
+  })[g];
+}
+
+function interpretBody(scores, data) {
+  if (scores.visibility < 50) {
+    return `Your AI search visibility is the biggest single lever. For ${data.industry.toLowerCase()} in ${data.city || 'your market'}, AI-recommended results are increasingly the first thing buyers see — and right now, they're not seeing you.`;
+  }
+  if (scores.opportunity > 70) {
+    return 'You\'ve flagged enough friction that the question isn\'t whether to deploy AI — it\'s where to start. The opportunities below are ranked by what would move the needle fastest for you specifically.';
+  }
+  if (scores.stack > 70) {
+    return 'You\'ve already got a solid tooling foundation, which means deploying AI on top of it is dramatically faster. Most of your wins are integration and intelligence layers, not new tools.';
+  }
+  return 'Your situation is typical of where small businesses are right now: a few tools, a few pain points, and a real opportunity to get ahead of competitors who haven\'t moved yet. Below are your top 3 moves.';
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
