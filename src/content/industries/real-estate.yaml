@@ -1,32 +1,40 @@
 name: Real Estate Agents
 published: true
-seoTitle: AI Lead Qualifier for Real Estate Agents | Never Miss a Buyer Call | Averde AI
-seoDescription: Averde AI builds AI voice agents for real estate agents. Qualify leads instantly, schedule showings 24/7, and be the first to respond — every time. Boulder, CO.
+seoTitle: AI-Ready Website for Real Estate Agents | Show Up in ChatGPT Recommendations | Averde AI
+seoDescription: When buyers and sellers ask ChatGPT or Perplexity for an agent recommendation in your market, do you appear? For most agents, the answer is no. We rebuild your site so AI engines actually recommend you.
 heroEyebrow: For Real Estate Agents
-heroHeadline: Be the First Agent to Respond — Every Single Time
-heroDek: AI voice agents that qualify leads, schedule showings, and follow up 24/7 — so you never lose a buyer to a faster-responding agent again.
-heroCta: Get My Free Missed Call Audit
-painHeadline: Speed Wins in Real Estate — And You're Getting Beaten
+heroHeadline: When Buyers Ask AI for an Agent, Be the Name That Comes Up
+heroDek: Buyers and sellers increasingly start with ChatGPT or Perplexity, asking who to work with in your market. Most agent websites are completely invisible to those engines. We rebuild yours to actually show up — and convert that visibility into qualified leads.
+heroCta: Run my free AI audit
+painHeadline: Your Future Clients Are Asking AI Tools You're Not Showing Up On
 painPoints:
-  - pain: Leads go cold in minutes
-    result: "78% of buyers choose the first agent who responds. If that's not you, they're gone."
-  - pain: "Can't answer during showings"
-    result: "You're with one client — and losing three others to voicemail."
-  - pain: Buyers browse listings after hours
-    result: The call comes in at 9pm. No one answers. Lead disappears.
-  - pain: Inconsistent lead follow-up across your team
-    result: "Different agents handle leads differently — some close, most don't."
-solutionHeadline: What Your AI Real Estate Agent Does
-solutionDek: Pre-screens every lead, schedules every showing, and makes sure you only spend time with serious buyers.
+  - pain: "Buyers ask ChatGPT 'best buyer's agent in [neighborhood]' and your site doesn't surface"
+    result: "AI engines pull from agents who built structured neighborhood and review content. Your IDX site can't compete with that signal."
+  - pain: "Sellers research listing agents through AI Overviews before they ever call"
+    result: "If your specialties, neighborhood expertise, and recent transactions aren't in AI-readable structured form, you're skipped."
+  - pain: "Your team site has no per-agent schema, no neighborhood pages, no FAQ markup"
+    result: "AI tools recommend the agent who built that content for the same neighborhood last year."
+  - pain: "Zillow and Realtor.com leads have collapsed in quality — and now AI is the new top of funnel"
+    result: "Buyers who ask AI for a recommendation skip the lead-gen mills entirely. They contact the agent AI surfaces directly."
+solutionHeadline: What an AI-Ready Real Estate Site Looks Like
+solutionDek: Built so AI engines understand your specialties, your neighborhoods, your transaction history, and recommend you to the buyers and sellers asking for help.
 capabilities:
-  - "Answers calls instantly — during showings, after hours, weekends"
-  - "Qualifies buyers: timeline, budget, pre-approval status"
-  - Schedules showings directly into your calendar
-  - "Answers listing FAQs: price, features, neighborhood"
-  - Captures seller leads with custom intake flow
-  - Syncs all lead info to your CRM automatically
-roiHeadline: One extra closing per month more than covers your entire year of AI.
-roiBody: "At an average commission of $8,000–$15,000 per transaction, your AI agent pays for itself with a single lead it saves from voicemail. Everything after that is pure upside."
-roiStats: []
-ctaHeadline: Stop Losing Leads to Faster Agents
-ctaDek: "Book your free Missed Call Audit. We'll show you exactly how many leads you're losing and what a 24/7 AI agent would change."
+  - Per-neighborhood landing pages optimized for AEO
+  - Schema markup for RealEstateAgent + Neighborhood + FAQs
+  - Buyer guide and seller guide content that AI engines cite
+  - Recent transactions / case studies in AI-readable format
+  - Per-agent profile pages with structured specialties + reviews
+  - Google Business Profile + Apple Maps + Bing optimization
+  - Content audit + 3-month plan to keep your local AI signal fresh
+  - "Voice agent add-on for instant lead response once leads are flowing"
+roiHeadline: "The first agent AI recommends gets the call. There's no second place."
+roiBody: "Buyers and sellers asking AI for a recommendation typically contact one agent — the one AI surfaces. With average commissions of $8K-$15K per transaction, one AI-driven lead more than covers the entire rebuild. Pure upside after that."
+roiStats:
+  - stat: '$8-15K'
+    label: per transaction
+  - stat: '78%'
+    label: pick first agent who responds
+  - stat: '<3%'
+    label: of agents are AI-ready
+ctaHeadline: See How Your Site Stacks Up in AI Search — Free
+ctaDek: "Take the 3-minute AI Readiness Audit. You'll get a personalized report with the top 3 things to do so buyers and sellers start finding you through AI."

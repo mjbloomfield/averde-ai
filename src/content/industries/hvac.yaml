@@ -1,32 +1,40 @@
 name: HVAC & Contractors
 published: true
-seoTitle: AI Answering Service for HVAC & Contractors | 24/7 Emergency Call Handling | Averde AI
-seoDescription: Averde AI builds AI voice agents for HVAC and contractor businesses. Triage emergencies, book service calls, and never miss a job — 24/7. Boulder, CO.
+seoTitle: AI-Ready Website for HVAC & Contractors | Win Service Calls in AI Search | Averde AI
+seoDescription: When homeowners ask ChatGPT, Perplexity, or Google AI Overviews "who should I call for [problem]" — most contractors are invisible. We rebuild your site so AI engines actually surface and recommend your business.
 heroEyebrow: For HVAC & Contractors
-heroHeadline: Emergency Call at 2am? Your AI Agent Has It Covered
-heroDek: AI voice agents that triage emergency calls, dispatch with priority, and book service appointments automatically — so you never lose a job to a competitor who picked up first.
-heroCta: Get My Free Missed Call Audit
-painHeadline: "The Phone Is Your #1 Sales Channel — And You're Missing It"
+heroHeadline: When ChatGPT Recommends a Local HVAC Pro, It Should Be You
+heroDek: Homeowners increasingly ask AI tools for service recommendations — especially for the kind of urgent, anxious calls (broken AC, frozen pipes, no heat) that drive your best margins. Most contractor websites can't be read by AI engines at all. We fix that.
+heroCta: Run my free AI audit
+painHeadline: AI Search Is Quietly Eating Your Job Pipeline
 painPoints:
-  - pain: "Techs can't answer during jobs"
-    result: Calls ring out while your crew is on-site — customers call your competitor
-  - pain: No one covers after-hours emergencies
-    result: A broken AC in July or frozen pipes in January goes to whoever answers
-  - pain: Out-of-area calls waste your time
-    result: "Staff spends minutes on callers you can't service"
-  - pain: Manual scheduling creates double-bookings
-    result: Missed appointments and unhappy customers from coordination errors
-solutionHeadline: What Your AI Field Service Agent Does
-solutionDek: Trained on your services, your service area, and your scheduling — built to run your phones like a pro dispatcher.
+  - pain: "Customers ask Perplexity 'who fixes furnaces in [city]' and you don't appear"
+    result: "AI engines cite competitors who set up structured data and local citations months ago."
+  - pain: "Your site has no service-area pages, no FAQ schema, no service-specific copy"
+    result: "AI Overviews can't tell what you do, where, or how to recommend you."
+  - pain: "Pricing, response times, and emergency availability aren't on your site"
+    result: "AI assistants need that info to recommend a contractor — without it, you're skipped."
+  - pain: "You're paying for Google ads that AI search bypasses entirely"
+    result: "AI tools answer the customer directly. They never see your ad — only the businesses AI thinks are most relevant."
+solutionHeadline: What an AI-Ready Contractor Website Looks Like
+solutionDek: Built so AI engines understand your service area, your specialties, your pricing transparency, and your emergency availability — and recommend you when it counts.
 capabilities:
-  - Triages emergency vs. standard service calls
-  - Confirms service area before booking
-  - Books jobs directly into your calendar
-  - Escalates true emergencies to your on-call tech
-  - Answers service, parts, and pricing FAQs
-  - Captures full caller info for every lead
-roiHeadline: "The average HVAC service call is worth $300–$800. How many are you missing?"
-roiBody: Traditional after-hours answering services cost $400–$600/month and provide a human operator who doesn't know your business. Your AI agent costs less, knows everything, and never calls in sick.
-roiStats: []
-ctaHeadline: Stop Losing Jobs After Hours
-ctaDek: "Book a free Missed Call Audit. We'll quantify what you're losing and show you exactly what your AI dispatcher would do differently."
+  - Service-by-service pages (heating, AC, plumbing, electrical, etc.) optimized for AEO
+  - Service-area pages for every city/zip you cover
+  - FAQ schema for the questions customers actually ask AI engines
+  - LocalBusiness + Service schema markup
+  - Pricing transparency pages (a top AI-ranking signal)
+  - Emergency/24-7 availability marked up so AI tools surface it
+  - Google Business Profile + Apple Maps + Bing optimization
+  - "Voice agent add-on once your site is generating the right call volume"
+roiHeadline: "The customers asking AI for recommendations are the high-intent ones."
+roiBody: "Someone with a broken furnace at 9pm doesn't open Yelp anymore — they ask their phone. If your business shows up in that answer, you win the job. If you don't, you lose it before the call ever happens. Average HVAC ticket: $300-$1,500. One AI-driven booking pays for the whole rebuild."
+roiStats:
+  - stat: '$300-1,500'
+    label: average ticket
+  - stat: '70%'
+    label: of homeowners now use AI
+  - stat: '<5%'
+    label: of contractors are AI-ready
+ctaHeadline: See How Visible Your Business Is to AI Search — Free
+ctaDek: "Take the 3-minute AI Readiness Audit. You'll get a personalized report with the top 3 things to do so AI engines start recommending you."
