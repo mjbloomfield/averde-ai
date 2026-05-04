@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { Resend } from 'resend';
 
 export const prerender = false;
 
@@ -13,7 +14,7 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(null, { status: 302, headers: { Location: '/contact?error=missing' } });
   }
 
-  const apiKey = import.meta.env.SENDGRID_API_KEY;
+  const apiKey = import.meta.env.RESEND_API_KEY;
   if (!apiKey) {
     return new Response(null, { status: 302, headers: { Location: '/contact?error=config' } });
   }
@@ -22,22 +23,16 @@ export const POST: APIRoute = async ({ request }) => {
   const text = `Name: ${name}\nEmail: ${email}${company ? `\nCompany: ${company}` : ''}\n\n${message}`;
 
   try {
-    const res = await fetch('https://api.sendgrid.com/v3/mail/send', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        personalizations: [{ to: [{ email: 'mark@averde.ai', name: 'Mark Bloomfield' }] }],
-        from: { email: 'mark@averde.ai', name: 'Averde AI Website' },
-        reply_to: { email, name },
-        subject,
-        content: [{ type: 'text/plain', value: text }],
-      }),
+    const resend = new Resend(apiKey);
+    const { error } = await resend.emails.send({
+      from: 'Averde AI Website <mark@averde.ai>',
+      to: ['mark@averde.ai'],
+      replyTo: email,
+      subject,
+      text,
     });
 
-    if (!res.ok) {
+    if (error) {
       return new Response(null, { status: 302, headers: { Location: '/contact?error=send' } });
     }
   } catch {

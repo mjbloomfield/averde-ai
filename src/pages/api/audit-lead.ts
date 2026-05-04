@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
+import { Resend } from 'resend';
 
 export const prerender = false;
 
@@ -99,12 +100,12 @@ export const POST: APIRoute = async ({ request }) => {
     }
   }
 
-  // ── 2. Email Mark ──────────────────────────────────────────────
-  const apiKey = import.meta.env.SENDGRID_API_KEY;
+  // ── 2. Email Mark via Resend ───────────────────────────────────
+  const resendKey = import.meta.env.RESEND_API_KEY;
   let emailStatus: 'sent' | 'failed' | 'config' = 'config';
   let emailError: string | null = null;
 
-  if (apiKey) {
+  if (resendKey) {
     const s = payload.scores || {};
     const ops = (payload.opportunities || []).slice(0, 3);
     const topOps = ops
@@ -138,24 +139,18 @@ export const POST: APIRoute = async ({ request }) => {
     const subject = `Averde AI Audit Lead: ${name || 'Anonymous'} (${industry || 'unknown'})`;
 
     try {
-      const res = await fetch('https://api.sendgrid.com/v3/mail/send', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          personalizations: [{ to: [{ email: 'mark@averde.ai', name: 'Mark Bloomfield' }] }],
-          from: { email: 'mark@averde.ai', name: 'Averde AI Audit' },
-          reply_to: { email, name: name || email },
-          subject,
-          content: [{ type: 'text/plain', value: text }],
-        }),
+      const resend = new Resend(resendKey);
+      const { error } = await resend.emails.send({
+        from: 'Averde AI Audit <mark@averde.ai>',
+        to: ['mark@averde.ai'],
+        replyTo: email,
+        subject,
+        text,
       });
 
-      if (!res.ok) {
+      if (error) {
         emailStatus = 'failed';
-        emailError = `sendgrid_${res.status}`;
+        emailError = `resend_${error.name || 'error'}: ${error.message || ''}`.trim();
       } else {
         emailStatus = 'sent';
       }
