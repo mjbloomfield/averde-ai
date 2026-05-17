@@ -74,7 +74,19 @@ const error = Astro.url.searchParams.get('error');
               action="/api/contact"
               method="POST"
               class="space-y-4"
+              id="contact-form"
             >
+              <!-- Anti-spam: honeypot (hidden, real users never fill this; bots do).
+                   Also: timestamp set by JS — bots that POST directly skip JS. -->
+              <div style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;" aria-hidden="true">
+                <label for="website">Website (leave empty)</label>
+                <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+              </div>
+              <input type="hidden" name="t" id="contact-t" value="" />
+              <script is:inline>
+                document.getElementById('contact-t').value = Date.now().toString();
+              </script>
+
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label for="name" class="block text-sm font-medium text-dark mb-1.5">Name *</label>
