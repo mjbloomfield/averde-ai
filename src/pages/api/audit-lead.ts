@@ -21,8 +21,36 @@ type Opportunity = {
   why?: string;
 };
 
+type Stack = { productivity?: string; otherTools?: string; customTools?: string };
+
+// Legacy + transitional support for the prior tools-map shape.
 type ToolEntry = { selected?: string[]; other?: string; usesAi?: boolean };
 type ToolsMap = Record<string, ToolEntry | string | null | undefined>;
+
+type SiteAuditFindings = {
+  reachable?: boolean;
+  url?: string;
+  finalUrl?: string;
+  title?: string | null;
+  description?: string | null;
+  platform?: string | null;
+  schema?: { present?: string[]; missing?: string[]; typesFound?: string[]; score?: number; max?: number };
+  pagespeed?: { performance?: number | null; seo?: number | null; accessibility?: number | null; lcp?: number | null; cls?: number | null } | null;
+  files?: { robots?: boolean; sitemap?: boolean };
+};
+
+type AiVisibilityResult = {
+  configured?: boolean;
+  appeared?: boolean;
+  industry?: string;
+  city?: string;
+  userHost?: string | null;
+  queries?: Array<{
+    query: string;
+    appeared: boolean;
+    results: Array<{ title: string; url: string; snippet: string; host: string; isUser: boolean }>;
+  }>;
+};
 
 type AuditPayload = {
   name?: string;
@@ -31,20 +59,15 @@ type AuditPayload = {
   industry?: string;
   city?: string;
   keywords?: string;
-  tools?: ToolsMap;
+  stack?: Stack;
+  tools?: ToolsMap; // legacy
   pains?: string[];
   goal?: string;
   scores?: Scores;
   opportunities?: Opportunity[];
+  siteAudit?: SiteAuditFindings | null;
+  aiVisibility?: AiVisibilityResult | null;
 };
-
-// Normalize a tool entry to the canonical shape, tolerating the legacy
-// "single string per category" payload from any stale cached widget.
-function normalizeToolEntry(v: ToolEntry | string | null | undefined): { selected: string[]; other: string; usesAi: boolean } {
-  if (!v) return { selected: [], other: '', usesAi: false };
-  if (typeof v === 'string') return { selected: [v], other: '', usesAi: false };
-  return { selected: v.selected ?? [], other: v.other ?? '', usesAi: !!v.usesAi };
-}
 
 const json = (status: number, body: Record<string, unknown>) =>
   new Response(JSON.stringify(body), {
@@ -88,10 +111,13 @@ export const POST: APIRoute = async ({ request }) => {
           city: payload.city || null,
           keywords: payload.keywords || null,
           goal: payload.goal || null,
-          tools: payload.tools ?? {},
+          // New shape — stack object goes into tools column as-is (jsonb)
+          tools: payload.stack ?? payload.tools ?? {},
           pains: payload.pains ?? [],
           scores: payload.scores ?? {},
           opportunities: payload.opportunities ?? [],
+          site_audit: payload.siteAudit ?? null,
+          ai_visibility: payload.aiVisibility ?? null,
           user_agent: request.headers.get('user-agent'),
           referer: request.headers.get('referer'),
         })
@@ -202,26 +228,65 @@ function renderEmail(args: {
   const ops = (payload.opportunities || []).slice(0, 3);
   const subject = `Averde AI Audit Lead: ${name || 'Anonymous'} (${industry || 'unknown'})`;
 
-  // Normalize the tools map and build human-readable per-category strings.
-  // Skip categories the user didn't touch.
-  type ToolsRow = { cat: string; tools: string; usesAi: boolean };
-  const toolsMap: ToolsMap = payload.tools || {};
-  const toolsRows: ToolsRow[] = Object.keys(toolsMap)
-    .map(cat => {
-      const e = normalizeToolEntry(toolsMap[cat]);
+  // Stack rows — supports new shape (payload.stack) and legacy (payload.tools map).
+  type StackRow = { label: string; value: string };
+  const stackRows: StackRow[] = [];
+  if (payload.stack) {
+    if (payload.stack.productivity) {
+      const labelMap: Record<string, string> = {
+        google: 'Google Workspace',
+        microsoft: 'Microsoft 365',
+        mixed: 'Mix of both Google + Microsoft',
+        other: 'Neither / something else',
+      };
+      stackRows.push({ label: 'Productivity', value: labelMap[payload.stack.productivity] || payload.stack.productivity });
+    }
+    if (payload.stack.otherTools?.trim()) stackRows.push({ label: 'Other tools', value: payload.stack.otherTools.trim() });
+    if (payload.stack.customTools?.trim()) stackRows.push({ label: 'Custom tools', value: payload.stack.customTools.trim() });
+  } else if (payload.tools) {
+    Object.keys(payload.tools).forEach(cat => {
+      const e = normalizeToolEntry(payload.tools![cat]);
       const parts = [...e.selected];
-      // Replace the literal "Other" with the actual free-text answer
-      if (parts.includes('Other')) {
-        const i = parts.indexOf('Other');
-        if (e.other.trim()) parts[i] = `Other: ${e.other.trim()}`;
+      if (parts.includes('Other') && e.other.trim()) {
+        parts[parts.indexOf('Other')] = `Other: ${e.other.trim()}`;
       }
-      return { cat, tools: parts.join(', '), usesAi: e.usesAi };
-    })
-    .filter(r => r.tools.length > 0);
+      if (parts.length) stackRows.push({ label: cat, value: parts.join(', ') + (e.usesAi ? '  [AI]' : '') });
+    });
+  }
 
-  // — Plain-text fallback (gmail-stripped clients, screenreaders) —
-  const toolsTextBlock = toolsRows.length
-    ? ['', 'Stack:', ...toolsRows.map(r => `  ${r.cat}: ${r.tools}${r.usesAi ? '  [using AI here]' : ''}`)].join('\n')
+  // Real findings — site audit
+  const sa = payload.siteAudit;
+  const siteAuditTextBlock = sa?.reachable
+    ? [
+        '',
+        'Site analysis:',
+        sa.platform ? `  Platform: ${sa.platform}` : '',
+        `  Schema markup: ${sa.schema?.present?.length ?? 0} of ${sa.schema?.max ?? '?'} expected types`,
+        sa.schema?.present?.length ? `    Found: ${sa.schema.present.join(', ')}` : '',
+        sa.schema?.missing?.length ? `    Missing: ${sa.schema.missing.join(', ')}` : '',
+        sa.pagespeed?.performance != null ? `  PageSpeed mobile performance: ${sa.pagespeed.performance}/100` : '',
+        sa.pagespeed?.seo != null ? `  PageSpeed SEO basics: ${sa.pagespeed.seo}/100` : '',
+        `  robots.txt: ${sa.files?.robots ? 'present' : 'missing'}  |  sitemap.xml: ${sa.files?.sitemap ? 'present' : 'missing'}`,
+      ].filter(Boolean).join('\n')
+    : sa
+      ? '\nSite analysis: site was not reachable.'
+      : '';
+
+  // Real findings — AI search visibility
+  const av = payload.aiVisibility;
+  const aiVisTextBlock = av?.configured
+    ? [
+        '',
+        `AI search visibility: ${av.appeared ? 'APPEARED in Perplexity search ✓' : 'INVISIBLE to Perplexity ✗'}`,
+        av.queries?.[0]?.query ? `  Query: "${av.queries[0].query}"` : '',
+        ...(av.queries?.[0]?.results || []).slice(0, 5).map((r) =>
+          `  ${r.isUser ? '→ ' : '  '}${r.title}  (${r.host || r.url})`,
+        ),
+      ].filter(Boolean).join('\n')
+    : '';
+
+  const stackTextBlock = stackRows.length
+    ? ['', 'Stack:', ...stackRows.map(r => `  ${r.label}: ${r.value}`)].join('\n')
     : '';
 
   const textLines = [
@@ -231,7 +296,9 @@ function renderEmail(args: {
     `Industry: ${industry || '(not given)'}`,
     payload.city ? `City: ${payload.city}` : '',
     payload.goal ? `Stated goal: ${payload.goal}` : '',
-    toolsTextBlock,
+    stackTextBlock,
+    siteAuditTextBlock,
+    aiVisTextBlock,
     '',
     `Overall AI Readiness: ${s.grade ?? '?'} (${s.overall ?? '?'} / 100)`,
     `  AI Search Visibility: ${s.visibility ?? '?'}`,
@@ -285,18 +352,60 @@ function renderEmail(args: {
       ? `<tr><td style="padding:3px 12px 3px 0;color:${c.muted};white-space:nowrap;vertical-align:top;">${esc(label)}</td><td style="padding:3px 0;color:${c.ink};">${esc(value)}</td></tr>`
       : '';
 
-  const toolsHtmlBlock = toolsRows.length
+  const toolsHtmlBlock = stackRows.length
     ? `
         <tr><td style="padding:8px 28px 4px;">
           <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:${c.muted};margin-bottom:10px;">Stack</div>
           <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;">
-            ${toolsRows.map(r => `
+            ${stackRows.map(r => `
               <tr>
-                <td style="padding:5px 12px 5px 0;color:${c.muted};white-space:nowrap;vertical-align:top;width:38%;">${esc(r.cat)}${r.usesAi ? ` <span style="display:inline-block;background:${c.accent};color:#fff;font:700 9px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;padding:3px 6px;border-radius:4px;margin-left:4px;">AI</span>` : ''}</td>
-                <td style="padding:5px 0;color:${c.ink};">${esc(r.tools)}</td>
+                <td style="padding:5px 12px 5px 0;color:${c.muted};white-space:nowrap;vertical-align:top;width:32%;">${esc(r.label)}</td>
+                <td style="padding:5px 0;color:${c.ink};">${esc(r.value)}</td>
               </tr>
             `).join('')}
           </table>
+        </td></tr>`
+    : '';
+
+  const siteAuditHtmlBlock = sa
+    ? `
+        <tr><td style="padding:8px 28px 4px;">
+          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:${c.muted};margin-bottom:10px;">Real site signals</div>
+          ${!sa.reachable ? `
+            <div style="background:${c.bone};border-left:3px solid ${c.accent};padding:12px 16px;border-radius:6px;color:${c.ink};font-size:13px;">
+              Site was not reachable for analysis.
+            </div>
+          ` : `
+            <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;background:${c.bone};border-radius:8px;">
+              <tr>
+                <td style="padding:10px 14px;color:${c.muted};width:42%;vertical-align:top;">Schema markup</td>
+                <td style="padding:10px 14px;color:${c.ink};">${sa.schema?.present?.length ?? 0} of ${sa.schema?.max ?? '?'} expected${sa.schema?.present?.length ? `<br><span style="color:${c.muted};font-size:12px;">Found: ${esc(sa.schema!.present!.join(', '))}</span>` : ''}${sa.schema?.missing?.length ? `<br><span style="color:#B45309;font-size:12px;">Missing: ${esc(sa.schema!.missing!.join(', '))}</span>` : ''}</td>
+              </tr>
+              ${sa.platform ? `<tr><td style="padding:10px 14px;color:${c.muted};vertical-align:top;">Platform</td><td style="padding:10px 14px;color:${c.ink};">${esc(sa.platform)}</td></tr>` : ''}
+              ${sa.pagespeed?.performance != null ? `<tr><td style="padding:10px 14px;color:${c.muted};vertical-align:top;">Mobile perf</td><td style="padding:10px 14px;color:${c.ink};">${sa.pagespeed.performance}/100</td></tr>` : ''}
+              ${sa.pagespeed?.seo != null ? `<tr><td style="padding:10px 14px;color:${c.muted};vertical-align:top;">SEO basics</td><td style="padding:10px 14px;color:${c.ink};">${sa.pagespeed.seo}/100</td></tr>` : ''}
+              <tr><td style="padding:10px 14px;color:${c.muted};vertical-align:top;">Discoverability</td><td style="padding:10px 14px;color:${c.ink};">${sa.files?.robots ? '✓ robots.txt' : '✗ no robots.txt'} &nbsp;·&nbsp; ${sa.files?.sitemap ? '✓ sitemap.xml' : '✗ no sitemap.xml'}</td></tr>
+            </table>
+          `}
+        </td></tr>`
+    : '';
+
+  const aiVisHtmlBlock = av?.configured
+    ? `
+        <tr><td style="padding:8px 28px 4px;">
+          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:${c.muted};margin-bottom:10px;">AI search visibility</div>
+          <div style="background:${av.appeared ? '#ECFDF5' : c.walnut};color:${av.appeared ? c.ink : c.paper};border-radius:10px;padding:16px 18px;">
+            <div style="font:600 13px/1.2 'Helvetica Neue',Arial,sans-serif;margin-bottom:10px;color:${av.appeared ? '#16A34A' : '#C99356'};">
+              ${av.appeared ? '✓ Appeared in Perplexity search' : '⚠ Did NOT appear in Perplexity search'}
+            </div>
+            ${av.queries?.[0]?.query ? `<div style="font:400 12px/1.4 'Helvetica Neue',Arial,sans-serif;color:${av.appeared ? c.muted : '#D1D5DB'};margin-bottom:10px;">Query: "${esc(av.queries[0].query)}"</div>` : ''}
+            ${(av.queries?.[0]?.results || []).slice(0, 5).map(r => `
+              <div style="padding:8px 10px;margin-bottom:4px;border-radius:6px;background:${r.isUser ? 'rgba(34,197,94,.18)' : (av.appeared ? 'rgba(255,255,255,.6)' : 'rgba(255,255,255,.06)')};">
+                <div style="font:600 13px/1.3 'Helvetica Neue',Arial,sans-serif;color:${av.appeared ? c.ink : c.paper};">${r.isUser ? '✓ ' : ''}${esc(r.title)}</div>
+                <div style="font:400 11px/1.3 'Helvetica Neue',Arial,sans-serif;color:${av.appeared ? c.muted : '#D1D5DB'};margin-top:2px;">${esc(r.host || r.url)}</div>
+              </div>
+            `).join('')}
+          </div>
         </td></tr>`
     : '';
 
@@ -326,6 +435,12 @@ function renderEmail(args: {
 
         <!-- Tools / stack -->
         ${toolsHtmlBlock}
+
+        <!-- Real site signals -->
+        ${siteAuditHtmlBlock}
+
+        <!-- AI search visibility -->
+        ${aiVisHtmlBlock}
 
         <!-- Overall score banner -->
         <tr><td style="padding:8px 28px 4px;">

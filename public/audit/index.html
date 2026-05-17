@@ -69,18 +69,13 @@ const INDUSTRIES = [
   'E-commerce / DTC brand','Other'
 ];
 
-const TOOL_CATEGORIES = [
-  { name: 'CRM',               tools: ['HubSpot','Salesforce','Pipedrive','GoHighLevel','Zoho','Jobber','Housecall Pro','ServiceTitan','Industry-specific','Other','None / Spreadsheets'] },
-  { name: 'Scheduling',        tools: ['Calendly','TidyCal','Cal.com','Acuity','Square Appointments','NexHealth','Industry-specific','Other','None'] },
-  { name: 'Accounting',        tools: ['QuickBooks','Xero','FreshBooks','Wave','Sage','Industry-specific','Other','None'] },
-  { name: 'Email & Marketing', tools: ['Mailchimp','Klaviyo','ActiveCampaign','ConvertKit','Constant Contact','Beehiiv','MailerLite','Other','None'] },
-  { name: 'Internal Comms',    tools: ['Slack','MS Teams','Discord','Email only','Other'] },
-  { name: 'AI tools in use',   tools: ['ChatGPT','Claude','Gemini','Perplexity','Custom GPTs','Zapier / Make AI','Voice agent','Other','None'] },
+// Productivity foundation — single radio choice. Most signal in one question.
+const PRODUCTIVITY_OPTIONS = [
+  { value: 'google',    label: 'Google Workspace',     hint: 'Gmail, Drive, Docs, Sheets' },
+  { value: 'microsoft', label: 'Microsoft 365',        hint: 'Outlook, OneDrive, Word, Excel' },
+  { value: 'mixed',     label: 'Mix of both',          hint: 'Some Google, some Microsoft' },
+  { value: 'other',     label: 'Neither / something else' },
 ];
-
-// Tool entry for a single category. Shape: { selected: string[], other: string, usesAi: boolean }
-const isNoneTool = (t) => t === 'None' || t === 'None / Spreadsheets';
-const emptyCat = () => ({ selected: [], other: '', usesAi: false });
 
 const PAIN_POINTS = [
   { id:'calls',      label:'Phone calls going unanswered' },
@@ -112,80 +107,124 @@ const HIGH_VISIBILITY_INDUSTRIES = [
 ];
 
 // ---------- Scoring ----------
-// Helpers to read the new tools shape: { [cat]: { selected: [], other: '', usesAi: false } }
-// Defensive — also tolerates the old shape ({ [cat]: 'ToolName' }) in case a stale browser submits.
-function readCat(tools, cat) {
-  const v = tools && tools[cat];
-  if (!v) return { selected: [], other: '', usesAi: false };
-  if (typeof v === 'string') return { selected: isNoneTool(v) ? [v] : [v], other: '', usesAi: false };
-  return { selected: v.selected || [], other: v.other || '', usesAi: !!v.usesAi };
-}
-function hasRealTool(entry) {
-  return entry.selected.some(s => !isNoneTool(s)) || !!entry.other.trim();
-}
-function realCategoryCount(tools) {
-  return TOOL_CATEGORIES.filter(c => hasRealTool(readCat(tools, c.name))).length;
-}
-function aiCategoryCount(tools) {
-  // counts categories where the user explicitly checked "Using AI with this tool"
-  return TOOL_CATEGORIES.filter(c => {
-    const e = readCat(tools, c.name);
-    return hasRealTool(e) && e.usesAi;
-  }).length;
-}
-function hasExplicitAiToolSelection(tools) {
-  // "AI tools in use" category has a real selection (not just None)
-  const e = readCat(tools, 'AI tools in use');
-  return hasRealTool(e);
+// stack data shape: { productivity: 'google'|'microsoft'|'mixed'|'other'|'', otherTools: '', customTools: '' }
+function countOtherTools(s) {
+  if (!s) return 0;
+  return s.split(/[,\n]/).map(x => x.trim()).filter(Boolean).length;
 }
 
 function compute(data) {
-  // Visibility (35%)
+  const stack = data.stack || {};
+  const siteAudit = data.siteAudit || null;
+  const aiVis = data.aiVisibility || null;
+
+  // ── Visibility (35%) — now grounded in real signals when available ──
   let visibility = 55;
   if (data.website && data.website.length > 4) visibility += 5;
   if (data.keywords && data.keywords.trim().split(/[,\n]/).filter(Boolean).length >= 2) visibility += 5;
-  if (HIGH_VISIBILITY_INDUSTRIES.includes(data.industry)) visibility -= 18; // service biz often invisible to AI
-  if (data.pains.includes('visibility')) visibility -= 8;
-  visibility = Math.max(18, Math.min(88, visibility));
+  // Soft penalty for high-visibility-need industries (kept as a small thumbtack)
+  if (HIGH_VISIBILITY_INDUSTRIES.includes(data.industry)) visibility -= 10;
+  if (data.pains.includes('visibility')) visibility -= 6;
 
-  // Stack (30%)
-  const realCount = realCategoryCount(data.tools);
-  let stack = 28 + realCount * 9;
-  if (hasExplicitAiToolSelection(data.tools)) stack += 12;
-  // Bonus if AI is already layered on top of existing tools
-  const aiPerCat = aiCategoryCount(data.tools);
-  stack += Math.min(aiPerCat * 4, 12);
-  // Bonus for a connected ops stack (CRM + Scheduling both filled with real tools)
-  if (hasRealTool(readCat(data.tools, 'CRM')) && hasRealTool(readCat(data.tools, 'Scheduling'))) stack += 4;
-  if (data.pains.includes('data')) stack -= 8; // disconnected stack signal
-  stack = Math.max(15, Math.min(94, stack));
+  // Real signal: schema markup present on their site
+  if (siteAudit && siteAudit.reachable) {
+    const schemaPresent = siteAudit.schema?.present?.length || 0;
+    const schemaMax = siteAudit.schema?.max || 6;
+    visibility += Math.round((schemaPresent / schemaMax) * 22) - 4;
+    if (siteAudit.files?.sitemap) visibility += 3;
+    if (siteAudit.pagespeed?.seo) {
+      // pull the SEO score toward our visibility number
+      visibility = Math.round(visibility * 0.65 + siteAudit.pagespeed.seo * 0.35);
+    }
+  }
+  // Real signal: did they appear in Perplexity citations?
+  if (aiVis && aiVis.configured) {
+    if (aiVis.appeared) visibility += 18;
+    else visibility -= 14;
+  }
+  visibility = Math.max(8, Math.min(96, visibility));
 
-  // Opportunity density (35%) — more pains = bigger ROI surface
+  // ── Stack (30%) — much simpler signal model now ──
+  let stackScore = 35;
+  if (stack.productivity === 'google' || stack.productivity === 'microsoft') stackScore += 12;
+  else if (stack.productivity === 'mixed') stackScore += 6;
+  // Free-text tool count is a real signal — more tools = more stack to leverage
+  const otherCount = countOtherTools(stack.otherTools);
+  stackScore += Math.min(otherCount, 6) * 5;
+  const customCount = countOtherTools(stack.customTools);
+  if (customCount > 0) stackScore += 8; // having any custom tooling implies maturity
+  if (data.pains.includes('data')) stackScore -= 8;
+  // Real signal: detected platform tells us something
+  if (siteAudit?.platform) {
+    if (/wordpress|wix|squarespace|godaddy|duda/i.test(siteAudit.platform)) stackScore -= 4;
+    if (/next\.js|astro|custom|webflow/i.test(siteAudit.platform)) stackScore += 4;
+  }
+  stackScore = Math.max(15, Math.min(94, stackScore));
+
+  // ── Opportunity density (35%) — more pains = bigger ROI surface ──
   let opportunity = 28 + data.pains.length * 8;
   opportunity = Math.max(22, Math.min(96, opportunity));
 
-  const overall = Math.round(visibility * 0.35 + stack * 0.30 + opportunity * 0.35);
+  const overall = Math.round(visibility * 0.35 + stackScore * 0.30 + opportunity * 0.35);
   const grade = overall >= 82 ? 'A' : overall >= 70 ? 'B' : overall >= 55 ? 'C' : overall >= 40 ? 'D' : 'F';
 
-  return { overall, grade, visibility: Math.round(visibility), stack: Math.round(stack), opportunity: Math.round(opportunity) };
+  return {
+    overall,
+    grade,
+    visibility: Math.round(visibility),
+    stack: Math.round(stackScore),
+    opportunity: Math.round(opportunity),
+  };
 }
 
 function buildOpportunities(data, scores) {
   const ops = [];
+  const stack = data.stack || {};
+  const siteAudit = data.siteAudit || null;
+  const aiVis = data.aiVisibility || null;
   const firstKeyword = (data.keywords || '').split(/[,\n]/)[0].trim() || 'businesses like yours';
 
-  if (scores.visibility < 70 && HIGH_VISIBILITY_INDUSTRIES.includes(data.industry)) {
-    ops.push({
-      rank: 'High impact',
-      title: 'Get findable in AI search',
-      why: `When a buyer asks ChatGPT or Perplexity about "${firstKeyword}," you almost certainly aren't in the answer. Every AI-search query you miss is a buyer who learns about a competitor instead of you.`,
-      service: 'AI-Ready Website rebuild',
-      effort: '3–4 weeks',
-      invest: 'From $1,200',
-    });
-  }
+  // Real-signal-grounded version of the AI search recommendation.
+  // Use Perplexity result if available, else fall back to the heuristic.
+  const aiVisBlock = (() => {
+    if (aiVis && aiVis.configured && !aiVis.appeared) {
+      const sampleQ = aiVis.queries?.[0]?.query || `"best ${data.industry || 'businesses'} in ${data.city || 'your city'}"`;
+      return {
+        rank: 'High impact — verified',
+        title: 'Get findable in AI search',
+        why: `We just asked Perplexity ${sampleQ}. Your business wasn't in the recommendation. Every AI-search query you miss is a buyer learning about a competitor instead of you — and AI engines are now where ${firstKeyword === 'businesses like yours' ? 'these buyers' : 'people searching for ' + firstKeyword} actually start.`,
+        service: 'AI-Ready Website rebuild',
+        effort: '3–4 weeks',
+        invest: 'From $1,200',
+      };
+    }
+    if (siteAudit && siteAudit.reachable && (siteAudit.schema?.present?.length || 0) < 2) {
+      return {
+        rank: 'High impact',
+        title: 'Add the schema markup AI engines actually read',
+        why: `Your site has ${siteAudit.schema.present.length} of ${siteAudit.schema.max} expected schema types (we checked). Without LocalBusiness, FAQ, and Service schema, ChatGPT and Perplexity can't cleanly extract what you do — so they recommend competitors who did set it up.`,
+        service: 'AI-Ready Website rebuild',
+        effort: '3–4 weeks',
+        invest: 'From $1,200',
+      };
+    }
+    if (scores.visibility < 70 && HIGH_VISIBILITY_INDUSTRIES.includes(data.industry)) {
+      return {
+        rank: 'High impact',
+        title: 'Get findable in AI search',
+        why: `When a buyer asks ChatGPT or Perplexity about "${firstKeyword}," you almost certainly aren't in the answer. Every AI-search query you miss is a buyer who learns about a competitor instead of you.`,
+        service: 'AI-Ready Website rebuild',
+        effort: '3–4 weeks',
+        invest: 'From $1,200',
+      };
+    }
+    return null;
+  })();
+  if (aiVisBlock) ops.push(aiVisBlock);
 
-  if (data.pains.includes('data') || (realCategoryCount(data.tools) >= 3 && !hasExplicitAiToolSelection(data.tools))) {
+  const otherToolCount = countOtherTools(stack.otherTools);
+  const customToolCount = countOtherTools(stack.customTools);
+  if (data.pains.includes('data') || (otherToolCount >= 3 && stack.productivity)) {
     ops.push({
       rank: 'High ROI',
       title: 'Connect your tools so they stop fighting each other',
@@ -193,6 +232,17 @@ function buildOpportunities(data, scores) {
       service: 'Custom AI / Automation build',
       effort: '2–6 weeks',
       invest: 'Typically $1,500–$5,000',
+    });
+  }
+
+  if (customToolCount > 0) {
+    ops.push({
+      rank: 'Quick win',
+      title: 'Layer AI on top of the tools you already built',
+      why: 'You mentioned custom tooling — that\'s a real foundation most small businesses don\'t have. Adding an AI layer (a search interface, a summarizer, an auto-categorizer) is usually a fraction of the cost of building new, and 10x the value.',
+      service: 'Custom AI build',
+      effort: '2–4 weeks',
+      invest: 'Quote-based',
     });
   }
 
@@ -230,7 +280,7 @@ function buildOpportunities(data, scores) {
   }
 
   if (data.goal === 'Just understand what AI can actually do for us' ||
-      !hasExplicitAiToolSelection(data.tools)) {
+      (otherToolCount === 0 && customToolCount === 0)) {
     ops.push({
       rank: 'Foundational',
       title: 'Get a clear-headed AI roadmap',
@@ -292,51 +342,59 @@ function App() {
   const [data, setData] = useState({
     name: '', website: '', industry: '', city: '',
     keywords: '',
-    tools: {},
+    stack: { productivity: '', otherTools: '', customTools: '' },
     pains: [],
     goal: '',
     email: '',
+    siteAudit: null,       // populated in background after Step 2
+    aiVisibility: null,    // populated in background after Step 2
   });
 
   const TOTAL = 6; // intake steps (excluding welcome and report)
   const set = (k, v) => setData(d => ({ ...d, [k]: v }));
-
-  const getCat = (tools, cat) => tools[cat] || emptyCat();
-
-  const toggleTool = (cat, tool) =>
-    setData(d => {
-      const current = getCat(d.tools, cat);
-      let selected;
-      if (isNoneTool(tool)) {
-        // "None" is mutually exclusive — selecting it clears everything else
-        selected = current.selected.includes(tool) ? [] : [tool];
-      } else {
-        // Selecting any real tool removes "None" from the list
-        const without = current.selected.filter(s => s !== tool && !isNoneTool(s));
-        selected = current.selected.includes(tool) ? without : [...without, tool];
-      }
-      // If "Other" was deselected, also wipe its free-text
-      const stillHasOther = selected.includes('Other');
-      const next = {
-        ...current,
-        selected,
-        other: stillHasOther ? current.other : '',
-        // If "None" is the only selection, AI flag is irrelevant — clear it
-        usesAi: selected.length === 0 || (selected.length === 1 && isNoneTool(selected[0])) ? false : current.usesAi,
-      };
-      return { ...d, tools: { ...d.tools, [cat]: next } };
-    });
-
-  const setOther = (cat, value) =>
-    setData(d => ({ ...d, tools: { ...d.tools, [cat]: { ...getCat(d.tools, cat), other: value } } }));
-
-  const toggleAi = (cat) =>
-    setData(d => ({ ...d, tools: { ...d.tools, [cat]: { ...getCat(d.tools, cat), usesAi: !getCat(d.tools, cat).usesAi } } }));
+  const setStack = (k, v) =>
+    setData(d => ({ ...d, stack: { ...d.stack, [k]: v } }));
 
   const togglePain = (id) =>
     setData(d => ({ ...d, pains: d.pains.includes(id) ? d.pains.filter(p => p !== id) : [...d.pains, id] }));
   const next = () => setStep(s => s + 1);
   const back = () => setStep(s => Math.max(s - 1, 0));
+
+  // After Step 2 (web presence — website + keywords known + name/industry/city known)
+  // kick off the real-signal checks in the background. Results land in state by
+  // the time the user reaches the report ~60–90s later.
+  const [checksFired, setChecksFired] = useState(false);
+  useEffect(() => {
+    if (step < 3 || checksFired) return;
+    setChecksFired(true);
+    // Site audit — only if they gave a URL
+    if (data.website && data.website.length > 3) {
+      fetch('/api/site-audit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: data.website }),
+      })
+        .then(r => r.ok ? r.json() : null)
+        .then(r => r && setData(d => ({ ...d, siteAudit: r })))
+        .catch(() => {});
+    }
+    // AI search visibility — requires industry + city
+    if (data.industry && data.city) {
+      fetch('/api/ai-visibility', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          industry: data.industry,
+          city: data.city,
+          domain: data.website || '',
+          name: data.name || '',
+        }),
+      })
+        .then(r => r.ok ? r.json() : null)
+        .then(r => r && setData(d => ({ ...d, aiVisibility: r })))
+        .catch(() => {});
+    }
+  }, [step, checksFired, data.website, data.industry, data.city, data.name]);
 
   const scores = useMemo(() => step >= TOTAL+1 ? compute(data) : null, [step, data]);
   const ops = useMemo(() => scores ? buildOpportunities(data, scores) : [], [scores, data]);
@@ -441,52 +499,54 @@ function App() {
 
   // ---------- Step 3: Stack ----------
   if (step === 3) {
+    const stack = data.stack;
     return (
       <Shell progress={<ProgressBar step={2} total={TOTAL} />}>
         <StepWrap
           eyebrow="Your tech stack"
           title="What's running your business today?"
-          dek="Select everything you use in each category — multiple are fine. Skip categories that don't apply. Pick 'Other' to type in a tool not listed."
+          dek="A few quick questions about your tools. Skip anything that doesn't apply."
           onBack={back}
           onNext={next}
         >
-          <div className="space-y-7">
-            {TOOL_CATEGORIES.map(cat => {
-              const entry = getCat(data.tools, cat.name);
-              const hasReal = entry.selected.some(s => !isNoneTool(s));
-              return (
-                <div key={cat.name}>
-                  <p className="label mb-3">{cat.name}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {cat.tools.map(t => (
-                      <span key={t}
-                        className={"chip " + (entry.selected.includes(t) ? 'selected' : '')}
-                        onClick={() => toggleTool(cat.name, t)}>{t}</span>
-                    ))}
-                  </div>
-                  {entry.selected.includes('Other') && (
-                    <input
-                      className="input mt-3"
-                      type="text"
-                      value={entry.other}
-                      onChange={e => setOther(cat.name, e.target.value)}
-                      placeholder={`Which one? (e.g. for ${cat.name})`}
-                    />
-                  )}
-                  {hasReal && (
-                    <label className="flex items-center gap-2 mt-3 text-sm cursor-pointer" style={{color:'var(--ink-700)'}}>
-                      <input
-                        type="checkbox"
-                        checked={entry.usesAi}
-                        onChange={() => toggleAi(cat.name)}
-                        style={{accentColor:'var(--honey-300)', width:16, height:16}}
-                      />
-                      <span>Using AI with this tool</span>
-                    </label>
-                  )}
-                </div>
-              );
-            })}
+          <div className="space-y-8">
+            <div>
+              <p className="label mb-3">Productivity foundation</p>
+              <div className="flex flex-wrap gap-2">
+                {PRODUCTIVITY_OPTIONS.map(opt => (
+                  <span key={opt.value}
+                    className={"chip " + (stack.productivity === opt.value ? 'selected' : '')}
+                    onClick={() => setStack('productivity', stack.productivity === opt.value ? '' : opt.value)}
+                    title={opt.hint || ''}>
+                    {opt.label}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <p className="label mb-2">What other tools do you use?</p>
+              <p className="text-sm text-[var(--smoke)] mb-3">CRM, scheduling, accounting, marketing — anything. Comma-separated is fine.</p>
+              <textarea
+                className="input"
+                rows={2}
+                value={stack.otherTools}
+                onChange={e => setStack('otherTools', e.target.value)}
+                placeholder="e.g. HubSpot, Calendly, QuickBooks, Mailchimp"
+              />
+            </div>
+
+            <div>
+              <p className="label mb-2">Any custom tools or internal systems?</p>
+              <p className="text-sm text-[var(--smoke)] mb-3">Things you (or someone) built specifically for your business.</p>
+              <textarea
+                className="input"
+                rows={2}
+                value={stack.customTools}
+                onChange={e => setStack('customTools', e.target.value)}
+                placeholder="e.g. internal job-tracking sheet, Airtable for clients, custom intake form"
+              />
+            </div>
           </div>
         </StepWrap>
       </Shell>
@@ -602,6 +662,89 @@ function App() {
           </div>
         </div>
 
+        {/* Real signal: what we found on their website */}
+        {data.siteAudit && (
+          <div className="card rounded-2xl p-7 md:p-8 mb-6">
+            <p className="eyebrow mb-2">We looked at your site</p>
+            <h3 className="text-2xl mb-4">Real signals from {data.siteAudit.url || data.website}</h3>
+            {!data.siteAudit.reachable ? (
+              <p className="text-[var(--muted)]">We couldn't reach your site to analyze it. That's a problem on its own — make sure it's online and returning a 200.</p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3 text-sm">
+                <div>
+                  <span className="label block">Schema markup (for AI engines)</span>
+                  <span className="text-[var(--ink)]">{data.siteAudit.schema.present.length} of {data.siteAudit.schema.max} expected types</span>
+                  {data.siteAudit.schema.present.length > 0 && (
+                    <span className="text-[var(--smoke)] text-xs block mt-0.5">Found: {data.siteAudit.schema.present.join(', ')}</span>
+                  )}
+                  {data.siteAudit.schema.missing.length > 0 && (
+                    <span className="text-[var(--rust)] text-xs block mt-0.5">Missing: {data.siteAudit.schema.missing.join(', ')}</span>
+                  )}
+                </div>
+                <div>
+                  <span className="label block">Platform</span>
+                  <span className="text-[var(--ink)]">{data.siteAudit.platform || 'Could not detect'}</span>
+                </div>
+                {data.siteAudit.pagespeed && (
+                  <>
+                    <div>
+                      <span className="label block">Mobile performance</span>
+                      <span className="text-[var(--ink)]">{data.siteAudit.pagespeed.performance ?? '—'}/100</span>
+                    </div>
+                    <div>
+                      <span className="label block">SEO basics</span>
+                      <span className="text-[var(--ink)]">{data.siteAudit.pagespeed.seo ?? '—'}/100</span>
+                    </div>
+                  </>
+                )}
+                <div>
+                  <span className="label block">Discoverability files</span>
+                  <span className="text-[var(--ink)]">{data.siteAudit.files.robots ? '✓ robots.txt' : '✗ no robots.txt'} · {data.siteAudit.files.sitemap ? '✓ sitemap.xml' : '✗ no sitemap.xml'}</span>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Real signal: AI search visibility */}
+        {data.aiVisibility && data.aiVisibility.configured && (
+          <div className="card rounded-2xl p-7 md:p-8 mb-12" style={{background: data.aiVisibility.appeared ? 'var(--bone)' : 'var(--walnut-700)', color: data.aiVisibility.appeared ? 'var(--ink)' : 'var(--paper)'}}>
+            <p className="eyebrow mb-2" style={{color: data.aiVisibility.appeared ? 'var(--rust)' : 'var(--honey-300)'}}>
+              {data.aiVisibility.appeared ? '✓ You appeared in AI search' : '⚠ You\'re invisible to AI search'}
+            </p>
+            <h3 className="text-2xl mb-4" style={{color: data.aiVisibility.appeared ? 'var(--ink)' : 'var(--paper)'}}>
+              When buyers search Perplexity for "{data.aiVisibility.queries?.[0]?.query || `${data.industry?.toLowerCase()} in ${data.city}`}", here's what comes up:
+            </h3>
+            <div className="space-y-2 mb-4">
+              {(data.aiVisibility.queries?.[0]?.results || []).slice(0, 5).map((r, i) => (
+                <div key={i} className="rounded-lg p-3" style={{
+                  background: r.isUser ? 'rgba(34, 197, 94, .15)' : (data.aiVisibility.appeared ? 'rgba(255,255,255,.6)' : 'rgba(255,255,255,.06)'),
+                  border: r.isUser ? '1px solid rgba(34, 197, 94, .4)' : 'none',
+                }}>
+                  <div style={{fontSize:'14px',fontWeight:600,color: data.aiVisibility.appeared ? 'var(--ink)' : 'var(--paper)'}}>
+                    {r.isUser && '✓ '}{r.title}
+                  </div>
+                  <div style={{fontSize:'12px',color: data.aiVisibility.appeared ? 'var(--smoke)' : 'var(--driftwood)',marginTop:'2px'}}>
+                    {r.host || r.url}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p style={{color: data.aiVisibility.appeared ? 'var(--ink-700)' : 'var(--bone)', fontSize: '14px'}}>
+              {data.aiVisibility.appeared
+                ? `Your business surfaced. That puts you ahead of most ${data.industry?.toLowerCase()} businesses in your market.`
+                : `These are the businesses buyers will reach out to when they ask AI for a recommendation. Until your site has the right schema and content for AI engines to pick up, you're not in the running.`}
+            </p>
+          </div>
+        )}
+
+        {/* "Still analyzing" if we haven't gotten Perplexity results yet */}
+        {!data.aiVisibility && data.industry && data.city && (
+          <div className="card rounded-2xl p-7 mb-12 text-center" style={{background: 'var(--bone)'}}>
+            <p className="text-[var(--muted)]">Still analyzing AI search visibility — refresh in a moment to see whether you appear when buyers ask AI for a recommendation.</p>
+          </div>
+        )}
+
         <div className="mb-12">
           <p className="eyebrow mb-3 text-center">Top 3 things to do next</p>
           <h2 className="text-3xl md:text-4xl text-center mb-10">Your highest-impact moves.</h2>
@@ -645,7 +788,7 @@ function App() {
         </div>
 
         <div className="mt-10 text-center">
-          <button className="ghost-btn text-sm" onClick={() => { setStep(0); setData({name:'',website:'',industry:'',city:'',keywords:'',tools:{},pains:[],goal:'',email:''}); setSendStatus('idle'); }}>
+          <button className="ghost-btn text-sm" onClick={() => { setStep(0); setData({name:'',website:'',industry:'',city:'',keywords:'',stack:{productivity:'',otherTools:'',customTools:''},pains:[],goal:'',email:'',siteAudit:null,aiVisibility:null}); setSendStatus('idle'); setChecksFired(false); }}>
             ← Start over
           </button>
         </div>
