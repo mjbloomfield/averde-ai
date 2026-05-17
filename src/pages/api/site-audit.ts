@@ -101,7 +101,9 @@ function detectPlatform(html: string, headers: Headers): string | null {
   return null;
 }
 
-// Lighthouse signal from PageSpeed Insights API. Free at low volume, no key required.
+// Lighthouse signal from PageSpeed Insights API. Without an API key we share
+// the public unauthenticated quota with the whole internet and get 429'd
+// constantly. With a key (free, 25k queries/day per project), it's reliable.
 async function pageSpeedSignals(target: string): Promise<{
   performance: number | null;
   seo: number | null;
@@ -109,9 +111,11 @@ async function pageSpeedSignals(target: string): Promise<{
   lcp: number | null; // largest contentful paint, seconds
   cls: number | null; // cumulative layout shift
 } | null> {
+  const apiKey = import.meta.env.PAGESPEED_API_KEY;
   const url =
     `https://www.googleapis.com/pagespeedonline/v5/runPagespeed` +
-    `?url=${encodeURIComponent(target)}&category=performance&category=seo&category=accessibility&strategy=mobile`;
+    `?url=${encodeURIComponent(target)}&category=performance&category=seo&category=accessibility&strategy=mobile` +
+    (apiKey ? `&key=${encodeURIComponent(apiKey)}` : '');
   const controller = new AbortController();
   // Mobile PageSpeed Insights regularly takes 20-40s. Give it room.
   const t = setTimeout(() => controller.abort(), 45_000);
@@ -173,12 +177,39 @@ export const POST: APIRoute = async ({ request }) => {
 
   const html = await homeRes.text();
 
-  // Schema markup — the key AI-readiness signal
+  // Schema markup — the key AI-readiness signal.
+  // schema.org has a deep inheritance tree (Dentist IS-A LocalBusiness IS-A
+  // Organization). We map the user's actual found types to the umbrella
+  // categories AI engines care about.
   const schemaTypes = extractSchemaTypes(html);
-  const expectedSchemaTypes = ['LocalBusiness', 'Organization', 'FAQPage', 'Service', 'Review', 'Product'];
-  const hasSchema = (t: string) =>
-    schemaTypes.some(s => s.toLowerCase().includes(t.toLowerCase()));
-
+  const SCHEMA_INHERITANCE: Record<string, string[]> = {
+    LocalBusiness: [
+      'LocalBusiness', 'Dentist', 'MedicalBusiness', 'MedicalClinic', 'Optician', 'Pharmacy',
+      'HomeAndConstructionBusiness', 'HVACBusiness', 'Plumber', 'Electrician', 'Locksmith', 'RoofingContractor',
+      'AutoRepair', 'AutoBodyShop', 'AutoDealer', 'AutoPartsStore', 'GasStation',
+      'Restaurant', 'Bar', 'CafeOrCoffeeShop', 'FastFoodRestaurant', 'Bakery', 'FoodEstablishment',
+      'ProfessionalService', 'FinancialService', 'AccountingService', 'InsuranceAgency',
+      'LegalService', 'Attorney', 'Notary',
+      'RealEstateAgent', 'RealEstateListing',
+      'HealthAndBeautyBusiness', 'BeautySalon', 'DaySpa', 'HairSalon', 'NailSalon',
+      'VeterinaryCare', 'ChildCare', 'PreSchool', 'EducationalOrganization',
+      'Store', 'Florist', 'GroceryStore', 'ClothingStore', 'JewelryStore', 'FurnitureStore',
+      'SportsActivityLocation', 'ExerciseGym', 'GolfCourse',
+      'LodgingBusiness', 'Hotel', 'Resort', 'BedAndBreakfast',
+      'Animal', 'PetStore',
+    ],
+    Organization: ['Organization', 'Corporation', 'NGO', 'EducationalOrganization', 'GovernmentOrganization'],
+    FAQPage: ['FAQPage'],
+    Service: ['Service', 'FinancialProduct', 'MedicalProcedure'],
+    Review: ['Review', 'AggregateRating'],
+    Product: ['Product', 'IndividualProduct', 'ProductModel'],
+  };
+  const expectedSchemaTypes = Object.keys(SCHEMA_INHERITANCE);
+  const lowerFound = schemaTypes.map(t => t.toLowerCase());
+  const hasSchema = (umbrella: string) => {
+    const variants = (SCHEMA_INHERITANCE[umbrella] || [umbrella]).map(v => v.toLowerCase());
+    return variants.some(v => lowerFound.includes(v));
+  };
   const schemaPresent = expectedSchemaTypes.filter(hasSchema);
   const schemaMissing = expectedSchemaTypes.filter(t => !hasSchema(t));
 
