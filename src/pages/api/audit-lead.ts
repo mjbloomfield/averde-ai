@@ -21,6 +21,9 @@ type Opportunity = {
   why?: string;
 };
 
+type ToolEntry = { selected?: string[]; other?: string; usesAi?: boolean };
+type ToolsMap = Record<string, ToolEntry | string | null | undefined>;
+
 type AuditPayload = {
   name?: string;
   email?: string;
@@ -28,12 +31,20 @@ type AuditPayload = {
   industry?: string;
   city?: string;
   keywords?: string;
-  tools?: Record<string, string | null>;
+  tools?: ToolsMap;
   pains?: string[];
   goal?: string;
   scores?: Scores;
   opportunities?: Opportunity[];
 };
+
+// Normalize a tool entry to the canonical shape, tolerating the legacy
+// "single string per category" payload from any stale cached widget.
+function normalizeToolEntry(v: ToolEntry | string | null | undefined): { selected: string[]; other: string; usesAi: boolean } {
+  if (!v) return { selected: [], other: '', usesAi: false };
+  if (typeof v === 'string') return { selected: [v], other: '', usesAi: false };
+  return { selected: v.selected ?? [], other: v.other ?? '', usesAi: !!v.usesAi };
+}
 
 const json = (status: number, body: Record<string, unknown>) =>
   new Response(JSON.stringify(body), {
@@ -191,7 +202,28 @@ function renderEmail(args: {
   const ops = (payload.opportunities || []).slice(0, 3);
   const subject = `Averde AI Audit Lead: ${name || 'Anonymous'} (${industry || 'unknown'})`;
 
+  // Normalize the tools map and build human-readable per-category strings.
+  // Skip categories the user didn't touch.
+  type ToolsRow = { cat: string; tools: string; usesAi: boolean };
+  const toolsMap: ToolsMap = payload.tools || {};
+  const toolsRows: ToolsRow[] = Object.keys(toolsMap)
+    .map(cat => {
+      const e = normalizeToolEntry(toolsMap[cat]);
+      const parts = [...e.selected];
+      // Replace the literal "Other" with the actual free-text answer
+      if (parts.includes('Other')) {
+        const i = parts.indexOf('Other');
+        if (e.other.trim()) parts[i] = `Other: ${e.other.trim()}`;
+      }
+      return { cat, tools: parts.join(', '), usesAi: e.usesAi };
+    })
+    .filter(r => r.tools.length > 0);
+
   // — Plain-text fallback (gmail-stripped clients, screenreaders) —
+  const toolsTextBlock = toolsRows.length
+    ? ['', 'Stack:', ...toolsRows.map(r => `  ${r.cat}: ${r.tools}${r.usesAi ? '  [using AI here]' : ''}`)].join('\n')
+    : '';
+
   const textLines = [
     `Name: ${name || '(not given)'}`,
     `Email: ${email}`,
@@ -199,6 +231,7 @@ function renderEmail(args: {
     `Industry: ${industry || '(not given)'}`,
     payload.city ? `City: ${payload.city}` : '',
     payload.goal ? `Stated goal: ${payload.goal}` : '',
+    toolsTextBlock,
     '',
     `Overall AI Readiness: ${s.grade ?? '?'} (${s.overall ?? '?'} / 100)`,
     `  AI Search Visibility: ${s.visibility ?? '?'}`,
@@ -249,8 +282,23 @@ function renderEmail(args: {
 
   const identityRow = (label: string, value?: string) =>
     value
-      ? `<tr><td style="padding:3px 12px 3px 0;color:${c.muted};white-space:nowrap;">${esc(label)}</td><td style="padding:3px 0;color:${c.ink};">${esc(value)}</td></tr>`
+      ? `<tr><td style="padding:3px 12px 3px 0;color:${c.muted};white-space:nowrap;vertical-align:top;">${esc(label)}</td><td style="padding:3px 0;color:${c.ink};">${esc(value)}</td></tr>`
       : '';
+
+  const toolsHtmlBlock = toolsRows.length
+    ? `
+        <tr><td style="padding:8px 28px 4px;">
+          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:${c.muted};margin-bottom:10px;">Stack</div>
+          <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;">
+            ${toolsRows.map(r => `
+              <tr>
+                <td style="padding:5px 12px 5px 0;color:${c.muted};white-space:nowrap;vertical-align:top;width:38%;">${esc(r.cat)}${r.usesAi ? ` <span style="display:inline-block;background:${c.accent};color:#fff;font:700 9px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;padding:3px 6px;border-radius:4px;margin-left:4px;">AI</span>` : ''}</td>
+                <td style="padding:5px 0;color:${c.ink};">${esc(r.tools)}</td>
+              </tr>
+            `).join('')}
+          </table>
+        </td></tr>`
+    : '';
 
   const html = `<!DOCTYPE html>
 <html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>${esc(subject)}</title></head>
@@ -275,6 +323,9 @@ function renderEmail(args: {
             ${identityRow('Stated goal', payload.goal)}
           </table>
         </td></tr>
+
+        <!-- Tools / stack -->
+        ${toolsHtmlBlock}
 
         <!-- Overall score banner -->
         <tr><td style="padding:8px 28px 4px;">

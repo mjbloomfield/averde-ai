@@ -70,13 +70,17 @@ const INDUSTRIES = [
 ];
 
 const TOOL_CATEGORIES = [
-  { name: 'CRM',                tools: ['HubSpot','Salesforce','Pipedrive','GoHighLevel','Zoho','None / Spreadsheets'] },
-  { name: 'Scheduling',         tools: ['Calendly','TidyCal','Cal.com','Acuity','Industry-specific','None'] },
-  { name: 'Accounting',         tools: ['QuickBooks','Xero','FreshBooks','Wave','None'] },
-  { name: 'Email & Marketing',  tools: ['Mailchimp','Klaviyo','ActiveCampaign','ConvertKit','None'] },
-  { name: 'Internal Comms',     tools: ['Slack','MS Teams','Discord','Email only'] },
-  { name: 'AI tools in use',    tools: ['ChatGPT','Claude','Perplexity','Custom GPTs','Zapier / Make AI','Voice agent','None'] },
+  { name: 'CRM',               tools: ['HubSpot','Salesforce','Pipedrive','GoHighLevel','Zoho','Jobber','Housecall Pro','ServiceTitan','Industry-specific','Other','None / Spreadsheets'] },
+  { name: 'Scheduling',        tools: ['Calendly','TidyCal','Cal.com','Acuity','Square Appointments','NexHealth','Industry-specific','Other','None'] },
+  { name: 'Accounting',        tools: ['QuickBooks','Xero','FreshBooks','Wave','Sage','Industry-specific','Other','None'] },
+  { name: 'Email & Marketing', tools: ['Mailchimp','Klaviyo','ActiveCampaign','ConvertKit','Constant Contact','Beehiiv','MailerLite','Other','None'] },
+  { name: 'Internal Comms',    tools: ['Slack','MS Teams','Discord','Email only','Other'] },
+  { name: 'AI tools in use',   tools: ['ChatGPT','Claude','Gemini','Perplexity','Custom GPTs','Zapier / Make AI','Voice agent','Other','None'] },
 ];
+
+// Tool entry for a single category. Shape: { selected: string[], other: string, usesAi: boolean }
+const isNoneTool = (t) => t === 'None' || t === 'None / Spreadsheets';
+const emptyCat = () => ({ selected: [], other: '', usesAi: false });
 
 const PAIN_POINTS = [
   { id:'calls',      label:'Phone calls going unanswered' },
@@ -108,6 +112,33 @@ const HIGH_VISIBILITY_INDUSTRIES = [
 ];
 
 // ---------- Scoring ----------
+// Helpers to read the new tools shape: { [cat]: { selected: [], other: '', usesAi: false } }
+// Defensive — also tolerates the old shape ({ [cat]: 'ToolName' }) in case a stale browser submits.
+function readCat(tools, cat) {
+  const v = tools && tools[cat];
+  if (!v) return { selected: [], other: '', usesAi: false };
+  if (typeof v === 'string') return { selected: isNoneTool(v) ? [v] : [v], other: '', usesAi: false };
+  return { selected: v.selected || [], other: v.other || '', usesAi: !!v.usesAi };
+}
+function hasRealTool(entry) {
+  return entry.selected.some(s => !isNoneTool(s)) || !!entry.other.trim();
+}
+function realCategoryCount(tools) {
+  return TOOL_CATEGORIES.filter(c => hasRealTool(readCat(tools, c.name))).length;
+}
+function aiCategoryCount(tools) {
+  // counts categories where the user explicitly checked "Using AI with this tool"
+  return TOOL_CATEGORIES.filter(c => {
+    const e = readCat(tools, c.name);
+    return hasRealTool(e) && e.usesAi;
+  }).length;
+}
+function hasExplicitAiToolSelection(tools) {
+  // "AI tools in use" category has a real selection (not just None)
+  const e = readCat(tools, 'AI tools in use');
+  return hasRealTool(e);
+}
+
 function compute(data) {
   // Visibility (35%)
   let visibility = 55;
@@ -118,14 +149,14 @@ function compute(data) {
   visibility = Math.max(18, Math.min(88, visibility));
 
   // Stack (30%)
-  const realToolCount = Object.entries(data.tools).filter(([cat,tool]) =>
-    tool && !['None','None / Spreadsheets','Email only'].includes(tool)
-  ).length;
-  let stack = 28 + realToolCount * 9;
-  const aiTool = data.tools['AI tools in use'];
-  if (aiTool && aiTool !== 'None') stack += 12;
-  if (data.tools['CRM'] && data.tools['CRM'] !== 'None / Spreadsheets' &&
-      data.tools['Scheduling'] && data.tools['Scheduling'] !== 'None') stack += 4;
+  const realCount = realCategoryCount(data.tools);
+  let stack = 28 + realCount * 9;
+  if (hasExplicitAiToolSelection(data.tools)) stack += 12;
+  // Bonus if AI is already layered on top of existing tools
+  const aiPerCat = aiCategoryCount(data.tools);
+  stack += Math.min(aiPerCat * 4, 12);
+  // Bonus for a connected ops stack (CRM + Scheduling both filled with real tools)
+  if (hasRealTool(readCat(data.tools, 'CRM')) && hasRealTool(readCat(data.tools, 'Scheduling'))) stack += 4;
   if (data.pains.includes('data')) stack -= 8; // disconnected stack signal
   stack = Math.max(15, Math.min(94, stack));
 
@@ -154,7 +185,7 @@ function buildOpportunities(data, scores) {
     });
   }
 
-  if (data.pains.includes('data') || (Object.keys(data.tools).length >= 3 && !data.tools['AI tools in use'])) {
+  if (data.pains.includes('data') || (realCategoryCount(data.tools) >= 3 && !hasExplicitAiToolSelection(data.tools))) {
     ops.push({
       rank: 'High ROI',
       title: 'Connect your tools so they stop fighting each other',
@@ -199,7 +230,7 @@ function buildOpportunities(data, scores) {
   }
 
   if (data.goal === 'Just understand what AI can actually do for us' ||
-      (data.tools['AI tools in use'] === 'None')) {
+      !hasExplicitAiToolSelection(data.tools)) {
     ops.push({
       rank: 'Foundational',
       title: 'Get a clear-headed AI roadmap',
@@ -269,8 +300,39 @@ function App() {
 
   const TOTAL = 6; // intake steps (excluding welcome and report)
   const set = (k, v) => setData(d => ({ ...d, [k]: v }));
+
+  const getCat = (tools, cat) => tools[cat] || emptyCat();
+
   const toggleTool = (cat, tool) =>
-    setData(d => ({ ...d, tools: { ...d.tools, [cat]: d.tools[cat] === tool ? null : tool } }));
+    setData(d => {
+      const current = getCat(d.tools, cat);
+      let selected;
+      if (isNoneTool(tool)) {
+        // "None" is mutually exclusive — selecting it clears everything else
+        selected = current.selected.includes(tool) ? [] : [tool];
+      } else {
+        // Selecting any real tool removes "None" from the list
+        const without = current.selected.filter(s => s !== tool && !isNoneTool(s));
+        selected = current.selected.includes(tool) ? without : [...without, tool];
+      }
+      // If "Other" was deselected, also wipe its free-text
+      const stillHasOther = selected.includes('Other');
+      const next = {
+        ...current,
+        selected,
+        other: stillHasOther ? current.other : '',
+        // If "None" is the only selection, AI flag is irrelevant — clear it
+        usesAi: selected.length === 0 || (selected.length === 1 && isNoneTool(selected[0])) ? false : current.usesAi,
+      };
+      return { ...d, tools: { ...d.tools, [cat]: next } };
+    });
+
+  const setOther = (cat, value) =>
+    setData(d => ({ ...d, tools: { ...d.tools, [cat]: { ...getCat(d.tools, cat), other: value } } }));
+
+  const toggleAi = (cat) =>
+    setData(d => ({ ...d, tools: { ...d.tools, [cat]: { ...getCat(d.tools, cat), usesAi: !getCat(d.tools, cat).usesAi } } }));
+
   const togglePain = (id) =>
     setData(d => ({ ...d, pains: d.pains.includes(id) ? d.pains.filter(p => p !== id) : [...d.pains, id] }));
   const next = () => setStep(s => s + 1);
@@ -384,23 +446,47 @@ function App() {
         <StepWrap
           eyebrow="Your tech stack"
           title="What's running your business today?"
-          dek="Pick the closest match in each category. Skip categories that don't apply."
+          dek="Select everything you use in each category — multiple are fine. Skip categories that don't apply. Pick 'Other' to type in a tool not listed."
           onBack={back}
           onNext={next}
         >
           <div className="space-y-7">
-            {TOOL_CATEGORIES.map(cat => (
-              <div key={cat.name}>
-                <p className="label mb-3">{cat.name}</p>
-                <div className="flex flex-wrap gap-2">
-                  {cat.tools.map(t => (
-                    <span key={t}
-                      className={"chip " + (data.tools[cat.name] === t ? 'selected' : '')}
-                      onClick={() => toggleTool(cat.name, t)}>{t}</span>
-                  ))}
+            {TOOL_CATEGORIES.map(cat => {
+              const entry = getCat(data.tools, cat.name);
+              const hasReal = entry.selected.some(s => !isNoneTool(s));
+              return (
+                <div key={cat.name}>
+                  <p className="label mb-3">{cat.name}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {cat.tools.map(t => (
+                      <span key={t}
+                        className={"chip " + (entry.selected.includes(t) ? 'selected' : '')}
+                        onClick={() => toggleTool(cat.name, t)}>{t}</span>
+                    ))}
+                  </div>
+                  {entry.selected.includes('Other') && (
+                    <input
+                      className="input mt-3"
+                      type="text"
+                      value={entry.other}
+                      onChange={e => setOther(cat.name, e.target.value)}
+                      placeholder={`Which one? (e.g. for ${cat.name})`}
+                    />
+                  )}
+                  {hasReal && (
+                    <label className="flex items-center gap-2 mt-3 text-sm cursor-pointer" style={{color:'var(--ink-700)'}}>
+                      <input
+                        type="checkbox"
+                        checked={entry.usesAi}
+                        onChange={() => toggleAi(cat.name)}
+                        style={{accentColor:'var(--honey-300)', width:16, height:16}}
+                      />
+                      <span>Using AI with this tool</span>
+                    </label>
+                  )}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </StepWrap>
       </Shell>
