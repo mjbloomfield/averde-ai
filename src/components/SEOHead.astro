@@ -7,26 +7,109 @@ interface Props {
 }
 const { title, description, canonical, isHome = false } = Astro.props;
 const url = canonical || Astro.url.href;
+const site = 'https://averde.ai';
 
-const schema = {
-  "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  "name": "Averde AI",
-  "description": "AI voice agents for small businesses. Never miss another call.",
-  "url": "https://averde.ai",
-  "email": "mark@averde.ai",
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Boulder",
-    "addressRegion": "CO",
-    "addressCountry": "US"
+// JSON-LD @graph — multiple cross-referenced entities. Modern best practice
+// for AI search engines (ChatGPT, Perplexity, Google AI Overviews).
+const graph: Record<string, unknown>[] = [
+  {
+    '@type': 'Organization',
+    '@id': `${site}/#organization`,
+    name: 'Averde AI',
+    url: site,
+    email: 'mark@averde.ai',
+    description: "Averde AI helps small businesses get found in AI search (ChatGPT, Perplexity, Google AI Overviews) and deploy practical AI tools that fit their business.",
+    founder: { '@id': `${site}/#mark` },
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Boulder',
+      addressRegion: 'CO',
+      addressCountry: 'US',
+    },
+    areaServed: { '@type': 'Country', name: 'United States' },
+    sameAs: ['https://github.com/mjbloomfield'],
   },
-  "areaServed": "US",
-  "founder": {
-    "@type": "Person",
-    "name": "Mark Bloomfield"
-  }
-};
+  {
+    '@type': 'LocalBusiness',
+    '@id': `${site}/#localbusiness`,
+    name: 'Averde AI',
+    url: site,
+    email: 'mark@averde.ai',
+    description: 'AI-Ready Websites, AI strategy sessions, voice agents, and custom AI builds for small businesses. Boulder, CO — serving businesses nationwide.',
+    image: `${site}/images/textures/mark-headshot.jpg`,
+    priceRange: '$$',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Boulder',
+      addressRegion: 'CO',
+      addressCountry: 'US',
+    },
+    areaServed: { '@type': 'Country', name: 'United States' },
+    founder: { '@id': `${site}/#mark` },
+  },
+  {
+    '@type': 'Person',
+    '@id': `${site}/#mark`,
+    name: 'Mark Bloomfield',
+    jobTitle: 'Founder',
+    worksFor: { '@id': `${site}/#organization` },
+    description: 'Engineer, founder, and the person behind Averde AI. Helps small businesses cut through the AI noise.',
+    email: 'mark@averde.ai',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Boulder',
+      addressRegion: 'CO',
+      addressCountry: 'US',
+    },
+    image: `${site}/images/textures/mark-headshot.jpg`,
+  },
+  {
+    '@type': 'WebSite',
+    '@id': `${site}/#website`,
+    url: site,
+    name: 'Averde AI',
+    publisher: { '@id': `${site}/#organization` },
+    inLanguage: 'en-US',
+  },
+  {
+    '@type': 'Service',
+    name: 'AI-Ready Website',
+    serviceType: 'Website redesign for AI search visibility',
+    provider: { '@id': `${site}/#organization` },
+    description: "Get found in ChatGPT, Perplexity, and Google's AI Overviews. Full site rebuild with AEO content, schema markup, and local AI citations.",
+    offers: { '@type': 'Offer', priceCurrency: 'USD', price: '1200' },
+    areaServed: { '@type': 'Country', name: 'United States' },
+  },
+  {
+    '@type': 'Service',
+    name: 'AI Strategy Session',
+    serviceType: 'AI consulting',
+    provider: { '@id': `${site}/#organization` },
+    description: "A focused 90-minute working session where we map out your AI roadmap — what to build, what to buy off the shelf, and what to skip entirely.",
+    offers: { '@type': 'Offer', priceCurrency: 'USD', price: '250' },
+    areaServed: { '@type': 'Country', name: 'United States' },
+  },
+  {
+    '@type': 'Service',
+    name: 'AI Voice Agent',
+    serviceType: 'AI receptionist deployment',
+    provider: { '@id': `${site}/#organization` },
+    description: "An AI that answers your phone 24/7 — qualifying leads, booking appointments, handling FAQs. Deployed in 5 business days.",
+    areaServed: { '@type': 'Country', name: 'United States' },
+  },
+  {
+    '@type': 'Service',
+    name: 'Custom AI Build',
+    serviceType: 'Custom AI development',
+    provider: { '@id': `${site}/#organization` },
+    description: "Bespoke AI built around your data, your workflows, your team. Internal knowledge bases, multi-step automations, fractional Head of AI.",
+    areaServed: { '@type': 'Country', name: 'United States' },
+  },
+];
+
+const jsonLd = { '@context': 'https://schema.org', '@graph': graph };
+// keep prop in signature for back-compat; not currently branching on it
+void isHome;
 ---
 
 <meta charset="UTF-8" />
@@ -41,15 +124,16 @@ const schema = {
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:site_name" content="Averde AI" />
+<meta property="og:image" content={`${site}/images/textures/mark-headshot.jpg`} />
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={`${site}/images/textures/mark-headshot.jpg`} />
 
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-{isHome && (
-  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
-)}
+<!-- JSON-LD structured data — every page emits the full @graph for AI engines -->
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
