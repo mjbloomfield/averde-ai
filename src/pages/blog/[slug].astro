@@ -4,7 +4,12 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
-  return posts.map(post => ({ params: { slug: post.slug } }));
+  // Scheduled-publish filter: don't generate routes for future-dated posts.
+  // Set publishedDate in Keystatic to schedule.
+  const now = Date.now();
+  return posts
+    .filter(p => !p.data.publishedDate || new Date(p.data.publishedDate).getTime() <= now)
+    .map(post => ({ params: { slug: post.slug } }));
 }
 
 const { slug } = Astro.params;

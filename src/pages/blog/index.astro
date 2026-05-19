@@ -3,11 +3,21 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const allPosts = await getCollection('blog');
-const posts = allPosts.sort((a, b) => {
-  const dateA = a.data.publishedDate ? new Date(a.data.publishedDate).getTime() : 0;
-  const dateB = b.data.publishedDate ? new Date(b.data.publishedDate).getTime() : 0;
-  return dateB - dateA;
-});
+// Scheduled-publish filter: hide posts whose publishedDate is in the future.
+// Set a future date in Keystatic and the post stays invisible until that
+// date passes AND the site is rebuilt. (Free — no cron required if you
+// commit/deploy weekly anyway.)
+const now = Date.now();
+const posts = allPosts
+  .filter(p => {
+    if (!p.data.publishedDate) return true;
+    return new Date(p.data.publishedDate).getTime() <= now;
+  })
+  .sort((a, b) => {
+    const dateA = a.data.publishedDate ? new Date(a.data.publishedDate).getTime() : 0;
+    const dateB = b.data.publishedDate ? new Date(b.data.publishedDate).getTime() : 0;
+    return dateB - dateA;
+  });
 
 const categoryColors: Record<string, string> = {
   'Voice AI': 'bg-green-sage/10 text-green-mid',
