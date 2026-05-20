@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Source+Serif+4:wght@400;500;600&family=Inter+Tight:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Source+Serif+4:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -55,6 +55,15 @@
   --cream:      var(--paper);
   --dark:       var(--ink);
   --white-warm: var(--paper);
+
+  /* === TYPOGRAPHY STACKS ============================== */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body:    'Source Serif 4', Georgia, serif;
+  --font-ui:      'IBM Plex Mono', ui-monospace, 'SF Mono', monospace;
+
+  /* === MOTION ============================== */
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --ease-in-out: cubic-bezier(.65, 0, .35, 1);
 }
 
 html { scroll-behavior: smooth; }
@@ -112,3 +121,150 @@ details summary { cursor: pointer; list-style: none; }
 details summary::-webkit-details-marker { display: none; }
 details[open] .summary-arrow { transform: rotate(180deg); }
 .summary-arrow { transition: transform 0.2s ease; }
+
+/* =================================================================
+   MOTION LAYER — reveal, stagger, page-load orchestration
+================================================================= */
+
+/* Base reveal: invisible until .is-in is added by IntersectionObserver */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 900ms var(--ease-out), transform 900ms var(--ease-out);
+  will-change: opacity, transform;
+}
+.reveal.is-in { opacity: 1; transform: translateY(0); }
+
+/* Variants */
+.reveal-left { transform: translateX(-32px); }
+.reveal-left.is-in { transform: translateX(0); }
+.reveal-right { transform: translateX(32px); }
+.reveal-right.is-in { transform: translateX(0); }
+.reveal-scale { transform: scale(.94); }
+.reveal-scale.is-in { transform: scale(1); }
+.reveal-blur { filter: blur(8px); }
+.reveal-blur.is-in { filter: blur(0); }
+
+/* Stagger via data-delay attribute (0..900ms) */
+.reveal[data-delay="60"]  { transition-delay: 60ms; }
+.reveal[data-delay="120"] { transition-delay: 120ms; }
+.reveal[data-delay="180"] { transition-delay: 180ms; }
+.reveal[data-delay="240"] { transition-delay: 240ms; }
+.reveal[data-delay="300"] { transition-delay: 300ms; }
+.reveal[data-delay="360"] { transition-delay: 360ms; }
+.reveal[data-delay="420"] { transition-delay: 420ms; }
+.reveal[data-delay="480"] { transition-delay: 480ms; }
+.reveal[data-delay="540"] { transition-delay: 540ms; }
+.reveal[data-delay="600"] { transition-delay: 600ms; }
+.reveal[data-delay="720"] { transition-delay: 720ms; }
+.reveal[data-delay="840"] { transition-delay: 840ms; }
+.reveal[data-delay="960"] { transition-delay: 960ms; }
+
+/* Hero page-load orchestration — fires once on initial paint */
+@keyframes hero-rise {
+  from { opacity: 0; transform: translateY(36px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes hero-slide-in {
+  from { opacity: 0; transform: translateX(24px) rotate(-2deg); }
+  to   { opacity: 1; transform: translateX(0) rotate(0); }
+}
+@keyframes badge-drop {
+  0%   { opacity: 0; transform: translateY(-40px) rotate(8deg) scale(.7); }
+  60%  { opacity: 1; transform: translateY(6px) rotate(-12deg) scale(1.05); }
+  100% { opacity: 1; transform: translateY(0) rotate(-8deg) scale(1); }
+}
+@keyframes grain-shift {
+  0%   { background-position: 0 0; }
+  50%  { background-position: 120px -80px; }
+  100% { background-position: 0 0; }
+}
+
+.hero-load { animation: hero-rise 1100ms var(--ease-out) both; }
+.hero-load-2 { animation: hero-rise 1100ms var(--ease-out) 120ms both; }
+.hero-load-3 { animation: hero-rise 1100ms var(--ease-out) 240ms both; }
+.hero-load-4 { animation: hero-rise 1100ms var(--ease-out) 360ms both; }
+.hero-card-load { animation: hero-slide-in 1200ms var(--ease-out) 480ms both; }
+.badge-load { animation: badge-drop 1400ms var(--ease-out) 1100ms both; }
+
+/* Slow animated grain — adds life without distraction */
+body::before {
+  animation: grain-shift 24s ease-in-out infinite;
+}
+
+/* =================================================================
+   LINEN WEAVE PATTERN — second texture for accent strips
+================================================================= */
+.linen-bg {
+  background-image:
+    repeating-linear-gradient(90deg,
+      rgba(31,26,18,.04) 0px,
+      rgba(31,26,18,.04) 1px,
+      transparent 1px,
+      transparent 3px),
+    repeating-linear-gradient(0deg,
+      rgba(31,26,18,.05) 0px,
+      rgba(31,26,18,.05) 1px,
+      transparent 1px,
+      transparent 4px);
+}
+.linen-bg-light {
+  background-image:
+    repeating-linear-gradient(90deg,
+      rgba(244,236,219,.06) 0px,
+      rgba(244,236,219,.06) 1px,
+      transparent 1px,
+      transparent 3px),
+    repeating-linear-gradient(0deg,
+      rgba(244,236,219,.08) 0px,
+      rgba(244,236,219,.08) 1px,
+      transparent 1px,
+      transparent 4px);
+}
+
+/* =================================================================
+   CUSTOM CURSOR ACCENT — subtle honey dot following links
+================================================================= */
+a, button, .tool-card, .playbook, .service-cta-btn {
+  cursor: pointer;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cursor-dot {
+    position: fixed;
+    top: 0; left: 0;
+    width: 8px; height: 8px;
+    border-radius: 999px;
+    background: var(--rust);
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 220ms var(--ease-out), height 220ms var(--ease-out),
+                background 220ms var(--ease-out), opacity 220ms var(--ease-out);
+    mix-blend-mode: multiply;
+    opacity: 0;
+  }
+  .cursor-dot.is-active { opacity: 1; }
+  .cursor-dot.is-hover {
+    width: 36px; height: 36px;
+    background: var(--honey-300);
+    opacity: .8;
+  }
+  /* hide native cursor on interactive things to let the dot shine */
+  body.has-cursor-dot a:hover,
+  body.has-cursor-dot button:hover,
+  body.has-cursor-dot .tool-card:hover,
+  body.has-cursor-dot .playbook:hover { cursor: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-blur {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+  .hero-load, .hero-load-2, .hero-load-3, .hero-load-4,
+  .hero-card-load, .badge-load { animation: none !important; }
+  body::before { animation: none !important; }
+}
