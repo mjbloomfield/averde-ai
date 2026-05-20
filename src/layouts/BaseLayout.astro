@@ -25,8 +25,6 @@ const { title, description, canonical, isHome = false } = Astro.props;
     </main>
     <Footer />
 
-    <div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
-
     <script>
       // === Scroll-triggered reveals ===
       const targets = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-blur');
@@ -42,35 +40,6 @@ const { title, description, canonical, isHome = false } = Astro.props;
         targets.forEach((t) => io.observe(t));
       } else {
         targets.forEach((t) => t.classList.add('is-in'));
-      }
-
-      // === Custom cursor (desktop only) ===
-      const dot = document.getElementById('cursor-dot');
-      const isFine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-      const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (dot && isFine && !prefersReduce) {
-        document.body.classList.add('has-cursor-dot');
-        let rafId: number | null = null;
-        let pendingX = 0, pendingY = 0;
-        const move = (e: MouseEvent) => {
-          pendingX = e.clientX;
-          pendingY = e.clientY;
-          dot.classList.add('is-active');
-          if (rafId == null) {
-            rafId = requestAnimationFrame(() => {
-              dot.style.transform = `translate(${pendingX}px, ${pendingY}px) translate(-50%, -50%)`;
-              rafId = null;
-            });
-          }
-        };
-        const leave = () => dot.classList.remove('is-active');
-        window.addEventListener('mousemove', move, { passive: true });
-        window.addEventListener('mouseleave', leave);
-        const hoverables = 'a, button, .tool-card, .playbook, .service-cta-btn, .hero-card, .hero-badge';
-        document.querySelectorAll(hoverables).forEach((el) => {
-          el.addEventListener('mouseenter', () => dot.classList.add('is-hover'));
-          el.addEventListener('mouseleave', () => dot.classList.remove('is-hover'));
-        });
       }
     </script>
   </body>

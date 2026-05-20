@@ -222,41 +222,6 @@ body::before {
       transparent 4px);
 }
 
-/* =================================================================
-   CUSTOM CURSOR ACCENT — subtle honey dot following links
-================================================================= */
-a, button, .tool-card, .playbook, .service-cta-btn {
-  cursor: pointer;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .cursor-dot {
-    position: fixed;
-    top: 0; left: 0;
-    width: 8px; height: 8px;
-    border-radius: 999px;
-    background: var(--rust);
-    pointer-events: none;
-    z-index: 9999;
-    transform: translate(-50%, -50%);
-    transition: width 220ms var(--ease-out), height 220ms var(--ease-out),
-                background 220ms var(--ease-out), opacity 220ms var(--ease-out);
-    mix-blend-mode: multiply;
-    opacity: 0;
-  }
-  .cursor-dot.is-active { opacity: 1; }
-  .cursor-dot.is-hover {
-    width: 36px; height: 36px;
-    background: var(--honey-300);
-    opacity: .8;
-  }
-  /* hide native cursor on interactive things to let the dot shine */
-  body.has-cursor-dot a:hover,
-  body.has-cursor-dot button:hover,
-  body.has-cursor-dot .tool-card:hover,
-  body.has-cursor-dot .playbook:hover { cursor: none; }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-blur {
     opacity: 1 !important;
