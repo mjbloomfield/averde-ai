@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "mcp__claude_ai_Supabase__list_organizations",
+      "mcp__claude_ai_Supabase__list_projects",
+      "Bash(vercel env *)",
+      "mcp__claude_ai_Supabase__get_project",
+      "Bash(gh api *)",
+      "Bash(gh search *)",
+      "Bash(gh repo *)",
+      "Bash(curl -s https://raw.githubusercontent.com/obsidianmd/obsidian-releases/HEAD/community-plugins.json)",
+      "Bash(claude mcp *)",
+      "mcp__supabase-averde__list_tables",
+      "mcp__supabase-averde__list_extensions",
+      "mcp__supabase-averde__get_project_url",
+      "mcp__supabase-averde__apply_migration",
+      "mcp__supabase-averde__get_advisors",
+      "mcp__supabase-averde__execute_sql"
+    ]
+  }
+}

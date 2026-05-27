@@ -64,6 +64,35 @@ home.yaml + industry pages + this CLAUDE.md style:
 - Honest acknowledgment of what something *isn't* (defensive prose)
 - Closing with the strategic/urgency point, not a wishy-washy summary
 
+### Voice patterns confirmed by post #1 edits (May 2026)
+
+- **"Make sure..." imperatives** for parallel numbered/bulleted list headings.
+  Talks TO the reader instead of lecturing about an abstract.
+- **Claude first** when listing AI engines; ChatGPT/Perplexity/Gemini after.
+  Mark's brand, Mark's call.
+- **Cinematic openers welcome.** "Scene:" as a screenplay direction is on-brand.
+- **Smooth out abrupt fragments.** "Different game." → "It's just a different game."
+  Mark doesn't trust punch-fragment style; prefers conversational completeness.
+- **Conversational connectors at section breaks** — "So,", "It's just",
+  "Beyond the...". Don't open sections with bare nouns when a connector reads warmer.
+- **Mechanism over psychology** when explaining why people get things wrong.
+  Don't attribute to reader self-flattery ("they think because they use AI...");
+  explain the actual technical reason ("AEO uses different signals than SEO").
+- **Honest hedges on numbers.** Prefer "+" suffixes on prices, "a couple weeks"
+  over precise ranges when the range is fuzzy. Don't overclaim.
+- **Parenthetical self-include.** "(which we all should be doing anyway)" pattern.
+  Pulls Mark into the reader's situation instead of standing above it.
+- **Repeat the brand term as a payoff line.** "Your site wasn't AI Ready."
+  reinforces the title, doesn't just gesture at it.
+- **No "slick", "slicker", or trendy descriptors.** "Professional" / "polished"
+  when that meaning is needed.
+- **Drop qualifier hedges from sharp claims.** "AI didn't know you existed in a
+  form it could recommend" → "AI didn't even know you existed." Crisp claim
+  beats copywriter-hedged claim.
+- **Cut speculative moats.** Don't claim multi-year head starts or citation
+  graphs that "settle." If you can't prove the duration, soften ("leg up").
+  Mark called out this exact overclaim in the post #1 review.
+
 ---
 
 ## Blog post workflow
@@ -126,3 +155,39 @@ gives you 2 cron jobs free. Not needed yet.
 - Sitemap: dynamic at `/sitemap.xml` from `src/pages/sitemap.xml.ts`
 - All blog posts should be ~1,200-1,800 words and AEO-shaped (direct
   answer-first paragraphs, FAQ-style sections, real numbers/examples)
+
+---
+
+## TODO.md — running task list
+
+`TODO.md` at the repo root is the single source of truth for what's planned, what's been done, and what's been deferred on this project. Maintain it on every working session.
+
+**Structure:**
+
+- **`## To do`** — the active list. Top of the list = next thing to work on. New deferred items append to the bottom.
+- **`## Project log`** — completed work with a one-line summary per item, appended chronologically (oldest at the top, newest at the bottom). Reads as a log of the project's history. Don't write detail — the git history has that. Just enough that someone reading TODO.md can see the arc of what's shipped.
+
+**Workflow:**
+
+- **Starting a task:** open `TODO.md`, pick the top item, work on it.
+- **Finishing a task:** move it from `## To do` to the bottom of `## Project log`, rewriting it as one short past-tense sentence with the commit hash if available. Example: `- 2026-05-27 — added noindex env-gate, replaced placeholder content, stripped dev image captions (4293ac8).`
+- **Substantive ad-hoc work (bug fixes, surprise requests, things that weren't in `## To do` first) also gets appended to `## Project log`.** The log captures everything substantive that ships, not just pre-planned tasks. If a task was never on the To do list because it surfaced mid-session, log it anyway.
+- **Deferring a task:** move it to the bottom of `## To do`. If the reason for deferral matters, add a one-line note (e.g., `(waiting on client to provide profile URLs)`).
+- **Adding a new task:** insert at the right priority point in `## To do`, or at the bottom if not urgent.
+
+**What goes in TODO.md:**
+
+- Phase-level work from the active plan
+- Punch-list items discovered mid-phase
+- Bugs / regressions
+- Things waiting on the client or a third party
+- One-off requests that came up in conversation but weren't done immediately
+
+**What doesn't go in TODO.md:**
+
+- Step-by-step implementation details (that's a plan file or just thinking)
+- Personal preferences / voice rules (those belong in this CLAUDE.md)
+- Long-form documentation (those belong in their own files)
+- Trivial doc/typo tweaks — keep the log focused on substantive work
+
+The point: a future Claude session opens `TODO.md` and knows in 60 seconds what's next, what's blocked, and what's already shipped.
