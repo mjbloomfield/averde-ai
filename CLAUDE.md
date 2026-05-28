@@ -92,6 +92,15 @@ home.yaml + industry pages + this CLAUDE.md style:
 - **Cut speculative moats.** Don't claim multi-year head starts or citation
   graphs that "settle." If you can't prove the duration, soften ("leg up").
   Mark called out this exact overclaim in the post #1 review.
+- **Avoid the three-short-declaratives-plus-closer rhythm.** "The tools
+  existed. The use cases were real. But nobody was translating it. So I
+  started doing that work." reads as LLM rhythm even when the meaning is
+  fine. Collapse those runs into one flowing sentence with commas or
+  em-dashes ("The tools and use cases were real, but nobody was
+  translating any of it — so I started doing that work myself"). Same
+  fix for paired fragment closers like "Based in Boulder. Working
+  nationwide." → "I'm based in Boulder, working with businesses
+  nationwide." Mark called this out by name as "AI speak."
 
 ---
 
