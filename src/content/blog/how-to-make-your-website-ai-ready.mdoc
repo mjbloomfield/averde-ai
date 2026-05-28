@@ -9,8 +9,6 @@ seoDescription: How to make your website AI-Ready — a 5-minute self-check, an 
 
 **Part 2 of a 2-part series.** Start with [Part 1: What does it actually mean for a website to be "AI-Ready"? →](/blog/what-does-ai-ready-website-actually-mean)
 
----
-
 Quick recap from Part 1: your website is "AI-Ready" when AI engines like Claude and ChatGPT can read it, understand it, and recommend it in their answers. That requires three things — AEO-shaped content, schema markup, and presence in the AI engines' citation graph. Most small business sites get zero of them.
 
 This post is the playbook for actually doing the work: a quick self-check to see where you stand, the DIY breakdown by pillar (with realistic time estimates), and when it makes sense to hire it out instead.
@@ -73,10 +71,6 @@ The work to get that early advantage isn't massive — it's a reorientation of y
 So there is urgency. Not because AI is hype, but because the slot for "the business AI recommends in your market" is being filled right now, and you want to be the one filling it.
 
 If you're not AI-Ready yet, the question isn't whether to fix it. It's whether you fix it before your competitors do.
-
----
-
-**Missed Part 1?** [What does it actually mean for a website to be "AI-Ready"? →](/blog/what-does-ai-ready-website-actually-mean)
 
 ---
 

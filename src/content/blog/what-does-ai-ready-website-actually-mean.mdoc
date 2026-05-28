@@ -9,8 +9,6 @@ seoDescription: AI-Ready means your website can be read, understood, and recomme
 
 **Part 1 of a 2-part series.** Next: [How to actually make your website AI-Ready →](/blog/how-to-make-your-website-ai-ready)
 
----
-
 Scene: A potential customer in your city opens Claude (Perplexity, ChatGPT, Gemini, etc) and types "best [insert your business] near me."
 
 Claude thinks for a second, then gives them five business names with a short blurb about each. Maybe a link or two. The person picks one — probably the first — and calls.
@@ -110,10 +108,6 @@ A few things people assume that aren't actually part of it:
 Knowing what AI-Ready means is half the job. The other half is the playbook — a five-minute self-check to see where you actually stand, a DIY breakdown by pillar (with time estimates) for the AI-assisted version of the work, and when it makes sense to bring someone in.
 
 That's [Part 2 of this series →](/blog/how-to-make-your-website-ai-ready).
-
----
-
-**Continue to Part 2:** [How to actually make your website AI-Ready →](/blog/how-to-make-your-website-ai-ready)
 
 ---
 

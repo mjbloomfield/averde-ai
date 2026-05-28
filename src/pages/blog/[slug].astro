@@ -37,8 +37,17 @@ const categoryColors: Record<string, string> = {
 
   <div class="bg-cream min-h-screen">
     <!-- Header -->
-    <div class="bg-green-deep py-16">
-      <div class="max-w-3xl mx-auto px-4 sm:px-6">
+    <div class="relative bg-green-deep py-16 overflow-hidden">
+      <div
+        class="absolute inset-0 bg-cover bg-center"
+        style="background-image: url('/images/textures/wood-beam-dark.jpg'); opacity: 0.35;"
+        aria-hidden="true"
+      ></div>
+      <div
+        class="absolute inset-0 bg-gradient-to-b from-green-deep/60 via-green-deep/40 to-green-deep/80"
+        aria-hidden="true"
+      ></div>
+      <div class="relative max-w-3xl mx-auto px-4 sm:px-6">
         <a href="/blog" class="text-cream/60 text-sm hover:text-cream mb-6 inline-block">← Back to Resources</a>
         <div class="flex items-center gap-3 mb-5">
           <span class={`text-xs font-semibold px-2.5 py-1 rounded-full ${categoryColors[post.data.category] || 'bg-white/10 text-white'}`}>
@@ -71,15 +80,6 @@ const categoryColors: Record<string, string> = {
         prose-h2:text-2xl prose-h3:text-xl prose-h2:mt-10 prose-h2:mb-4
         prose-h3:mt-8 prose-h3:mb-3">
         <Content />
-      </div>
-
-      <!-- CTA -->
-      <div class="mt-12 bg-green-deep rounded-2xl p-8 text-center">
-        <h2 class="text-xl font-bold text-cream mb-2">Ready to stop missing calls?</h2>
-        <p class="text-cream/60 text-sm mb-5">Get a free AI audit and see exactly how many calls your business is losing.</p>
-        <a href="/ai-audit" class="inline-flex items-center bg-sand text-green-deep font-semibold px-6 py-3 rounded-xl hover:bg-sand/90 transition-colors text-sm">
-          Book Your Free AI Audit →
-        </a>
       </div>
     </div>
   </div>
