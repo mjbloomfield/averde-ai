@@ -19,7 +19,6 @@ if (!post) return Astro.redirect('/blog');
 const { Content } = await post.render();
 
 const categoryColors: Record<string, string> = {
-  'Voice AI': 'bg-green-sage/10 text-green-mid',
   'Pricing': 'bg-sand/20 text-terracotta',
   'Dental': 'bg-blue-50 text-blue-700',
   'HVAC': 'bg-orange-50 text-orange-700',
@@ -31,7 +30,7 @@ const categoryColors: Record<string, string> = {
 ---
 
 <BaseLayout
-  title={`${post.data.title} | Averde AI`}
+  title={`${post.data.title} | Mark Bloomfield`}
   description={post.data.seoDescription || post.data.excerpt}
 >
 

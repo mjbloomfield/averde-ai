@@ -35,7 +35,7 @@ const graph: Record<string, unknown>[] = [
     name: 'Averde AI',
     url: site,
     email: 'mark@averde.ai',
-    description: 'AI-Ready Websites, AI strategy sessions, voice agents, and custom AI builds for small businesses. Boulder, CO — serving businesses nationwide.',
+    description: 'AI-Ready Websites, AI strategy sessions, and custom AI builds for small businesses. Boulder, CO — serving businesses nationwide.',
     image: `${site}/images/textures/mark-headshot.jpg`,
     priceRange: '$$',
     address: {
@@ -53,7 +53,7 @@ const graph: Record<string, unknown>[] = [
     name: 'Mark Bloomfield',
     jobTitle: 'Founder',
     worksFor: { '@id': `${site}/#organization` },
-    description: 'Engineer, founder, and the person behind Averde AI. Helps small businesses cut through the AI noise.',
+    description: 'Engineer, founder, and the AI consultant for small businesses. Helps owners cut through the AI noise — flagship service is the AI-Ready Website.',
     email: 'mark@averde.ai',
     address: {
       '@type': 'PostalAddress',
@@ -87,14 +87,6 @@ const graph: Record<string, unknown>[] = [
     provider: { '@id': `${site}/#organization` },
     description: "A focused 90-minute working session where we map out your AI roadmap — what to build, what to buy off the shelf, and what to skip entirely.",
     offers: { '@type': 'Offer', priceCurrency: 'USD', price: '250' },
-    areaServed: { '@type': 'Country', name: 'United States' },
-  },
-  {
-    '@type': 'Service',
-    name: 'AI Voice Agent',
-    serviceType: 'AI receptionist deployment',
-    provider: { '@id': `${site}/#organization` },
-    description: "An AI that answers your phone 24/7 — qualifying leads, booking appointments, handling FAQs. Deployed in 5 business days.",
     areaServed: { '@type': 'Country', name: 'United States' },
   },
   {

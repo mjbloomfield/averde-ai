@@ -50,12 +50,6 @@ services:
     description: "Bespoke AI built around your data, your workflows, and your team. Internal knowledge bases, multi-step automations, fractional Head of AI."
     ctaLabel: "Let's talk →"
     ctaHref: '/contact'
-  - published: true
-    title: 'Voice Agent — AI Receptionist'
-    price: ''
-    description: "AI that answers your phone 24/7 — booking appointments and qualifying leads. A natural add-on once your AI-Ready Website is bringing in the right calls."
-    ctaLabel: 'Get a quote →'
-    ctaHref: '/contact'
 
 quoteText: '"After Mark rebuilt our site, we started getting calls from people who said ChatGPT recommended us. That had literally never happened before — and it''s now happening every week."'
 quoteName: 'Tasha Reyes'
@@ -63,7 +57,7 @@ quoteRole: 'Owner · Front Range Family Dental · Boulder, CO'
 
 aboutEyebrow: 'Why work with me'
 aboutHeadline: "I'm not a consultant who learned AI last year."
-aboutBio1: 'I spent years as a composites research engineer and sustainability consultant before the AI wave hit. When I saw what it could do for small businesses — not the hype, the actual practical tools — I built Averde to make it accessible.'
+aboutBio1: 'I spent years as a composites research engineer and sustainability consultant before the AI wave hit. When I saw what it could do for small businesses — not the hype, the actual practical tools — I went all in on helping owners cut through the noise.'
 aboutBio2: "Every client works directly with me. I figure out what you actually need, skip the things you don't, and build or deploy it fast. Based in Boulder, CO. Working with businesses everywhere."
 
 ctaHeadline: "Not sure where AI fits?\nRun the audit."

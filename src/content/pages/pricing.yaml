@@ -26,18 +26,6 @@ plans:
       - 'Prioritized action plan'
       - 'Tools & vendor recommendations'
       - 'Follow-up Q&A by email'
-  - name: 'Voice Agent'
-    price: ''
-    description: "AI receptionist that answers calls, books appointments, and handles FAQs 24/7. A great add-on once your AI-Ready Website is bringing in the right calls."
-    ctaLabel: 'Get a quote'
-    featured: false
-    features:
-      - 'Live in 5 business days'
-      - '24/7 call answering'
-      - 'Appointment booking'
-      - 'Lead qualification'
-      - 'Monthly reporting'
-      - 'Ongoing support from Mark'
   - name: 'Custom AI Build'
     price: 'Quote-based'
     description: 'Bespoke AI built around your data, your workflows, your team.'

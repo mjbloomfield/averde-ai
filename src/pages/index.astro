@@ -34,9 +34,8 @@ const servicesEyebrow  = home?.servicesEyebrow  ?? 'Ready to go deeper';
 const servicesHeadline = home?.servicesHeadline ?? "When you're ready to actually build something.";
 const servicesDek      = home?.servicesDek      ?? '';
 const services = (home?.services ?? [
-  { title: 'Strategy Session',           price: '$250 – $500',    description: '', ctaLabel: 'Book a session →',     ctaHref: '/ai-audit' },
   { title: 'AI-Ready Website & SEO',     price: 'From $1,200',    description: '', ctaLabel: 'Get a quote →',         ctaHref: '/contact' },
-  { title: 'Voice Agent — AI Receptionist', price: 'From $297/mo', description: '', ctaLabel: 'See how it works →', ctaHref: '/how-it-works' },
+  { title: 'Strategy Session',           price: '$250 – $500',    description: '', ctaLabel: 'Book a session →',     ctaHref: '/ai-audit' },
   { published: true, title: 'Custom AI Builds', price: 'Quote-based', description: '', ctaLabel: "Let's talk →", ctaHref: '/contact' },
 ]).filter((s: { published?: boolean }) => s.published !== false);
 
@@ -56,7 +55,7 @@ const ctaMicro    = home?.ctaMicro    ?? 'No commitment · No credit card · Jus
 ---
 
 <BaseLayout
-  title="Mark Bloomfield — Your Personal AI Guy | Averde AI"
+  title="Mark Bloomfield — Your Personal AI Guy"
   description="Mark Bloomfield helps small businesses and service providers cut through the AI noise. Free tools, $27 playbooks, strategy sessions, and custom builds. Boulder, CO."
   isHome={true}
 >
@@ -87,7 +86,7 @@ const ctaMicro    = home?.ctaMicro    ?? 'No commitment · No credit card · Jus
           <div class="hero-card-img">
             <div class="hero-card-caption">
               <div class="caption-name">Mark Bloomfield</div>
-              <div class="caption-role">Founder · Averde AI</div>
+              <div class="caption-role">Your Personal AI Guy</div>
             </div>
           </div>
           <div class="hero-card-body">
