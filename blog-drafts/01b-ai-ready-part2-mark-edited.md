@@ -1,0 +1,83 @@
+---
+title: How to actually make your website AI-Ready
+excerpt: The 30–45 hour DIY playbook — AI does most of the keystrokes — plus when it makes sense to hire it out. Part 2 of a 2-part series.
+category: Automation
+publishedDate: 2026-05-18
+author: Mark Bloomfield
+seoDescription: How to make your website AI-Ready — a 5-minute self-check, an AI-assisted DIY breakdown by pillar (Content, Schema, Citation graph), and when to hire a specialist. Part 2 of 2.
+---
+
+**Part 2 of a 2-part series.** Start with [Part 1: What does it actually mean for a website to be "AI-Ready"? →](/blog/what-does-ai-ready-website-actually-mean)
+
+---
+
+Quick recap from Part 1: your website is "AI-Ready" when AI engines like Claude and ChatGPT can read it, understand it, and recommend it in their answers. That requires three things — AEO-shaped content, schema markup, and presence in the AI engines' citation graph. Most small business sites get zero of them.
+
+This post is the playbook for actually doing the work: a quick self-check to see where you stand, the DIY breakdown by pillar (with realistic time estimates), and when it makes sense to hire it out instead.
+
+## The five-minute self-check
+
+You can roughly diagnose this yourself in five minutes. Pull up a few different AI tools — Claude, ChatGPT, Perplexity, Google AI Overviews — and ask each of them the question your best new customer would ask. Something like:
+
+- "Best dental practice in Boulder, CO accepting new patients"
+- "HVAC company in Denver for emergency service"
+- "Real estate agent in Pearl Street area Boulder for first-time buyers"
+
+Whichever applies to you. Then check:
+
+- Did your business name appear in the answer?
+- Did your domain appear in the cited sources?
+- Did any of your competitors appear?
+- Were the businesses that did appear actually better than you, or just *more visible*?
+
+If the answer to question 4 is "they're not better, they just show up and we don't" — that's when you need an AI-readiness update.
+
+(If you want a more thorough version of this check, [run the free AI Readiness Audit](/ai-audit). It does the same thing automatically, plus checks your actual site's schema, page speed, and citation footprint, then gives you a personalized report with the top three things to fix.)
+
+## Do it yourself
+
+You can absolutely do this yourself. None of it requires a Computer Science degree. The work breaks down by pillar:
+
+**Content (~15–25 hours, free, any platform).** This is where AI does the heavy lifting for you — but there's still real work to direct it. Three phases:
+
+*First, figure out what your customers are actually searching for.* Open Claude or ChatGPT and ask it to brainstorm 30–50 search queries someone might type when looking for your business — by service, by neighborhood, by problem they're trying to solve. Run those queries through Google and an AI engine; see what shows up, see what doesn't. The gap between "people are asking this" and "nobody in my space has answered it well" is your map.
+
+*Second, add the pages your site is missing.* Most small business sites have 4–6 pages. Most should have 15–30. A page per service. A page per neighborhood you serve. A page per common customer question. Use Claude to draft each one based on your existing content and the gaps you found — then edit. AI gets you to 80% in a fraction of the time; the last 20% (the parts that actually sound like you, the specific examples, the prices) is yours.
+
+*Third, rewrite your existing pages for AEO.* Every key page should answer its main question in the first 200 words, not set the scene first. Build a real FAQ page with the 8–15 actual questions your customers ask (your front desk and your inbox already have the list). Make pricing explicit — or at least give a range. State your location, service area, and hours unambiguously.
+
+AI does most of the keystrokes. You're directing, editing, and adding the specifics no model can know. Expect 15–25 hours of real work even with all the AI assistance — broadening a site from 5 pages to 25 isn't fast, even when Claude drafts 80% of each one.
+
+**Schema (~3–8 hours, platform-dependent).** Use schema.org's docs and your favorite LLM to draft `LocalBusiness` (with the right subtype — `Dentist`, `Plumber`, etc.), `FAQPage`, and `Service` blocks. Validate them with [schema.org's validator](https://validator.schema.org/). Then inject them via your platform's code-injection feature: Squarespace Business+ and Wix-with-Velo both support this; WordPress has plugins (Yoast, Rank Math) that handle it for you. Squarespace Personal and GoDaddy builders don't allow custom code — at that point the question becomes "rebuild the site or skip schema." Most service businesses on those platforms end up rebuilding eventually.
+
+**Citation graph (~8–12 hours, any platform).** Claim and fully fill out your Google Business Profile — services, photos, hours, the Q&A section, regular posts. Then do the same on Apple Maps Business Connect, Bing Places, and whatever industry directories matter for you (Healthgrades, Avvo, Clutch, Houzz, etc.). Get on Yelp and the Better Business Bureau. Ask happy customers to leave reviews on the platforms AI engines cite — Google first, then your industry's specialist sites.
+
+**Ongoing (~1–4 hours/month).** Publish something monthly (at least) — a service update, a customer question answered in a blog post, a seasonal note. This could be 30 minutes per post with proper use of Claude/ChatGPT. AI engines reward sites that show signs of life.
+
+Plan on roughly 30–45 hours for the initial work across all three pillars, then a couple hours a month after.
+
+## Hire it out
+
+> "Wow — this looks so good, Mark. Everything is organized and styled so beautifully and strategically. Love a lot of the wording choices you made.... Thank you so much — I'm really excited to have a legit website that will be easy for me to edit."
+>
+> — Sharon T.
+
+If you're busy and need to get back to the actual work, a specialist can usually rebuild your site to be fully AI-Ready in a couple weeks, for $1,200–$3,000+ depending on complexity. That's roughly the value of one new customer for most service businesses, and the change compounds: once your website is AI-Ready, consistent content updates should keep you relevant.
+
+## The time is now
+
+AI search visibility is still early. Most small businesses have *no idea* this is happening, let alone how to fix it. The businesses that figure it out in the next 12 months will have a leg up on everyone else in their category.
+
+The work to get that early advantage isn't massive — it's a reorientation of your website now, and a plan to regularly update with some new content (which we all should be doing anyway).
+
+So there is urgency. Not because AI is hype, but because the slot for "the business AI recommends in your market" is being filled right now, and you want to be the one filling it.
+
+If you're not AI-Ready yet, the question isn't whether to fix it. It's whether you fix it before your competitors do.
+
+---
+
+**Missed Part 1?** [What does it actually mean for a website to be "AI-Ready"? →](/blog/what-does-ai-ready-website-actually-mean)
+
+---
+
+*Want to see where you stand? The [free 3-minute AI Readiness Audit](/ai-audit) fetches your actual website, checks its schema and structure, runs a real Perplexity query for your industry and city, and tells you exactly where the gaps are. No commitment, no sales call (unless you want one).*
