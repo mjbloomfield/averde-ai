@@ -149,6 +149,28 @@ gives you 2 cron jobs free. Not needed yet.
 
 ---
 
+## Reference: Claude products (distinct things — don't conflate)
+
+- **Claude (chat)** — assistant at claude.ai / mobile + desktop apps.
+  Conversation: you ask, it answers.
+- **Claude Code** — developer tool in the **terminal (CLI)**. Reads/edits
+  files, runs commands, deploys, talks to GitHub/Supabase/etc. For
+  project/coding work. This site was built with it.
+- **Claude Cowork** — Anthropic's agentic AI for **non-technical** knowledge
+  work, in the **Claude desktop app** (no terminal). GA February 2026 —
+  *after the Jan-2026 training cutoff, so verify specifics against
+  claude.com/product/cowork instead of relying on memory.* On all paid
+  plans. Flow: describe an outcome → Claude shows a plan → you approve → it
+  executes autonomously over the local files/folders + connected apps you
+  grant. Does file organization, data extraction (receipts/invoices →
+  spreadsheets), report generation, scheduled recurring tasks, cross-app
+  workflows. Essentially "Claude Code power, without the terminal."
+- **CLAUDE.md** — the context file at a project root that Claude Code reads
+  each session (voice rules, conventions, what not to touch). This file is
+  the example.
+
+---
+
 ## Other repo conventions (for future sessions)
 
 - Path aliases: none configured; use relative imports
