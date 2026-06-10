@@ -1,10 +1,10 @@
 ---
-title: "Claude, Cowork, and Code: what's the difference? (And what's a CLAUDE.md?)"
+title: "Claude, Cowork, and Code: what's the difference? (And how does it remember your business?)"
 excerpt: Most people use Claude as a chat tool. Few realize that the same desktop app has two other tabs that turn Claude into a real co-worker — one that does real work on real projects. Part 1 of a 2-part series.
 category: Automation
 publishedDate: 2099-01-01
 author: Mark Bloomfield
-seoDescription: What Claude is, what the Cowork and Code tabs in the Claude desktop app actually do, and what a CLAUDE.md file is — explained in plain English for small business owners. Part 1 of 2.
+seoDescription: What Claude is, what the Cowork and Code tabs in the Claude desktop app actually do, and how to give Claude a lasting memory of your business with Instructions and Projects. Part 1 of 2.
 ---
 
 **Part 1 of a 2-part series.** Next: [How to actually set up Claude as your co-worker →](/blog/how-to-set-up-claude-code)
@@ -15,7 +15,7 @@ Now imagine that same Claude, but it can edit the actual files on your computer,
 
 That's the difference between Claude in a browser tab and Claude as a co-worker. Same underlying model, completely different ways of working with it. And the surprising part is that it's all sitting in the same desktop app most people only ever use for chat.
 
-This post is the conceptual half — what Claude actually is, what the Cowork and Code tabs do, and what a CLAUDE.md file is. [Part 2](/blog/how-to-set-up-claude-code) is the nuts-and-bolts setup guide.
+This post is the conceptual half — what Claude actually is, what the Cowork and Code tabs do, and how you give it a lasting memory of your business. [Part 2](/blog/how-to-set-up-claude-code) is the nuts-and-bolts setup guide.
 
 ## Claude — the AI itself
 
@@ -54,25 +54,19 @@ The **Code** tab is the same idea pointed at building software — websites, too
 
 This is the tab I used to build the entire site you're reading right now — the pages, the free AI Readiness Audit tool, this blog system. More on that below. For a small business owner, Cowork is where you'll start; Code is where you go when you want to build something, not just get work done.
 
-## CLAUDE.md — the file that gives Claude context
+## How Claude remembers your business: Instructions and Projects
 
 Here's the piece nobody talks about until they need it.
 
-By default, every new session with Claude starts fresh — no memory of past conversations, no knowledge of your business, no idea how you write or what you've already decided. That's fine for one-off questions, useless if you want consistent work over time.
+By default, every new chat with Claude starts fresh — no memory of the last one, no knowledge of your business, no idea how you write or what you've already decided. That's fine for one-off questions, useless if you want consistent work over time.
 
-**CLAUDE.md** is a plain-text file you put in a project folder. Claude reads it at the start of every session, and whatever's in there becomes the standing context for the work. (The name is literally the word "claude" plus ".md", which just means it's a plain text file.)
+The desktop app fixes this two ways, and neither involves code or files you have to babysit:
 
-For this website's CLAUDE.md, I keep things like:
+**Instructions for Claude** is a text box in your settings where you write standing context that loads into every single chat — who you are, what your business does, how you want Claude to write, and what you never want it to do. Set it once and it's always on. Mine tells Claude about my business, my writing style, and a short list of habits to avoid, so I never have to re-explain myself.
 
-- What the business is and what I sell
-- My voice patterns ("Claude first when listing AI tools," "avoid AI-speak rhythm," "honest hedges on prices")
-- The blog post workflow I use
-- Which files to never touch
-- Conventions and gotchas specific to this project
+**Projects** go a level deeper. A Project is a workspace for one client, job, or kind of work, with its own instructions *and* its own uploaded files — your brand guide, your price list, last year's reports, whatever Claude should treat as reference. Everything you do inside that Project starts with that context already loaded, and Claude can pull straight from the files you gave it.
 
-The result: every new session opens already knowing what I'm building, who I am, and how I write. I don't have to re-explain context, new drafts come out closer to my voice on the first try, and the decisions Claude makes match the ones I'd make. The file gets better every time something needs correcting — I add a new rule and the next session inherits it automatically.
-
-That's the "memory" that turns Claude from an assistant into an actual co-worker.
+Put together: Instructions tell Claude who you are everywhere; a Project tells it everything about the specific thing you're working on. That standing context is the "memory" that turns Claude from an assistant you re-brief every time into an actual co-worker — and it gets sharper the more you use it, because every time Claude gets something wrong, you add a line and the next session gets it right.
 
 ## The "you direct, Claude executes" mental model
 
@@ -101,10 +95,10 @@ The whole thing works because Claude is unusually good at being told "no" and ch
 
 Concrete examples from this very site, which I built almost entirely in the Code tab:
 
-- The homepage you're reading was drafted by Claude, then I edited the parts that didn't sound like me. The CLAUDE.md voice file now captures those edits, so future drafts arrive closer on the first try.
+- The homepage you're reading was drafted by Claude, then I edited the parts that didn't sound like me. My saved instructions now capture those edits, so future drafts arrive closer on the first try.
 - The free AI Readiness Audit (the tool at [/ai-audit](/ai-audit)) was built end to end with Claude — the form, the behind-the-scenes logic, the email delivery, the lead tracking. A couple of working sessions, all of it directly with Claude.
 - This blog system — scheduled publishing, a voice-training workflow, a draft-review pattern — I built in a single session with no prior plan.
-- The AI-Ready Website service I sell is itself built this way, with each client's CLAUDE.md tuned to their business so the work stays consistent across sessions.
+- The AI-Ready Website service I sell is itself built this way, with a Project set up per client and tuned to their business so the work stays consistent across sessions.
 
 None of that required a developer team. It required a clear sense of what I wanted, an iteration loop where I edit what's wrong, and a CLAUDE.md that keeps the context warm.
 
@@ -120,7 +114,7 @@ It also isn't the answer to every problem. For quick questions and research, the
 
 ## What's next: actually setting it up
 
-If this sounds useful, [Part 2](/blog/how-to-set-up-claude-code) walks through the setup end to end — installing the Claude desktop app, finding your way around the Cowork and Code tabs, writing your first CLAUDE.md, and a starter project so you can try it on something real before you commit.
+If this sounds useful, [Part 2](/blog/how-to-set-up-claude-code) walks through the setup end to end — installing the Claude desktop app, setting your Instructions for Claude, finding your way around the Cowork and Code tabs, setting up your first Project, and a starter task so you can try it on something real before you commit.
 
 ---
 
