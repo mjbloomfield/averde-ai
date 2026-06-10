@@ -100,7 +100,7 @@ Concrete examples from this very site, which I built almost entirely in the Code
 - This blog system — scheduled publishing, a voice-training workflow, a draft-review pattern — I built in a single session with no prior plan.
 - The AI-Ready Website service I sell is itself built this way, with a Project set up per client and tuned to their business so the work stays consistent across sessions.
 
-None of that required a developer team. It required a clear sense of what I wanted, an iteration loop where I edit what's wrong, and a CLAUDE.md that keeps the context warm.
+None of that required a developer team. It required a clear sense of what I wanted, an iteration loop where I edit what's wrong, and standing instructions that keep the context warm.
 
 ## What this isn't
 
