@@ -1,0 +1,108 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const site = 'https://averde.ai';
+
+// Plain-English definitions of the terms used across the site. Each gets a
+// DefinedTerm node + a hash anchor so other pages can deep-link a definition
+// (e.g. /glossary#aeo). Keep definitions short, concrete, jargon-free.
+const terms: { term: string; slug: string; def: string }[] = [
+  {
+    term: 'AEO (Answer Engine Optimization)',
+    slug: 'aeo',
+    def: "Writing and structuring a website so AI answer engines — ChatGPT, Perplexity, Google AI Overviews — can cleanly extract, recommend, and cite your business when someone asks them a question.",
+  },
+  {
+    term: 'SEO (Search Engine Optimization)',
+    slug: 'seo',
+    def: "Optimizing a website to rank in classic search results — Google's list of ten blue links. Still matters, but it's a different game from getting cited inside an AI answer.",
+  },
+  {
+    term: 'AI Overviews',
+    slug: 'ai-overviews',
+    def: "Google's AI-generated answer that appears above the regular search results. It summarizes an answer and cites a handful of sources — and being one of those sources is the goal.",
+  },
+  {
+    term: 'Answer engine',
+    slug: 'answer-engine',
+    def: "Any tool that reads the web and answers a question directly instead of handing you a list of links. ChatGPT, Perplexity, and Google AI Overviews are all answer engines.",
+  },
+  {
+    term: 'Schema markup (structured data)',
+    slug: 'schema-markup',
+    def: "Hidden, machine-readable labels in a page's code that tell search and AI engines exactly what something is — a business, a service, a price, an FAQ — instead of making them guess from the text.",
+  },
+  {
+    term: 'LocalBusiness schema',
+    slug: 'localbusiness-schema',
+    def: "A specific type of schema markup that describes a business: its name, address, area served, hours, and contact details. It's how AI engines place you on the local map.",
+  },
+  {
+    term: 'FAQ schema',
+    slug: 'faq-schema',
+    def: "Schema markup that wraps a page's questions and answers so AI engines can lift a direct answer straight from your site and attribute it to you.",
+  },
+  {
+    term: 'LLM (Large Language Model)',
+    slug: 'llm',
+    def: "The kind of AI behind tools like Claude and ChatGPT. It's trained on huge amounts of text and predicts useful, fluent responses — including which businesses to mention when asked.",
+  },
+  {
+    term: 'Citation network',
+    slug: 'citation-network',
+    def: "The web of sources AI engines pull from when they build an answer — your site, directories, maps, reviews, and mentions elsewhere. Showing up across it is what gets you recommended.",
+  },
+  {
+    term: 'Google Business Profile (GBP)',
+    slug: 'google-business-profile',
+    def: "Your free business listing on Google (formerly Google My Business). It feeds the local AI graph, so a complete, accurate profile is one of the highest-leverage local AI moves there is.",
+  },
+  {
+    term: 'AI-Ready Website',
+    slug: 'ai-ready-website',
+    def: "A site built so AI engines can read it, recommend it, and cite it: AEO content, full schema markup, and presence across the local AI citation network. The flagship Averde AI service.",
+  },
+];
+
+const definedTermSet = {
+  '@context': 'https://schema.org',
+  '@type': 'DefinedTermSet',
+  '@id': `${site}/glossary#termset`,
+  name: 'Averde AI Glossary',
+  description: 'Plain-English definitions of AI search, AEO, and small-business AI terms.',
+  hasDefinedTerm: terms.map((t) => ({
+    '@type': 'DefinedTerm',
+    '@id': `${site}/glossary#${t.slug}`,
+    name: t.term,
+    description: t.def,
+    inDefinedTermSet: `${site}/glossary#termset`,
+  })),
+};
+---
+
+<BaseLayout
+  title="AI Search Glossary — AEO, Schema, and Small-Business AI Terms"
+  description="Plain-English definitions of the terms behind AI search: AEO, SEO, AI Overviews, schema markup, LLMs, and more — no jargon."
+>
+  <section class="bg-green-deep py-20">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <h1 class="text-4xl md:text-5xl font-extrabold text-white-warm leading-tight mb-4">Glossary</h1>
+      <p class="text-cream/70 text-lg">The terms behind AI search, in plain English. No jargon — and where a word is unavoidable, it's defined here.</p>
+    </div>
+  </section>
+
+  <section class="bg-cream py-16">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <dl class="space-y-8">
+        {terms.map((t) => (
+          <div id={t.slug} class="scroll-mt-24 bg-white-warm rounded-2xl p-7 border-l-2 border-sand/40">
+            <dt class="text-xl font-bold text-green-deep mb-2">{t.term}</dt>
+            <dd class="text-dark leading-relaxed">{t.def}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(definedTermSet)} />
+</BaseLayout>

@@ -20,6 +20,7 @@
 ## Writing
 
 - [Blog](https://averde.ai/blog): Plain-English writing on AI search, AEO, and practical AI for small business.
+- [Glossary](https://averde.ai/glossary): Plain-English definitions of AI search terms — AEO, SEO, schema markup, AI Overviews, LLMs, and more.
 
 ## Services
 
