@@ -19,7 +19,12 @@
       "mcp__supabase-averde__get_project_url",
       "mcp__supabase-averde__apply_migration",
       "mcp__supabase-averde__get_advisors",
-      "mcp__supabase-averde__execute_sql"
+      "mcp__supabase-averde__execute_sql",
+      "Bash(dig +short brain.averde.ai A)",
+      "Bash(dig +short brain.averde.ai CNAME)",
+      "Bash(dig +short www.averde.ai A)",
+      "Bash(dig +short www.averde.ai CNAME)",
+      "Bash(dig +short averde.ai A)"
     ]
   }
 }
