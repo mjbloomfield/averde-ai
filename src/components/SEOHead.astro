@@ -4,10 +4,20 @@ interface Props {
   description: string;
   canonical?: string;
   isHome?: boolean;
+  faqItems?: { q: string; a: string }[];
 }
-const { title, description, canonical, isHome = false } = Astro.props;
+const { title, description, canonical, isHome = false, faqItems } = Astro.props;
 const url = canonical || Astro.url.href;
 const site = 'https://averde.ai';
+
+// Fail open: the live site indexes by default; only Vercel preview/branch URLs
+// (VERCEL_ENV === 'preview') get noindexed so they don't compete as duplicate
+// content. This can never accidentally noindex production.
+const isProduction = process.env.VERCEL_ENV === 'production';
+const noIndex = process.env.VERCEL_ENV === 'preview';
+
+// GA4 measurement id (G-XXXX). Set PUBLIC_GA_ID in Vercel + .env to turn on.
+const gaId = import.meta.env.PUBLIC_GA_ID;
 
 // JSON-LD @graph — multiple cross-referenced entities. Modern best practice
 // for AI search engines (ChatGPT, Perplexity, Google AI Overviews).
@@ -44,7 +54,11 @@ const graph: Record<string, unknown>[] = [
       addressRegion: 'CO',
       addressCountry: 'US',
     },
-    areaServed: { '@type': 'Country', name: 'United States' },
+    areaServed: [
+      { '@type': 'City', name: 'Boulder', '@id': 'https://www.wikidata.org/wiki/Q49236' },
+      { '@type': 'State', name: 'Colorado' },
+      { '@type': 'Country', name: 'United States' },
+    ],
     founder: { '@id': `${site}/#mark` },
   },
   {
@@ -99,6 +113,20 @@ const graph: Record<string, unknown>[] = [
   },
 ];
 
+// Emit FAQPage whenever a page passes a non-empty faqItems array. AEO's
+// highest-leverage move — lets ChatGPT / AI Overviews pull Q&A directly.
+if (faqItems && faqItems.length) {
+  graph.push({
+    '@type': 'FAQPage',
+    '@id': `${url}#faq`,
+    mainEntity: faqItems.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  });
+}
+
 const jsonLd = { '@context': 'https://schema.org', '@graph': graph };
 // keep prop in signature for back-compat; not currently branching on it
 void isHome;
@@ -109,6 +137,7 @@ void isHome;
 <title>{title}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={url} />
+{noIndex && <meta name="robots" content="noindex, nofollow" />}
 
 <!-- Open Graph -->
 <meta property="og:type" content="website" />
@@ -129,3 +158,11 @@ void isHome;
 
 <!-- JSON-LD structured data — every page emits the full @graph for AI engines -->
 <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+<!-- Analytics — production only, gated on PUBLIC_GA_ID -->
+{gaId && isProduction && (
+  <Fragment>
+    <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+    <script is:inline set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${gaId}');`}></script>
+  </Fragment>
+)}

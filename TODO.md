@@ -8,6 +8,10 @@ Site: `https://averde.ai` · Stack: Astro + Tailwind + Keystatic + Supabase + Re
 
 ## To do
 
+- **Set `PUBLIC_GA_ID` in Vercel (production) + local `.env`** to turn on analytics. Uses existing GA4 property. If you'd rather avoid cookies/consent, say so and I'll swap SEOHead's snippet for Plausible or Cloudflare Web Analytics (cookieless).
+- **Privacy policy legal skim** — `/privacy` is drafted in plain English; have a lawyer glance at it if you want belt-and-suspenders (not legal advice).
+- **Glossary page (`/glossary`, DefinedTermSet schema)** — AEO asset: A–Z terms (AEO, schema markup, LLM, AI Overviews, citation network, etc.) with hash-anchored deep links. Drafted as part of the playbook pass — review the copy.
+- **Comparison post — "AEO vs SEO"** — decision-stage, on-brand. Drafted in `/blog-drafts` for your edit pass.
 - **Free lead magnet — "Set Up Claude Desktop" 1-pager + webpage** at `/free/setup-claude-desktop`. Email-gated PDF download; webpage shows full content + deep-dive sections (Custom Instructions, Connectors, Pro Workflows).
 - **Free lead magnet — "Claude Cowork in 5 Minutes" 1-pager + webpage** at `/free/claude-cowork`. Same email-gated pattern; webpage with prompt library + side-by-side examples.
 - **Email-gated download flow** — new Supabase table (`tool_downloads`: email, tool_slug, source, timestamp); inline form on each lead-magnet page; on submit → write row + serve PDF link.
@@ -25,3 +29,5 @@ Site: `https://averde.ai` · Stack: Astro + Tailwind + Keystatic + Supabase + Re
 - 2026-05 — Added blog scheduling pattern (publishedDate filter), seeded CLAUDE.md voice-training corpus, set up `/blog-drafts/` workflow (72e85c4).
 - 2026-05-19 — Homepage design pass: motion layer (IntersectionObserver reveals, staggered page-load), editorial typography (Fraunces + IBM Plex Mono labels), asymmetric grids, mesh-gradient CTA, hover treatments (dfd07c4).
 - 2026-05-19 — Removed custom cursor dot from homepage (b3559c0).
+- 2026-06-13 — Moved repo from ~/Programming into Google Drive (Claude_Cowork/websites/averde-ai); reinstalled deps fresh, history + remote intact.
+- 2026-06-13 — Playbook pass (technical/SEO/legal): added `/llms.txt`, privacy policy at `/privacy` (+ footer/sitemap links), preview-only noindex gate (VERCEL_ENV), FAQPage schema on /how-it-works, GA4 analytics slot gated on PUBLIC_GA_ID (prod-only), Boulder/Colorado areaServed in LocalBusiness schema.

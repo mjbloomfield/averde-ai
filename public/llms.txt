@@ -1,0 +1,28 @@
+# Averde AI
+
+> Averde AI is Mark Bloomfield's solo consultancy in Boulder, CO, working with small businesses nationwide. It helps owners get found in AI search (ChatGPT, Perplexity, Google AI Overviews) and deploy practical AI tools that fit how they actually work. The flagship service is the AI-Ready Website — a full rebuild with AEO content, schema markup, and local AI citations so AI engines can read, recommend, and cite the business.
+
+## Core pages
+
+- [Home](https://averde.ai/): What Averde AI does and who it's for.
+- [How It Works](https://averde.ai/how-it-works): The AI-Ready Website build process, what's included, and a detailed FAQ.
+- [Pricing](https://averde.ai/pricing): Honest, transparent pricing for the AI-Ready Website, strategy sessions, and custom builds.
+- [About](https://averde.ai/about): Mark Bloomfield — engineer and founder, based in Boulder, CO.
+- [Free AI Readiness Audit](https://averde.ai/ai-audit): A free 3-minute audit that scores how visible a business is to AI search.
+- [Contact](https://averde.ai/contact): Get in touch or book a strategy call.
+
+## Industries
+
+- [Dental practices](https://averde.ai/industries/dental): AI-Ready Websites for dentists.
+- [HVAC](https://averde.ai/industries/hvac): AI-Ready Websites for HVAC contractors.
+- [Real estate](https://averde.ai/industries/real-estate): AI-Ready Websites for real estate agents.
+
+## Writing
+
+- [Blog](https://averde.ai/blog): Plain-English writing on AI search, AEO, and practical AI for small business.
+
+## Services
+
+- AI-Ready Website — full website rebuild for AI search visibility (from $1,200).
+- AI Strategy Session — a focused 90-minute working session to map an AI roadmap (from $250).
+- Custom AI Build — bespoke AI around a business's data and workflows.

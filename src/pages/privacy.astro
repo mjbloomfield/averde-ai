@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const effectiveDate = 'June 13, 2026';
+---
+
+<BaseLayout
+  title="Privacy Policy"
+  description="How Averde AI collects, uses, and protects the information you share through this site."
+>
+  <section class="bg-green-deep py-20">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <h1 class="text-4xl md:text-5xl font-extrabold text-white-warm leading-tight mb-4">Privacy Policy</h1>
+      <p class="text-cream/70 text-lg">How I handle the information you share with this site.</p>
+      <p class="text-cream/50 text-sm mt-3">Last updated: {effectiveDate}</p>
+    </div>
+  </section>
+
+  <section class="bg-cream py-16">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 prose prose-lg prose-headings:text-green-deep prose-headings:font-bold prose-a:text-green-mid prose-p:text-dark prose-li:text-dark max-w-none">
+
+      <p>
+        Averde AI is a solo consultancy run by Mark Bloomfield, based in Boulder, Colorado, working with
+        clients nationwide. This page explains what information I collect through
+        <a href="https://averde.ai">averde.ai</a>, why, and what I do with it. If anything here is unclear,
+        email <a href="mailto:mark@averde.ai">mark@averde.ai</a> and I'll answer plainly.
+      </p>
+
+      <h2>What I collect</h2>
+      <ul>
+        <li><strong>Information you give me.</strong> When you run the free AI Readiness Audit, send a message
+        through the contact form, or request a download, you share your email address, your website URL, and
+        any details you type into the form.</li>
+        <li><strong>Basic usage data.</strong> If analytics is enabled, I collect aggregate, non-identifying
+        information about how pages are used (which pages get visited, roughly where visitors come from). I use
+        this to understand what's useful, not to track individuals.</li>
+      </ul>
+
+      <h2>How I use it</h2>
+      <ul>
+        <li>To run your audit and send you the report.</li>
+        <li>To reply to your message or follow up about working together.</li>
+        <li>To send you something you specifically asked for (like a download).</li>
+        <li>To improve the site and the services I offer.</li>
+      </ul>
+      <p>I don't sell your information, rent it, or share it for anyone else's advertising.</p>
+
+      <h2>Who I share it with</h2>
+      <p>
+        I use a small set of trusted services to run the site. Your information passes through them only so they
+        can do their job:
+      </p>
+      <ul>
+        <li><strong>Supabase</strong> — stores audit and form submissions.</li>
+        <li><strong>Resend</strong> — sends the emails I reply with.</li>
+        <li><strong>Vercel</strong> — hosts the site.</li>
+        <li><strong>Google Analytics</strong> — aggregate usage measurement, if enabled (uses cookies).</li>
+      </ul>
+
+      <h2>Cookies</h2>
+      <p>
+        The site itself doesn't need cookies to work. If analytics is enabled, the analytics provider may set
+        cookies to measure usage. You can block or delete cookies in your browser settings without breaking the
+        site.
+      </p>
+
+      <h2>Your choices</h2>
+      <p>
+        You can ask me to show you what I have, correct it, or delete it. Email
+        <a href="mailto:mark@averde.ai">mark@averde.ai</a> and I'll take care of it. You can also unsubscribe from
+        any email I send at any time.
+      </p>
+
+      <h2>Data retention</h2>
+      <p>
+        I keep audit and inquiry records only as long as they're useful for following up or doing the work, then
+        I remove them. If you ask me to delete your information sooner, I will.
+      </p>
+
+      <h2>Changes</h2>
+      <p>
+        If I change how I handle data, I'll update this page and the date at the top.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions about privacy? Email <a href="mailto:mark@averde.ai">mark@averde.ai</a>.
+      </p>
+
+    </div>
+  </section>
+</BaseLayout>
