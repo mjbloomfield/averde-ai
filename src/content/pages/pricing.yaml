@@ -1,39 +1,44 @@
-heroHeadline: 'Simple, honest pricing.'
-heroDek: 'Start with the free audit. Step up when you need more.'
+heroHeadline: Simple pricing.
+heroDek: Start with the free audit. Step up when you need more.
 plans:
-  - name: 'AI-Ready Website'
-    price: 'From $1,200'
-    description: "Get found in ChatGPT, Perplexity, and Google AI Overviews — not just regular Google search. The biggest shift in how customers find local businesses since the smartphone."
-    ctaLabel: 'Get a quote'
+  - name: AI-Ready Website
+    price: From $1,200
+    description: >-
+      Get found in ChatGPT, Perplexity, and Google AI Overviews — not just
+      regular Google search. The biggest shift in how customers find local
+      businesses since the smartphone.
+    features:
+      - Full site rebuild on a modern, fast stack
+      - AEO-optimized copy across every page
+      - FAQ + LocalBusiness schema markup
+      - AI-search visibility report (before & after)
+      - Google Business Profile optimization
+      - Local AI citation setup (Apple Maps, Bing, etc.)
+      - Content audit + 3-month content plan
+      - 90-day post-launch optimization support
+    ctaLabel: Get a quote
     featured: true
+  - name: Strategy Session
+    price: $250 – $500
+    description: >-
+      A focused 90-minute working session. Walk away with a clear AI action
+      plan.
     features:
-      - 'Full site rebuild on a modern, fast stack'
-      - 'AEO-optimized copy across every page'
-      - 'FAQ + LocalBusiness schema markup'
-      - 'AI-search visibility report (before & after)'
-      - 'Google Business Profile optimization'
-      - 'Local AI citation setup (Apple Maps, Bing, etc.)'
-      - 'Content audit + 3-month content plan'
-      - '90-day post-launch optimization support'
-  - name: 'Strategy Session'
-    price: '$250 – $500'
-    description: 'A focused 90-minute working session. Walk away with a clear AI action plan.'
-    ctaLabel: 'Book a session'
+      - 90-minute 1:1 with Mark
+      - Full AI opportunity audit
+      - Prioritized action plan
+      - Tools & vendor recommendations
+      - Follow-up Q&A by email
+    ctaLabel: Book a session
     featured: false
+  - name: Custom AI Build
+    price: Quote-based
+    description: Bespoke AI built around your data, your workflows, your team.
     features:
-      - '90-minute 1:1 with Mark'
-      - 'Full AI opportunity audit'
-      - 'Prioritized action plan'
-      - 'Tools & vendor recommendations'
-      - 'Follow-up Q&A by email'
-  - name: 'Custom AI Build'
-    price: 'Quote-based'
-    description: 'Bespoke AI built around your data, your workflows, your team.'
-    ctaLabel: "Let's talk"
+      - Custom scoping call
+      - Built on your data & tools
+      - Integrations (Zapier, n8n, APIs)
+      - Internal knowledge bases
+      - Fractional Head of AI option
+    ctaLabel: Let's talk
     featured: false
-    features:
-      - 'Custom scoping call'
-      - 'Built on your data & tools'
-      - 'Integrations (Zapier, n8n, APIs)'
-      - 'Internal knowledge bases'
-      - 'Fractional Head of AI option'
