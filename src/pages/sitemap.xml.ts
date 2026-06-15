@@ -34,7 +34,7 @@ export const GET: APIRoute = async () => {
 
   const posts = await getCollection('blog');
   const postRoutes = posts.map(p => ({
-    path: `/blog/${p.slug}`,
+    path: `/blog/${p.id}`,
     priority: 0.6,
     changefreq: 'monthly',
     lastmod: p.data.publishedDate || now,
