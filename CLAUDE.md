@@ -15,8 +15,10 @@ service (was previously Voice Agent). Marketing centers on the gap: most
 small businesses are invisible to ChatGPT, Perplexity, and Google AI Overviews
 — and that's where their next customers are starting their search.
 
-Stack: Astro 4 (hybrid output) + Tailwind + Keystatic CMS + Supabase
-(audit_leads table) + Resend (email) + Vercel (deploys).
+Stack: Astro 6 (output: 'static' + Vercel adapter for SSR routes) + Tailwind 4
+(via @tailwindcss/postcss; theme still in tailwind.config.mjs, loaded with
+`@config` in global.css) + Keystatic CMS (cloud storage) + Supabase
+(audit_leads table) + Resend (email) + Vercel (deploys). Node 24.
 
 ---
 
@@ -174,11 +176,17 @@ gives you 2 cron jobs free. Not needed yet.
 ## Other repo conventions (for future sessions)
 
 - Path aliases: none configured; use relative imports
-- Build target: `output: 'hybrid'` — most pages prerendered, API routes
-  and a few SSR pages are server-rendered
-- Astro content collections: `blog` (markdown) and `industries` (data/yaml)
+- Build target: `output: 'static'` — most pages prerendered; API routes opt
+  into SSR with `export const prerender = false`. (Was `'hybrid'`, which Astro 5
+  removed — `'static'` now covers the same prerender-by-default behavior.)
+- Astro content collections: Content Layer API in `src/content.config.ts` —
+  `blog` (glob loader over `*.mdoc`) and `industries` (glob loader over
+  `*.yaml`). Use `entry.id` (not `.slug`) and `render(entry)` (not
+  `entry.render()`).
 - Keystatic: cloud storage (`storage: { kind: 'cloud' }`),
-  project = `averde-ai/averde-ai`
+  project = `averde-ai/averde-ai`. The `keystatic()` integration injects the
+  `/keystatic` + `/api/keystatic` routes — don't add manual route files (Astro
+  6 errors on duplicate SSR routes).
 - Image optimization: manual via `sips` (no Astro `<Image>` yet — CSS
   background-images can't use it). When adding hero photos, compress them
   before commit. Target: <300KB per image.

@@ -1,5 +1,5 @@
 ---
-import { getCollection, getEntry } from 'astro:content';
+import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
@@ -9,14 +9,14 @@ export async function getStaticPaths() {
   const now = Date.now();
   return posts
     .filter(p => !p.data.publishedDate || new Date(p.data.publishedDate).getTime() <= now)
-    .map(post => ({ params: { slug: post.slug } }));
+    .map(post => ({ params: { slug: post.id } }));
 }
 
 const { slug } = Astro.params;
 const post = await getEntry('blog', slug as string);
 if (!post) return Astro.redirect('/blog');
 
-const { Content } = await post.render();
+const { Content } = await render(post);
 
 const categoryColors: Record<string, string> = {
   'Pricing': 'bg-sand/20 text-terracotta',
