@@ -109,12 +109,18 @@ body::before {
 }
 body > * { position: relative; z-index: 1; }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Fraunces', Georgia, serif;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-  color: var(--ink);
+/* In @layer base so Tailwind text-color utilities (e.g. text-white-warm on
+   dark heroes) override the default heading color. Tailwind v4 puts utilities
+   in @layer utilities, which loses to unlayered rules — an unlayered
+   `h1{color}` here would make every heading ignore its text-color utility. */
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--ink);
+  }
 }
 
 /* Existing helpers kept */

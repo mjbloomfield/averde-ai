@@ -1,5 +1,23 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
+
+// Read the About singleton straight from the Keystatic content file
+// (src/content/pages/about.yaml). This is what makes CMS edits actually
+// render — the page reads the file Keystatic writes.
+const reader = createReader(process.cwd(), keystaticConfig);
+const about = await reader.singletons.about.read();
+
+// Icons for the values cards — keyed by position, since the values text is
+// CMS-driven but the artwork isn't.
+const valueIcons = [
+  `<svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="12" cy="12" r="8" stroke="#C99356" stroke-width="1.8"/><path d="M18 18l4 4" stroke="#C99356" stroke-width="1.8" stroke-linecap="round"/></svg>`,
+  `<svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M14 4v4M14 20v4M4 14h4M20 14h4M7 7l2.8 2.8M18.2 18.2l2.8 2.8M7 21l2.8-2.8M18.2 9.8l2.8-2.8" stroke="#C99356" stroke-width="1.8" stroke-linecap="round"/></svg>`,
+  `<svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M6 20V14M11 20V10M16 20V6M21 20V12" stroke="#C99356" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+];
+
+const bioParagraphs = [about.bioIntro, about.bioBackground, about.bioApproach].filter(Boolean);
 ---
 
 <BaseLayout
@@ -11,10 +29,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <section class="bg-green-deep py-20">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
       <h1 class="text-5xl md:text-6xl font-extrabold text-white-warm leading-tight mb-5">
-        Engineer. Founder.<br />Your Personal AI Guy.
+        {about.heroHeadline}
       </h1>
       <p class="text-cream/70 text-xl max-w-2xl mx-auto">
-        I don't do jargon. I don't do hype. I help small business owners figure out what AI is actually worth doing — and then I build it.
+        {about.heroDek}
       </p>
     </div>
   </section>
@@ -37,18 +55,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <p class="text-sand font-semibold text-sm uppercase tracking-widest mb-3">Founder · Your Personal AI Guy</p>
           <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-5">Mark Bloomfield</h2>
           <div class="space-y-4 text-muted leading-relaxed">
-            <p>
-              I spent years as a composites research engineer and sustainability consultant before the AI wave hit. I learned how to think about complex systems, how to separate what's real from what sounds good, and how to explain both to non-technical people.
-            </p>
-            <p>
-              When AI got dramatically better — and when AI search through Claude, ChatGPT, Perplexity, and Google's AI Overviews started rewriting how customers actually find local businesses — I saw a massive gap. The tools and the use cases were real, but nobody was translating any of it for small business owners, so I started doing that work myself.
-            </p>
-            <p>
-              The flagship is the <strong>AI-Ready Website</strong>: a rebuild of your existing site so it actually shows up when customers ask AI tools for a recommendation. Around that, I run strategy sessions for owners who want to figure out where AI fits in their business, and I build custom AI tools when off-the-shelf doesn't quite work.
-            </p>
-            <p>
-              Every engagement is with me directly — I scope it, build it, and support it. I'm based in Boulder, Colorado, working with businesses across the country.
-            </p>
+            {bioParagraphs.map(p => <p>{p}</p>)}
           </div>
           <div class="mt-6 pt-6 border-t border-green-sage/20">
             <p class="text-green-deep font-medium italic">
@@ -98,27 +105,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
       <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-12 text-center">What I Stand For</h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {[
-          {
-            icon: `<svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="12" cy="12" r="8" stroke="#C99356" stroke-width="1.8"/><path d="M18 18l4 4" stroke="#C99356" stroke-width="1.8" stroke-linecap="round"/></svg>`,
-            title: 'Transparency',
-            body: "I show you the numbers. You'll know exactly what you're getting, what it costs, and what results to expect. No jargon, no smoke and mirrors.",
-          },
-          {
-            icon: `<svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M14 4v4M14 20v4M4 14h4M20 14h4M7 7l2.8 2.8M18.2 18.2l2.8 2.8M7 21l2.8-2.8M18.2 9.8l2.8-2.8" stroke="#C99356" stroke-width="1.8" stroke-linecap="round"/></svg>`,
-            title: 'Simplicity',
-            body: "AI doesn't have to be complicated. I handle every technical detail so you never have to think about infrastructure, APIs, or integrations.",
-          },
-          {
-            icon: `<svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M6 20V14M11 20V10M16 20V6M21 20V12" stroke="#C99356" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-            title: 'Results',
-            body: "I measure success in AI-search visibility, leads captured, and time saved. If it's not working, I fix it — that's the whole point.",
-          },
-        ].map(v => (
+        {about.values.map((v, i) => (
           <div class="bg-white-warm rounded-2xl p-8 text-center">
-            <div class="flex justify-center mb-4" set:html={v.icon} />
+            <div class="flex justify-center mb-4" set:html={valueIcons[i % valueIcons.length]} />
             <h3 class="text-xl font-bold text-green-deep mb-3">{v.title}</h3>
-            <p class="text-muted leading-relaxed">{v.body}</p>
+            <p class="text-muted leading-relaxed">{v.description}</p>
           </div>
         ))}
       </div>
