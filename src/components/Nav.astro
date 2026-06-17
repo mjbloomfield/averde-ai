@@ -24,6 +24,13 @@ const industries = (await getCollection('industries'))
         How It Works
       </a>
 
+      <a
+        href="/case-studies"
+        class={`text-sm font-medium transition-colors hover:text-terracotta ${isActive('/case-studies') ? 'text-dark border-b-2 border-terracotta pb-0.5' : 'text-dark'}`}
+      >
+        Case Studies
+      </a>
+
       {/* Industries tab hidden until refined — uncomment this block (and the mobile one below) to restore
       <div class="relative" id="industries-menu">
         <button
@@ -112,6 +119,7 @@ const industries = (await getCollection('industries'))
   <input type="checkbox" id="nav-toggle" class="hidden" />
   <div id="nav-menu" class="hidden flex-col md:hidden bg-white-warm border-t border-green-sage/10 px-4 pb-4 gap-1">
     <a href="/how-it-works" class="block py-2.5 text-sm font-medium text-dark hover:text-terracotta border-b border-cream">How It Works</a>
+    <a href="/case-studies" class="block py-2.5 text-sm font-medium text-dark hover:text-terracotta border-b border-cream">Case Studies</a>
     {/* Industries tab hidden until refined — uncomment to restore
     {industries.map(ind => (
       <a href={`/industries/${ind.id}`} class="block py-2.5 text-sm font-medium text-dark hover:text-terracotta border-b border-cream">

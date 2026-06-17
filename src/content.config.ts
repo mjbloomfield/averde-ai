@@ -37,4 +37,43 @@ const industries = defineCollection({
   }),
 });
 
-export const collections = { blog, industries };
+const caseStudies = defineCollection({
+  loader: glob({ pattern: '**/*.yaml', base: './src/content/case-studies' }),
+  schema: z.object({
+    client: z.string(),
+    published: z.boolean().default(true),
+    order: z.number().default(0),
+    industry: z.string(),
+    location: z.string(),
+    seoTitle: z.string(),
+    seoDescription: z.string(),
+    cardSummary: z.string(),
+    oldUrl: z.string(),
+    oldPlatform: z.string(),
+    liveUrl: z.string(),
+    newPlatform: z.string(),
+    heroEyebrow: z.string(),
+    heroHeadline: z.string(),
+    heroDek: z.string(),
+    scores: z.array(z.object({
+      label: z.string(),
+      sublabel: z.string(),
+      before: z.number(),
+      after: z.number(),
+    })),
+    metrics: z.array(z.object({
+      label: z.string(),
+      before: z.string(),
+      after: z.string(),
+    })),
+    challengeHeadline: z.string(),
+    challengeBody: z.array(z.string()),
+    approachHeadline: z.string(),
+    approach: z.array(z.object({ title: z.string(), body: z.string() })),
+    featuresHeadline: z.string(),
+    features: z.array(z.string()),
+    methodologyNote: z.string(),
+  }),
+});
+
+export const collections = { blog, industries, caseStudies };

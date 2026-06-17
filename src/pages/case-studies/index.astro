@@ -1,0 +1,68 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const studies = (await getCollection('caseStudies'))
+  .filter(s => s.data.published !== false)
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout
+  title="Case Studies — AI-Ready Website Rebuilds | Averde AI"
+  description="Real before-and-after rebuilds: how dated small-business sites became AI-ready, schema-rich websites that AI search can read, recommend, and cite."
+>
+
+  <!-- HERO -->
+  <section class="bg-green-deep py-20 text-center">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <h1 class="text-5xl font-extrabold text-white-warm mb-5">Case Studies</h1>
+      <p class="text-cream/70 text-xl">
+        Real before-and-after rebuilds — measured by how well AI search can read, recommend, and cite the business.
+      </p>
+    </div>
+  </section>
+
+  <!-- STUDIES -->
+  <section class="bg-cream py-20">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      {studies.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {studies.map(study => {
+            const aeo = study.data.scores.find(s => s.label.toLowerCase().includes('aeo'));
+            return (
+              <a
+                href={`/case-studies/${study.id}`}
+                class="group bg-white-warm rounded-2xl p-8 flex flex-col hover:shadow-md transition-shadow"
+              >
+                <div class="flex items-center gap-2 mb-4">
+                  <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-green-50 text-green-700">
+                    {study.data.industry}
+                  </span>
+                  <span class="text-xs text-muted">{study.data.location}</span>
+                </div>
+                <h2 class="text-xl font-bold text-green-deep mb-3 leading-snug">
+                  {study.data.client}
+                </h2>
+                <p class="text-muted text-sm leading-relaxed mb-6 flex-1">{study.data.cardSummary}</p>
+                {aeo && (
+                  <div class="flex items-center gap-3 mb-5">
+                    <span class="text-xs font-semibold uppercase tracking-wide text-muted">AEO score</span>
+                    <span class="text-sm font-bold text-muted/70 line-through">{aeo.before}</span>
+                    <span class="text-muted">→</span>
+                    <span class="text-lg font-extrabold text-green-deep">{aeo.after}</span>
+                  </div>
+                )}
+                <span class="text-green-mid text-sm font-semibold group-hover:text-green-deep transition-colors">
+                  Read the case study →
+                </span>
+              </a>
+            );
+          })}
+        </div>
+      ) : (
+        <p class="text-center text-muted">Case studies coming soon.</p>
+      )}
+    </div>
+  </section>
+
+</BaseLayout>

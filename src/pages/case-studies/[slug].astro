@@ -1,0 +1,168 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const studies = await getCollection('caseStudies');
+  return studies
+    .filter(s => s.data.published !== false)
+    .map(s => ({ params: { slug: s.id } }));
+}
+
+const { slug } = Astro.params;
+const all = await getCollection('caseStudies');
+const study = all.find(s => s.id === slug);
+if (!study) return Astro.redirect('/case-studies');
+
+const d = study.data;
+---
+
+<BaseLayout title={d.seoTitle} description={d.seoDescription}>
+
+  <!-- HERO -->
+  <section class="bg-green-deep py-20">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      <div class="inline-flex items-center gap-2 bg-green-mid/50 text-sand text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
+        {d.heroEyebrow}
+      </div>
+      <h1 class="text-4xl md:text-5xl font-extrabold text-white-warm leading-tight tracking-tight mb-6">
+        {d.heroHeadline}
+      </h1>
+      <p class="text-cream/80 text-xl leading-relaxed mb-8">{d.heroDek}</p>
+      <div class="flex flex-wrap items-center gap-4">
+        <a href={d.liveUrl} target="_blank" rel="noopener" class="inline-flex items-center bg-sand text-green-deep font-semibold px-6 py-3.5 rounded-xl hover:bg-sand/90 transition-colors">
+          View the live rebuild →
+        </a>
+        <a href={d.oldUrl} target="_blank" rel="noopener" class="inline-flex items-center text-cream/70 text-sm font-medium hover:text-cream transition-colors underline underline-offset-4">
+          See the original site
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCORECARD -->
+  <section class="bg-cream py-20">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-3">AI readiness, before and after</h2>
+      <p class="text-muted text-lg mb-10">
+        {d.oldPlatform} → {d.newPlatform}. Scored on how well each version can be read, recommended, and cited by AI search.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {d.scores.map(s => (
+          <div class="bg-white-warm rounded-2xl p-7">
+            <div class="flex items-baseline justify-between mb-1">
+              <h3 class="text-lg font-bold text-green-deep">{s.label}</h3>
+              <span class="text-xs font-bold text-green-mid bg-green-50 px-2 py-1 rounded-full">+{s.after - s.before}</span>
+            </div>
+            <p class="text-muted text-sm mb-6">{s.sublabel}</p>
+
+            <div class="space-y-4">
+              <div>
+                <div class="flex items-center justify-between text-sm mb-1.5">
+                  <span class="text-muted font-medium">Before</span>
+                  <span class="text-muted font-bold">{s.before}<span class="text-muted/50 font-normal">/100</span></span>
+                </div>
+                <div class="h-2.5 rounded-full bg-green-deep/10 overflow-hidden">
+                  <div class="h-full rounded-full bg-muted/40" style={`width:${s.before}%`}></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex items-center justify-between text-sm mb-1.5">
+                  <span class="text-green-deep font-semibold">After</span>
+                  <span class="text-green-deep font-extrabold">{s.after}<span class="text-muted/50 font-normal">/100</span></span>
+                </div>
+                <div class="h-2.5 rounded-full bg-green-deep/10 overflow-hidden">
+                  <div class="h-full rounded-full bg-sand" style={`width:${s.after}%`}></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- BY THE NUMBERS -->
+  <section class="bg-white-warm py-20">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-10">By the numbers</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-px bg-green-deep/10 rounded-2xl overflow-hidden">
+        {d.metrics.map(m => (
+          <div class="bg-cream p-6">
+            <p class="text-sm text-muted mb-3">{m.label}</p>
+            <div class="flex items-center gap-3">
+              <span class="text-base font-semibold text-muted/60 line-through">{m.before}</span>
+              <span class="text-muted">→</span>
+              <span class="text-2xl font-extrabold text-green-deep">{m.after}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CHALLENGE -->
+  <section class="bg-cream py-20">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-6">{d.challengeHeadline}</h2>
+      {d.challengeBody.map(p => (
+        <p class="text-muted text-lg leading-relaxed mb-5">{p}</p>
+      ))}
+    </div>
+  </section>
+
+  <!-- APPROACH -->
+  <section class="bg-white-warm py-20">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-10">{d.approachHeadline}</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {d.approach.map(a => (
+          <div class="bg-cream rounded-2xl p-7 border-l-2 border-sand/40">
+            <h3 class="font-bold text-green-deep mb-2">{a.title}</h3>
+            <p class="text-muted text-sm leading-relaxed">{a.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="bg-cream py-20">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-10">{d.featuresHeadline}</h2>
+      <ul class="space-y-3">
+        {d.features.map(f => (
+          <li class="flex items-start gap-3">
+            <span class="mt-1 text-green-mid font-bold">✓</span>
+            <span class="text-muted leading-relaxed">{f}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- METHODOLOGY -->
+  <section class="bg-white-warm pb-16">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <div class="border-t border-green-deep/10 pt-6">
+        <p class="text-xs uppercase tracking-widest text-muted/60 font-semibold mb-2">How we scored this</p>
+        <p class="text-muted/80 text-sm leading-relaxed">{d.methodologyNote}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-green-deep py-20">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold text-white-warm mb-4">Want to see where your site stands?</h2>
+      <p class="text-cream/80 text-lg mb-8">
+        Run the free AI Readiness Audit to see how AI search reads your business today — and what a rebuild could change.
+      </p>
+      <a href="/ai-audit" class="inline-flex items-center bg-sand text-green-deep font-semibold px-6 py-3.5 rounded-xl hover:bg-sand/90 transition-colors">
+        Run my free AI audit
+      </a>
+    </div>
+  </section>
+
+</BaseLayout>

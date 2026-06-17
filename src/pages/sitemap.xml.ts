@@ -15,6 +15,7 @@ const staticRoutes: Array<{ path: string; priority: number; changefreq: string }
   { path: '/about',        priority: 0.7,  changefreq: 'monthly' },
   { path: '/contact',      priority: 0.7,  changefreq: 'monthly' },
   { path: '/blog',         priority: 0.7,  changefreq: 'weekly' },
+  { path: '/case-studies', priority: 0.8,  changefreq: 'monthly' },
   { path: '/glossary',     priority: 0.6,  changefreq: 'monthly' },
   { path: '/privacy',      priority: 0.2,  changefreq: 'yearly' },
 ];
@@ -40,10 +41,21 @@ export const GET: APIRoute = async () => {
     lastmod: p.data.publishedDate || now,
   }));
 
+  const studies = await getCollection('caseStudies');
+  const caseStudyRoutes = studies
+    .filter(s => s.data.published !== false)
+    .map(s => ({
+      path: `/case-studies/${s.id}`,
+      priority: 0.75,
+      changefreq: 'monthly',
+      lastmod: now,
+    }));
+
   const allRoutes = [
     ...staticRoutes.map(r => ({ ...r, lastmod: now })),
     ...industryRoutes,
     ...postRoutes,
+    ...caseStudyRoutes,
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

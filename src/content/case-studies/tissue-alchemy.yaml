@@ -1,0 +1,84 @@
+client: Tissue Alchemy
+published: true
+order: 1
+industry: Bodywork & Massage Therapy
+location: Boulder, CO
+seoTitle: "Tissue Alchemy Case Study — AI-Ready Website Rebuild | Averde AI"
+seoDescription: "How a dated WordPress site for a Boulder bodywork practice became an AI-ready, schema-rich website — AEO score 22 → 94, zero structured data to 11 schema types, and 43 purpose-built pages."
+cardSummary: "A dated WordPress site with zero structured data, rebuilt into a schema-rich, AI-readable website. AEO readiness jumped from 22 to 94."
+
+oldUrl: "https://tissuealchemy.com"
+oldPlatform: "WordPress"
+liveUrl: "https://tissue-alchemy.vercel.app"
+newPlatform: "Astro — static, schema-first"
+
+heroEyebrow: "Case Study · Bodywork & Massage Therapy"
+heroHeadline: "From invisible to AI-readable: rebuilding Tissue Alchemy for AI search"
+heroDek: "Sharon's Boulder bodywork practice had a dated WordPress site that AI engines couldn't read or cite — no structured data, no AI signals, and a blog that had been dormant since 2016. We rebuilt it from the ground up as an AI-ready website."
+
+scores:
+  - label: AEO score
+    sublabel: How readable & citable the site is to AI engines (ChatGPT, Perplexity, Google AI Overviews)
+    before: 22
+    after: 94
+  - label: SEO score
+    sublabel: Traditional search readiness — metadata, content depth, crawlability, performance
+    before: 48
+    after: 92
+
+metrics:
+  - label: Schema.org structured-data types
+    before: "0"
+    after: "11"
+  - label: llms.txt for AI engines
+    before: "None"
+    after: "Published"
+  - label: FAQ schema (Question nodes)
+    before: "0"
+    after: "63"
+  - label: Pages with unique meta descriptions
+    before: "Missing"
+    after: "All 43"
+  - label: Fresh education content
+    before: "2 posts (2016)"
+    after: "8 posts + 15 deep pages"
+  - label: Local-SEO service-area cities
+    before: "0"
+    after: "20"
+  - label: Largest page asset (logo)
+    before: "2.0 MB"
+    after: "20 KB"
+  - label: Broken internal links
+    before: "Unaudited"
+    after: "0 of 42"
+
+challengeHeadline: "The problem: a site AI couldn't read"
+challengeBody:
+  - "Tissue Alchemy is a precision fascia-and-chronic-pain practice — exactly the kind of specialized expertise people now ask ChatGPT and Google's AI about. But the existing WordPress site gave AI engines almost nothing to work with: no schema markup, no llms.txt, missing meta descriptions, and thin pages with duplicated calls-to-action."
+  - "The sitemap was padded with demo, test, and duplicate pages (/test/, /demo-parallax-images/, /one-page/, two near-identical bio pages), and the blog had been dormant since 2016 — two posts, nearly a decade old. When an AI assistant looked for a fascia specialist in Boulder, there was nothing structured for it to cite."
+
+approachHeadline: "What we built"
+approach:
+  - title: "Structured data on every page"
+    body: "Site-wide LocalBusiness and Person schema, plus per-page Service, FAQPage, MedicalCondition, Article, Review, BreadcrumbList, and a DefinedTermSet glossary — 11 schema types in all, so AI engines can identify the practice, its services, and its expertise."
+  - title: "An AI-readable content layer"
+    body: "A published llms.txt that hands AI engines a clean map of the site, a canonical 'what is Tissue Alchemy' definition repeated in key places for entity clarity, and a 15-term plain-English glossary with deep-linkable definitions."
+  - title: "Deep, honest topical content"
+    body: "Seven condition pages (sciatica, frozen shoulder, TMJ, plantar fasciitis and more), four 'how this compares' pages (vs Rolfing, PT, classic myofascial release, traditional massage), four sport-specific pages for Front Range athletes, and three deep-dive science articles — each written in Sharon's voice with explicit 'when this isn't the right tool' referral language."
+  - title: "Local visibility & performance"
+    body: "A 20-city Front Range service area in schema, a dedicated /visiting/ logistics page, and a performance pass that cut the logo from 2 MB to 20 KB and deferred animation scripts so pages render fast."
+
+featuresHeadline: "New capabilities the old site never had"
+features:
+  - "Schema.org structured data across every page (LocalBusiness, Service, FAQ, MedicalCondition, Review)"
+  - "llms.txt so ChatGPT, Perplexity, and Google AI Overviews can read and cite the practice"
+  - "Condition-specific landing pages for the problems clients actually search"
+  - "'How this compares' pages vs Rolfing, physical therapy, and traditional massage"
+  - "Sport-specific pages for Boulder runners, cyclists, climbers, and skiers"
+  - "An 18-question FAQ with FAQPage schema, plus per-page FAQs"
+  - "A plain-English, deep-linkable glossary of fascia and bodywork terms"
+  - "20-city Front Range local-SEO footprint and a visiting/logistics page"
+  - "A Keystatic CMS so Sharon edits her own content — no developer needed"
+  - "Accessibility and performance: reduced-motion support, alt text everywhere, a 99% smaller logo"
+
+methodologyNote: "Scores reflect Averde's AI-readiness assessment of each site's public markup in June 2026 — structured-data coverage, AI-crawlability (llms.txt and a clean sitemap), content depth, local-search signals, metadata completeness, and performance. 'Before' is the live WordPress site at tissuealchemy.com; 'after' is the rebuilt site. Every point traces to an observed, verifiable on-page fact — not estimated traffic or rankings."
