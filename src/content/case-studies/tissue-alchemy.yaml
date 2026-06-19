@@ -4,8 +4,8 @@ order: 1
 industry: Bodywork & Massage Therapy
 location: Boulder, CO
 seoTitle: "Tissue Alchemy Case Study — AI-Ready Website Rebuild | Averde AI"
-seoDescription: "How a dated WordPress site for a Boulder bodywork practice became an AI-ready, schema-rich website — AEO score 22 → 94, zero structured data to 11 schema types, and 43 purpose-built pages."
-cardSummary: "A dated WordPress site with zero structured data, rebuilt into a schema-rich, AI-readable website. AEO readiness jumped from 22 to 94."
+seoDescription: "How a dated WordPress site for a Boulder bodywork practice became an AI-ready, schema-rich website — AEO readiness from roughly 25 to 90, zero structured data to 11 schema types, and 43 purpose-built pages."
+cardSummary: "A dated WordPress site with zero structured data, rebuilt into a schema-rich, AI-readable website. AEO readiness jumped from roughly 25 to 90."
 
 oldUrl: "https://tissuealchemy.com"
 oldPlatform: "WordPress"
@@ -14,17 +14,19 @@ newPlatform: "Astro — static, schema-first"
 
 heroEyebrow: "Case Study · Bodywork & Massage Therapy"
 heroHeadline: "From invisible to AI-readable: rebuilding Tissue Alchemy for AI search"
-heroDek: "Sharon's Boulder bodywork practice had a dated WordPress site that AI engines couldn't read or cite — no structured data, no AI signals, and a blog that had been dormant since 2016. We rebuilt it from the ground up as an AI-ready website."
+heroDek: "Tissue Alchemy is a Boulder bodywork practice whose dated WordPress site AI engines couldn't read or cite — no structured data, no AI signals, and a blog dormant since 2016. We rebuilt it from the ground up as an AI-ready website."
 
 scores:
   - label: AEO score
     sublabel: How readable & citable the site is to AI engines (ChatGPT, Perplexity, Google AI Overviews)
-    before: 22
-    after: 94
+    info: "AEO = Answer Engine Optimization: how easily AI assistants can read your site and cite it when they answer questions. Driven by structured data, an llms.txt file, and clear content. It matters because more searches now end in an AI answer instead of a list of links."
+    before: 25
+    after: 90
   - label: SEO score
     sublabel: Traditional search readiness — metadata, content depth, crawlability, performance
-    before: 48
-    after: 92
+    info: "SEO = Search Engine Optimization: how well your site is set up to rank in traditional search like Google. Driven by clean metadata, content depth, crawlability, and page speed. It still drives most discovery for local businesses."
+    before: 50
+    after: 88
 
 metrics:
   - label: Schema.org structured-data types
@@ -64,7 +66,7 @@ approach:
   - title: "An AI-readable content layer"
     body: "A published llms.txt that hands AI engines a clean map of the site, a canonical 'what is Tissue Alchemy' definition repeated in key places for entity clarity, and a 15-term plain-English glossary with deep-linkable definitions."
   - title: "Deep, honest topical content"
-    body: "Seven condition pages (sciatica, frozen shoulder, TMJ, plantar fasciitis and more), four 'how this compares' pages (vs Rolfing, PT, classic myofascial release, traditional massage), four sport-specific pages for Front Range athletes, and three deep-dive science articles — each written in Sharon's voice with explicit 'when this isn't the right tool' referral language."
+    body: "Seven condition pages (sciatica, frozen shoulder, TMJ, plantar fasciitis and more), four 'how this compares' pages (vs Rolfing, PT, classic myofascial release, traditional massage), four sport-specific pages for Front Range athletes, and three deep-dive science articles — each written in the practice's own voice with explicit 'when this isn't the right tool' referral language."
   - title: "Local visibility & performance"
     body: "A 20-city Front Range service area in schema, a dedicated /visiting/ logistics page, and a performance pass that cut the logo from 2 MB to 20 KB and deferred animation scripts so pages render fast."
 
@@ -78,7 +80,7 @@ features:
   - "An 18-question FAQ with FAQPage schema, plus per-page FAQs"
   - "A plain-English, deep-linkable glossary of fascia and bodywork terms"
   - "20-city Front Range local-SEO footprint and a visiting/logistics page"
-  - "A Keystatic CMS so Sharon edits her own content — no developer needed"
+  - "A Keystatic CMS so the practice can edit its own content — no developer needed"
   - "Accessibility and performance: reduced-motion support, alt text everywhere, a 99% smaller logo"
 
-methodologyNote: "Scores reflect Averde's AI-readiness assessment of each site's public markup in June 2026 — structured-data coverage, AI-crawlability (llms.txt and a clean sitemap), content depth, local-search signals, metadata completeness, and performance. 'Before' is the live WordPress site at tissuealchemy.com; 'after' is the rebuilt site. Every point traces to an observed, verifiable on-page fact — not estimated traffic or rankings."
+methodologyNote: "These are approximate, rubric-based readiness scores — Averde's assessment of each site's public, on-page markup in June 2026, weighted across structured-data coverage, AI-crawlability (llms.txt and a clean sitemap), content depth, local-search signals, metadata, and page hygiene. They're rounded and carry a few points of judgment either way; they are not certified tool output. They deliberately exclude off-page factors — backlinks, domain authority, current Google rankings, and organic traffic — so the original site's roughly decade of domain history likely carries real search equity this on-page score doesn't credit. Measured performance (e.g. Lighthouse / Core Web Vitals) is also not yet folded in. 'Before' is the live WordPress site at tissuealchemy.com, assessed from its homepage and sitemap; 'after' is the rebuilt site."

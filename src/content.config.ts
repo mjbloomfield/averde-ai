@@ -58,6 +58,7 @@ const caseStudies = defineCollection({
     scores: z.array(z.object({
       label: z.string(),
       sublabel: z.string(),
+      info: z.string().optional(),
       before: z.number(),
       after: z.number(),
     })),

@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import InfoTip from '../../components/InfoTip.astro';
 
 export async function getStaticPaths() {
   const studies = await getCollection('caseStudies');
@@ -31,10 +32,7 @@ const d = study.data;
       <p class="text-cream/80 text-xl leading-relaxed mb-8">{d.heroDek}</p>
       <div class="flex flex-wrap items-center gap-4">
         <a href={d.liveUrl} target="_blank" rel="noopener" class="inline-flex items-center bg-sand text-green-deep font-semibold px-6 py-3.5 rounded-xl hover:bg-sand/90 transition-colors">
-          View the live rebuild →
-        </a>
-        <a href={d.oldUrl} target="_blank" rel="noopener" class="inline-flex items-center text-cream/70 text-sm font-medium hover:text-cream transition-colors underline underline-offset-4">
-          See the original site
+          View the rebuild →
         </a>
       </div>
     </div>
@@ -43,7 +41,7 @@ const d = study.data;
   <!-- SCORECARD -->
   <section class="bg-cream py-20">
     <div class="max-w-4xl mx-auto px-4 sm:px-6">
-      <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-3">AI readiness, before and after</h2>
+      <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-3">AI readiness, before and after<InfoTip label="What this section shows" text="An at-a-glance comparison of how ready each version of the site is for AI search and traditional search. Both scores are out of 100 — higher is better." /></h2>
       <p class="text-muted text-lg mb-10">
         {d.oldPlatform} → {d.newPlatform}. Scored on how well each version can be read, recommended, and cited by AI search.
       </p>
@@ -52,7 +50,7 @@ const d = study.data;
         {d.scores.map(s => (
           <div class="bg-white-warm rounded-2xl p-7">
             <div class="flex items-baseline justify-between mb-1">
-              <h3 class="text-lg font-bold text-green-deep">{s.label}</h3>
+              <h3 class="text-lg font-bold text-green-deep flex items-center">{s.label}{s.info && <InfoTip label={s.label} text={s.info} />}</h3>
               <span class="text-xs font-bold text-green-mid bg-green-50 px-2 py-1 rounded-full">+{s.after - s.before}</span>
             </div>
             <p class="text-muted text-sm mb-6">{s.sublabel}</p>
@@ -86,7 +84,7 @@ const d = study.data;
   <!-- BY THE NUMBERS -->
   <section class="bg-white-warm py-20">
     <div class="max-w-4xl mx-auto px-4 sm:px-6">
-      <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-10">By the numbers</h2>
+      <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-10">By the numbers<InfoTip label="What this section shows" text="The concrete, countable differences between the old site and the rebuild. Every figure is a verifiable on-page fact, not an estimate." /></h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-px bg-green-deep/10 rounded-2xl overflow-hidden">
         {d.metrics.map(m => (
           <div class="bg-cream p-6">
@@ -105,7 +103,7 @@ const d = study.data;
   <!-- CHALLENGE -->
   <section class="bg-cream py-20">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
-      <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-6">{d.challengeHeadline}</h2>
+      <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-6">{d.challengeHeadline}<InfoTip label="What this section shows" text="What was holding the original site back from showing up in AI search and traditional search." /></h2>
       {d.challengeBody.map(p => (
         <p class="text-muted text-lg leading-relaxed mb-5">{p}</p>
       ))}
@@ -115,7 +113,7 @@ const d = study.data;
   <!-- APPROACH -->
   <section class="bg-white-warm py-20">
     <div class="max-w-4xl mx-auto px-4 sm:px-6">
-      <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-10">{d.approachHeadline}</h2>
+      <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-10">{d.approachHeadline}<InfoTip label="What this section shows" text="The specific work done in the rebuild to make the site readable, citable, and well-ranked." /></h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         {d.approach.map(a => (
           <div class="bg-cream rounded-2xl p-7 border-l-2 border-sand/40">
@@ -130,7 +128,7 @@ const d = study.data;
   <!-- FEATURES -->
   <section class="bg-cream py-20">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
-      <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-10">{d.featuresHeadline}</h2>
+      <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-10">{d.featuresHeadline}<InfoTip label="What this section shows" text="Capabilities the rebuild added that the original site simply didn't have." /></h2>
       <ul class="space-y-3">
         {d.features.map(f => (
           <li class="flex items-start gap-3">

@@ -1,0 +1,15 @@
+---
+interface Props { text: string; label?: string; }
+const { text, label = 'More information' } = Astro.props;
+---
+<span class="group relative inline-flex align-middle ml-1.5">
+  <button
+    type="button"
+    aria-label={label}
+    class="peer inline-flex items-center justify-center w-[18px] h-[18px] rounded-full border border-current text-[11px] leading-none italic font-serif text-muted/50 hover:text-muted focus:text-muted cursor-help outline-none"
+  >i</button>
+  <span
+    role="tooltip"
+    class="hidden group-hover:block peer-focus:block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-60 bg-green-deep text-cream text-xs font-normal normal-case tracking-normal leading-relaxed text-left p-3 rounded-lg shadow-lg z-50"
+  >{text}</span>
+</span>
