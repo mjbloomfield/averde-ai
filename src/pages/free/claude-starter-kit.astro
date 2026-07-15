@@ -1,0 +1,261 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SubscribeForm from '../../components/SubscribeForm.astro';
+
+// Copy-paste starter kit for small business owners setting up Claude.
+// Companion to the two-part "Claude as your co-worker" blog series.
+
+const instructionsTemplate = `I run [business name], a [what you do] serving [who you serve] in [city/region]. I'm not technical — explain things in plain English and skip the jargon.
+
+When you write for me: keep it direct and concrete, lead with the answer, and match a warm but no-nonsense tone. Use real numbers and examples over vague claims.
+
+Tools I use: [your email], [your calendar], [your CRM or client list], [your website platform], [your accounting software].
+
+Do NOT: use corporate buzzwords ("leverage," "synergy," "best-in-class"), over-promise, write in choppy three-sentence bursts, or pad word count. If you're guessing, say so.`;
+
+const prompts: { title: string; when: string; prompt: string }[] = [
+  {
+    title: 'Answer a customer email in your voice',
+    when: 'Any time a reply needs more than two sentences',
+    prompt: `Here's an email from a customer, and below it three examples of replies I've written before. Draft a reply that sounds like me — same warmth, same directness, same level of detail. Ask me anything you need to know before drafting.\n\n[paste customer email]\n\n[paste 2–3 of your past replies]`,
+  },
+  {
+    title: 'Turn your inbox FAQs into a real FAQ page',
+    when: 'Once — then it feeds your website and your replies forever',
+    prompt: `Here are a bunch of emails/messages where customers asked questions. Pull out the 10–15 questions that come up most, then draft a plain-English FAQ page answering each one. Use my actual answers where I gave them. Flag any question where you'd be guessing.\n\n[paste a pile of customer emails or notes]`,
+  },
+  {
+    title: 'Write a service page that AI engines can quote',
+    when: 'One per service you offer',
+    prompt: `Draft a web page about my [service name] service. Structure: answer "what is it and who is it for" in the first 150 words, then what's included, then pricing (I'll give you the range), then 3–5 FAQs about this service. Plain English, no hype, specific over general. Here's what I know: [describe the service, price range, who it's for].`,
+  },
+  {
+    title: 'Summarize a meeting into actions',
+    when: 'After any call with notes or a transcript',
+    prompt: `Here are my rough notes from a meeting. Write: (1) a 5-line summary, (2) a list of action items with who owns each, (3) anything that sounded like a decision, stated as one. If something is ambiguous, list it under "worth confirming" instead of guessing.\n\n[paste notes]`,
+  },
+  {
+    title: 'Draft a quote or proposal from past examples',
+    when: 'Every quote, once you\'ve saved 2–3 good past ones',
+    prompt: `Attached are examples of past proposals I've sent. Draft a new one for this job: [describe the job, the customer, rough scope]. Match my format and voice exactly. Use my past pricing as a guide, but flag any number you're unsure about rather than inventing one.`,
+  },
+  {
+    title: 'Write your Google Business Profile post',
+    when: 'Every few weeks — engines reward the pulse',
+    prompt: `Write a short Google Business Profile post (under 100 words) about [a recent job / a seasonal reminder / a common customer question]. Plain, useful, no hashtags, no exclamation-point cheerleading. End with one clear next step for the reader.`,
+  },
+  {
+    title: 'Make sense of a spreadsheet',
+    when: 'When the numbers are there but the answer isn\'t',
+    prompt: `Here's a spreadsheet export of [what it is]. Answer three questions: What changed most compared to the previous period? Where am I losing the most [money/time]? What's the one number I should watch monthly? Show your reasoning so I can check it.\n\n[paste or attach the data]`,
+  },
+  {
+    title: 'Draft the blog post you keep not writing',
+    when: 'Monthly, 30 minutes with editing',
+    prompt: `Draft a short blog post (500–800 words) answering this customer question: "[the question]". Lead with the direct answer in the first paragraph. Use my business specifics: [a real example, your pricing range, your area]. I'll edit for voice — prioritize being correct and concrete over being polished.`,
+  },
+  {
+    title: 'Prep for a difficult conversation',
+    when: 'Price increases, firing a client, a refund request',
+    prompt: `I need to [describe the situation — e.g., "tell a longtime client their rate is going up 15%"]. Draft what I should say: honest, direct, kind, no corporate padding. Then list the 3 most likely responses I'll get and how to handle each one.`,
+  },
+  {
+    title: 'Turn a project into a reusable checklist',
+    when: 'After you finish something you\'ll do again',
+    prompt: `Here's everything that happened on a recent [type of project] — notes, emails, invoices, whatever I've pasted. Turn it into a step-by-step checklist I can reuse next time, with rough time estimates per step and the mistakes to avoid based on what went sideways this time.`,
+  },
+];
+
+const weekPlan = [
+  { day: 'Day 1 — 20 minutes', what: 'Create your account, install the desktop app, and paste in your Instructions (template above, filled in). This one step improves everything that follows.' },
+  { day: 'Day 2 — 15 minutes', what: 'Run the customer-email prompt on one real email. Edit what comes back and send it. Notice what you changed — then add one line to your Instructions so next time it\'s closer.' },
+  { day: 'Day 3 — 30 minutes', what: 'Run the FAQ prompt on a pile of old customer emails. You now have the draft of the most valuable page on your website.' },
+  { day: 'Day 4 — 20 minutes', what: 'Create a Project called "My Business." Upload your price list, a couple of past proposals, and your new FAQ draft. Everything you draft inside it now starts from your real details.' },
+  { day: 'Day 5 — 30 minutes', what: 'Pick the one task from the prompt library that matches your biggest time sink, and run it for real. That\'s the habit — one real task at a time, each one a little more delegated than the last.' },
+];
+
+const faqs = [
+  {
+    q: 'Do I need the paid Claude plan?',
+    a: 'The free plan is fine for trying the prompts. The paid plan (starting around $20/month) is where the co-worker features live — Projects, higher limits, and the desktop app\'s working modes. Start free; upgrade when you notice you\'re hitting limits on real work.',
+  },
+  {
+    q: 'Will this work with ChatGPT instead?',
+    a: 'Mostly, yes. The prompts are model-agnostic and ChatGPT has equivalents of Instructions (Custom Instructions) and Projects. I write for Claude because it\'s what I use to run my own business — including building this website.',
+  },
+  {
+    q: 'Is it safe to paste customer emails into Claude?',
+    a: 'Treat it like a contractor: be deliberate. Remove details that don\'t need to be there (account numbers, health information), and check your industry\'s rules — medical and legal practices have specific obligations. On paid business plans, review the data settings so conversations aren\'t used for training.',
+  },
+  {
+    q: 'What\'s the biggest mistake beginners make?',
+    a: 'Delegating the judgment along with the keystrokes. Claude executes a clear request well and a vague one badly. Decide what good looks like, give it real examples, and edit what comes back — the thinking stays yours.',
+  },
+];
+---
+
+<BaseLayout
+  title="The Claude Starter Kit for Small Business — Free Templates & Prompts"
+  description="A free starter kit for small business owners setting up Claude: a fill-in-the-blanks Instructions template, 10 copy-paste prompts for real business tasks, and a 5-day first-week plan."
+  faqItems={faqs}
+>
+
+  <!-- HERO -->
+  <section class="bg-green-deep py-16 text-center">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <div class="inline-flex items-center gap-2 bg-sand/20 text-sand text-xs font-semibold px-3 py-1.5 rounded-full mb-5">
+        Free resource · Copy-paste everything · No email required
+      </div>
+      <h1 class="text-4xl md:text-5xl font-extrabold text-white-warm leading-tight mb-5">
+        The Claude Starter Kit
+      </h1>
+      <p class="text-cream/70 text-lg">
+        Everything I set up for clients who want Claude working like a co-worker instead of a
+        chatbot: the Instructions template, ten prompts for real business tasks, and a
+        first-week plan. All copy-paste, all free.
+      </p>
+    </div>
+  </section>
+
+  <!-- INSTRUCTIONS TEMPLATE -->
+  <section class="bg-cream py-16">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">Step 1 · The highest-leverage five minutes</p>
+      <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-4">Your "Instructions for Claude" template</h2>
+      <p class="text-muted leading-relaxed mb-3">
+        Before anything else, give Claude a standing brief about you. It loads into every
+        conversation automatically, so you stop re-explaining your business every time.
+        Open Claude's Settings, find <strong class="text-green-deep">Instructions for Claude</strong> in
+        your profile settings, and paste this in — then replace every bracket.
+      </p>
+      <p class="text-muted leading-relaxed mb-6">
+        The "Do NOT" list is the most useful part. Banning a habit works better than describing
+        the ideal — and every time Claude gets something wrong in a way that'll come up again,
+        add one line. It compounds fast.
+      </p>
+      <div class="relative bg-white-warm rounded-2xl border border-green-sage/25 p-6">
+        <button
+          class="copy-btn absolute top-4 right-4 bg-green-deep text-cream text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-green-mid transition-colors"
+          data-copy="instructions"
+        >Copy</button>
+        <pre id="copy-instructions" class="whitespace-pre-wrap text-sm text-dark leading-relaxed font-inter">{instructionsTemplate}</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROMPT LIBRARY -->
+  <section class="bg-white-warm py-16">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">Step 2 · The prompt library</p>
+      <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-4">Ten prompts for real business tasks</h2>
+      <p class="text-muted leading-relaxed mb-8">
+        Not "50 mind-blowing AI hacks" — ten tasks small businesses actually repeat, written so
+        Claude asks before it guesses. Copy one, fill in the brackets, paste your real material where marked.
+      </p>
+      <div class="space-y-4">
+        {prompts.map((p, i) => (
+          <details class="bg-cream rounded-2xl px-6 group">
+            <summary class="flex items-start justify-between gap-4 py-5 cursor-pointer">
+              <span>
+                <span class="block font-bold text-green-deep">{String(i + 1).padStart(2, '0')} · {p.title}</span>
+                <span class="block text-muted text-sm mt-1">{p.when}</span>
+              </span>
+              <span class="text-green-sage mt-1 flex-shrink-0">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 7l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </summary>
+            <div class="relative bg-white-warm rounded-xl border border-green-sage/20 p-5 mb-5">
+              <button
+                class="copy-btn absolute top-3 right-3 bg-green-deep text-cream text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-green-mid transition-colors"
+                data-copy={`prompt-${i}`}
+              >Copy</button>
+              <pre id={`copy-prompt-${i}`} class="whitespace-pre-wrap text-sm text-dark leading-relaxed pr-16">{p.prompt}</pre>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FIRST WEEK PLAN -->
+  <section class="bg-cream py-16">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">Step 3 · The first week</p>
+      <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-4">Five days, under two hours total</h2>
+      <p class="text-muted leading-relaxed mb-8">
+        The goal of week one isn't mastery — it's running enough real tasks that you can feel
+        where this fits your business. Small, real, and daily beats one ambitious Saturday.
+      </p>
+      <div class="space-y-4">
+        {weekPlan.map(d => (
+          <div class="bg-white-warm rounded-2xl p-6">
+            <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-2">{d.day}</p>
+            <p class="text-dark leading-relaxed">{d.what}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="bg-white-warm py-16">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <h2 class="text-3xl font-bold text-green-deep mb-8 text-center">Common Questions</h2>
+      <div class="space-y-3">
+        {faqs.map(faq => (
+          <details class="bg-cream rounded-2xl px-6 group">
+            <summary class="flex items-center justify-between py-5 font-semibold text-green-deep cursor-pointer">
+              {faq.q}
+              <span class="text-green-sage ml-4 flex-shrink-0">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 7l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </summary>
+            <p class="text-muted leading-relaxed pb-5">{faq.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA + SUBSCRIBE -->
+  <section class="bg-cream py-16">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 space-y-8">
+      <div class="bg-sand/20 border border-sand/40 rounded-3xl p-8 sm:p-10 text-center">
+        <p class="text-sand font-bold text-sm uppercase tracking-wide mb-3">Beyond the starter kit</p>
+        <h2 class="text-2xl md:text-3xl font-bold text-green-deep mb-4">Want a roadmap for your specific business?</h2>
+        <p class="text-muted mb-6 max-w-lg mx-auto">
+          A Strategy Session is 90 minutes where we map what to set up, what to skip, and in what
+          order — for your tools, your team, your customers. You leave with a prioritized plan,
+          not a slide deck.
+        </p>
+        <a href="/contact" class="inline-flex items-center bg-green-deep text-cream font-semibold px-6 py-3.5 rounded-xl hover:bg-green-mid transition-colors">
+          Book a Strategy Session →
+        </a>
+      </div>
+      <SubscribeForm
+        source="claude-starter-kit"
+        heading="Get new prompts and guides by email"
+        dek="When I add prompts to this kit or Claude ships something worth knowing about, I'll send a short note. No fluff, no spam."
+      />
+    </div>
+  </section>
+
+</BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const target = document.getElementById(`copy-${btn.dataset.copy}`);
+      if (!target) return;
+      try {
+        await navigator.clipboard.writeText(target.textContent || '');
+        const old = btn.textContent;
+        btn.textContent = '✓ Copied';
+        setTimeout(() => { btn.textContent = old; }, 1500);
+      } catch {
+        btn.textContent = 'Select & copy manually';
+      }
+    });
+  });
+</script>

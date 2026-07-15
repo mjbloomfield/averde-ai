@@ -1,0 +1,73 @@
+---
+// Email capture used on the blog index and free-resource pages.
+// Posts to /api/subscribe; `source` tags where the lead came from.
+interface Props {
+  source: string;
+  heading?: string;
+  dek?: string;
+  buttonLabel?: string;
+}
+const {
+  source,
+  heading = 'Get new guides by email',
+  dek = 'Practical AI guides for small business owners — no fluff, no spam, unsubscribe anytime.',
+  buttonLabel = 'Subscribe',
+} = Astro.props;
+const formId = `sub-${source.replace(/[^a-z0-9]/gi, '')}`;
+---
+
+<div class="bg-green-deep rounded-3xl p-8 sm:p-10 text-center">
+  <h2 class="text-2xl font-bold text-cream mb-3">{heading}</h2>
+  <p class="text-cream/60 mb-6 max-w-md mx-auto">{dek}</p>
+  <form id={formId} data-source={source} class="subscribe-form flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+    <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"
+      style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden;" />
+    <label class="sr-only" for={`${formId}-email`}>Email</label>
+    <input
+      id={`${formId}-email`}
+      type="email"
+      name="email"
+      required
+      placeholder="you@yourbusiness.com"
+      class="flex-1 bg-white-warm border border-green-sage/30 rounded-xl px-4 py-3 text-dark text-sm focus:outline-none focus:border-sand"
+    />
+    <button
+      type="submit"
+      class="bg-sand text-green-deep font-semibold px-6 py-3 rounded-xl hover:bg-sand/90 transition-colors text-sm whitespace-nowrap"
+    >
+      {buttonLabel}
+    </button>
+  </form>
+  <p class="form-note text-cream/50 text-sm mt-4 hidden"></p>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('.subscribe-form').forEach((form) => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const note = form.parentElement!.querySelector('.form-note') as HTMLElement;
+      const email = (form.querySelector('input[name="email"]') as HTMLInputElement).value.trim();
+      const honeypot = (form.querySelector('input[name="website"]') as HTMLInputElement).value;
+      const btn = form.querySelector('button')!;
+      btn.disabled = true;
+      note.classList.remove('hidden');
+      note.textContent = 'Subscribing…';
+      try {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, source: form.dataset.source, website: honeypot }),
+        });
+        if (res.ok) {
+          note.textContent = "✓ You're in. Watch your inbox.";
+          form.reset();
+        } else {
+          note.textContent = 'That didn’t work — email mark@averde.ai and I’ll add you by hand.';
+        }
+      } catch {
+        note.textContent = 'That didn’t work — email mark@averde.ai and I’ll add you by hand.';
+      }
+      btn.disabled = false;
+    });
+  });
+</script>

@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SubscribeForm from '../../components/SubscribeForm.astro';
+
+const resources = [
+  {
+    tag: 'Interactive · ~3 minutes',
+    title: 'AI Visibility Audit',
+    description:
+      'The place to start. We fetch your live website, run 13 real checks on what AI engines actually read, and run a live AI-search query for your market. You get a transparent score and a fix-it-yourself action plan.',
+    ctaLabel: 'Run the audit →',
+    href: '/ai-audit',
+  },
+  {
+    tag: 'Checklist · 21 checks',
+    title: 'The AI-Ready Website Checklist',
+    description:
+      'The complete DIY version of what my paid rebuilds cover: content AI can quote, schema markup, and the citation graph. Every item says what to do and how to do it. Progress saves in your browser.',
+    ctaLabel: 'Open the checklist →',
+    href: '/free/ai-ready-checklist',
+  },
+  {
+    tag: 'Templates & prompts',
+    title: 'The Claude Starter Kit',
+    description:
+      'Set up Claude like a co-worker instead of a chatbot: a fill-in-the-blanks Instructions template, ten copy-paste prompts for real business tasks, and a five-day first-week plan.',
+    ctaLabel: 'Get the kit →',
+    href: '/free/claude-starter-kit',
+  },
+  {
+    tag: 'Reference',
+    title: 'The Plain-English AI Glossary',
+    description:
+      'AEO, schema markup, AI Overviews, LLMs — every term this site uses, defined in plain English so you can read anything about AI search without a translator.',
+    ctaLabel: 'Browse the glossary →',
+    href: '/glossary',
+  },
+  {
+    tag: 'Guides',
+    title: 'The Blog',
+    description:
+      'Longer-form, practical writing: what "AI-Ready" actually means, how to do the work yourself, and honest takes on where AI fits a small business — and where it doesn\'t.',
+    ctaLabel: 'Read the guides →',
+    href: '/blog',
+  },
+];
+---
+
+<BaseLayout
+  title="Free AI Tools & Resources for Small Business"
+  description="Free, no-catch resources for small business owners: an AI visibility audit that checks your live website, an AI-ready checklist, Claude templates and prompts, and a plain-English glossary."
+>
+
+  <!-- HERO -->
+  <section class="bg-green-deep py-16 text-center">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <h1 class="text-4xl md:text-5xl font-extrabold text-white-warm leading-tight mb-5">
+        Free resources. Actually free.
+      </h1>
+      <p class="text-cream/70 text-lg">
+        Everything here is the real version, not the teaser version. Use it all yourself, never
+        talk to me, and you'll still be ahead — that's the point. If you want help going faster,
+        you know where I am.
+      </p>
+    </div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section class="bg-cream py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      <div class="space-y-5">
+        {resources.map(r => (
+          <a href={r.href} class="block bg-white-warm rounded-3xl p-7 sm:p-8 border border-transparent hover:border-sand/50 hover:shadow-md transition-all">
+            <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-2">{r.tag}</p>
+            <h2 class="text-2xl font-bold text-green-deep mb-2">{r.title}</h2>
+            <p class="text-muted leading-relaxed mb-4">{r.description}</p>
+            <span class="text-green-mid text-sm font-semibold">{r.ctaLabel}</span>
+          </a>
+        ))}
+      </div>
+
+      <div class="mt-12">
+        <SubscribeForm source="free-index" />
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>

@@ -1,0 +1,325 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SubscribeForm from '../../components/SubscribeForm.astro';
+
+// The DIY companion to the AI Visibility Audit. Same checks, expanded into
+// a work-through-it checklist. Progress saves to localStorage.
+const sections: {
+  title: string;
+  time: string;
+  intro: string;
+  items: { id: string; task: string; how: string }[];
+}[] = [
+  {
+    title: 'The foundations',
+    time: '~2 hours',
+    intro: 'Basics every engine reads first. Most of these live in your platform’s settings — no code required.',
+    items: [
+      {
+        id: 'https',
+        task: 'Your site loads over HTTPS',
+        how: 'Open your site in a private browser window and check for the padlock. If it’s missing, your host can turn on a free SSL certificate — usually one toggle in the dashboard.',
+      },
+      {
+        id: 'title',
+        task: 'Your homepage title says what you do and where',
+        how: 'Not just your business name. Format: "Family Dentist in Boulder, CO | Harbor Dental". Edit it in your platform’s page settings or SEO settings.',
+      },
+      {
+        id: 'meta',
+        task: 'Every key page has a meta description',
+        how: 'One or two sentences: what you do, for whom, where. Engines fall back on this when deciding what a page is about.',
+      },
+      {
+        id: 'h1',
+        task: 'Each page has exactly one main heading (H1)',
+        how: 'Make your main headline the H1, and make it say what you do — "Emergency HVAC Repair in Denver" beats "Comfort is our business."',
+      },
+      {
+        id: 'speed',
+        task: 'Your site scores 50+ on mobile PageSpeed',
+        how: 'Test free at pagespeed.web.dev. The usual culprit is oversized images — compress them to under 300KB each. Slow sites get crawled less and abandoned more.',
+      },
+    ],
+  },
+  {
+    title: 'Content AI engines can quote',
+    time: '~15–25 hours, spread over weeks',
+    intro: 'The biggest pillar and the biggest payoff. AI does most of the keystrokes — you direct and edit.',
+    items: [
+      {
+        id: 'queries',
+        task: 'You know the 30–50 questions customers actually ask',
+        how: 'Ask Claude or ChatGPT to brainstorm the search queries someone would type when looking for your business — by service, by neighborhood, by problem. Your inbox and front desk already know the rest.',
+      },
+      {
+        id: 'answerfirst',
+        task: 'Key pages answer their main question in the first 200 words',
+        how: 'AI engines extract answers, not atmospheres. Lead with the answer; add the story after.',
+      },
+      {
+        id: 'faq',
+        task: 'You have a real FAQ page',
+        how: 'The 8–15 questions customers actually ask, answered in plain English with real specifics — prices, timelines, what happens next. This is the single easiest content for AI to quote.',
+      },
+      {
+        id: 'servicepages',
+        task: 'One page per service, one per area you serve',
+        how: 'Most small business sites have 4–6 pages and should have 15–30. Draft each with Claude from your existing content, then edit in the specifics no model can know.',
+      },
+      {
+        id: 'pricing',
+        task: 'Your pricing is stated — or at least ranged',
+        how: '"From $X" or "$X–$Y" is enough. Pages with real numbers get cited; "contact us for pricing" gets skipped.',
+      },
+      {
+        id: 'nap',
+        task: 'Location, service area, and hours are stated unambiguously',
+        how: 'On the site itself, in text (not only in an image or map embed) — and identical to what your Google Business Profile says.',
+      },
+    ],
+  },
+  {
+    title: 'Schema markup — the machine-readable layer',
+    time: '~3–8 hours, platform-dependent',
+    intro: 'Hidden labels in your page code that tell AI engines exactly what you are, instead of making them guess. This is where most small business sites score zero.',
+    items: [
+      {
+        id: 'localbusiness',
+        task: 'LocalBusiness schema (with the right subtype)',
+        how: 'Ask Claude or ChatGPT to "write LocalBusiness JSON-LD schema for my business" — use the specific subtype (Dentist, Plumber, RealEstateAgent). On WordPress, Yoast or Rank Math does this from a settings screen. On Squarespace/Wix, paste it into header code injection. Validate at validator.schema.org.',
+      },
+      {
+        id: 'faqschema',
+        task: 'FAQPage schema on your FAQ page',
+        how: 'Mark up the FAQ page you built above so engines can lift the question-answer pairs directly. Same method as LocalBusiness.',
+      },
+      {
+        id: 'serviceschema',
+        task: 'Service schema for each major service',
+        how: 'One Service block per major offering, so "who does X near me" queries can match you.',
+      },
+      {
+        id: 'sitemap',
+        task: 'sitemap.xml and robots.txt exist',
+        how: 'Check yoursite.com/sitemap.xml and /robots.txt. Most platforms generate both automatically — if yours doesn’t, that’s worth knowing.',
+      },
+      {
+        id: 'llms',
+        task: 'llms.txt (the new one almost nobody has)',
+        how: 'A plain-text summary of your business written for AI models, hosted at yoursite.com/llms.txt. Ask Claude to draft one from your homepage. Five minutes, real differentiation.',
+      },
+    ],
+  },
+  {
+    title: 'The citation graph — where AI engines check your story',
+    time: '~8–12 hours',
+    intro: 'AI engines cross-reference your site against the profiles and directories they trust. Consistency is the whole game.',
+    items: [
+      {
+        id: 'gbp',
+        task: 'Google Business Profile is claimed and completely filled out',
+        how: 'Services, photos, hours, the Q&A section, and a post every few weeks. This is the profile AI engines lean on hardest for local recommendations.',
+      },
+      {
+        id: 'maps',
+        task: 'Apple Maps and Bing Places are claimed and match',
+        how: 'Apple Maps Business Connect and Bing Places are both free. Same name, address, phone, and hours everywhere.',
+      },
+      {
+        id: 'directories',
+        task: 'You’re listed in your industry’s directories',
+        how: 'Healthgrades for medical, Avvo for legal, Houzz for contractors — whatever your customers actually check. Plus Yelp and the BBB.',
+      },
+      {
+        id: 'reviews',
+        task: 'You have a working review habit',
+        how: 'Ask happy customers for a Google review first, your industry’s site second. A steady trickle beats a burst.',
+      },
+      {
+        id: 'freshness',
+        task: 'Something new gets published monthly',
+        how: 'A customer question answered as a short post, a seasonal note, a project photo with a paragraph. With Claude drafting, this is 30 minutes a month. Engines reward signs of life.',
+      },
+    ],
+  },
+];
+
+const totalItems = sections.reduce((n, s) => n + s.items.length, 0);
+
+const faqs = [
+  {
+    q: 'What does "AI-Ready" mean for a website?',
+    a: 'A website is AI-Ready when AI engines like Claude, ChatGPT, Perplexity, and Google AI Overviews can read it, understand it, and recommend it in their answers. That takes three things working together: content shaped to answer real questions, schema markup so machines know what you are, and a consistent presence across the profiles AI engines cross-reference.',
+  },
+  {
+    q: 'How long does it take to make a website AI-Ready yourself?',
+    a: 'Plan on roughly 30–45 hours of real work for the initial pass — content is the biggest share — then an hour or two a month to keep it fresh. AI assistants like Claude do most of the keystrokes, but directing and editing is real work.',
+  },
+  {
+    q: 'Do I need to know how to code?',
+    a: 'No. Almost everything on the checklist happens in your platform’s settings or with copy-paste code an AI assistant generates for you. The exception: some platforms (GoDaddy builders, entry-level Squarespace plans) don’t allow custom code at all, which is when a rebuild conversation starts making sense.',
+  },
+  {
+    q: 'How do I know if it’s working?',
+    a: 'Ask the AI engines the question your best customer would ask — "best [what you do] in [your city]" — and see if you appear. The free AI Visibility Audit on this site automates that: it fetches your live site, runs the checks on this list, and runs a real Perplexity query for your market.',
+  },
+];
+---
+
+<BaseLayout
+  title="The AI-Ready Website Checklist — 21 Checks, Free"
+  description="The complete do-it-yourself checklist for making your small business website visible to ChatGPT, Perplexity, Claude, and Google AI Overviews. 21 checks across content, schema, and citations — with how-to for each."
+  faqItems={faqs}
+>
+
+  <!-- HERO -->
+  <section class="bg-green-deep py-16 text-center">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <div class="inline-flex items-center gap-2 bg-sand/20 text-sand text-xs font-semibold px-3 py-1.5 rounded-full mb-5">
+        Free resource · {totalItems} checks · Progress saves in your browser
+      </div>
+      <h1 class="text-4xl md:text-5xl font-extrabold text-white-warm leading-tight mb-5">
+        The AI-Ready Website Checklist
+      </h1>
+      <p class="text-cream/70 text-lg">
+        Everything it takes for AI engines to find, understand, and recommend your business —
+        as a checklist you can actually work through. Each item says what to do and how to do it.
+        No email required, no catch.
+      </p>
+    </div>
+  </section>
+
+  <!-- INTRO -->
+  <section class="bg-cream pt-14 pb-4">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <p class="text-dark text-lg leading-relaxed mb-4">
+        When someone asks ChatGPT or Perplexity for "the best {`{what you do}`} near me," the businesses
+        in that answer aren't necessarily the best ones — they're the most <em>legible</em> ones.
+        This checklist is how you become legible. It's the same set of checks my paid rebuilds cover
+        and the same ones the <a href="/ai-audit" class="text-green-mid font-semibold hover:text-green-deep">free audit</a> tests automatically.
+      </p>
+      <p class="text-muted leading-relaxed">
+        Work top to bottom. Check things off as you go — your progress saves in this browser.
+        Budget 30–45 hours total for a typical small business site, with Claude or ChatGPT doing
+        most of the keystrokes.
+      </p>
+      <div class="mt-8 bg-white-warm rounded-2xl p-5 flex items-center justify-between gap-4">
+        <p class="text-sm text-muted"><span id="done-count" class="font-bold text-green-deep">0</span> of {totalItems} done</p>
+        <button id="reset-checks" class="text-sm text-terracotta font-semibold hover:underline">Reset</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHECKLIST -->
+  <section class="bg-cream py-10">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 space-y-10">
+      {sections.map((sec, si) => (
+        <div>
+          <div class="flex items-baseline justify-between gap-4 mb-1">
+            <h2 class="text-2xl md:text-3xl font-bold text-green-deep">{si + 1}. {sec.title}</h2>
+            <span class="text-sand text-xs font-semibold uppercase tracking-widest whitespace-nowrap">{sec.time}</span>
+          </div>
+          <p class="text-muted mb-5">{sec.intro}</p>
+          <div class="space-y-3">
+            {sec.items.map(item => (
+              <label class="cl-item flex items-start gap-4 bg-white-warm rounded-2xl p-5 cursor-pointer border border-transparent hover:border-sand/40 transition-colors" data-check={item.id}>
+                <input type="checkbox" class="cl-box mt-1 w-5 h-5 accent-green-deep flex-shrink-0" />
+                <span>
+                  <span class="cl-task block font-semibold text-green-deep">{item.task}</span>
+                  <span class="block text-muted text-sm leading-relaxed mt-1">{item.how}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="bg-white-warm py-16">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <h2 class="text-3xl font-bold text-green-deep mb-8 text-center">Common Questions</h2>
+      <div class="space-y-3">
+        {faqs.map(faq => (
+          <details class="bg-cream rounded-2xl px-6 group">
+            <summary class="flex items-center justify-between py-5 font-semibold text-green-deep cursor-pointer">
+              {faq.q}
+              <span class="text-green-sage ml-4 flex-shrink-0">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 7l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </summary>
+            <p class="text-muted leading-relaxed pb-5">{faq.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA + SUBSCRIBE -->
+  <section class="bg-cream py-16">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 space-y-8">
+      <div class="bg-sand/20 border border-sand/40 rounded-3xl p-8 sm:p-10 text-center">
+        <p class="text-sand font-bold text-sm uppercase tracking-wide mb-3">See where you stand first</p>
+        <h2 class="text-2xl md:text-3xl font-bold text-green-deep mb-4">Don't guess — run the audit</h2>
+        <p class="text-muted mb-6 max-w-lg mx-auto">
+          The free AI Visibility Audit fetches your live site and tests most of this list automatically —
+          plus runs a real AI-search query for your market. Three minutes, and you'll know which
+          sections above need you most.
+        </p>
+        <a href="/ai-audit" class="inline-flex items-center bg-green-deep text-cream font-semibold px-6 py-3.5 rounded-xl hover:bg-green-mid transition-colors">
+          Run my free audit →
+        </a>
+      </div>
+      <SubscribeForm
+        source="ai-ready-checklist"
+        heading="Want the updates as engines change?"
+        dek="AI engines update constantly. I send practical guides when something on this list changes — no fluff, no spam."
+      />
+    </div>
+  </section>
+
+</BaseLayout>
+
+<script define:vars={{ totalItems }}>
+  // Checkbox progress persists per-browser.
+  const KEY = 'averde-ai-ready-checklist';
+  let done = [];
+  try { done = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch {}
+  const counter = document.getElementById('done-count');
+
+  const save = () => {
+    try { localStorage.setItem(KEY, JSON.stringify(done)); } catch {}
+    counter.textContent = String(done.length);
+  };
+
+  document.querySelectorAll('.cl-item').forEach(label => {
+    const id = label.dataset.check;
+    const box = label.querySelector('.cl-box');
+    const task = label.querySelector('.cl-task');
+    const apply = () => {
+      const checked = done.includes(id);
+      box.checked = checked;
+      task.style.textDecoration = checked ? 'line-through' : '';
+      task.style.opacity = checked ? '0.55' : '';
+    };
+    apply();
+    box.addEventListener('change', () => {
+      if (box.checked) { if (!done.includes(id)) done.push(id); }
+      else done = done.filter(d => d !== id);
+      save(); apply();
+    });
+  });
+
+  document.getElementById('reset-checks').addEventListener('click', () => {
+    done = []; save();
+    document.querySelectorAll('.cl-item').forEach(label => {
+      label.querySelector('.cl-box').checked = false;
+      const task = label.querySelector('.cl-task');
+      task.style.textDecoration = ''; task.style.opacity = '';
+    });
+  });
+
+  save();
+</script>

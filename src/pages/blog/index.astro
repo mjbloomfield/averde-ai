@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import SubscribeForm from '../../components/SubscribeForm.astro';
 
 const allPosts = await getCollection('blog');
 // Scheduled-publish filter: hide posts whose publishedDate is in the future.
@@ -78,13 +79,11 @@ const categoryColors: Record<string, string> = {
       )}
 
       <!-- Subscribe nudge -->
-      <div class="bg-green-deep rounded-3xl p-10 text-center">
-        <h2 class="text-2xl font-bold text-cream mb-3">Get notified when posts go live</h2>
-        <p class="text-cream/60 mb-6">Practical AI guides for small business owners — no fluff, no spam.</p>
-        <a href="mailto:mark@averde.ai?subject=Blog updates" class="inline-flex items-center bg-sand text-green-deep font-semibold px-6 py-3 rounded-xl hover:bg-sand/90 transition-colors">
-          Email mark@averde.ai to subscribe
-        </a>
-      </div>
+      <SubscribeForm
+        source="blog"
+        heading="Get notified when posts go live"
+        dek="Practical AI guides for small business owners — no fluff, no spam, unsubscribe anytime."
+      />
     </div>
   </section>
 

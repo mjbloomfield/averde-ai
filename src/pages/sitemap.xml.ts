@@ -16,6 +16,9 @@ const staticRoutes: Array<{ path: string; priority: number; changefreq: string }
   { path: '/contact',      priority: 0.7,  changefreq: 'monthly' },
   { path: '/blog',         priority: 0.7,  changefreq: 'weekly' },
   { path: '/case-studies', priority: 0.8,  changefreq: 'monthly' },
+  { path: '/free',         priority: 0.8,  changefreq: 'monthly' },
+  { path: '/free/ai-ready-checklist', priority: 0.8, changefreq: 'monthly' },
+  { path: '/free/claude-starter-kit', priority: 0.8, changefreq: 'monthly' },
   { path: '/glossary',     priority: 0.6,  changefreq: 'monthly' },
   { path: '/privacy',      priority: 0.2,  changefreq: 'yearly' },
 ];
@@ -34,12 +37,16 @@ export const GET: APIRoute = async () => {
     }));
 
   const posts = await getCollection('blog');
-  const postRoutes = posts.map(p => ({
-    path: `/blog/${p.id}`,
-    priority: 0.6,
-    changefreq: 'monthly',
-    lastmod: p.data.publishedDate || now,
-  }));
+  // Match the blog routes: future-dated (scheduled) posts have no page yet,
+  // so they must not appear in the sitemap either.
+  const postRoutes = posts
+    .filter(p => !p.data.publishedDate || new Date(p.data.publishedDate).getTime() <= Date.now())
+    .map(p => ({
+      path: `/blog/${p.id}`,
+      priority: 0.6,
+      changefreq: 'monthly',
+      lastmod: p.data.publishedDate || now,
+    }));
 
   const studies = await getCollection('caseStudies');
   const caseStudyRoutes = studies

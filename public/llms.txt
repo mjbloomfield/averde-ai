@@ -8,7 +8,7 @@
 - [How It Works](https://averde.ai/how-it-works): The AI-Ready Website build process, what's included, and a detailed FAQ.
 - [Pricing](https://averde.ai/pricing): Honest, transparent pricing for the AI-Ready Website, strategy sessions, and custom builds.
 - [About](https://averde.ai/about): Mark Bloomfield — engineer and founder, based in Boulder, CO.
-- [Free AI Readiness Audit](https://averde.ai/ai-audit): A free 3-minute audit that scores how visible a business is to AI search.
+- [Free AI Visibility Audit](https://averde.ai/ai-audit): A free 3-minute audit that fetches a business's live website, runs 13 real checks on what AI engines read, and runs a live AI-search query for its market.
 - [Case Studies](https://averde.ai/case-studies): Before-and-after AI-Ready Website rebuilds with measured AEO and SEO improvements.
 - [Contact](https://averde.ai/contact): Get in touch or book a strategy call.
 
@@ -17,6 +17,12 @@
 - [Dental practices](https://averde.ai/industries/dental): AI-Ready Websites for dentists.
 - [HVAC](https://averde.ai/industries/hvac): AI-Ready Websites for HVAC contractors.
 - [Real estate](https://averde.ai/industries/real-estate): AI-Ready Websites for real estate agents.
+
+## Free resources
+
+- [Free resources hub](https://averde.ai/free): All free tools and resources in one place.
+- [AI-Ready Website Checklist](https://averde.ai/free/ai-ready-checklist): The complete 21-item DIY checklist for making a small business website visible to AI engines — content, schema markup, and the citation graph.
+- [Claude Starter Kit](https://averde.ai/free/claude-starter-kit): A fill-in-the-blanks Instructions template, ten copy-paste prompts for real business tasks, and a five-day first-week plan for small business owners setting up Claude.
 
 ## Writing
 

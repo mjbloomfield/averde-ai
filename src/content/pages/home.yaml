@@ -11,15 +11,22 @@ heroCardItems:
 
 toolsEyebrow: 'Start here — no cost'
 toolsHeadline: 'Free tools to get you oriented.'
-toolsDek: "Two ways to figure out where AI fits — start with the audit, then book the call if you want to dig deeper."
+toolsDek: "Start with the audit — it checks your real website, not your answers to a quiz. Then dig into the free resources or book the call."
 tools:
   - published: true
     icon: checklist
     tag: 'Interactive · ~3 minutes · Free'
-    title: 'AI Readiness Audit'
-    description: "Answer 6 questions, get a personalized report with your top 3 highest-impact AI opportunities — ranked by what'll move the needle for your business specifically."
-    ctaLabel: 'Take the audit →'
+    title: 'AI Visibility Audit'
+    description: "We fetch your live website, run 13 real checks on what AI engines actually read, and run a live AI-search query for your market. Transparent score, fix-it-yourself action plan."
+    ctaLabel: 'Run the audit →'
     ctaHref: '/ai-audit'
+  - published: true
+    icon: star
+    tag: 'Checklists · Templates · Free'
+    title: 'Free Resources'
+    description: "The AI-Ready Website Checklist, the Claude Starter Kit, and a plain-English glossary. The real versions, not teasers — use them all without ever talking to me."
+    ctaLabel: 'Browse the resources →'
+    ctaHref: '/free'
   - published: true
     icon: clock
     tag: 'Live · 30 minutes · Free'
@@ -61,6 +68,6 @@ aboutBio1: 'I spent years as a composites research engineer and sustainability c
 aboutBio2: "Every client works directly with me — I figure out what you actually need, skip the things you don't, and build or deploy it fast. I'm based in Boulder, CO, working with businesses across the country."
 
 ctaHeadline: "Not sure where AI fits?\nRun the audit."
-ctaDek: "3 minutes. 6 questions. A personalized AI Readiness Report with your top 3 opportunities — and what each would cost to actually fix."
+ctaDek: "3 minutes. Live checks on your real website, a real AI-search query for your market, and an action plan you can execute yourself — or hand to me."
 ctaButton: 'Run my free AI audit'
 ctaMicro: 'No commitment · No credit card · Just clarity'
