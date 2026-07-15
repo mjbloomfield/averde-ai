@@ -24,7 +24,14 @@
       "Bash(dig +short brain.averde.ai CNAME)",
       "Bash(dig +short www.averde.ai A)",
       "Bash(dig +short www.averde.ai CNAME)",
-      "Bash(dig +short averde.ai A)"
+      "Bash(dig +short averde.ai A)",
+      "Read(//Users/mark/Programming/openbrain/**)",
+      "Bash(node -e \"const p=require\\('./dashboards/open-brain-dashboard-next/package.json'\\); console.log\\(JSON.stringify\\({dependencies:p.dependencies,devDependencies:p.devDependencies},null,1\\)\\)\")",
+      "Bash(sed -E 's/=.*/=.../' dashboards/open-brain-dashboard-next/.env.local)",
+      "Bash(command -v supabase)",
+      "Bash(supabase --version)",
+      "Bash(git -C /Users/mark/Programming/averde-ai status --short)",
+      "Bash(git -C /Users/mark/Programming/averde-ai diff --stat)"
     ]
   }
 }
