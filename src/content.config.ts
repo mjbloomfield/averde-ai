@@ -66,6 +66,7 @@ const caseStudies = defineCollection({
       label: z.string(),
       before: z.string(),
       after: z.string(),
+      note: z.string().optional(),
     })),
     challengeHeadline: z.string(),
     challengeBody: z.array(z.string()),

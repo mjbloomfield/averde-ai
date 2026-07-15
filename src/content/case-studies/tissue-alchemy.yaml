@@ -9,12 +9,12 @@ cardSummary: "A dated WordPress site with zero structured data, rebuilt into a s
 
 oldUrl: "https://tissuealchemy.com"
 oldPlatform: "WordPress"
-liveUrl: "https://tissue-alchemy.vercel.app"
+liveUrl: "https://www.tissuealchemy.com"
 newPlatform: "Astro — static, schema-first"
 
 heroEyebrow: "Case Study · Bodywork & Massage Therapy"
 heroHeadline: "From invisible to AI-readable: rebuilding Tissue Alchemy for AI search"
-heroDek: "Tissue Alchemy is a Boulder bodywork practice whose dated WordPress site AI engines couldn't read or cite — no structured data, no AI signals, and a blog dormant since 2016. We rebuilt it from the ground up as an AI-ready website."
+heroDek: "Tissue Alchemy is a Boulder bodywork practice whose dated WordPress site wasn't readable by AI engines. We fixed that. We added structured data, built a robust FAQ, and revived a blog that had been dormant since 2016 — all things AI search engines look for, and all good for standard SEO too."
 
 scores:
   - label: AEO score
@@ -32,32 +32,40 @@ metrics:
   - label: Schema.org structured-data types
     before: "0"
     after: "11"
+    note: "Schema markup is labeling in a page's code that tells search and AI engines exactly what they're looking at — the business, its services, its reviews — instead of making them guess. The old site had none."
   - label: llms.txt for AI engines
     before: "None"
     after: "Published"
+    note: "A simple published file that hands AI engines like Claude, ChatGPT, and Perplexity a clean map of the site and what the practice does."
   - label: FAQ schema (Question nodes)
     before: "0"
     after: "63"
+    note: "AI engines look for discrete question-and-answer pairs they can quote directly. Every FAQ on the new site is marked up so it can be lifted straight into an AI answer."
   - label: Pages with unique meta descriptions
     before: "Missing"
     after: "All 43"
+    note: "The one-line summary that shows under a result in Google. Not an AI-specific thing — just a search basic that most small-business websites are missing."
   - label: Fresh education content
     before: "2 posts (2016)"
     after: "8 posts + 15 deep pages"
+    note: "Traditional SEO and AI search both favor sites that publish fresh, useful content. A blog that's been silent since 2016 signals the opposite."
   - label: Local-SEO service-area cities
     before: "0"
     after: "20"
+    note: "Tells search and AI engines which Front Range cities the practice actually serves, so it can show up in searches beyond Boulder proper."
   - label: Largest page asset (logo)
     before: "2.0 MB"
     after: "20 KB"
+    note: "This one's pure speed: a 2 MB logo was slowing down every page. Same logo, 99% smaller, faster site — and speed matters to both visitors and search rankings."
   - label: Broken internal links
     before: "Unaudited"
     after: "0 of 42"
+    note: "Dead links frustrate visitors and waste a search engine's crawl. Every internal link on the new site was checked and works."
 
-challengeHeadline: "The problem: a site AI couldn't read"
+challengeHeadline: "The problem: nobody searches for \"Tissue Alchemy\""
 challengeBody:
-  - "Tissue Alchemy is a precision fascia-and-chronic-pain practice — exactly the kind of specialized expertise people now ask ChatGPT and Google's AI about. But the existing WordPress site gave AI engines almost nothing to work with: no schema markup, no llms.txt, missing meta descriptions, and thin pages with duplicated calls-to-action."
-  - "The sitemap was padded with demo, test, and duplicate pages (/test/, /demo-parallax-images/, /one-page/, two near-identical bio pages), and the blog had been dormant since 2016 — two posts, nearly a decade old. When an AI assistant looked for a fascia specialist in Boulder, there was nothing structured for it to cite."
+  - "People who need this work don't search the practice's name — they search for massage, physical therapy, or bodywork, or they ask something like \"what do I do if physical therapy isn't working?\" Those are the searches that bring in new clients, so the site had to show up for all of them, in both traditional search and AI search."
+  - "The old WordPress site couldn't. It gave search and AI engines almost nothing to work with: no schema markup, no llms.txt, missing meta descriptions, and thin pages with duplicated calls-to-action. The sitemap was padded with demo, test, and duplicate pages, and the blog had been dormant since 2016 — two posts, nearly a decade old. When someone asked an AI assistant about a fascia specialist in Boulder, there was nothing structured for it to cite."
 
 approachHeadline: "What we built"
 approach:
@@ -83,4 +91,4 @@ features:
   - "A Keystatic CMS so the practice can edit its own content — no developer needed"
   - "Accessibility and performance: reduced-motion support, alt text everywhere, a 99% smaller logo"
 
-methodologyNote: "These are approximate, rubric-based readiness scores — Averde's assessment of each site's public, on-page markup in June 2026, weighted across structured-data coverage, AI-crawlability (llms.txt and a clean sitemap), content depth, local-search signals, metadata, and page hygiene. They're rounded and carry a few points of judgment either way; they are not certified tool output. They deliberately exclude off-page factors — backlinks, domain authority, current Google rankings, and organic traffic — so the original site's roughly decade of domain history likely carries real search equity this on-page score doesn't credit. Measured performance (e.g. Lighthouse / Core Web Vitals) is also not yet folded in. 'Before' is the live WordPress site at tissuealchemy.com, assessed from its homepage and sitemap; 'after' is the rebuilt site."
+methodologyNote: "These are approximate, rubric-based readiness scores — Averde's assessment of each site's public, on-page markup in June 2026, weighted across structured-data coverage, AI-crawlability (llms.txt and a clean sitemap), content depth, local-search signals, metadata, and page hygiene. They're rounded and carry a few points of judgment either way; they are not certified tool output. They deliberately exclude off-page factors — backlinks, domain authority, current Google rankings, and organic traffic — so the original site's roughly decade of domain history likely carries real search equity this on-page score doesn't credit. Measured performance (e.g. Lighthouse / Core Web Vitals) is also not yet folded in. 'Before' is the previous WordPress site as it was live at tissuealchemy.com in June 2026, assessed from its homepage and sitemap; 'after' is the rebuilt site now live at the same domain."
