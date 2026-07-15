@@ -3,22 +3,24 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout
-  title="Free AI Readiness Audit | Personalized AI Plan in 3 Minutes"
-  description="Six questions, three minutes, one personalized AI Readiness Report. See your top three highest-impact AI opportunities — ranked by what'll move the needle for your business specifically."
+  title="Free AI Visibility Audit | Live Checks on Your Real Website"
+  description="We fetch your live website, check the 13 things AI engines actually read, and run a real AI-search query for your market. See exactly what passes, what fails, and how to fix each one — free, in about 3 minutes."
 >
 
   <!-- HERO -->
   <section class="bg-green-deep py-16 text-center">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
       <div class="inline-flex items-center gap-2 bg-sand/20 text-sand text-xs font-semibold px-3 py-1.5 rounded-full mb-5">
-        Free · Interactive · ~3 minutes · No credit card
+        Free · Live checks on your real site · ~3 minutes · No credit card
       </div>
       <h1 class="text-4xl md:text-5xl font-extrabold text-white-warm leading-tight mb-5">
-        Your AI Readiness Audit
+        Can AI find your business?
       </h1>
       <p class="text-cream/70 text-lg">
-        Answer six quick questions and you'll get a personalized AI Readiness Report — your top three
-        highest-impact opportunities, ranked, with timelines and rough investment for each.
+        This isn't a quiz with a made-up score. The audit fetches your live website, checks the
+        13 things AI engines actually read — schema markup, page structure, speed, crawl files —
+        and runs a real AI-search query for your market. You'll see exactly what passed, what
+        failed, and how to fix each one yourself.
       </p>
     </div>
   </section>
@@ -27,11 +29,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <section class="bg-cream pt-10 pb-16">
     <div class="max-w-5xl mx-auto px-4 sm:px-6">
       <iframe
+        id="audit-frame"
         src="/audit/index.html"
-        title="AI Readiness Audit"
-        style="width:100%; min-height:1100px; border:0; display:block; background:transparent;"
+        title="AI Visibility Audit"
+        style="width:100%; min-height:900px; border:0; display:block; background:transparent;"
         loading="lazy"
       ></iframe>
+      <script is:inline>
+        // The widget posts its height after each render — keep the iframe snug.
+        window.addEventListener('message', (e) => {
+          if (e.data && typeof e.data.auditHeight === 'number') {
+            document.getElementById('audit-frame').style.minHeight =
+              Math.max(600, e.data.auditHeight + 40) + 'px';
+          }
+        });
+      </script>
     </div>
   </section>
 
@@ -45,7 +57,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         </h2>
         <p class="text-muted text-lg max-w-2xl mx-auto">
           Pick a time below for a free 30-minute working session with me. I'll go through your
-          report, answer questions, and turn it into a concrete plan you can actually act on.
+          report, answer questions, and turn it into a concrete plan you can actually act on —
+          whether or not you hire me for any of it.
         </p>
       </div>
 

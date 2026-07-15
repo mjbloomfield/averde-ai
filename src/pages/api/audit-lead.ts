@@ -34,6 +34,7 @@ type SiteAuditFindings = {
   title?: string | null;
   description?: string | null;
   platform?: string | null;
+  hosting?: string | null;
   schema?: { present?: string[]; missing?: string[]; typesFound?: string[]; score?: number; max?: number };
   pagespeed?: { performance?: number | null; seo?: number | null; accessibility?: number | null; lcp?: number | null; cls?: number | null } | null;
   files?: { robots?: boolean; sitemap?: boolean };
@@ -52,8 +53,26 @@ type AiVisibilityResult = {
   }>;
 };
 
+type Check = {
+  id?: string;
+  name?: string;
+  status?: 'pass' | 'warn' | 'fail' | 'na';
+  points?: number;
+  max?: number;
+  evidence?: string;
+  fix?: string;
+};
+
+type PlanItem = {
+  title?: string;
+  why?: string;
+  diy?: string[];
+  shortcut?: string | null;
+};
+
 type AuditPayload = {
   name?: string;
+  contactName?: string;
   email?: string;
   website?: string;
   industry?: string;
@@ -63,7 +82,9 @@ type AuditPayload = {
   tools?: ToolsMap; // legacy
   pains?: string[];
   goal?: string;
-  scores?: Scores;
+  scores?: Scores & { earned?: number; possible?: number };
+  checks?: Check[];
+  actionPlan?: PlanItem[];
   opportunities?: Opportunity[];
   siteAudit?: SiteAuditFindings | null;
   aiVisibility?: AiVisibilityResult | null;
@@ -111,11 +132,14 @@ export const POST: APIRoute = async ({ request }) => {
           city: payload.city || null,
           keywords: payload.keywords || null,
           goal: payload.goal || null,
-          // New shape — stack object goes into tools column as-is (jsonb)
-          tools: payload.stack ?? payload.tools ?? {},
+          // New shape — stack object goes into tools column as-is (jsonb).
+          // The revamped widget no longer asks about tools; the column now
+          // carries the contact name so no migration is needed.
+          tools: payload.stack ?? payload.tools ?? (payload.contactName ? { contactName: payload.contactName } : {}),
           pains: payload.pains ?? [],
-          scores: payload.scores ?? {},
-          opportunities: payload.opportunities ?? [],
+          // Checklist results ride inside the scores jsonb — no migration needed.
+          scores: { ...(payload.scores ?? {}), checks: payload.checks ?? undefined },
+          opportunities: payload.actionPlan ?? payload.opportunities ?? [],
           site_audit: payload.siteAudit ?? null,
           ai_visibility: payload.aiVisibility ?? null,
           user_agent: request.headers.get('user-agent'),
@@ -144,9 +168,9 @@ export const POST: APIRoute = async ({ request }) => {
 
   if (resendKey) {
     const { html, text, subject } = renderEmail({ payload, name, email, industry, leadId, dbStatus });
+    const resend = new Resend(resendKey);
 
     try {
-      const resend = new Resend(resendKey);
       const { error } = await resend.emails.send({
         from: 'Averde AI Audit <mark@averde.ai>',
         to: ['mark@averde.ai'],
@@ -165,6 +189,22 @@ export const POST: APIRoute = async ({ request }) => {
     } catch (err) {
       emailStatus = 'failed';
       emailError = err instanceof Error ? err.message : 'unknown';
+    }
+
+    // The user's copy of their report — the audit UI promises this.
+    // Best-effort: a failure here shouldn't fail the lead capture.
+    try {
+      const user = renderUserReportEmail(payload);
+      await resend.emails.send({
+        from: 'Mark Bloomfield <mark@averde.ai>',
+        to: [email],
+        replyTo: 'mark@averde.ai',
+        subject: user.subject,
+        html: user.html,
+        text: user.text,
+      });
+    } catch (err) {
+      console.error('user report email failed:', err);
     }
   }
 
@@ -227,6 +267,13 @@ function renderEmail(args: {
   const s = payload.scores || {};
   const ops = (payload.opportunities || []).slice(0, 3);
   const subject = `Averde AI Audit Lead: ${name || 'Anonymous'} (${industry || 'unknown'})`;
+  const checksSummary = payload.checks?.length
+    ? {
+        pass: payload.checks.filter(c => c.status === 'pass').length,
+        warn: payload.checks.filter(c => c.status === 'warn').length,
+        fail: payload.checks.filter(c => c.status === 'fail').length,
+      }
+    : null;
 
   // Stack rows — supports new shape (payload.stack) and legacy (payload.tools map).
   type StackRow = { label: string; value: string };
@@ -261,6 +308,7 @@ function renderEmail(args: {
         '',
         'Site analysis:',
         sa.platform ? `  Platform: ${sa.platform}` : '',
+        sa.hosting ? `  Hosting: ${sa.hosting}` : '',
         `  Schema markup: ${sa.schema?.present?.length ?? 0} of ${sa.schema?.max ?? '?'} expected types`,
         sa.schema?.present?.length ? `    Found: ${sa.schema.present.join(', ')}` : '',
         sa.schema?.missing?.length ? `    Missing: ${sa.schema.missing.join(', ')}` : '',
@@ -382,6 +430,7 @@ function renderEmail(args: {
                 <td style="padding:10px 14px;color:${c.ink};">${sa.schema?.present?.length ?? 0} of ${sa.schema?.max ?? '?'} expected${sa.schema?.present?.length ? `<br><span style="color:${c.muted};font-size:12px;">Found: ${esc(sa.schema!.present!.join(', '))}</span>` : ''}${sa.schema?.missing?.length ? `<br><span style="color:#B45309;font-size:12px;">Missing: ${esc(sa.schema!.missing!.join(', '))}</span>` : ''}</td>
               </tr>
               ${sa.platform ? `<tr><td style="padding:10px 14px;color:${c.muted};vertical-align:top;">Platform</td><td style="padding:10px 14px;color:${c.ink};">${esc(sa.platform)}</td></tr>` : ''}
+              ${sa.hosting ? `<tr><td style="padding:10px 14px;color:${c.muted};vertical-align:top;">Hosting</td><td style="padding:10px 14px;color:${c.ink};">${esc(sa.hosting)}</td></tr>` : ''}
               ${sa.pagespeed?.performance != null ? `<tr><td style="padding:10px 14px;color:${c.muted};vertical-align:top;">Mobile perf</td><td style="padding:10px 14px;color:${c.ink};">${sa.pagespeed.performance}/100</td></tr>` : ''}
               ${sa.pagespeed?.seo != null ? `<tr><td style="padding:10px 14px;color:${c.muted};vertical-align:top;">SEO basics</td><td style="padding:10px 14px;color:${c.ink};">${sa.pagespeed.seo}/100</td></tr>` : ''}
               <tr><td style="padding:10px 14px;color:${c.muted};vertical-align:top;">Discoverability</td><td style="padding:10px 14px;color:${c.ink};">${sa.files?.robots ? '✓ robots.txt' : '✗ no robots.txt'} &nbsp;·&nbsp; ${sa.files?.sitemap ? '✓ sitemap.xml' : '✗ no sitemap.xml'}</td></tr>
@@ -426,6 +475,7 @@ function renderEmail(args: {
         <!-- Identity -->
         <tr><td style="padding:20px 28px 8px;">
           <table role="presentation" cellpadding="0" cellspacing="0" style="font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;">
+            ${identityRow('Contact', payload.contactName)}
             ${identityRow('Email', email)}
             ${identityRow('Website', payload.website)}
             ${identityRow('Keywords', payload.keywords)}
@@ -459,9 +509,13 @@ function renderEmail(args: {
         <tr><td style="padding:12px 28px 16px;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="6">
             <tr>
-              ${scoreCard('AI Search Vis.', s.visibility)}
-              ${scoreCard('Stack Maturity', s.stack)}
-              ${scoreCard('Opportunity', s.opportunity)}
+              ${checksSummary
+                ? scoreCard('Checks passed', checksSummary.pass) +
+                  scoreCard('Partial', checksSummary.warn) +
+                  scoreCard('Failed', checksSummary.fail)
+                : scoreCard('AI Search Vis.', s.visibility) +
+                  scoreCard('Stack Maturity', s.stack) +
+                  scoreCard('Opportunity', s.opportunity)}
             </tr>
           </table>
         </td></tr>
@@ -486,6 +540,140 @@ function renderEmail(args: {
         <!-- Footer / lead id -->
         <tr><td style="padding:12px 28px 24px;font:400 11px/1.5 'Helvetica Neue',Arial,sans-serif;color:${c.muted};border-top:1px solid ${c.border};">
           ${leadId ? `Supabase row: <code style="font:400 11px/1 ui-monospace,Menlo,monospace;color:${c.ink};">${esc(leadId)}</code>` : `Supabase: ${esc(dbStatus)}`}
+        </td></tr>
+
+      </table>
+    </td></tr>
+  </table>
+</body></html>`;
+
+  return { html, text: textLines, subject };
+}
+
+// ── User-facing report email ─────────────────────────────────────
+// A durable copy of what they saw on screen: score, check results,
+// action plan, and the booking link. Plain, warm, no tricks.
+function renderUserReportEmail(payload: AuditPayload): { html: string; text: string; subject: string } {
+  const s = payload.scores || {};
+  const checks = payload.checks || [];
+  const plan = payload.actionPlan || [];
+  const firstName = (payload.contactName || '').trim().split(/\s+/)[0] || '';
+  const business = payload.name || 'your business';
+  const subject = `Your AI Visibility Report — ${business}`;
+  const bookUrl = 'https://averde.ai/ai-audit#book';
+
+  const statusWord: Record<string, string> = { pass: 'PASS', warn: 'PARTIAL', fail: 'FIX', na: 'n/a' };
+  const statusColor: Record<string, string> = { pass: '#3a6f4d', warn: '#9C6A33', fail: '#A04324', na: '#B7A990' };
+
+  const textLines = [
+    `Hi${firstName ? ' ' + firstName : ''},`,
+    '',
+    `Here's your AI Visibility Report for ${business}.`,
+    '',
+    s.overall != null
+      ? `Score: ${s.overall}/100 (Grade ${s.grade ?? '?'}) — ${s.earned ?? '?'} of ${s.possible ?? '?'} points across automated checks of your live site and AI-search presence.`
+      : 'We couldn\'t run automated site checks (no website provided), so the plan below is based on what you told us.',
+    '',
+    checks.length ? 'Check results:' : '',
+    ...checks.filter(c => c.status !== 'na').map(c => `  [${statusWord[c.status || 'na']}] ${c.name} — ${c.points ?? 0}/${c.max ?? 0} pts`),
+    '',
+    'Your action plan:',
+    ...plan.map((p, i) => [
+      `  ${i + 1}. ${p.title}`,
+      ...(p.diy || []).map(d => `     - ${d}`),
+    ].join('\n')),
+    '',
+    `Want to walk through it together? Book a free 30-minute review call: ${bookUrl}`,
+    '',
+    'No pressure either way — everything above is yours to act on.',
+    '',
+    '— Mark Bloomfield',
+    'Averde AI · Boulder, CO · averde.ai',
+  ].filter(l => l !== '').join('\n');
+
+  const checkRow = (c: Check) => `
+    <tr>
+      <td style="padding:7px 10px 7px 0;white-space:nowrap;vertical-align:top;">
+        <span style="display:inline-block;font:700 10px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.08em;color:#fff;background:${statusColor[c.status || 'na']};border-radius:99px;padding:4px 8px;">${statusWord[c.status || 'na']}</span>
+      </td>
+      <td style="padding:7px 0;font:400 14px/1.4 'Helvetica Neue',Arial,sans-serif;color:#1F2937;">${esc(c.name)}
+        ${c.status !== 'pass' && c.fix ? `<div style="font:400 12px/1.5 'Helvetica Neue',Arial,sans-serif;color:#6B7280;margin-top:2px;">${esc(c.fix)}</div>` : ''}
+      </td>
+      <td style="padding:7px 0 7px 10px;font:600 12px/1 'Helvetica Neue',Arial,sans-serif;color:#6B7280;white-space:nowrap;text-align:right;vertical-align:top;">${c.status === 'na' ? '' : `${c.points ?? 0}/${c.max ?? 0}`}</td>
+    </tr>`;
+
+  const planCard = (p: PlanItem, i: number) => `
+    <tr><td style="padding:0 0 12px 0;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #E5E7EB;border-radius:10px;">
+        <tr><td style="padding:16px 20px;">
+          <div style="font:600 10px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#C99356;margin-bottom:4px;">Priority ${i + 1}</div>
+          <div style="font:600 16px/1.3 'Helvetica Neue',Arial,sans-serif;color:#1F2937;margin-bottom:6px;">${esc(p.title)}</div>
+          ${p.why ? `<div style="font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;color:#6B7280;margin-bottom:10px;">${esc(p.why)}</div>` : ''}
+          ${(p.diy && p.diy.length) ? `<div style="background:#F4F1EA;border-radius:8px;padding:10px 14px;font:400 13px/1.6 'Helvetica Neue',Arial,sans-serif;color:#1F2937;">${p.diy.map(d => `• ${esc(d)}`).join('<br/>')}</div>` : ''}
+        </td></tr>
+      </table>
+    </td></tr>`;
+
+  const gradeBg = gradeColor(s.grade);
+
+  const html = `<!DOCTYPE html>
+<html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>${esc(subject)}</title></head>
+<body style="margin:0;padding:0;background:#F4F1EA;font:400 14px/1.5 'Helvetica Neue',Arial,sans-serif;color:#1F2937;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F4F1EA;padding:24px 12px;">
+    <tr><td align="center">
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:#FFFFFF;border-radius:12px;overflow:hidden;">
+
+        <tr><td style="padding:26px 28px 18px;background:#2A1B11;color:#F4ECDB;">
+          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#C99356;margin-bottom:8px;">Your AI Visibility Report</div>
+          <div style="font:600 22px/1.25 'Helvetica Neue',Arial,sans-serif;">${esc(business)}</div>
+          ${payload.city || payload.industry ? `<div style="font:400 14px/1.4 'Helvetica Neue',Arial,sans-serif;color:#D1D5DB;margin-top:4px;">${esc(payload.industry || '')}${payload.city ? ' · ' + esc(payload.city) : ''}</div>` : ''}
+        </td></tr>
+
+        <tr><td style="padding:22px 28px 6px;font:400 14px/1.6 'Helvetica Neue',Arial,sans-serif;color:#1F2937;">
+          Hi${firstName ? ' ' + esc(firstName) : ''} — here's the report you just ran, in full, so you can keep it and act on it. Everything below came from live checks of your actual website and real AI-search queries.
+        </td></tr>
+
+        ${s.overall != null ? `
+        <tr><td style="padding:14px 28px 4px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${gradeBg};border-radius:10px;">
+            <tr>
+              <td style="padding:16px 22px;color:#fff;">
+                <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;opacity:.85;">AI Visibility Score</div>
+                <div style="font:700 30px/1.1 'Helvetica Neue',Arial,sans-serif;margin-top:6px;">Grade ${esc(s.grade ?? '?')}</div>
+              </td>
+              <td style="padding:16px 22px;color:#fff;text-align:right;font:700 34px/1 'Helvetica Neue',Arial,sans-serif;">${esc(s.overall)}<span style="font-weight:400;font-size:17px;opacity:.7;">/100</span></td>
+            </tr>
+          </table>
+          <div style="font:400 11px/1.5 'Helvetica Neue',Arial,sans-serif;color:#6B7280;margin-top:6px;">${esc(String(s.earned ?? '?'))} of ${esc(String(s.possible ?? '?'))} points across automated checks — nothing self-reported is scored.</div>
+        </td></tr>` : ''}
+
+        ${checks.filter(c => c.status !== 'na').length ? `
+        <tr><td style="padding:16px 28px 4px;">
+          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#6B7280;margin-bottom:8px;">Check results</div>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+            ${checks.filter(c => c.status !== 'na').map(checkRow).join('')}
+          </table>
+        </td></tr>` : ''}
+
+        ${plan.length ? `
+        <tr><td style="padding:18px 28px 8px;">
+          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#6B7280;margin-bottom:10px;">Your action plan — in this order</div>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+            ${plan.map(planCard).join('')}
+          </table>
+        </td></tr>` : ''}
+
+        <tr><td style="padding:10px 28px 26px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F4F1EA;border-radius:10px;">
+            <tr><td style="padding:18px 20px;">
+              <div style="font:600 15px/1.4 'Helvetica Neue',Arial,sans-serif;color:#1F2937;margin-bottom:6px;">Want a second pair of eyes on this?</div>
+              <div style="font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;color:#6B7280;margin-bottom:14px;">Book a free 30-minute review call — we'll walk through your report and pick the right first move. No pressure either way; everything above is yours to act on.</div>
+              <a href="${bookUrl}" style="display:inline-block;background:#2A1B11;color:#F4ECDB;font:600 14px/1 'Helvetica Neue',Arial,sans-serif;padding:12px 22px;border-radius:8px;text-decoration:none;">Book your free review call</a>
+            </td></tr>
+          </table>
+          <div style="font:400 12px/1.6 'Helvetica Neue',Arial,sans-serif;color:#6B7280;margin-top:18px;">
+            — Mark Bloomfield<br/>Averde AI · Boulder, CO · <a href="https://averde.ai" style="color:#9C6A33;">averde.ai</a>
+          </div>
         </td></tr>
 
       </table>

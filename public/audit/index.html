@@ -3,11 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>AI Readiness Audit | Averde AI</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<title>AI Visibility Audit | Averde AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;500;600&family=Source+Serif+4:wght@400;500;600&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -16,49 +12,142 @@
     --bone:#E5DBC9; --driftwood:#B7A990; --smoke:#7B6E5B;
     --paper:#F4ECDB; --ink:#1F1A12; --ink-700:#48392A; --muted:#7A6A58;
     --aged-cream:#EDE3D0;
-    --blue-200:#9CB6BD; --blue-400:#6E8E97; --blue-600:#4B6770;
     --rust:#A86237;
+    --pass:#3a6f4d; --warn:#9C6A33; --fail:#A04324;
   }
-  html, body { background:var(--paper); color:var(--ink); font-family:'Source Serif 4',Georgia,serif; }
-  h1,h2,h3,h4 { font-family:'Fraunces',Georgia,serif; letter-spacing:-0.02em; line-height:1.15; font-weight:500; }
-  .brand-btn { background:var(--walnut-700); color:var(--paper); transition:all 0.18s; font-family:'Inter Tight',sans-serif; font-weight:600; letter-spacing:0.01em; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background:var(--paper); color:var(--ink); font-family:'Source Serif 4',Georgia,serif; font-size:16px; line-height:1.55; }
+  h1,h2,h3,h4 { font-family:'Fraunces',Georgia,serif; letter-spacing:-0.02em; line-height:1.15; font-weight:500; margin:0; }
+  p { margin:0; }
+  .shell { min-height:100vh; padding:40px 16px 64px; }
+  .shell-inner { max-width:680px; margin:0 auto; }
+  .shell-inner.wide { max-width:880px; }
+  .wordmark { text-align:center; margin-bottom:32px; font-family:'Fraunces',serif; font-size:24px; color:var(--walnut-700); font-weight:500; letter-spacing:-0.02em; }
+  .wordmark span { color:var(--honey-500); }
+  .card { background:#fff; border:1px solid var(--bone); border-radius:24px; padding:32px; }
+  @media (min-width:640px){ .card { padding:48px; } }
+  .fade-in { animation: fadeIn 0.35s ease both; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(6px);} to { opacity:1; transform:translateY(0);} }
+
+  .eyebrow { font-family:'Inter Tight',sans-serif; font-size:11px; font-weight:600; color:var(--honey-500); text-transform:uppercase; letter-spacing:0.14em; margin-bottom:12px; }
+  .label { font-family:'Inter Tight',sans-serif; font-size:13px; font-weight:600; color:var(--ink-700); text-transform:uppercase; letter-spacing:0.08em; display:block; margin-bottom:8px; }
+  .hint { font-size:14px; color:var(--smoke); margin-top:8px; }
+  .dek { color:var(--muted); font-size:18px; margin:12px 0 32px; }
+
+  .brand-btn { background:var(--walnut-700); color:var(--paper); border:0; border-radius:12px; padding:14px 28px; font-family:'Inter Tight',sans-serif; font-weight:600; font-size:14px; letter-spacing:0.01em; cursor:pointer; transition:background 0.18s; }
   .brand-btn:hover { background:var(--walnut-500); }
   .brand-btn:disabled { opacity:0.4; cursor:not-allowed; }
-  .ghost-btn { color:var(--ink-700); transition:all 0.18s; font-family:'Inter Tight',sans-serif; font-weight:500; }
+  .ghost-btn { background:none; border:0; color:var(--ink-700); font-family:'Inter Tight',sans-serif; font-weight:500; font-size:14px; cursor:pointer; padding:8px 0; }
   .ghost-btn:hover { color:var(--walnut-700); }
-  .card { background:#fff; border:1px solid var(--bone); }
+  .step-footer { display:flex; align-items:center; justify-content:space-between; padding-top:24px; margin-top:32px; border-top:1px solid var(--bone); }
+
   .input { background:#fff; border:1.5px solid var(--driftwood); border-radius:10px; padding:13px 16px; width:100%; font-family:'Source Serif 4',serif; font-size:16px; color:var(--ink); transition:border 0.15s; }
   .input:focus { outline:none; border-color:var(--honey-300); }
-  .chip { background:#fff; border:1.5px solid var(--driftwood); border-radius:999px; padding:9px 16px; cursor:pointer; transition:all 0.15s; font-size:14px; font-family:'Inter Tight',sans-serif; font-weight:500; color:var(--ink-700); display:inline-block; user-select:none; }
-  .chip:hover { border-color:var(--honey-300); color:var(--ink); }
-  .chip.selected { background:var(--walnut-700); color:var(--paper); border-color:var(--walnut-700); }
+  textarea.input { resize:vertical; }
+  select.input { appearance:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%237B6E5B' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>"); background-repeat:no-repeat; background-position:right 16px center; padding-right:40px; }
+  .field-grid { display:grid; grid-template-columns:1fr; gap:20px; }
+  @media (min-width:640px){ .field-grid { grid-template-columns:1fr 1fr; } }
+
+  .progress-wrap { margin-bottom:32px; }
+  .progress-labels { display:flex; justify-content:space-between; margin-bottom:8px; }
+  .progress-labels span { font-family:'Inter Tight',sans-serif; font-size:13px; font-weight:600; color:var(--ink-700); text-transform:uppercase; letter-spacing:0.08em; }
   .progress { background:var(--bone); height:4px; border-radius:99px; overflow:hidden; }
   .progress-bar { background:var(--honey-300); height:100%; transition:width 0.4s ease; }
-  .label { font-family:'Inter Tight',sans-serif; font-size:13px; font-weight:600; color:var(--ink-700); text-transform:uppercase; letter-spacing:0.08em; }
-  .eyebrow { font-family:'Inter Tight',sans-serif; font-size:11px; font-weight:600; color:var(--honey-500); text-transform:uppercase; letter-spacing:0.14em; }
-  .grade-A { color:#3a6f4d; } .grade-B { color:#5b7a5e; }
-  .grade-C { color:var(--honey-500); } .grade-D { color:var(--rust); } .grade-F { color:#7c2d12; }
+
   .check-row { display:flex; align-items:flex-start; gap:12px; padding:14px 16px; border:1.5px solid var(--bone); border-radius:12px; cursor:pointer; transition:all 0.15s; background:#fff; }
   .check-row:hover { border-color:var(--honey-300); }
   .check-row.selected { border-color:var(--walnut-700); background:var(--aged-cream); }
   .check-box { flex-shrink:0; width:20px; height:20px; border:1.5px solid var(--driftwood); border-radius:5px; margin-top:2px; display:flex; align-items:center; justify-content:center; }
   .check-row.selected .check-box { background:var(--walnut-700); border-color:var(--walnut-700); }
-  .radio-row { display:flex; align-items:center; gap:12px; padding:14px 16px; border:1.5px solid var(--bone); border-radius:12px; cursor:pointer; transition:all 0.15s; background:#fff; }
-  .radio-row:hover { border-color:var(--honey-300); }
-  .radio-row.selected { border-color:var(--walnut-700); background:var(--aged-cream); }
-  .radio-dot { flex-shrink:0; width:18px; height:18px; border:1.5px solid var(--driftwood); border-radius:999px; display:flex; align-items:center; justify-content:center; }
-  .radio-row.selected .radio-dot { border-color:var(--walnut-700); }
-  .radio-row.selected .radio-dot::after { content:''; width:9px; height:9px; border-radius:999px; background:var(--walnut-700); }
-  select.input { appearance:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%237B6E5B' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>"); background-repeat:no-repeat; background-position:right 16px center; padding-right:40px; }
-  .score-ring { stroke-linecap:round; transform:rotate(-90deg); transform-origin:center; }
-  .fade-in { animation: fadeIn 0.35s ease both; }
-  @keyframes fadeIn { from { opacity:0; transform:translateY(6px);} to { opacity:1; transform:translateY(0);} }
+  .pains-grid { display:grid; grid-template-columns:1fr; gap:12px; }
+  @media (min-width:640px){ .pains-grid { grid-template-columns:1fr 1fr; } }
+
+  /* Report styles */
+  .report-head { text-align:center; margin-bottom:40px; }
+  .report-head h1 { font-size:clamp(2rem,5vw,3rem); margin:8px 0; }
+  .report-sub { color:var(--muted); font-size:18px; }
+
+  .score-panel { background:#fff; border:1px solid var(--bone); border-radius:24px; padding:32px; display:flex; flex-direction:column; gap:24px; align-items:center; margin-bottom:24px; }
+  @media (min-width:640px){ .score-panel { flex-direction:row; padding:40px; } }
+  .score-ring-wrap { position:relative; width:140px; height:140px; flex-shrink:0; }
+  .score-ring-wrap svg circle.arc { stroke-linecap:round; transform:rotate(-90deg); transform-origin:center; transition:stroke-dashoffset 0.8s ease; }
+  .score-ring-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .score-ring-num { font-family:'Fraunces',serif; font-size:36px; font-weight:500; }
+  .score-ring-grade { font-family:'Inter Tight',sans-serif; font-size:12px; font-weight:600; }
+  .score-copy h2 { font-size:26px; margin-bottom:10px; }
+  .score-copy p { color:var(--muted); }
+  .score-basis { font-family:'Inter Tight',sans-serif; font-size:12px; color:var(--smoke); margin-top:10px; }
+
+  .section-block { background:#fff; border:1px solid var(--bone); border-radius:20px; padding:28px; margin-bottom:24px; }
+  @media (min-width:640px){ .section-block { padding:32px; } }
+  .section-block h3 { font-size:22px; margin-bottom:6px; }
+  .section-block > .section-dek { color:var(--muted); font-size:15px; margin-bottom:20px; }
+
+  .checks-table { display:flex; flex-direction:column; }
+  .check-item { border-top:1px solid var(--bone); }
+  .check-item:first-child { border-top:0; }
+  .check-item summary { list-style:none; display:flex; align-items:center; gap:12px; padding:13px 4px; cursor:pointer; }
+  .check-item summary::-webkit-details-marker { display:none; }
+  .check-status { flex-shrink:0; width:22px; height:22px; border-radius:999px; display:flex; align-items:center; justify-content:center; font-size:12px; color:#fff; font-family:'Inter Tight',sans-serif; font-weight:700; }
+  .check-status.pass { background:var(--pass); } .check-status.warn { background:var(--warn); }
+  .check-status.fail { background:var(--fail); } .check-status.na { background:var(--driftwood); }
+  .check-name { flex:1; font-size:15px; color:var(--ink); }
+  .check-pts { font-family:'Inter Tight',sans-serif; font-size:12px; font-weight:600; color:var(--smoke); white-space:nowrap; }
+  .check-chevron { color:var(--driftwood); transition:transform 0.15s; font-size:12px; }
+  .check-item[open] .check-chevron { transform:rotate(180deg); }
+  .check-detail { padding:2px 4px 16px 34px; font-size:14px; color:var(--ink-700); }
+  .check-detail .why { margin-bottom:8px; }
+  .check-detail .fix { background:var(--aged-cream); border-radius:8px; padding:10px 14px; }
+  .check-detail .fix strong { font-family:'Inter Tight',sans-serif; font-size:11px; text-transform:uppercase; letter-spacing:0.1em; color:var(--honey-500); display:block; margin-bottom:4px; }
+
+  .vis-results { display:flex; flex-direction:column; gap:8px; margin:16px 0; }
+  .vis-hit { border-radius:10px; padding:10px 14px; background:var(--aged-cream); }
+  .vis-hit.you { background:rgba(58,111,77,.12); border:1px solid rgba(58,111,77,.4); }
+  .vis-hit .t { font-family:'Inter Tight',sans-serif; font-size:14px; font-weight:600; color:var(--ink); }
+  .vis-hit .h { font-size:12px; color:var(--smoke); margin-top:2px; }
+  .vis-badge { display:inline-block; font-family:'Inter Tight',sans-serif; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; padding:5px 12px; border-radius:999px; margin-bottom:12px; }
+  .vis-badge.good { background:rgba(58,111,77,.12); color:var(--pass); }
+  .vis-badge.bad  { background:rgba(160,67,36,.12); color:var(--fail); }
+
+  .plan-list { display:flex; flex-direction:column; gap:16px; }
+  .plan-item { border:1px solid var(--bone); border-radius:16px; padding:22px; background:#fff; }
+  .plan-num { font-family:'Fraunces',serif; font-size:26px; color:var(--driftwood); }
+  .plan-item h4 { font-size:19px; margin:6px 0 8px; }
+  .plan-item .why { font-size:14.5px; color:var(--ink-700); margin-bottom:14px; }
+  .plan-diy { background:var(--aged-cream); border-radius:10px; padding:14px 16px; font-size:14px; color:var(--ink-700); }
+  .plan-diy strong, .plan-short strong { font-family:'Inter Tight',sans-serif; font-size:11px; text-transform:uppercase; letter-spacing:0.1em; color:var(--honey-500); display:block; margin-bottom:6px; }
+  .plan-diy ul { margin:0; padding-left:18px; } .plan-diy li { margin-bottom:4px; }
+  .plan-short { margin-top:10px; font-size:14px; color:var(--ink-700); padding:0 16px; }
+
+  .cta-panel { background:var(--walnut-700); color:var(--paper); border-radius:24px; padding:40px 28px; text-align:center; margin-top:32px; }
+  .cta-panel h2 { color:var(--paper); font-size:clamp(1.6rem,3.5vw,2.2rem); margin-bottom:12px; }
+  .cta-panel p { color:var(--bone); max-width:520px; margin:0 auto 24px; }
+  .cta-btn { display:inline-block; background:var(--honey-300); color:var(--walnut-700); font-family:'Inter Tight',sans-serif; font-weight:600; font-size:15px; padding:15px 30px; border-radius:12px; text-decoration:none; }
+  .cta-note { font-size:13px; color:var(--driftwood); margin-top:16px; }
+
+  .pending { display:flex; align-items:center; gap:10px; color:var(--muted); font-size:14px; padding:14px 0; }
+  .spinner { width:16px; height:16px; border:2px solid var(--bone); border-top-color:var(--honey-500); border-radius:999px; animation:spin 0.8s linear infinite; flex-shrink:0; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .restart { text-align:center; margin-top:28px; }
 </style>
 </head>
-<body class="min-h-screen">
-<div id="root"></div>
-<script type="text/babel">
-const { useState, useMemo, useEffect } = React;
+<body>
+<div class="shell"><div class="shell-inner" id="shell">
+  <div class="wordmark">Averde<span>.</span></div>
+  <div id="root"></div>
+</div></div>
+
+<script>
+(function () {
+'use strict';
+
+/* ================================================================
+   AI Visibility Audit — honest version.
+   Everything scored comes from a verifiable check: we fetch the
+   user's live site (/api/site-audit) and run real AI-search queries
+   (/api/ai-visibility). Self-reported answers only shape the action
+   plan — they never move the score.
+================================================================ */
 
 const INDUSTRIES = [
   'Dental practice','HVAC / Heating & Cooling','Real estate brokerage',
@@ -69,805 +158,743 @@ const INDUSTRIES = [
   'E-commerce / DTC brand','Other'
 ];
 
-// Productivity foundation — single radio choice. Most signal in one question.
-const PRODUCTIVITY_OPTIONS = [
-  { value: 'google',    label: 'Google Workspace',     hint: 'Gmail, Drive, Docs, Sheets' },
-  { value: 'microsoft', label: 'Microsoft 365',        hint: 'Outlook, OneDrive, Word, Excel' },
-  { value: 'mixed',     label: 'Mix of both',          hint: 'Some Google, some Microsoft' },
-  { value: 'other',     label: 'Neither / something else' },
-];
-
 const PAIN_POINTS = [
+  { id:'visibility', label:"Competitors show up online when we don't" },
   { id:'calls',      label:'Phone calls going unanswered' },
   { id:'leads',      label:'Lead follow-up dropping through the cracks' },
   { id:'data',       label:'Manual data entry between systems' },
   { id:'questions',  label:'Same customer questions answered over and over' },
-  { id:'quotes',     label:'Quoting / proposal generation takes too long' },
+  { id:'quotes',     label:'Quoting / proposal writing takes too long' },
   { id:'scheduling', label:'Scheduling complexity, no-shows, or double-bookings' },
-  { id:'content',    label:'Content & marketing creation eats time' },
-  { id:'reporting',  label:'No clear visibility into what\'s actually working' },
-  { id:'hiring',     label:'Hiring or training overhead is a drag on growth' },
-  { id:'visibility', label:'Competitors show up online when we don\'t' },
+  { id:'content',    label:'Content & marketing creation eats my time' },
+  { id:'reporting',  label:"No clear visibility into what's actually working" },
 ];
 
 const GOALS = [
   'Get more qualified leads',
   'Free up my time / reduce admin',
   'Win more deals from existing leads',
-  'Cut software or staff costs',
-  'Add new revenue streams',
   'Just understand what AI can actually do for us',
 ];
 
-const HIGH_VISIBILITY_INDUSTRIES = [
-  'Dental practice','HVAC / Heating & Cooling','Real estate brokerage','Law firm',
-  'Med spa / Aesthetic medicine','Home services (plumbing, roofing, landscaping)',
-  'Auto repair / Body shop','Veterinary clinic','Accounting / Financial advisor',
-  'Construction / Contractor','Restaurant / Hospitality','Fitness / Gym'
-];
+// ---------------- state ----------------
+const state = {
+  step: 0,
+  name: '', website: '', industry: '', city: '',
+  keywords: '',
+  pains: [], goal: '',
+  contactName: '', email: '',
+  siteAudit: null,     // null = not fetched yet; {pending:true} = in flight
+  aiVisibility: null,
+  checksFired: false,
+  sendStatus: 'idle',  // idle | sending | sent | failed
+};
 
-// ---------- Scoring ----------
-// stack data shape: { productivity: 'google'|'microsoft'|'mixed'|'other'|'', otherTools: '', customTools: '' }
-function countOtherTools(s) {
-  if (!s) return 0;
-  return s.split(/[,\n]/).map(x => x.trim()).filter(Boolean).length;
-}
+const TOTAL_STEPS = 4; // basics, keywords, pains, email
 
-function compute(data) {
-  const stack = data.stack || {};
-  const siteAudit = data.siteAudit || null;
-  const aiVis = data.aiVisibility || null;
+// ---------------- real-signal fetches ----------------
+function fireChecks() {
+  if (state.checksFired) return;
+  state.checksFired = true;
 
-  // ── Visibility (35%) — now grounded in real signals when available ──
-  let visibility = 55;
-  if (data.website && data.website.length > 4) visibility += 5;
-  if (data.keywords && data.keywords.trim().split(/[,\n]/).filter(Boolean).length >= 2) visibility += 5;
-  // Soft penalty for high-visibility-need industries (kept as a small thumbtack)
-  if (HIGH_VISIBILITY_INDUSTRIES.includes(data.industry)) visibility -= 10;
-  if (data.pains.includes('visibility')) visibility -= 6;
-
-  // Real signal: schema markup present on their site
-  if (siteAudit && siteAudit.reachable) {
-    const schemaPresent = siteAudit.schema?.present?.length || 0;
-    const schemaMax = siteAudit.schema?.max || 6;
-    visibility += Math.round((schemaPresent / schemaMax) * 22) - 4;
-    if (siteAudit.files?.sitemap) visibility += 3;
-    if (siteAudit.pagespeed?.seo) {
-      // pull the SEO score toward our visibility number
-      visibility = Math.round(visibility * 0.65 + siteAudit.pagespeed.seo * 0.35);
-    }
-  }
-  // Real signal: did they appear in Perplexity citations?
-  if (aiVis && aiVis.configured) {
-    if (aiVis.appeared) visibility += 18;
-    else visibility -= 14;
-  }
-  visibility = Math.max(8, Math.min(96, visibility));
-
-  // ── Stack (30%) — much simpler signal model now ──
-  let stackScore = 35;
-  if (stack.productivity === 'google' || stack.productivity === 'microsoft') stackScore += 12;
-  else if (stack.productivity === 'mixed') stackScore += 6;
-  // Free-text tool count is a real signal — more tools = more stack to leverage
-  const otherCount = countOtherTools(stack.otherTools);
-  stackScore += Math.min(otherCount, 6) * 5;
-  const customCount = countOtherTools(stack.customTools);
-  if (customCount > 0) stackScore += 8; // having any custom tooling implies maturity
-  if (data.pains.includes('data')) stackScore -= 8;
-  // Real signal: detected platform tells us something
-  if (siteAudit?.platform) {
-    if (/wordpress|wix|squarespace|godaddy|duda/i.test(siteAudit.platform)) stackScore -= 4;
-    if (/next\.js|astro|custom|webflow/i.test(siteAudit.platform)) stackScore += 4;
-  }
-  stackScore = Math.max(15, Math.min(94, stackScore));
-
-  // ── Opportunity density (35%) — more pains = bigger ROI surface ──
-  let opportunity = 28 + data.pains.length * 8;
-  opportunity = Math.max(22, Math.min(96, opportunity));
-
-  const overall = Math.round(visibility * 0.35 + stackScore * 0.30 + opportunity * 0.35);
-  const grade = overall >= 82 ? 'A' : overall >= 70 ? 'B' : overall >= 55 ? 'C' : overall >= 40 ? 'D' : 'F';
-
-  return {
-    overall,
-    grade,
-    visibility: Math.round(visibility),
-    stack: Math.round(stackScore),
-    opportunity: Math.round(opportunity),
-  };
-}
-
-function buildOpportunities(data, scores) {
-  const ops = [];
-  const stack = data.stack || {};
-  const siteAudit = data.siteAudit || null;
-  const aiVis = data.aiVisibility || null;
-  const firstKeyword = (data.keywords || '').split(/[,\n]/)[0].trim() || 'businesses like yours';
-
-  // Real-signal-grounded version of the AI search recommendation.
-  // Use Perplexity result if available, else fall back to the heuristic.
-  const aiVisBlock = (() => {
-    if (aiVis && aiVis.configured && !aiVis.appeared) {
-      const sampleQ = aiVis.queries?.[0]?.query || `"best ${data.industry || 'businesses'} in ${data.city || 'your city'}"`;
-      return {
-        rank: 'High impact — verified',
-        title: 'Get findable in AI search',
-        why: `We just asked Perplexity ${sampleQ}. Your business wasn't in the recommendation. Every AI-search query you miss is a buyer learning about a competitor instead of you — and AI engines are now where ${firstKeyword === 'businesses like yours' ? 'these buyers' : 'people searching for ' + firstKeyword} actually start.`,
-        service: 'AI-Ready Website rebuild',
-        effort: '3–4 weeks',
-        invest: 'From $1,200',
-      };
-    }
-    if (siteAudit && siteAudit.reachable && (siteAudit.schema?.present?.length || 0) < 2) {
-      return {
-        rank: 'High impact',
-        title: 'Add the schema markup AI engines actually read',
-        why: `Your site has ${siteAudit.schema.present.length} of ${siteAudit.schema.max} expected schema types (we checked). Without LocalBusiness, FAQ, and Service schema, ChatGPT and Perplexity can't cleanly extract what you do — so they recommend competitors who did set it up.`,
-        service: 'AI-Ready Website rebuild',
-        effort: '3–4 weeks',
-        invest: 'From $1,200',
-      };
-    }
-    if (scores.visibility < 70 && HIGH_VISIBILITY_INDUSTRIES.includes(data.industry)) {
-      return {
-        rank: 'High impact',
-        title: 'Get findable in AI search',
-        why: `When a buyer asks ChatGPT or Perplexity about "${firstKeyword}," you almost certainly aren't in the answer. Every AI-search query you miss is a buyer who learns about a competitor instead of you.`,
-        service: 'AI-Ready Website rebuild',
-        effort: '3–4 weeks',
-        invest: 'From $1,200',
-      };
-    }
-    return null;
-  })();
-  if (aiVisBlock) ops.push(aiVisBlock);
-
-  const otherToolCount = countOtherTools(stack.otherTools);
-  const customToolCount = countOtherTools(stack.customTools);
-  if (data.pains.includes('data') || (otherToolCount >= 3 && stack.productivity)) {
-    ops.push({
-      rank: 'High ROI',
-      title: 'Connect your tools so they stop fighting each other',
-      why: 'You\'re paying for tools that should already talk to each other. Manual re-entry between systems is the #1 hidden cost in small businesses — and the easiest one to remove.',
-      service: 'Custom AI / Automation build',
-      effort: '2–6 weeks',
-      invest: 'Typically $1,500–$5,000',
-    });
-  }
-
-  if (customToolCount > 0) {
-    ops.push({
-      rank: 'Quick win',
-      title: 'Layer AI on top of the tools you already built',
-      why: 'You mentioned custom tooling — that\'s a real foundation most small businesses don\'t have. Adding an AI layer (a search interface, a summarizer, an auto-categorizer) is usually a fraction of the cost of building new, and 10x the value.',
-      service: 'Custom AI build',
-      effort: '2–4 weeks',
-      invest: 'Quote-based',
-    });
-  }
-
-  if (data.pains.includes('calls')) {
-    ops.push({
-      rank: 'Quick win',
-      title: 'Stop letting missed calls become missed revenue',
-      why: 'Most service businesses miss 15+ calls a day. An AI receptionist answers every one — books, qualifies, handles FAQs, escalates emergencies. Live in a week.',
-      service: 'Voice Agent (add-on service)',
-      effort: '5 business days',
-      invest: 'Get a quote',
-    });
-  }
-
-  if (data.pains.includes('questions') || data.pains.includes('content')) {
-    ops.push({
-      rank: 'Compounding',
-      title: 'Build an AI that absorbs your team\'s knowledge',
-      why: 'Your team spends hours every week answering the same questions — for customers, for new hires, for each other. A custom AI trained on your docs answers in your voice, on demand.',
-      service: 'Custom AI build',
-      effort: '3–6 weeks',
-      invest: 'Quote-based',
-    });
-  }
-
-  if (data.pains.includes('quotes')) {
-    ops.push({
-      rank: 'Time recovery',
-      title: 'Cut quoting time from hours to minutes',
-      why: 'Custom proposals and quotes are some of the highest-leverage tasks for AI. Trained on your past work, an AI can draft a 90%-there proposal in seconds.',
-      service: 'Custom AI build',
-      effort: '2–4 weeks',
-      invest: 'Quote-based',
-    });
-  }
-
-  if (data.goal === 'Just understand what AI can actually do for us' ||
-      (otherToolCount === 0 && customToolCount === 0)) {
-    ops.push({
-      rank: 'Foundational',
-      title: 'Get a clear-headed AI roadmap',
-      why: 'Before you spend on tools, you need 90 minutes with someone who can tell you what to do, what to skip, and in what order. No 50-page strategy doc. Just answers.',
-      service: 'Strategy Session',
-      effort: '90 minutes',
-      invest: '$250 – $500',
-    });
-  }
-
-  if (ops.length === 0) {
-    ops.push({
-      rank: 'Next move',
-      title: 'Schedule a strategy session',
-      why: 'You\'ve got real foundations. The next move is figuring out which AI bets compound and which add noise. Worth 90 minutes.',
-      service: 'Strategy Session',
-      effort: '90 minutes',
-      invest: '$250 – $500',
-    });
-  }
-
-  return ops.slice(0, 3);
-}
-
-// ---------- Components ----------
-
-function ProgressBar({ step, total }) {
-  const pct = (step / total) * 100;
-  return (
-    <div>
-      <div className="flex justify-between mb-2">
-        <span className="label">Step {Math.min(step+1, total)} of {total}</span>
-        <span className="label">{Math.round(pct)}%</span>
-      </div>
-      <div className="progress"><div className="progress-bar" style={{width: pct + '%'}} /></div>
-    </div>
-  );
-}
-
-function StepWrap({ eyebrow, title, dek, children, onBack, onNext, nextDisabled, nextLabel }) {
-  return (
-    <div className="fade-in">
-      {eyebrow && <p className="eyebrow mb-3">{eyebrow}</p>}
-      <h2 className="text-3xl md:text-4xl mb-3">{title}</h2>
-      {dek && <p className="text-[var(--muted)] mb-8 text-lg">{dek}</p>}
-      <div className="mb-10">{children}</div>
-      <div className="flex items-center justify-between pt-6 border-t border-[var(--bone)]">
-        {onBack ? <button className="ghost-btn text-sm" onClick={onBack}>← Back</button> : <div />}
-        <button className="brand-btn px-7 py-3 rounded-xl text-sm" onClick={onNext} disabled={nextDisabled}>
-          {nextLabel || 'Continue →'}
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function App() {
-  const [step, setStep] = useState(0);
-  const [data, setData] = useState({
-    name: '', website: '', industry: '', city: '',
-    keywords: '',
-    stack: { productivity: '', otherTools: '', customTools: '' },
-    pains: [],
-    goal: '',
-    email: '',
-    siteAudit: null,       // populated in background after Step 2
-    aiVisibility: null,    // populated in background after Step 2
-  });
-
-  const TOTAL = 6; // intake steps (excluding welcome and report)
-  const set = (k, v) => setData(d => ({ ...d, [k]: v }));
-  const setStack = (k, v) =>
-    setData(d => ({ ...d, stack: { ...d.stack, [k]: v } }));
-
-  const togglePain = (id) =>
-    setData(d => ({ ...d, pains: d.pains.includes(id) ? d.pains.filter(p => p !== id) : [...d.pains, id] }));
-  const next = () => setStep(s => s + 1);
-  const back = () => setStep(s => Math.max(s - 1, 0));
-
-  // After Step 2 (web presence — website + keywords known + name/industry/city known)
-  // kick off the real-signal checks in the background. Results land in state by
-  // the time the user reaches the report ~60–90s later.
-  const [checksFired, setChecksFired] = useState(false);
-  useEffect(() => {
-    if (step < 3 || checksFired) return;
-    setChecksFired(true);
-    // Site audit — only if they gave a URL
-    if (data.website && data.website.length > 3) {
-      fetch('/api/site-audit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: data.website }),
-      })
-        .then(r => r.ok ? r.json() : null)
-        .then(r => r && setData(d => ({ ...d, siteAudit: r })))
-        .catch(() => {});
-    }
-    // AI search visibility — requires industry + city
-    if (data.industry && data.city) {
-      fetch('/api/ai-visibility', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          industry: data.industry,
-          city: data.city,
-          domain: data.website || '',
-          name: data.name || '',
-        }),
-      })
-        .then(r => r.ok ? r.json() : null)
-        .then(r => r && setData(d => ({ ...d, aiVisibility: r })))
-        .catch(() => {});
-    }
-  }, [step, checksFired, data.website, data.industry, data.city, data.name]);
-
-  const scores = useMemo(() => step >= TOTAL+1 ? compute(data) : null, [step, data]);
-  const ops = useMemo(() => scores ? buildOpportunities(data, scores) : [], [scores, data]);
-
-  // 'idle' | 'sending' | 'sent' | 'failed'
-  const [sendStatus, setSendStatus] = useState('idle');
-  useEffect(() => {
-    if (step !== TOTAL + 1) return;
-    if (sendStatus !== 'idle') return;
-    if (!scores || !data.email) return;
-    setSendStatus('sending');
-    fetch('/api/audit-lead', {
+  if (state.website && state.website.length > 3) {
+    state.siteAudit = { pending: true };
+    fetch('/api/site-audit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...data, scores, opportunities: ops }),
+      body: JSON.stringify({ url: state.website }),
     })
-      .then(r => setSendStatus(r.ok ? 'sent' : 'failed'))
-      .catch(() => setSendStatus('failed'));
-  }, [step, scores, ops, data, sendStatus]);
-
-  // ---------- Welcome ----------
-  if (step === 0) {
-    return (
-      <Shell>
-        <div className="fade-in text-center">
-          <p className="eyebrow mb-4">Free · 6 questions · ~3 minutes</p>
-          <h1 className="text-4xl md:text-5xl mb-5">Find out where AI moves your business.</h1>
-          <p className="text-[var(--muted)] text-lg mb-10 max-w-xl mx-auto">
-            Answer 6 quick questions. Get a personalized AI Readiness Report — with the top 3 things you should do next, ranked by impact.
-          </p>
-          <button className="brand-btn px-8 py-4 rounded-xl" onClick={next}>Start the audit →</button>
-          <p className="text-[var(--smoke)] text-sm mt-6">Built by Mark Bloomfield · Founder of Averde AI · Boulder, CO</p>
-        </div>
-      </Shell>
-    );
+      .then(r => (r.ok ? r.json() : null))
+      .then(r => { state.siteAudit = r || { reachable: false }; rerenderIfReport(); })
+      .catch(() => { state.siteAudit = { reachable: false }; rerenderIfReport(); });
   }
 
-  // ---------- Step 1: Basics ----------
-  if (step === 1) {
-    const valid = data.name && data.industry && data.city;
-    return (
-      <Shell progress={<ProgressBar step={0} total={TOTAL} />}>
-        <StepWrap
-          eyebrow="The basics"
-          title="Tell me about your business."
-          dek="Just enough to make the rest of the audit specific to you."
-          onNext={next}
-          nextDisabled={!valid}
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div>
-              <label className="label block mb-2">Business name</label>
-              <input className="input" value={data.name} onChange={e=>set('name', e.target.value)} placeholder="Harbor Dental" />
-            </div>
-            <div>
-              <label className="label block mb-2">Website (if you have one)</label>
-              <input className="input" value={data.website} onChange={e=>set('website', e.target.value)} placeholder="harbordental.com" />
-            </div>
-            <div>
-              <label className="label block mb-2">Industry</label>
-              <select className="input" value={data.industry} onChange={e=>set('industry', e.target.value)}>
-                <option value="">Choose one…</option>
-                {INDUSTRIES.map(i => <option key={i} value={i}>{i}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="label block mb-2">City / region you serve</label>
-              <input className="input" value={data.city} onChange={e=>set('city', e.target.value)} placeholder="Boulder, CO" />
-            </div>
-          </div>
-        </StepWrap>
-      </Shell>
-    );
+  if (state.industry && state.city) {
+    state.aiVisibility = { pending: true };
+    fetch('/api/ai-visibility', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        industry: state.industry, city: state.city,
+        domain: state.website || '', name: state.name || '',
+      }),
+    })
+      .then(r => (r.ok ? r.json() : null))
+      .then(r => { state.aiVisibility = r || { configured: false }; rerenderIfReport(); })
+      .catch(() => { state.aiVisibility = { configured: false }; rerenderIfReport(); });
   }
-
-  // ---------- Step 2: AI search target ----------
-  if (step === 2) {
-    return (
-      <Shell progress={<ProgressBar step={1} total={TOTAL} />}>
-        <StepWrap
-          eyebrow="AI search visibility"
-          title="What do you most want to be found for?"
-          dek="When a potential customer asks ChatGPT or Perplexity for help, what would they type? List 1–3 phrases."
-          onBack={back}
-          onNext={next}
-          nextDisabled={!data.keywords.trim()}
-        >
-          <textarea
-            className="input"
-            rows="4"
-            value={data.keywords}
-            onChange={e=>set('keywords', e.target.value)}
-            placeholder={'family dentist in Boulder\nemergency dental Boulder CO\nInvisalign provider Boulder'}
-          />
-          <p className="text-[var(--smoke)] text-sm mt-3">
-            Tip: think how a real customer would phrase it — not how you describe yourself.
-          </p>
-        </StepWrap>
-      </Shell>
-    );
-  }
-
-  // ---------- Step 3: Stack ----------
-  if (step === 3) {
-    const stack = data.stack;
-    return (
-      <Shell progress={<ProgressBar step={2} total={TOTAL} />}>
-        <StepWrap
-          eyebrow="Your tech stack"
-          title="What's running your business today?"
-          dek="A few quick questions about your tools. Skip anything that doesn't apply."
-          onBack={back}
-          onNext={next}
-        >
-          <div className="space-y-8">
-            <div>
-              <p className="label mb-3">Productivity foundation</p>
-              <div className="flex flex-wrap gap-2">
-                {PRODUCTIVITY_OPTIONS.map(opt => (
-                  <span key={opt.value}
-                    className={"chip " + (stack.productivity === opt.value ? 'selected' : '')}
-                    onClick={() => setStack('productivity', stack.productivity === opt.value ? '' : opt.value)}
-                    title={opt.hint || ''}>
-                    {opt.label}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <p className="label mb-2">What other tools do you use?</p>
-              <p className="text-sm text-[var(--smoke)] mb-3">CRM, scheduling, accounting, marketing — anything. Comma-separated is fine.</p>
-              <textarea
-                className="input"
-                rows={2}
-                value={stack.otherTools}
-                onChange={e => setStack('otherTools', e.target.value)}
-                placeholder="e.g. HubSpot, Calendly, QuickBooks, Mailchimp"
-              />
-            </div>
-
-            <div>
-              <p className="label mb-2">Any custom tools or internal systems?</p>
-              <p className="text-sm text-[var(--smoke)] mb-3">Things you (or someone) built specifically for your business.</p>
-              <textarea
-                className="input"
-                rows={2}
-                value={stack.customTools}
-                onChange={e => setStack('customTools', e.target.value)}
-                placeholder="e.g. internal job-tracking sheet, Airtable for clients, custom intake form"
-              />
-            </div>
-          </div>
-        </StepWrap>
-      </Shell>
-    );
-  }
-
-  // ---------- Step 4: Pain points ----------
-  if (step === 4) {
-    return (
-      <Shell progress={<ProgressBar step={3} total={TOTAL} />}>
-        <StepWrap
-          eyebrow="Where it hurts"
-          title="Where are you bleeding time or revenue?"
-          dek="Check everything that applies. Be honest — this is what shapes your top 3 recommendations."
-          onBack={back}
-          onNext={next}
-          nextDisabled={data.pains.length === 0}
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {PAIN_POINTS.map(p => (
-              <div key={p.id}
-                className={"check-row " + (data.pains.includes(p.id) ? 'selected' : '')}
-                onClick={() => togglePain(p.id)}>
-                <div className="check-box">
-                  {data.pains.includes(p.id) && (
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <path d="M2 6.5l2.5 2.5L10 3.5" stroke="#F4ECDB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  )}
-                </div>
-                <span className="text-[var(--ink)]">{p.label}</span>
-              </div>
-            ))}
-          </div>
-        </StepWrap>
-      </Shell>
-    );
-  }
-
-  // ---------- Step 5: Goal ----------
-  if (step === 5) {
-    return (
-      <Shell progress={<ProgressBar step={4} total={TOTAL} />}>
-        <StepWrap
-          eyebrow="Your 12-month goal"
-          title="What would matter most over the next year?"
-          dek="Pick the one outcome that, if you nailed it, would make this year a win."
-          onBack={back}
-          onNext={next}
-          nextDisabled={!data.goal}
-        >
-          <div className="space-y-3">
-            {GOALS.map(g => (
-              <div key={g}
-                className={"radio-row " + (data.goal === g ? 'selected' : '')}
-                onClick={() => set('goal', g)}>
-                <div className="radio-dot" />
-                <span className="text-[var(--ink)]">{g}</span>
-              </div>
-            ))}
-          </div>
-        </StepWrap>
-      </Shell>
-    );
-  }
-
-  // ---------- Step 6: Email ----------
-  if (step === 6) {
-    const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email);
-    return (
-      <Shell progress={<ProgressBar step={5} total={TOTAL} />}>
-        <StepWrap
-          eyebrow="One last thing"
-          title="Where should I send your report?"
-          dek="I'll also send a calendar link so you can claim your free 30-min review call with me, where we walk through the report together."
-          onBack={back}
-          onNext={next}
-          nextDisabled={!validEmail}
-          nextLabel="See my AI Readiness Report →"
-        >
-          <input className="input" type="email" value={data.email}
-            onChange={e=>set('email', e.target.value)} placeholder="you@yourbusiness.com" />
-          <p className="text-[var(--smoke)] text-sm mt-3">
-            No spam. I send your report, the calendar link, and one short follow-up. That's it.
-          </p>
-        </StepWrap>
-      </Shell>
-    );
-  }
-
-  // ---------- Report ----------
-  return (
-    <Shell wide>
-      <div className="fade-in">
-        <p className="eyebrow mb-3 text-center">Your AI Readiness Report</p>
-        <h1 className="text-3xl md:text-5xl text-center mb-4">{data.name}</h1>
-        <p className="text-[var(--muted)] text-center mb-12 text-lg">
-          {data.industry} · {data.city}
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-12">
-          <ScoreCard label="AI Search Visibility" score={scores.visibility} />
-          <ScoreCard label="Stack Maturity" score={scores.stack} />
-          <ScoreCard label="Opportunity Density" score={scores.opportunity} />
-        </div>
-
-        <div className="card rounded-3xl p-8 md:p-10 mb-12 flex flex-col md:flex-row items-center gap-8">
-          <ScoreRing score={scores.overall} grade={scores.grade} />
-          <div className="flex-1">
-            <p className="eyebrow mb-2">Overall AI Readiness</p>
-            <h2 className="text-3xl mb-3">{interpretGrade(scores.grade)}</h2>
-            <p className="text-[var(--muted)]">{interpretBody(scores, data)}</p>
-          </div>
-        </div>
-
-        {/* Real signal: what we found on their website */}
-        {data.siteAudit && (
-          <div className="card rounded-2xl p-7 md:p-8 mb-6">
-            <p className="eyebrow mb-2">We looked at your site</p>
-            <h3 className="text-2xl mb-4">Real signals from {data.siteAudit.url || data.website}</h3>
-            {!data.siteAudit.reachable ? (
-              <p className="text-[var(--muted)]">We couldn't reach your site to analyze it. That's a problem on its own — make sure it's online and returning a 200.</p>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3 text-sm">
-                <div>
-                  <span className="label block">Schema markup (for AI engines)</span>
-                  <span className="text-[var(--ink)]">{data.siteAudit.schema.present.length} of {data.siteAudit.schema.max} expected types</span>
-                  {data.siteAudit.schema.present.length > 0 && (
-                    <span className="text-[var(--smoke)] text-xs block mt-0.5">Found: {data.siteAudit.schema.present.join(', ')}</span>
-                  )}
-                  {data.siteAudit.schema.missing.length > 0 && (
-                    <span className="text-[var(--rust)] text-xs block mt-0.5">Missing: {data.siteAudit.schema.missing.join(', ')}</span>
-                  )}
-                </div>
-                <div>
-                  <span className="label block">Platform</span>
-                  <span className="text-[var(--ink)]">{data.siteAudit.platform || 'Could not detect'}</span>
-                </div>
-                {data.siteAudit.pagespeed && (
-                  <>
-                    <div>
-                      <span className="label block">Mobile performance</span>
-                      <span className="text-[var(--ink)]">{data.siteAudit.pagespeed.performance ?? '—'}/100</span>
-                    </div>
-                    <div>
-                      <span className="label block">SEO basics</span>
-                      <span className="text-[var(--ink)]">{data.siteAudit.pagespeed.seo ?? '—'}/100</span>
-                    </div>
-                  </>
-                )}
-                <div>
-                  <span className="label block">Discoverability files</span>
-                  <span className="text-[var(--ink)]">{data.siteAudit.files.robots ? '✓ robots.txt' : '✗ no robots.txt'} · {data.siteAudit.files.sitemap ? '✓ sitemap.xml' : '✗ no sitemap.xml'}</span>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Real signal: AI search visibility */}
-        {data.aiVisibility && data.aiVisibility.configured && (
-          <div className="card rounded-2xl p-7 md:p-8 mb-12" style={{background: data.aiVisibility.appeared ? 'var(--bone)' : 'var(--walnut-700)', color: data.aiVisibility.appeared ? 'var(--ink)' : 'var(--paper)'}}>
-            <p className="eyebrow mb-2" style={{color: data.aiVisibility.appeared ? 'var(--rust)' : 'var(--honey-300)'}}>
-              {data.aiVisibility.appeared ? '✓ You appeared in AI search' : '⚠ You\'re invisible to AI search'}
-            </p>
-            <h3 className="text-2xl mb-4" style={{color: data.aiVisibility.appeared ? 'var(--ink)' : 'var(--paper)'}}>
-              When buyers search Perplexity for "{data.aiVisibility.queries?.[0]?.query || `${data.industry?.toLowerCase()} in ${data.city}`}", here's what comes up:
-            </h3>
-            <div className="space-y-2 mb-4">
-              {(data.aiVisibility.queries?.[0]?.results || []).slice(0, 5).map((r, i) => (
-                <div key={i} className="rounded-lg p-3" style={{
-                  background: r.isUser ? 'rgba(34, 197, 94, .15)' : (data.aiVisibility.appeared ? 'rgba(255,255,255,.6)' : 'rgba(255,255,255,.06)'),
-                  border: r.isUser ? '1px solid rgba(34, 197, 94, .4)' : 'none',
-                }}>
-                  <div style={{fontSize:'14px',fontWeight:600,color: data.aiVisibility.appeared ? 'var(--ink)' : 'var(--paper)'}}>
-                    {r.isUser && '✓ '}{r.title}
-                  </div>
-                  <div style={{fontSize:'12px',color: data.aiVisibility.appeared ? 'var(--smoke)' : 'var(--driftwood)',marginTop:'2px'}}>
-                    {r.host || r.url}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <p style={{color: data.aiVisibility.appeared ? 'var(--ink-700)' : 'var(--bone)', fontSize: '14px'}}>
-              {data.aiVisibility.appeared
-                ? `Your business surfaced. That puts you ahead of most ${data.industry?.toLowerCase()} businesses in your market.`
-                : `These are the businesses buyers will reach out to when they ask AI for a recommendation. Until your site has the right schema and content for AI engines to pick up, you're not in the running.`}
-            </p>
-          </div>
-        )}
-
-        {/* "Still analyzing" if we haven't gotten Perplexity results yet */}
-        {!data.aiVisibility && data.industry && data.city && (
-          <div className="card rounded-2xl p-7 mb-12 text-center" style={{background: 'var(--bone)'}}>
-            <p className="text-[var(--muted)]">Still analyzing AI search visibility — refresh in a moment to see whether you appear when buyers ask AI for a recommendation.</p>
-          </div>
-        )}
-
-        <div className="mb-12">
-          <p className="eyebrow mb-3 text-center">Top 3 things to do next</p>
-          <h2 className="text-3xl md:text-4xl text-center mb-10">Your highest-impact moves.</h2>
-          <div className="space-y-5">
-            {ops.map((op, i) => (
-              <div key={i} className="card rounded-2xl p-7 md:p-8 flex flex-col md:flex-row gap-6">
-                <div className="md:w-12 md:flex-shrink-0">
-                  <span className="text-4xl text-[var(--driftwood)]" style={{fontFamily: "'Fraunces', serif"}}>0{i+1}</span>
-                </div>
-                <div className="flex-1">
-                  <p className="eyebrow mb-2">{op.rank}</p>
-                  <h3 className="text-2xl mb-3">{op.title}</h3>
-                  <p className="text-[var(--ink-700)] mb-5">{op.why}</p>
-                  <div className="flex flex-wrap gap-x-8 gap-y-2 text-sm">
-                    <div><span className="label block">Service</span><span className="text-[var(--ink)]">{op.service}</span></div>
-                    <div><span className="label block">Timeline</span><span className="text-[var(--ink)]">{op.effort}</span></div>
-                    <div><span className="label block">Investment</span><span className="text-[var(--ink)]">{op.invest}</span></div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="card rounded-3xl p-10 text-center" style={{background:'var(--walnut-700)', color:'var(--paper)'}}>
-          <h2 className="text-3xl md:text-4xl mb-4 text-[var(--paper)]">Ready to walk through this together?</h2>
-          <p className="mb-8 text-[var(--bone)] max-w-xl mx-auto">
-            Book your free 30-minute review call. We'll go through this report together, answer your questions, and figure out the right first move for your business.
-          </p>
-          <a href="/ai-audit#book" className="inline-block px-8 py-4 rounded-xl font-semibold"
-             style={{background:'var(--honey-300)', color:'var(--walnut-700)', fontFamily:"'Inter Tight',sans-serif"}}>
-            Book your free review call →
-          </a>
-          <p className="text-[var(--driftwood)] text-sm mt-5">
-            {sendStatus === 'sent' && <span>✓ Sent to {data.email}</span>}
-            {sendStatus === 'sending' && <span>Sending to {data.email}…</span>}
-            {sendStatus === 'failed' && <span>Couldn't email {data.email} — but your report is here.</span>}
-            {sendStatus === 'idle' && <span>Sent to {data.email}</span>}
-            {' · 30 minutes · No commitment'}
-          </p>
-        </div>
-
-        <div className="mt-10 text-center">
-          <button className="ghost-btn text-sm" onClick={() => { setStep(0); setData({name:'',website:'',industry:'',city:'',keywords:'',stack:{productivity:'',otherTools:'',customTools:''},pains:[],goal:'',email:'',siteAudit:null,aiVisibility:null}); setSendStatus('idle'); setChecksFired(false); }}>
-            ← Start over
-          </button>
-        </div>
-      </div>
-    </Shell>
-  );
 }
 
-function Shell({ children, progress, wide }) {
-  return (
-    <div className="min-h-screen py-10 md:py-16 px-4">
-      <div className={(wide ? "max-w-4xl" : "max-w-2xl") + " mx-auto"}>
-        <div className="text-center mb-8">
-          <span className="text-2xl" style={{fontFamily:"'Fraunces',serif", color:'var(--walnut-700)', fontWeight:500, letterSpacing:'-0.02em'}}>
-            Averde<span style={{color:'var(--honey-500)'}}>.</span>
-          </span>
-        </div>
-        {progress && <div className="mb-8">{progress}</div>}
-        <div className="card rounded-3xl p-8 md:p-12">{children}</div>
+function rerenderIfReport() {
+  if (state.step === TOTAL_STEPS + 1) render();
+}
+
+/* ================================================================
+   Scoring — a transparent checklist. Every check names its evidence,
+   its points, and its fix. Checks that couldn't run are excluded
+   from the denominator instead of silently counting against you.
+   status: pass | warn | fail | na
+================================================================ */
+function buildChecks() {
+  const sa = state.siteAudit && !state.siteAudit.pending ? state.siteAudit : null;
+  const av = state.aiVisibility && !state.aiVisibility.pending ? state.aiVisibility : null;
+  const platform = sa && sa.platform ? sa.platform : null;
+  const hosting = sa && sa.hosting ? sa.hosting : null;
+  const noSite = !state.website || state.website.length <= 3;
+
+  // Platform-aware fix note for schema checks. Platform (the builder you edit
+  // in) drives the instructions; hosting fills in when no builder is detected.
+  const schemaHow = (() => {
+    if (/squarespace/i.test(platform || '')) return 'On Squarespace: Settings → Advanced → Code Injection (Business plan or higher). Ask Claude or ChatGPT to “write LocalBusiness JSON-LD schema for my business”, paste the result into the Header box, then check it at validator.schema.org.';
+    if (/wordpress/i.test(platform || '')) return 'On WordPress: install Yoast SEO or Rank Math — both generate LocalBusiness and FAQ schema from a settings screen, no code needed.';
+    if (/wix/i.test(platform || '')) return 'On Wix: Settings → SEO → Structured Data (or per-page SEO panel → Advanced → Structured Data). Ask Claude or ChatGPT to generate the JSON-LD, paste it in, then check it at validator.schema.org.';
+    if (/shopify/i.test(platform || '')) return 'On Shopify: many themes include basic schema. Add LocalBusiness/FAQ JSON-LD via a small snippet in theme.liquid, or use an SEO app like Smart SEO.';
+    if (/webflow/i.test(platform || '')) return 'On Webflow: Page settings → Custom code → Head code (needs a paid site plan). Ask Claude or ChatGPT to generate the JSON-LD, paste it in, then check it at validator.schema.org.';
+    if (/framer/i.test(platform || '')) return 'On Framer: Site Settings → General → Custom Code → Start of head tag. Ask Claude or ChatGPT to generate the JSON-LD, paste it in, then check it at validator.schema.org.';
+    if (/hubspot/i.test(platform || '')) return 'On HubSpot: Settings → Website → Pages → site header HTML. Ask Claude or ChatGPT to generate the JSON-LD, paste it in, then check it at validator.schema.org.';
+    if (/godaddy|duda/i.test(platform || '')) return `Your platform (${platform}) doesn’t allow custom code on most plans — this is one of the checks that usually requires a rebuild on a platform you control.`;
+    if (/ghost/i.test(platform || '')) return 'On Ghost: Settings → Code injection → Site header. Ask Claude or ChatGPT to generate the JSON-LD, paste it in, then check it at validator.schema.org.';
+    if (platform) return 'Add a JSON-LD script block to your site’s <head>. Ask Claude or ChatGPT to generate it for your business, then check it at validator.schema.org.';
+    if (hosting) return `Your site looks custom-built (served by ${hosting}), which is good news — whoever maintains it can add the JSON-LD block straight into the site’s <head>. It’s a 15-minute task; Claude or ChatGPT can generate the block.`;
+    return 'Ask whoever manages your site (or an AI assistant like Claude) to generate the JSON-LD block, then paste it into your site’s header code injection.';
+  })();
+
+  const checks = [];
+  const add = (id, name, status, points, max, evidence, why, fix) =>
+    checks.push({ id, name, status, points, max, evidence, why, fix });
+
+  // --- Site checks ---
+  if (noSite) {
+    add('site', 'Website checks', 'na', 0, 0,
+      'No website provided.',
+      'Without a website there’s nothing for AI engines to read, cite, or recommend — it’s the single biggest gap.',
+      'Getting a simple, well-structured site online is step one. Even 5 good pages beats none.');
+  } else if (!sa) {
+    add('site', 'Website checks', 'na', 0, 0, 'Still analyzing…', '', '');
+  } else if (!sa.reachable) {
+    add('reachable', 'Site reachable', 'fail', 0, 5,
+      'We couldn’t load your site.',
+      'If our checker can’t reach it, AI crawlers likely can’t either — nothing else matters until this works.',
+      'Confirm the address is right and the site loads over https:// in a private browser window. If it loads for you but not for bots, ask your host about firewall/bot-blocking settings.');
+  } else {
+    add('reachable', 'Site loads over HTTPS', sa.https === false ? 'warn' : 'pass', sa.https === false ? 2 : 5, 5,
+      sa.https === false ? 'Site loads, but not over HTTPS.' : 'Loads correctly over a secure connection.',
+      'AI engines and Google both treat non-HTTPS sites as second-class.',
+      'Your host can enable a free SSL certificate — usually one toggle.');
+
+    const t = sa.title || '';
+    const titleOk = t.length >= 10 && t.length <= 70;
+    add('title', 'Page title describes the business', titleOk ? 'pass' : (t ? 'warn' : 'fail'), titleOk ? 5 : (t ? 2 : 0), 5,
+      t ? `Found: “${t.slice(0, 90)}”` : 'No title tag found.',
+      'The title is the first thing every engine reads. “Home” or your bare business name wastes it.',
+      'Format: “What you do in Plain English | Business Name — City, ST”. Every platform lets you edit this under page settings or SEO settings.');
+
+    add('desc', 'Meta description present', sa.description ? 'pass' : 'fail', sa.description ? 5 : 0, 5,
+      sa.description ? 'Found a meta description.' : 'No meta description found.',
+      'It’s the summary engines fall back on when deciding what your page is about.',
+      'Write 1–2 sentences saying what you do, for whom, and where. Add it in your platform’s SEO settings for the homepage.');
+
+    add('h1', 'Clear main heading (H1)', sa.h1Count === 1 ? 'pass' : (sa.h1Count > 1 ? 'warn' : 'fail'), sa.h1Count === 1 ? 5 : (sa.h1Count > 1 ? 3 : 0), 5,
+      sa.h1Count === 1 ? 'Exactly one H1 heading — correct.' : sa.h1Count > 1 ? `${sa.h1Count} H1 headings found (should be one).` : 'No H1 heading found.',
+      'The H1 tells engines what the page is about in one line. Zero or many H1s muddies that signal.',
+      'Make your main headline the H1, and say what you do + where — not just a slogan.');
+
+    const present = (sa.schema && sa.schema.present) || [];
+    const has = n => present.indexOf(n) !== -1;
+    add('schema-local', 'LocalBusiness schema', has('LocalBusiness') ? 'pass' : 'fail', has('LocalBusiness') ? 15 : 0, 15,
+      has('LocalBusiness') ? 'Found LocalBusiness (or a subtype) markup.' : 'No LocalBusiness markup found.',
+      'This is the machine-readable card that tells AI engines your name, location, and what kind of business you are. It’s the highest-value single block of code on a local business site.',
+      schemaHow);
+
+    add('schema-faq', 'FAQ schema', has('FAQPage') ? 'pass' : 'fail', has('FAQPage') ? 10 : 0, 10,
+      has('FAQPage') ? 'Found FAQPage markup.' : 'No FAQPage markup found.',
+      'AI engines love clean question-and-answer pairs — FAQ schema is the easiest content for them to quote directly.',
+      'First write a real FAQ page (the 8–15 questions customers actually ask). Then mark it up: ' + schemaHow);
+
+    add('schema-service', 'Service schema', has('Service') ? 'pass' : 'fail', has('Service') ? 5 : 0, 5,
+      has('Service') ? 'Found Service markup.' : 'No Service markup found.',
+      'Tells engines exactly which services you offer, so “who does X near me” queries can match you.',
+      'One Service block per major service you offer. ' + schemaHow);
+
+    add('sitemap', 'sitemap.xml', sa.files && sa.files.sitemap ? 'pass' : 'fail', sa.files && sa.files.sitemap ? 5 : 0, 5,
+      sa.files && sa.files.sitemap ? 'Found /sitemap.xml.' : 'No /sitemap.xml found.',
+      'The index crawlers use to find all your pages. Without it, deeper pages may never get read.',
+      'Most platforms generate one automatically — check yoursite.com/sitemap.xml. On WordPress, Yoast/Rank Math handles it.');
+
+    add('robots', 'robots.txt', sa.files && sa.files.robots ? 'pass' : 'fail', sa.files && sa.files.robots ? 5 : 0, 5,
+      sa.files && sa.files.robots ? 'Found /robots.txt.' : 'No /robots.txt found.',
+      'Tells crawlers (including AI crawlers) what they may read. A missing file is a small but easy fix.',
+      'Most platforms generate this automatically. If yours doesn’t, add a robots.txt that allows crawling and points to your sitemap.');
+
+    add('llms', 'llms.txt', sa.files && sa.files.llms ? 'pass' : 'fail', sa.files && sa.files.llms ? 5 : 0, 5,
+      sa.files && sa.files.llms ? 'Found /llms.txt.' : 'No /llms.txt found.',
+      'A new convention: a plain-text summary of your business written specifically for AI models. Very few small businesses have one — easy differentiation.',
+      'Write a short markdown file describing your business, services, and key pages, and host it at yoursite.com/llms.txt. Ask Claude to draft it from your homepage.');
+
+    const ps = sa.pagespeed;
+    if (ps && ps.performance != null) {
+      const perf = ps.performance;
+      add('perf', 'Mobile speed (Google PageSpeed)', perf >= 80 ? 'pass' : perf >= 50 ? 'warn' : 'fail', perf >= 80 ? 10 : perf >= 50 ? 5 : 0, 10,
+        `Scored ${perf}/100 on Google’s mobile performance test.`,
+        'Slow sites get crawled less and abandoned more. Most site-builder templates score poorly out of the box.',
+        'Compress images (biggest win — aim under 300KB each), remove unused plugins/scripts. If your template itself is slow, that’s a rebuild conversation.');
+    } else {
+      add('perf', 'Mobile speed (Google PageSpeed)', 'na', 0, 0, 'Speed test didn’t complete in time — not counted against you.', '', 'Run it yourself free at pagespeed.web.dev.');
+    }
+    if (ps && ps.seo != null) {
+      const seo = ps.seo;
+      add('seo', 'Technical SEO basics (Google PageSpeed)', seo >= 90 ? 'pass' : seo >= 70 ? 'warn' : 'fail', seo >= 90 ? 10 : seo >= 70 ? 5 : 0, 10,
+        `Scored ${seo}/100 on Google’s SEO checks.`,
+        'Covers crawlability fundamentals: valid links, alt text, indexing directives.',
+        'Run pagespeed.web.dev on your site — it lists the exact failing items with instructions.');
+    } else {
+      add('seo', 'Technical SEO basics (Google PageSpeed)', 'na', 0, 0, 'SEO test didn’t complete in time — not counted against you.', '', 'Run it yourself free at pagespeed.web.dev.');
+    }
+  }
+
+  // --- AI search visibility (15) ---
+  if (av && av.configured) {
+    const q = (av.queries && av.queries[0] && av.queries[0].query) || '';
+    add('aivis', 'Appears in AI search results', av.appeared ? 'pass' : 'fail', av.appeared ? 15 : 0, 15,
+      av.appeared ? `Your business appeared when we asked Perplexity “${q}”.` : `We asked Perplexity “${q}” — your business didn’t appear.`,
+      'This is the test that matters: when a buyer asks an AI engine for a recommendation in your market, are you in the answer?',
+      'Everything above feeds this — schema, FAQ content, and a complete Google Business Profile are what get you cited. Fix the failed checks and re-run this audit in a few weeks.');
+  } else if (av && !av.configured) {
+    // check unavailable — leave out entirely
+  } else if (state.industry && state.city) {
+    add('aivis', 'Appears in AI search results', 'na', 0, 0, 'Still running live AI-search queries…', '', '');
+  }
+
+  return checks;
+}
+
+function scoreFromChecks(checks) {
+  let earned = 0, possible = 0, ran = 0;
+  checks.forEach(c => {
+    if (c.status === 'na') return;
+    earned += c.points; possible += c.max; ran += 1;
+  });
+  const overall = possible > 0 ? Math.round((earned / possible) * 100) : null;
+  const grade = overall == null ? null : overall >= 85 ? 'A' : overall >= 70 ? 'B' : overall >= 55 ? 'C' : overall >= 40 ? 'D' : 'F';
+  return { overall, grade, earned, possible, ran };
+}
+
+function gradeColor(g) {
+  return { A:'#3a6f4d', B:'#5b7a5e', C:'#9C6A33', D:'#A86237', F:'#A04324' }[g] || '#9C6A33';
+}
+
+function interpret(score, checks) {
+  if (score.overall == null) return 'We couldn’t run automated checks without a website — the plan below is where to start.';
+  const fails = checks.filter(c => c.status === 'fail').length;
+  if (score.overall >= 85) return 'Genuinely rare for a small business site. Your remaining gaps are listed below — they’re refinements, not rescues.';
+  if (score.overall >= 70) return 'A solid foundation with a few real gaps. The failed checks below are specific and fixable — most in an afternoon.';
+  if (score.overall >= 55) return `You’re partway there. ${fails} checks failed — each one below tells you exactly what we found and how to fix it.`;
+  if (score.overall >= 40) return 'AI engines can find your site but can’t make much sense of it. The good news: most of what’s failing is concrete and fixable.';
+  return 'Right now AI engines have almost nothing to work with on your site. That’s bad news and good news — every fix below moves the number.';
+}
+
+/* ================================================================
+   Action plan — failed checks first (with DIY steps), then
+   recommendations driven by the pains they selected. Self-serve
+   first; the shortcut line mentions the relevant service honestly.
+================================================================ */
+function buildPlan(checks) {
+  const plan = [];
+
+  // 0. No website at all — that's priority one, full stop.
+  if (!state.website || state.website.length <= 3) {
+    plan.push({
+      title: 'Get a real website online',
+      why: 'Without a website there’s nothing for AI engines to read, cite, or recommend. Every other fix waits on this one.',
+      diy: [
+        'You don’t need 20 pages to start — five good ones beat none: home, services, pricing, FAQ, contact.',
+        'Pick a platform that allows custom code (you’ll want schema markup later) and state what you do, where, in plain English.',
+      ],
+      shortcut: 'The AI-Ready Website build starts at $1,200 and handles all of this — structure, content, schema — in about 3–4 weeks.',
+    });
+  }
+
+  // 1. Highest-value failed checks, in point order
+  const failed = checks
+    .filter(c => (c.status === 'fail' || c.status === 'warn') && c.max > 0)
+    .sort((a, b) => (b.max - b.points) - (a.max - a.points));
+
+  failed.slice(0, 3).forEach(c => {
+    plan.push({
+      title: 'Fix: ' + c.name,
+      why: c.why,
+      diy: [c.fix],
+      shortcut: c.id.indexOf('schema') === 0 || c.id === 'aivis' || c.id === 'llms'
+        ? 'The AI-Ready Website rebuild covers every check on this list — from $1,200, about 3–4 weeks.'
+        : null,
+    });
+  });
+
+  // 2. Pain-driven recommendations — real tools, not just services
+  const P = id => state.pains.indexOf(id) !== -1;
+
+  if (P('questions') || P('content')) {
+    plan.push({
+      title: 'Put your repeated answers to work twice',
+      why: 'The questions you answer over and over are exactly what AI engines want on your site. One effort, two payoffs: less repeat work, more AI visibility.',
+      diy: [
+        'Collect the 10–15 questions your inbox and front desk actually get.',
+        'Publish them as a real FAQ page, in plain English, with specific answers (prices, timelines).',
+        'Set up a free Claude or ChatGPT account and paste your FAQ in when drafting replies — it answers in your words.',
+      ],
+      shortcut: 'A Strategy Session ($250–$500) can turn this into a full content plan in 90 minutes.',
+    });
+  }
+
+  if (P('calls') || P('scheduling')) {
+    plan.push({
+      title: 'Stop losing the jobs that call after hours',
+      why: 'Missed calls and booking friction are usually the cheapest revenue to recover — the customer already wanted you.',
+      diy: [
+        'Turn on missed-call text-back (many phone providers and Google Business Profile offer this free).',
+        'Add online booking — TidyCal, Calendly, or your industry’s scheduler — and link it from your homepage and Google profile.',
+        'If call volume is real, look at an AI receptionist service and have it book directly into your calendar.',
+      ],
+      shortcut: 'I scope and set these up as a Custom AI Build — quote depends on your phone/calendar stack.',
+    });
+  }
+
+  if (P('data') || P('reporting')) {
+    plan.push({
+      title: 'Connect the systems you’re re-typing between',
+      why: 'Manual re-entry between systems is the most common hidden cost in small businesses — and the most automatable.',
+      diy: [
+        'Write down the 3 places the same information gets typed twice.',
+        'Check Zapier or Make — the connection you need probably already exists as a template.',
+        'For reporting: Google Looker Studio (free) can pull your numbers into one live dashboard.',
+      ],
+      shortcut: 'Custom automation builds typically run $1,500–$5,000 depending on the systems involved.',
+    });
+  }
+
+  if (P('quotes')) {
+    plan.push({
+      title: 'Cut quoting from hours to minutes',
+      why: 'Proposals are high-leverage AI work: the structure repeats, only the specifics change.',
+      diy: [
+        'Save your 3 best past proposals as examples.',
+        'In Claude, create a Project with those examples plus your price list.',
+        'Draft each new quote by describing the job — you edit the 20% that needs your judgment.',
+      ],
+      shortcut: null,
+    });
+  }
+
+  if (P('leads')) {
+    plan.push({
+      title: 'Close the follow-up gap',
+      why: 'Most lost leads aren’t lost to competitors — they’re lost to silence. Speed and consistency beat cleverness here.',
+      diy: [
+        'Set an auto-reply on your contact form / Google profile that promises (and states) a response time.',
+        'Pick one place every lead lands — even a free CRM like HubSpot Free — so nothing lives only in someone’s inbox.',
+        'Write two follow-up templates (day 2, day 7) and actually send them.',
+      ],
+      shortcut: null,
+    });
+  }
+
+  // Fallback if somehow nothing landed
+  if (plan.length === 0) {
+    plan.push({
+      title: 'Book a 30-minute working session',
+      why: 'Your checks look strong and you didn’t flag major pain — the next move is deciding which AI bets compound for your specific business.',
+      diy: ['Bring your report to a free 30-minute call and we’ll rank your options together.'],
+      shortcut: null,
+    });
+  }
+
+  return plan.slice(0, 5);
+}
+
+// ---------------- lead submission ----------------
+function submitLead(checks, score, plan) {
+  if (state.sendStatus !== 'idle' || !state.email) return;
+  state.sendStatus = 'sending';
+  const opportunities = plan.map((p, i) => ({
+    rank: 'Priority ' + (i + 1),
+    title: p.title,
+    why: p.why,
+    service: p.shortcut || '',
+    effort: '', invest: '',
+  }));
+  fetch('/api/audit-lead', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name: state.name,
+      contactName: state.contactName,
+      email: state.email,
+      website: state.website,
+      industry: state.industry,
+      city: state.city,
+      keywords: state.keywords,
+      pains: state.pains,
+      goal: state.goal,
+      scores: { overall: score.overall, grade: score.grade, earned: score.earned, possible: score.possible },
+      checks: checks.map(c => ({ id: c.id, name: c.name, status: c.status, points: c.points, max: c.max, evidence: c.evidence, fix: c.fix })),
+      opportunities,
+      actionPlan: plan,
+      siteAudit: state.siteAudit && !state.siteAudit.pending ? state.siteAudit : null,
+      aiVisibility: state.aiVisibility && !state.aiVisibility.pending ? state.aiVisibility : null,
+    }),
+  })
+    .then(r => { state.sendStatus = r.ok ? 'sent' : 'failed'; updateSendNote(); })
+    .catch(() => { state.sendStatus = 'failed'; updateSendNote(); });
+}
+
+function updateSendNote() {
+  const el = document.getElementById('send-note');
+  if (el) el.textContent = sendNoteText();
+}
+function sendNoteText() {
+  if (state.sendStatus === 'sent') return '✓ Report sent to ' + state.email + ' · 30 minutes · No commitment';
+  if (state.sendStatus === 'sending') return 'Sending your report to ' + state.email + '…';
+  if (state.sendStatus === 'failed') return 'Couldn’t email ' + state.email + ' — but your report is right here.';
+  return '30 minutes · No commitment';
+}
+
+// ---------------- rendering helpers ----------------
+const root = document.getElementById('root');
+const shell = document.getElementById('shell');
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function el(html) {
+  const t = document.createElement('template');
+  t.innerHTML = html.trim();
+  return t.content.firstChild;
+}
+
+function progressBar(step) {
+  const pct = Math.round((step / TOTAL_STEPS) * 100);
+  return `<div class="progress-wrap">
+    <div class="progress-labels"><span>Step ${step} of ${TOTAL_STEPS}</span><span>${pct}%</span></div>
+    <div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div>
+  </div>`;
+}
+
+function stepWrap(opts) {
+  return `<div class="fade-in">
+    ${opts.progress || ''}
+    <div class="card">
+      ${opts.eyebrow ? `<p class="eyebrow">${opts.eyebrow}</p>` : ''}
+      <h2 style="font-size:clamp(1.7rem,4vw,2.3rem)">${opts.title}</h2>
+      ${opts.dek ? `<p class="dek">${opts.dek}</p>` : ''}
+      <div>${opts.body}</div>
+      <div class="step-footer">
+        ${opts.back ? '<button class="ghost-btn" data-act="back">← Back</button>' : '<span></span>'}
+        <button class="brand-btn" data-act="next" ${opts.nextDisabled ? 'disabled' : ''}>${opts.nextLabel || 'Continue →'}</button>
       </div>
     </div>
-  );
+  </div>`;
 }
 
-function ScoreCard({ label, score }) {
-  const grade = score >= 82 ? 'A' : score >= 70 ? 'B' : score >= 55 ? 'C' : score >= 40 ? 'D' : 'F';
-  return (
-    <div className="card rounded-2xl p-6 text-center">
-      <p className="label mb-3">{label}</p>
-      <p className={"text-5xl mb-1 grade-" + grade} style={{fontFamily:"'Fraunces',serif", fontWeight:500}}>{score}</p>
-      <p className={"text-sm grade-" + grade} style={{fontFamily:"'Inter Tight',sans-serif", fontWeight:600}}>Grade {grade}</p>
+// ---------------- step renderers ----------------
+function renderWelcome() {
+  root.innerHTML = `<div class="fade-in card" style="text-align:center">
+    <p class="eyebrow">Free · Live checks on your real website · ~3 minutes</p>
+    <h1 style="font-size:clamp(2rem,5vw,2.9rem);margin-bottom:16px">Can AI find your business?</h1>
+    <p class="dek" style="max-width:520px;margin-left:auto;margin-right:auto">
+      This isn’t a quiz with a made-up score. We fetch your live website, check the
+      ${'13'} things AI engines actually read, and run a real AI-search query for your market.
+      You’ll see exactly what passed, what failed, and how to fix each one — yourself.
+    </p>
+    <button class="brand-btn" data-act="next" style="padding:16px 32px">Run the audit →</button>
+    <p class="hint" style="margin-top:24px">Built by Mark Bloomfield · Averde AI · Boulder, CO</p>
+  </div>`;
+}
+
+function renderBasics() {
+  root.innerHTML = stepWrap({
+    progress: progressBar(1),
+    eyebrow: 'The basics',
+    title: 'Tell me about your business.',
+    dek: 'As soon as you hit continue, we start fetching your site and running live AI-search checks in the background.',
+    body: `<div class="field-grid">
+      <div><label class="label" for="f-name">Business name</label>
+        <input class="input" id="f-name" value="${esc(state.name)}" placeholder="Harbor Dental" /></div>
+      <div><label class="label" for="f-web">Website</label>
+        <input class="input" id="f-web" value="${esc(state.website)}" placeholder="harbordental.com" />
+        <p class="hint">No website? Leave blank — we’ll adjust.</p></div>
+      <div><label class="label" for="f-ind">Industry</label>
+        <select class="input" id="f-ind">
+          <option value="">Choose one…</option>
+          ${INDUSTRIES.map(i => `<option value="${esc(i)}" ${state.industry === i ? 'selected' : ''}>${esc(i)}</option>`).join('')}
+        </select></div>
+      <div><label class="label" for="f-city">City / region you serve</label>
+        <input class="input" id="f-city" value="${esc(state.city)}" placeholder="Boulder, CO" /></div>
+    </div>`,
+    back: false,
+    nextDisabled: !(state.name && state.industry && state.city),
+  });
+  const sync = () => {
+    state.name = document.getElementById('f-name').value.trim();
+    state.website = document.getElementById('f-web').value.trim();
+    state.industry = document.getElementById('f-ind').value;
+    state.city = document.getElementById('f-city').value.trim();
+    root.querySelector('[data-act="next"]').disabled = !(state.name && state.industry && state.city);
+  };
+  ['f-name','f-web','f-ind','f-city'].forEach(id =>
+    document.getElementById(id).addEventListener('input', sync));
+}
+
+function renderKeywords() {
+  root.innerHTML = stepWrap({
+    progress: progressBar(2),
+    eyebrow: 'AI search visibility',
+    title: 'What do you most want to be found for?',
+    dek: 'When a potential customer asks ChatGPT or Perplexity for help, what would they type? List 1–3 phrases.',
+    body: `<textarea class="input" id="f-kw" rows="4" placeholder="family dentist in Boulder&#10;emergency dental Boulder CO&#10;Invisalign provider Boulder">${esc(state.keywords)}</textarea>
+      <p class="hint">Tip: think how a real customer would phrase it — not how you describe yourself.</p>`,
+    back: true,
+    nextDisabled: !state.keywords.trim(),
+  });
+  document.getElementById('f-kw').addEventListener('input', e => {
+    state.keywords = e.target.value;
+    root.querySelector('[data-act="next"]').disabled = !state.keywords.trim();
+  });
+}
+
+function renderPains() {
+  root.innerHTML = stepWrap({
+    progress: progressBar(3),
+    eyebrow: 'Where it hurts',
+    title: 'Where are you losing time or revenue?',
+    dek: 'Check everything that applies. This shapes your action plan — it doesn’t change your score.',
+    body: `<div class="pains-grid">
+      ${PAIN_POINTS.map(p => `
+        <div class="check-row ${state.pains.indexOf(p.id) !== -1 ? 'selected' : ''}" data-pain="${p.id}">
+          <div class="check-box">${state.pains.indexOf(p.id) !== -1 ? '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6.5l2.5 2.5L10 3.5" stroke="#F4ECDB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' : ''}</div>
+          <span>${esc(p.label)}</span>
+        </div>`).join('')}
     </div>
-  );
+    <div style="margin-top:28px">
+      <label class="label" for="f-goal">If you nailed one outcome this year, which?</label>
+      <select class="input" id="f-goal">
+        <option value="">Choose one…</option>
+        ${GOALS.map(g => `<option value="${esc(g)}" ${state.goal === g ? 'selected' : ''}>${esc(g)}</option>`).join('')}
+      </select>
+    </div>`,
+    back: true,
+    nextDisabled: state.pains.length === 0,
+  });
+  root.querySelectorAll('[data-pain]').forEach(row => {
+    row.addEventListener('click', () => {
+      const id = row.getAttribute('data-pain');
+      const i = state.pains.indexOf(id);
+      if (i === -1) state.pains.push(id); else state.pains.splice(i, 1);
+      renderPains();
+    });
+  });
+  document.getElementById('f-goal').addEventListener('change', e => { state.goal = e.target.value; });
 }
 
-function ScoreRing({ score, grade }) {
-  const r = 56, c = 2 * Math.PI * r;
-  const offset = c - (score / 100) * c;
-  const colorMap = { A:'#3a6f4d', B:'#5b7a5e', C:'#9C6A33', D:'#A86237', F:'#7c2d12' };
-  const color = colorMap[grade] || '#9C6A33';
-  return (
-    <div className="relative" style={{width:140, height:140}}>
-      <svg width="140" height="140">
-        <circle cx="70" cy="70" r={r} fill="none" stroke="#E5DBC9" strokeWidth="10" />
-        <circle cx="70" cy="70" r={r} fill="none" stroke={color} strokeWidth="10"
-          strokeDasharray={c} strokeDashoffset={offset} className="score-ring" style={{transition:'stroke-dashoffset 0.8s ease'}} />
-      </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-4xl" style={{fontFamily:"'Fraunces',serif", color, fontWeight:500}}>{score}</span>
-        <span className="text-xs" style={{fontFamily:"'Inter Tight',sans-serif", fontWeight:600, color}}>Grade {grade}</span>
+function renderEmail() {
+  root.innerHTML = stepWrap({
+    progress: progressBar(4),
+    eyebrow: 'One last thing',
+    title: 'Where should I send your report?',
+    dek: 'You’ll see the full report on the next screen either way — the email copy is so you can keep it, forward it, and act on it later.',
+    body: `<div class="field-grid">
+      <div><label class="label" for="f-cname">Your name</label>
+        <input class="input" id="f-cname" value="${esc(state.contactName)}" placeholder="First name is fine" /></div>
+      <div><label class="label" for="f-email">Email</label>
+        <input class="input" id="f-email" type="email" value="${esc(state.email)}" placeholder="you@yourbusiness.com" /></div>
+    </div>
+    <p class="hint">No spam. You get your report and one short follow-up. That’s it.</p>`,
+    back: true,
+    nextDisabled: !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email),
+    nextLabel: 'Show my report →',
+  });
+  const sync = () => {
+    state.contactName = document.getElementById('f-cname').value.trim();
+    state.email = document.getElementById('f-email').value.trim();
+    root.querySelector('[data-act="next"]').disabled = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email);
+  };
+  ['f-cname','f-email'].forEach(id => document.getElementById(id).addEventListener('input', sync));
+}
+
+// ---------------- report ----------------
+function statusIcon(s) {
+  if (s === 'pass') return '<div class="check-status pass">✓</div>';
+  if (s === 'warn') return '<div class="check-status warn">!</div>';
+  if (s === 'fail') return '<div class="check-status fail">✕</div>';
+  return '<div class="check-status na">–</div>';
+}
+
+function renderReport() {
+  shell.classList.add('wide');
+  const checks = buildChecks();
+  const score = scoreFromChecks(checks);
+  const plan = buildPlan(checks);
+  const av = state.aiVisibility && !state.aiVisibility.pending ? state.aiVisibility : null;
+  const pendingAny = (state.siteAudit && state.siteAudit.pending) || (state.aiVisibility && state.aiVisibility.pending);
+  const color = gradeColor(score.grade);
+  const r = 56, circ = 2 * Math.PI * r;
+  const offset = score.overall == null ? circ : circ - (score.overall / 100) * circ;
+
+  // AI visibility panel
+  let visPanel = '';
+  if (av && av.configured) {
+    const q = av.queries && av.queries[0];
+    visPanel = `<div class="section-block">
+      <span class="vis-badge ${av.appeared ? 'good' : 'bad'}">${av.appeared ? '✓ You appeared in AI search' : '✕ Invisible to AI search'}</span>
+      <h3>We asked Perplexity: “${esc(q && q.query || '')}”</h3>
+      <p class="section-dek">A live query, run just now — these are the sources the AI engine actually pulled for your market.</p>
+      <div class="vis-results">
+        ${(q && q.results || []).slice(0, 5).map(h => `
+          <div class="vis-hit ${h.isUser ? 'you' : ''}">
+            <div class="t">${h.isUser ? '✓ ' : ''}${esc(h.title)}</div>
+            <div class="h">${esc(h.host || h.url)}</div>
+          </div>`).join('')}
+      </div>
+      <p style="font-size:14px;color:var(--ink-700)">${av.appeared
+        ? 'Your business surfaced — that already puts you ahead of most local competitors. The checklist below is how you keep that position.'
+        : 'These are the businesses buyers hear about when they ask AI for a recommendation. The checklist below is what gets you into that answer.'}</p>
+    </div>`;
+  } else if (state.aiVisibility && state.aiVisibility.pending) {
+    visPanel = `<div class="section-block"><div class="pending"><div class="spinner"></div>Running a live AI-search query for “${esc(state.industry.toLowerCase())} in ${esc(state.city)}”… results will appear here.</div></div>`;
+  }
+
+  // Site checks panel
+  const gradable = checks.filter(c => c.max > 0 || c.status === 'na');
+  let checksPanel = '';
+  if (state.siteAudit && state.siteAudit.pending) {
+    checksPanel = `<div class="section-block"><div class="pending"><div class="spinner"></div>Fetching ${esc(state.website)} and running the site checks — usually 15–45 seconds. The score updates when it lands.</div></div>`;
+  } else {
+    const sa2 = state.siteAudit && !state.siteAudit.pending ? state.siteAudit : null;
+    const platformLine = sa2 && sa2.reachable && (sa2.platform || sa2.hosting)
+      ? `<p class="section-dek" style="margin-top:-12px">${[
+          sa2.platform ? 'Platform: ' + esc(sa2.platform) : '',
+          sa2.hosting ? 'Hosted on: ' + esc(sa2.hosting) : '',
+        ].filter(Boolean).join(' · ')} — the fixes below are written for your setup.</p>`
+      : '';
+    checksPanel = `<div class="section-block">
+      <h3>The checklist${state.website ? `: what we found on ${esc(state.website)}` : ''}</h3>
+      <p class="section-dek">Every check shows its evidence, its point value, and its fix. Click any row to expand.</p>
+      ${platformLine}
+      <div class="checks-table">
+        ${gradable.map(c => `
+          <details class="check-item">
+            <summary>
+              ${statusIcon(c.status)}
+              <span class="check-name">${esc(c.name)}</span>
+              <span class="check-pts">${c.status === 'na' ? 'not counted' : c.points + '/' + c.max + ' pts'}</span>
+              <span class="check-chevron">▾</span>
+            </summary>
+            <div class="check-detail">
+              <div class="why"><em>${esc(c.evidence)}</em>${c.why ? ' — ' + esc(c.why) : ''}</div>
+              ${c.fix ? `<div class="fix"><strong>How to fix it</strong>${esc(c.fix)}</div>` : ''}
+            </div>
+          </details>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  root.innerHTML = `<div class="fade-in">
+    <div class="report-head">
+      <p class="eyebrow">Your AI Visibility Report</p>
+      <h1>${esc(state.name)}</h1>
+      <p class="report-sub">${esc(state.industry)} · ${esc(state.city)}</p>
+    </div>
+
+    <div class="score-panel">
+      <div class="score-ring-wrap">
+        <svg width="140" height="140">
+          <circle cx="70" cy="70" r="${r}" fill="none" stroke="#E5DBC9" stroke-width="10"/>
+          <circle class="arc" cx="70" cy="70" r="${r}" fill="none" stroke="${color}" stroke-width="10"
+            stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/>
+        </svg>
+        <div class="score-ring-center">
+          <span class="score-ring-num" style="color:${color}">${score.overall == null ? '–' : score.overall}</span>
+          <span class="score-ring-grade" style="color:${color}">${score.grade ? 'Grade ' + score.grade : 'no site checks'}</span>
+        </div>
+      </div>
+      <div class="score-copy">
+        <p class="eyebrow" style="margin-bottom:6px">AI Visibility Score</p>
+        <h2>${score.overall == null ? 'No automated score without a website.' : interpret(score, checks)}</h2>
+        <p class="score-basis">${score.overall == null
+          ? 'The action plan below is built from what you told us.'
+          : `Transparent math: ${score.earned} of ${score.possible} points across ${score.ran} automated checks of your actual site and AI-search presence. Nothing self-reported is scored.`}
+        ${pendingAny ? ' Some checks are still running — the score updates automatically.' : ''}</p>
       </div>
     </div>
-  );
+
+    ${visPanel}
+    ${checksPanel}
+
+    <div style="margin:40px 0 16px;text-align:center">
+      <p class="eyebrow">Your action plan</p>
+      <h2 style="font-size:clamp(1.7rem,4vw,2.4rem)">Do these, in this order.</h2>
+    </div>
+    <div class="plan-list">
+      ${plan.map((p, i) => `
+        <div class="plan-item">
+          <span class="plan-num">0${i + 1}</span>
+          <h4>${esc(p.title)}</h4>
+          <p class="why">${esc(p.why)}</p>
+          <div class="plan-diy"><strong>Do it yourself</strong><ul>${p.diy.map(d => `<li>${esc(d)}</li>`).join('')}</ul></div>
+          ${p.shortcut ? `<div class="plan-short"><strong>Shortcut</strong>${esc(p.shortcut)}</div>` : ''}
+        </div>`).join('')}
+    </div>
+
+    <div class="cta-panel">
+      <h2>Want a second pair of eyes on this?</h2>
+      <p>Book a free 30-minute working session. We’ll walk through your report together, answer questions, and pick the right first move — whether or not you hire me for any of it.</p>
+      <a class="cta-btn" href="/ai-audit#book" target="_top">Book your free review call →</a>
+      <p class="cta-note" id="send-note">${sendNoteText()}</p>
+    </div>
+
+    <div class="restart"><button class="ghost-btn" data-act="restart">← Start over</button></div>
+  </div>`;
+
+  // Send the lead once (only after both checks have resolved, or immediately
+  // if they can't resolve — we want the emailed report to match the screen).
+  if (!pendingAny && state.sendStatus === 'idle') submitLead(checks, score, plan);
 }
 
-function interpretGrade(g) {
-  return ({
-    A: 'You\'re ahead of the pack.',
-    B: 'You\'ve got real momentum.',
-    C: 'You\'re sitting on a lot of leverage.',
-    D: 'There\'s significant room to move.',
-    F: 'You\'re leaving real money on the table.',
-  })[g];
+// ---------------- router ----------------
+function render() {
+  shell.classList.toggle('wide', state.step === TOTAL_STEPS + 1);
+  if (state.step === 0) renderWelcome();
+  else if (state.step === 1) renderBasics();
+  else if (state.step === 2) renderKeywords();
+  else if (state.step === 3) renderPains();
+  else if (state.step === 4) renderEmail();
+  else renderReport();
+  // resize parent iframe politely
+  try { parent.postMessage({ auditHeight: document.body.scrollHeight }, '*'); } catch (e) {}
 }
 
-function interpretBody(scores, data) {
-  if (scores.visibility < 50) {
-    return `Your AI search visibility is the biggest single lever. For ${data.industry.toLowerCase()} in ${data.city || 'your market'}, AI-recommended results are increasingly the first thing buyers see — and right now, they're not seeing you.`;
+document.addEventListener('click', e => {
+  const btn = e.target.closest('[data-act]');
+  if (!btn) return;
+  const act = btn.getAttribute('data-act');
+  if (act === 'next') {
+    if (state.step === 1) fireChecks(); // start real checks as early as possible
+    state.step += 1;
+    render();
+    window.scrollTo({ top: 0 });
+  } else if (act === 'back') {
+    state.step = Math.max(0, state.step - 1);
+    render();
+  } else if (act === 'restart') {
+    Object.assign(state, {
+      step: 0, name:'', website:'', industry:'', city:'', keywords:'',
+      pains: [], goal:'', contactName:'', email:'',
+      siteAudit: null, aiVisibility: null, checksFired: false, sendStatus: 'idle',
+    });
+    render();
+    window.scrollTo({ top: 0 });
   }
-  if (scores.opportunity > 70) {
-    return 'You\'ve flagged enough friction that the question isn\'t whether to deploy AI — it\'s where to start. The opportunities below are ranked by what would move the needle fastest for you specifically.';
-  }
-  if (scores.stack > 70) {
-    return 'You\'ve already got a solid tooling foundation, which means deploying AI on top of it is dramatically faster. Most of your wins are integration and intelligence layers, not new tools.';
-  }
-  return 'Your situation is typical of where small businesses are right now: a few tools, a few pain points, and a real opportunity to get ahead of competitors who haven\'t moved yet. Below are your top 3 moves.';
-}
+});
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+render();
+})();
 </script>
 </body>
 </html>

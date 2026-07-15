@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { promises as dns } from 'node:dns';
 
 export const prerender = false;
 
@@ -79,7 +80,33 @@ function pickTitle(html: string): string | null {
   return m ? m[1].trim() : null;
 }
 
-function detectPlatform(html: string, headers: Headers): string | null {
+// DNS signals — A records, CNAME chain, and nameservers all fingerprint
+// site builders and hosts that hide from HTML sniffing. Best-effort with a
+// short timeout; any lookup that fails just returns empty.
+type DnsSignals = { a: string[]; cname: string[]; ns: string[] };
+
+async function dnsSignals(host: string): Promise<DnsSignals> {
+  const withTimeout = async <T>(p: Promise<T>): Promise<T | null> => {
+    let t: ReturnType<typeof setTimeout>;
+    const timeout = new Promise<null>(resolve => { t = setTimeout(() => resolve(null), 3_000); });
+    const result = await Promise.race([p.catch(() => null), timeout]);
+    clearTimeout(t!);
+    return result;
+  };
+  // Naive apex extraction (handles the common two-part-TLD cases).
+  const parts = host.replace(/^www\./, '').split('.');
+  const twoPartTld = /\.(co|com|org|net|gov|ac)\.[a-z]{2}$/i.test(host);
+  const apex = parts.slice(twoPartTld ? -3 : -2).join('.');
+
+  const [a, cname, ns] = await Promise.all([
+    withTimeout(dns.resolve4(host)),
+    withTimeout(dns.resolveCname(host)),
+    withTimeout(dns.resolveNs(apex)),
+  ]);
+  return { a: a ?? [], cname: (cname ?? []).map(c => c.toLowerCase()), ns: (ns ?? []).map(n => n.toLowerCase()) };
+}
+
+function detectPlatform(html: string, headers: Headers, dnsSig: DnsSignals): string | null {
   const generator = pickMeta(html, 'generator');
   if (generator) {
     if (/wordpress/i.test(generator)) return 'WordPress';
@@ -89,15 +116,55 @@ function detectPlatform(html: string, headers: Headers): string | null {
     if (/shopify/i.test(generator)) return 'Shopify';
     if (/duda/i.test(generator)) return 'Duda';
     if (/ghost/i.test(generator)) return 'Ghost';
+    if (/hubspot/i.test(generator)) return 'HubSpot';
+    if (/framer/i.test(generator)) return 'Framer';
   }
+  // HTML fingerprints
   if (/static\d?\.squarespace\.com/i.test(html)) return 'Squarespace';
-  if (/\.wixstatic\.com/i.test(html)) return 'Wix';
+  if (/\.wixstatic\.com|wix-code|parastorage\.com/i.test(html)) return 'Wix';
   if (/cdn\.shopify\.com/i.test(html)) return 'Shopify';
   if (/wp-content\/|wp-includes\//i.test(html)) return 'WordPress';
+  if (/framerusercontent\.com/i.test(html)) return 'Framer';
+  if (/js\.hs-scripts\.com|hubspotusercontent/i.test(html)) return 'HubSpot';
+  if (/assets\.website-files\.com/i.test(html)) return 'Webflow';
   if (/godaddy|website-builder/i.test(html)) return 'GoDaddy';
+  // Response headers
+  if (/squarespace/i.test(headers.get('server') || '')) return 'Squarespace';
+  if (headers.get('x-wix-request-id')) return 'Wix';
+  if (headers.get('x-shopify-stage') || headers.get('x-shopid')) return 'Shopify';
   const xPowered = headers.get('x-powered-by') || '';
   if (/next\.js/i.test(xPowered)) return 'Next.js (custom)';
   if (/astro/i.test(xPowered)) return 'Astro (custom)';
+  // DNS fingerprints — catch sites whose HTML gives nothing away
+  const SQUARESPACE_IPS = ['198.185.159.144', '198.185.159.145', '198.49.23.144', '198.49.23.145'];
+  const SHOPIFY_IPS = ['23.227.38.65', '23.227.38.74'];
+  if (dnsSig.a.some(ip => SQUARESPACE_IPS.includes(ip))) return 'Squarespace';
+  if (dnsSig.a.some(ip => SHOPIFY_IPS.includes(ip)) || dnsSig.cname.some(c => c.endsWith('myshopify.com'))) return 'Shopify';
+  if (dnsSig.cname.some(c => c.includes('webflow'))) return 'Webflow';
+  if (dnsSig.ns.some(n => n.endsWith('wixdns.net'))) return 'Wix';
+  return null;
+}
+
+// Infrastructure host — distinct from the builder/CMS. Tells us who serves
+// the site (and therefore whether "custom-built" is a fair description).
+// Order matters: origin-specific headers first; Cloudflare last because its
+// proxy masks whatever sits behind it.
+function detectHosting(headers: Headers, dnsSig: DnsSignals): string | null {
+  const server = headers.get('server') || '';
+  if (headers.get('x-vercel-id') || /vercel/i.test(server)) return 'Vercel';
+  if (headers.get('x-nf-request-id') || /netlify/i.test(server)) return 'Netlify';
+  if (headers.get('x-github-request-id') || /github\.com/i.test(server)) return 'GitHub Pages';
+  if (headers.get('x-kinsta-cache')) return 'Kinsta';
+  if (headers.get('x-pantheon-styx-hostname')) return 'Pantheon';
+  if (/wpengine/i.test(headers.get('x-powered-by') || '')) return 'WP Engine';
+  if (/flywheel/i.test(server)) return 'Flywheel';
+  if (headers.get('x-amz-cf-id')) return 'AWS CloudFront';
+  if (headers.get('x-served-by') && /varnish/i.test(headers.get('via') || '')) return 'Fastly';
+  if (dnsSig.a.includes('76.76.21.21') || dnsSig.cname.some(c => c.includes('vercel-dns'))) return 'Vercel';
+  if (dnsSig.a.includes('75.2.60.5') || dnsSig.cname.some(c => c.endsWith('netlify.app'))) return 'Netlify';
+  if (dnsSig.cname.some(c => c.endsWith('github.io'))) return 'GitHub Pages';
+  if (headers.get('cf-ray')) return 'Cloudflare';
+  if (/litespeed/i.test(server)) return 'shared hosting (LiteSpeed)';
   return null;
 }
 
@@ -145,14 +212,18 @@ async function pageSpeedSignals(target: string): Promise<{
   }
 }
 
-// Cheap follow-ups: does robots.txt + sitemap.xml exist?
-async function existsCheck(base: URL): Promise<{ robots: boolean; sitemap: boolean }> {
+// Cheap follow-ups: do robots.txt / sitemap.xml / llms.txt exist?
+async function existsCheck(base: URL): Promise<{ robots: boolean; sitemap: boolean; llms: boolean }> {
   const head = async (path: string) => {
     const res = await fetchWithTimeout(new URL(path, base).toString(), 5_000);
     return !!res && res.ok;
   };
-  const [robots, sitemap] = await Promise.all([head('/robots.txt'), head('/sitemap.xml')]);
-  return { robots, sitemap };
+  const [robots, sitemap, llms] = await Promise.all([
+    head('/robots.txt'),
+    head('/sitemap.xml'),
+    head('/llms.txt'),
+  ]);
+  return { robots, sitemap, llms };
 }
 
 export const POST: APIRoute = async ({ request }) => {
@@ -165,7 +236,11 @@ export const POST: APIRoute = async ({ request }) => {
   const u = normalizeUrl(body.url || '');
   if (!u) return json(400, { ok: false, error: 'invalid_url' });
 
-  const homeRes = await fetchWithTimeout(u.toString(), 10_000);
+  // DNS runs in parallel with the page fetch — both only need the hostname.
+  const [homeRes, dnsSig] = await Promise.all([
+    fetchWithTimeout(u.toString(), 10_000),
+    dnsSignals(u.hostname),
+  ]);
   if (!homeRes || !homeRes.ok) {
     return json(200, {
       ok: true,
@@ -213,18 +288,23 @@ export const POST: APIRoute = async ({ request }) => {
   const schemaPresent = expectedSchemaTypes.filter(hasSchema);
   const schemaMissing = expectedSchemaTypes.filter(t => !hasSchema(t));
 
+  const h1Count = (html.match(/<h1[\s>]/gi) || []).length;
+
   const findings = {
     ok: true as const,
     reachable: true,
     url: u.toString(),
     finalUrl: homeRes.url,
+    https: homeRes.url.startsWith('https://'),
+    h1Count,
     title: pickTitle(html),
     description: pickMeta(html, 'description'),
     ogTitle: pickMeta(html, 'og:title'),
     ogDescription: pickMeta(html, 'og:description'),
     ogImage: !!pickMeta(html, 'og:image'),
     twitterCard: !!pickMeta(html, 'twitter:card'),
-    platform: detectPlatform(html, homeRes.headers),
+    platform: detectPlatform(html, homeRes.headers, dnsSig),
+    hosting: detectHosting(homeRes.headers, dnsSig),
     schema: {
       typesFound: schemaTypes,
       present: schemaPresent,
@@ -233,7 +313,7 @@ export const POST: APIRoute = async ({ request }) => {
       max: expectedSchemaTypes.length,
     },
     pagespeed: null as Awaited<ReturnType<typeof pageSpeedSignals>>,
-    files: { robots: false, sitemap: false },
+    files: { robots: false, sitemap: false, llms: false },
   };
 
   // Fan out the two slow checks in parallel
