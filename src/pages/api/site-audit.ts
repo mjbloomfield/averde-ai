@@ -212,6 +212,37 @@ async function pageSpeedSignals(target: string): Promise<{
   }
 }
 
+// Schema often lives on the page it describes (FAQPage on /faq, Service on
+// /services) — Google's guidelines actually require that. So we can't judge
+// schema from the homepage alone: pick up to 4 likely schema-bearing pages
+// from the homepage's own links and scan those too.
+const SUBPAGE_KEYWORDS = ['faq', 'question', 'how-it-works', 'service', 'rate', 'pricing', 'price', 'treatment', 'about', 'contact'];
+
+function pickSubpages(html: string, base: URL): URL[] {
+  const seen = new Set<string>();
+  const links: URL[] = [];
+  const re = /<a[^>]+href=["']([^"'#]+)["']/gi;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(html))) {
+    try {
+      const u = new URL(m[1], base);
+      if (u.hostname.replace(/^www\./, '') !== base.hostname.replace(/^www\./, '')) continue;
+      if (u.pathname === '/' || /\.(pdf|jpe?g|png|gif|webp|svg|zip|mp4)$/i.test(u.pathname)) continue;
+      const key = u.pathname.replace(/\/$/, '').toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      links.push(u);
+    } catch { /* unparseable href */ }
+  }
+  const picked: URL[] = [];
+  for (const kw of SUBPAGE_KEYWORDS) {
+    const hit = links.find(l => l.pathname.toLowerCase().includes(kw) && !picked.includes(l));
+    if (hit) picked.push(hit);
+    if (picked.length >= 4) break;
+  }
+  return picked;
+}
+
 // Cheap follow-ups: do robots.txt / sitemap.xml / llms.txt exist?
 async function existsCheck(base: URL): Promise<{ robots: boolean; sitemap: boolean; llms: boolean }> {
   const head = async (path: string) => {
@@ -256,7 +287,17 @@ export const POST: APIRoute = async ({ request }) => {
   // schema.org has a deep inheritance tree (Dentist IS-A LocalBusiness IS-A
   // Organization). We map the user's actual found types to the umbrella
   // categories AI engines care about.
-  const schemaTypes = extractSchemaTypes(html);
+  const subpages = pickSubpages(html, u);
+  const subpageScans = await Promise.all(subpages.map(async sp => {
+    const res = await fetchWithTimeout(sp.toString(), 5_000);
+    if (!res || !res.ok) return null;
+    return { path: sp.pathname, types: extractSchemaTypes(await res.text()) };
+  }));
+  const pages = [
+    { path: '/', types: extractSchemaTypes(html) },
+    ...subpageScans.filter((p): p is { path: string; types: string[] } => !!p),
+  ];
+  const schemaTypes = [...new Set(pages.flatMap(p => p.types))];
   const SCHEMA_INHERITANCE: Record<string, string[]> = {
     LocalBusiness: [
       'LocalBusiness', 'Dentist', 'MedicalBusiness', 'MedicalClinic', 'Optician', 'Pharmacy',
@@ -287,6 +328,13 @@ export const POST: APIRoute = async ({ request }) => {
   };
   const schemaPresent = expectedSchemaTypes.filter(hasSchema);
   const schemaMissing = expectedSchemaTypes.filter(t => !hasSchema(t));
+  // Which scanned page each umbrella type was first seen on (for evidence lines).
+  const schemaFoundOn: Record<string, string> = {};
+  for (const umbrella of schemaPresent) {
+    const variants = (SCHEMA_INHERITANCE[umbrella] || [umbrella]).map(v => v.toLowerCase());
+    const page = pages.find(p => p.types.some(t => variants.includes(t.toLowerCase())));
+    if (page) schemaFoundOn[umbrella] = page.path;
+  }
 
   const h1Count = (html.match(/<h1[\s>]/gi) || []).length;
 
@@ -309,6 +357,8 @@ export const POST: APIRoute = async ({ request }) => {
       typesFound: schemaTypes,
       present: schemaPresent,
       missing: schemaMissing,
+      foundOn: schemaFoundOn,
+      pagesScanned: pages.map(p => p.path),
       score: schemaPresent.length, // out of expectedSchemaTypes.length
       max: expectedSchemaTypes.length,
     },

@@ -301,18 +301,22 @@ function buildChecks() {
 
     const present = (sa.schema && sa.schema.present) || [];
     const has = n => present.indexOf(n) !== -1;
+    const foundOn = (sa.schema && sa.schema.foundOn) || {};
+    const scanned = (sa.schema && sa.schema.pagesScanned) || ['/'];
+    const onPage = n => foundOn[n] && foundOn[n] !== '/' ? ' (on ' + foundOn[n] + ')' : '';
+    const notFound = what => 'No ' + what + ' markup found on the ' + scanned.length + ' page' + (scanned.length === 1 ? '' : 's') + ' we checked.';
     add('schema-local', 'LocalBusiness schema', has('LocalBusiness') ? 'pass' : 'fail', has('LocalBusiness') ? 15 : 0, 15,
-      has('LocalBusiness') ? 'Found LocalBusiness (or a subtype) markup.' : 'No LocalBusiness markup found.',
+      has('LocalBusiness') ? 'Found LocalBusiness (or a subtype) markup' + onPage('LocalBusiness') + '.' : notFound('LocalBusiness'),
       'This is the machine-readable card that tells AI engines your name, location, and what kind of business you are. It’s the highest-value single block of code on a local business site.',
       schemaHow);
 
     add('schema-faq', 'FAQ schema', has('FAQPage') ? 'pass' : 'fail', has('FAQPage') ? 10 : 0, 10,
-      has('FAQPage') ? 'Found FAQPage markup.' : 'No FAQPage markup found.',
+      has('FAQPage') ? 'Found FAQPage markup' + onPage('FAQPage') + '.' : notFound('FAQPage'),
       'AI engines love clean question-and-answer pairs — FAQ schema is the easiest content for them to quote directly.',
       'First write a real FAQ page (the 8–15 questions customers actually ask). Then mark it up: ' + schemaHow);
 
     add('schema-service', 'Service schema', has('Service') ? 'pass' : 'fail', has('Service') ? 5 : 0, 5,
-      has('Service') ? 'Found Service markup.' : 'No Service markup found.',
+      has('Service') ? 'Found Service markup' + onPage('Service') + '.' : notFound('Service'),
       'Tells engines exactly which services you offer, so “who does X near me” queries can match you.',
       'One Service block per major service you offer. ' + schemaHow);
 
