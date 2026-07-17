@@ -104,6 +104,32 @@ home.yaml + industry pages + this CLAUDE.md style:
   nationwide." → "I'm based in Boulder, working with businesses
   nationwide." Mark called this out by name as "AI speak."
 
+### Voice patterns confirmed by claude-cowork edits (July 2026)
+
+- **Front-load the honesty.** The "set expectations — it won't magically do all
+  your work" caveat moved from mid-post into the intro, before the pitch.
+  Caveats come before excitement, not after.
+- **Soften combative human-AI framing.** "Pushing back" → "making corrections";
+  "saying no, don't do that" → "reining it in." Working with Claude is
+  described as management, not argument. Prefer the "force-multiplier" frame:
+  you make the calls, Claude multiplies output.
+- **Audience-first examples, even at the cost of accurate detail.** For a
+  non-technical audience: "builds, deploys, checks" → "spreadsheets and
+  presentations"; "CLAUDE.md" → "proper Claude instructions"; "built in the
+  Code tab" → "built with Claude." Insider detail gets cut if the reader
+  can't act on it.
+- **Personal practice as guidance.** "I still use Chat for one-off questions,"
+  "there's a feature I *don't* use — Claude memory," "I'd stick with Cowork."
+  Teach by disclosing his own setup, including what he skips and why.
+- **Describe the real UI, warts included.** The desktop app's confusing
+  Home/Code layout gets described as it actually is, with "(I know, it's a
+  terrible design)" — candid critique of a product he's recommending.
+  "Modes," not "tabs" — the tabs framing was inaccurate.
+- **Colloquial-plain idioms.** "Sucked into the hype," "before it goes out
+  the door," "make the calls." Plain English leans folksy, not just simple.
+- **Trim redundant positioning lines.** Cut "This is the one most small
+  business owners should care about first" — the section already showed it.
+
 ---
 
 ## Blog post workflow
