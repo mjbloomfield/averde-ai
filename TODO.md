@@ -8,6 +8,8 @@ Site: `https://averde.ai` · Stack: Astro + Tailwind + Keystatic + Supabase + Re
 
 ## To do
 
+- **Decide the audit's name** — Mark is leaning toward "AI Website Audit" / "AI Website Readiness Audit" (currently "AI Visibility Audit" site-wide). Scoping it to *website* also clears the name space for the business audit below. Rename is copy-only; keep the /ai-audit URL.
+- **Develop an "AI Business Audit"** — separate product idea: how are you using AI in your business (operations, workflows, tooling), not just how AI sees your website. Would pair with the existing website audit as a two-audit funnel.
 - **Privacy policy legal skim** — `/privacy` is drafted in plain English; have a lawyer glance at it if you want belt-and-suspenders (not legal advice).
 - **Glossary page (`/glossary`, DefinedTermSet schema)** — AEO asset: A–Z terms (AEO, schema markup, LLM, AI Overviews, citation network, etc.) with hash-anchored deep links. Drafted as part of the playbook pass — review the copy.
 - **Comparison post — "AEO vs SEO"** — decision-stage, on-brand. Drafted in `/blog-drafts` for your edit pass.
