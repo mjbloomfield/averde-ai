@@ -22,115 +22,77 @@ Stack: Astro 6 (output: 'static' + Vercel adapter for SSR routes) + Tailwind 4
 
 ---
 
-## Mark's voice — initial observations
+## Mark's voice
 
-This section will be expanded as I see edits. Initial baselines from existing
-home.yaml + industry pages + this CLAUDE.md style:
+One unified guide, folded together from Mark's edit passes (May–July 2026).
+When a new edit pass teaches something, fold it in here where it belongs —
+don't append dated sections. Principles outrank examples; the examples are
+evidence, not extra rules.
 
-- **Smart-casual, founder-led.** First person ("I", "I'll", "we'll" only when
-  there's a real "we"). Mark is the company.
-- **Plain English. Zero jargon unless absolutely necessary, and then
-  defined inline.** "AEO — Answer Engine Optimization. In plain English: ..."
-- **Anti-hype.** Calls out the hype directly when relevant. Doesn't trend-chase.
-- **Specific over general.** Concrete dollar figures, real timelines, real
-  examples. "$1,200–$3,000" beats "competitively priced."
-- **Direct.** Short paragraphs. Strong claim at the start of each section.
-  Reader knows what's coming before reading the supporting copy.
-- **Comfortable with vulnerability/honesty.** "Won't do those '10 best where
-  I'm one of the ten' articles" → call out sleazy moves by name, including
-  if our own service has limits.
-- **Light humor, never forced.** Self-aware over self-important.
+### Who's talking
+- Founder, first person. "I", not "we" (unless there's a real we). Smart-casual,
+  self-aware over self-important, light humor never forced.
+- Talking to non-technical small-business owners. If the reader can't act on a
+  detail, cut it (the Linux aside, "CLAUDE.md", "built in the Code tab" all
+  died for this reason). Insider terms get translated or dropped.
 
-### Words/phrases Mark uses (from existing copy)
-- "your front desk" / "your team" (vs "your employees")
-- "actually" — used precisely, never as filler
-- "the math is clear" / "the math"
-- "stop letting X become Y" (rhetorical structure)
-- "no fluff" / "no jargon" / "no pressure"
-- "honest pricing" / "honest take"
-- "fit your business" / "fit how you work"
+### Core principles
+1. **Plain English, zero jargon.** Necessary terms get defined inline, then the
+   consequence translated for the reader: "the more tokens it uses — in other
+   words, the faster you'll use up your quota."
+2. **Anti-hype, in both directions.** Don't oversell the tools ("fast and
+   pretty good, but still needs your input") and don't oversell Averde.
+   Front-load caveats — expectations come *before* the pitch. Admit limits by
+   name; call out sleazy moves by name.
+3. **Specific over general.** Real dollar figures, real timelines, real
+   examples, exact click-paths ("Click your username in the bottom left →
+   Settings → General"). Hedge fuzzy numbers honestly ("+" suffixes, "a couple
+   weeks") and never claim what you can't prove (no speculative moats).
+4. **Mechanism over psychology.** When explaining why people get things wrong,
+   give the technical reason, not their vanity.
+5. **Reassure, never dare.** Adoption is a comfort progression: "start small,"
+   "as you get comfortable," "if you're feeling adventurous." Stage the
+   reader's inner voice ("maybe you're thinking, 'I wish I could build…'").
+   Working with AI is management, not combat: "making corrections," "reining
+   it in," force-multiplier — you make the calls.
+6. **Teach by disclosure.** Personal practice as guidance — what I use, what I
+   skip, and why ("there's a feature I *don't* use…"). Describe the real UI,
+   warts included ("I know, it's a terrible design").
 
-### Words/phrases Mark probably wouldn't use (to verify via edits)
-- "leverage" (verb)
-- "synergy", "ecosystem"
-- "revolutionize", "transform" (over-promising)
-- "best-in-class"
-- "world-class"
-- "thought leader"
-- Hedge words ("might," "could," "potentially") when a direct claim is better
+### Sound human — the ban list
+No AI tropes, ever:
+- "It's not X, it's Y" contrast framing
+- Staccato triads and fragment runs ("Simple. Direct. Done." / "The tools
+  existed. The use cases were real.") — collapse into one flowing sentence
+  with commas or em-dashes
+- "honest" / "genuinely" as modifiers — honesty shows in behavior, never as a
+  self-label ("my honest advice" → "my advice"; "A few honest gotchas" →
+  "A few further thoughts")
+- Buzzwords: leverage (verb), synergy, ecosystem, revolutionize, transform,
+  best-in-class, world-class, thought leader, "slick"
+- Hedge words (might / could / potentially) where a direct claim is true
+- Over-promising, padded word count
 
-### Structural patterns to keep using
-- Open with a concrete scenario, not a thesis statement
-- Direct claims as section openers, then explanation
-- "Three things, in order of X" — numbered, ranked, opinionated
-- Honest acknowledgment of what something *isn't* (defensive prose)
-- Closing with the strategic/urgency point, not a wishy-washy summary
+### Structure
+- Open with a concrete scenario, not a thesis statement. Cinematic openers
+  ("Scene:") welcome.
+- Direct claim first in each section, then the support. Numbered, ranked,
+  opinionated lists ("Three things, in order of impact"). "Make sure…"
+  imperatives for parallel list headings.
+- Conversational connectors at section breaks ("So,", "Beyond the…",
+  "Remember —"); don't open a section with a bare noun.
+- Say what something *isn't* (defensive prose). Close on the strategic or
+  urgency point, and repeat the brand term as a payoff line ("Your site
+  wasn't AI Ready.").
+- Prices as a value progression with the entry tier reassured ("To start,
+  the $20/mo plan should be plenty").
 
-### Voice patterns confirmed by post #1 edits (May 2026)
-
-- **"Make sure..." imperatives** for parallel numbered/bulleted list headings.
-  Talks TO the reader instead of lecturing about an abstract.
-- **Claude first** when listing AI engines; ChatGPT/Perplexity/Gemini after.
-  Mark's brand, Mark's call.
-- **Cinematic openers welcome.** "Scene:" as a screenplay direction is on-brand.
-- **Smooth out abrupt fragments.** "Different game." → "It's just a different game."
-  Mark doesn't trust punch-fragment style; prefers conversational completeness.
-- **Conversational connectors at section breaks** — "So,", "It's just",
-  "Beyond the...". Don't open sections with bare nouns when a connector reads warmer.
-- **Mechanism over psychology** when explaining why people get things wrong.
-  Don't attribute to reader self-flattery ("they think because they use AI...");
-  explain the actual technical reason ("AEO uses different signals than SEO").
-- **Honest hedges on numbers.** Prefer "+" suffixes on prices, "a couple weeks"
-  over precise ranges when the range is fuzzy. Don't overclaim.
-- **Parenthetical self-include.** "(which we all should be doing anyway)" pattern.
-  Pulls Mark into the reader's situation instead of standing above it.
-- **Repeat the brand term as a payoff line.** "Your site wasn't AI Ready."
-  reinforces the title, doesn't just gesture at it.
-- **No "slick", "slicker", or trendy descriptors.** "Professional" / "polished"
-  when that meaning is needed.
-- **Drop qualifier hedges from sharp claims.** "AI didn't know you existed in a
-  form it could recommend" → "AI didn't even know you existed." Crisp claim
-  beats copywriter-hedged claim.
-- **Cut speculative moats.** Don't claim multi-year head starts or citation
-  graphs that "settle." If you can't prove the duration, soften ("leg up").
-  Mark called out this exact overclaim in the post #1 review.
-- **Avoid the three-short-declaratives-plus-closer rhythm.** "The tools
-  existed. The use cases were real. But nobody was translating it. So I
-  started doing that work." reads as LLM rhythm even when the meaning is
-  fine. Collapse those runs into one flowing sentence with commas or
-  em-dashes ("The tools and use cases were real, but nobody was
-  translating any of it — so I started doing that work myself"). Same
-  fix for paired fragment closers like "Based in Boulder. Working
-  nationwide." → "I'm based in Boulder, working with businesses
-  nationwide." Mark called this out by name as "AI speak."
-
-### Voice patterns confirmed by claude-cowork edits (July 2026)
-
-- **Front-load the honesty.** The "set expectations — it won't magically do all
-  your work" caveat moved from mid-post into the intro, before the pitch.
-  Caveats come before excitement, not after.
-- **Soften combative human-AI framing.** "Pushing back" → "making corrections";
-  "saying no, don't do that" → "reining it in." Working with Claude is
-  described as management, not argument. Prefer the "force-multiplier" frame:
-  you make the calls, Claude multiplies output.
-- **Audience-first examples, even at the cost of accurate detail.** For a
-  non-technical audience: "builds, deploys, checks" → "spreadsheets and
-  presentations"; "CLAUDE.md" → "proper Claude instructions"; "built in the
-  Code tab" → "built with Claude." Insider detail gets cut if the reader
-  can't act on it.
-- **Personal practice as guidance.** "I still use Chat for one-off questions,"
-  "there's a feature I *don't* use — Claude memory," "I'd stick with Cowork."
-  Teach by disclosing his own setup, including what he skips and why.
-- **Describe the real UI, warts included.** The desktop app's confusing
-  Home/Code layout gets described as it actually is, with "(I know, it's a
-  terrible design)" — candid critique of a product he's recommending.
-  "Modes," not "tabs" — the tabs framing was inaccurate.
-- **Colloquial-plain idioms.** "Sucked into the hype," "before it goes out
-  the door," "make the calls." Plain English leans folksy, not just simple.
-- **Trim redundant positioning lines.** Cut "This is the one most small
-  business owners should care about first" — the section already showed it.
-
----
+### Verbal fingerprints
+Uses: "your front desk", "the math is clear", "stop letting X become Y",
+"no fluff / no jargon / no pressure", "fit how you work", colloquial-plain
+idioms ("sucked into the hype", "before it goes out the door", "make the
+calls"), parenthetical self-include ("which we all should be doing anyway"),
+"actually" only when it earns its place. Claude listed first among AI engines.
 
 ## Blog post workflow
 
@@ -157,8 +119,9 @@ After Mark edits a post, he says:
 I then:
 1. Read both `<NN>-*-claude-draft.md` and `<NN>-*-mark-edited.md`
 2. Diff them mentally
-3. Add new observations to the "Mark's voice" section above (specific
-   patterns: words swapped, structures changed, things removed)
+3. Fold new observations into the unified "Mark's voice" section above,
+   under whichever heading fits (principle, ban list, structure, fingerprints).
+   Generalize when possible; don't append dated sections or one-off examples.
 4. The next post I draft pulls from these patterns automatically since this
    file is in every session's context
 
