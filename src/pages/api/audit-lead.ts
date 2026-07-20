@@ -194,7 +194,35 @@ export const POST: APIRoute = async ({ request }) => {
     // The user's copy of their report — the audit UI promises this.
     // Best-effort: a failure here shouldn't fail the lead capture.
     try {
-      const user = renderUserReportEmail(payload);
+      // Store a web copy of the report first so the email can link to it.
+      // If storage fails, fall back to sending the email without the link.
+      let reportUrl: string | null = null;
+      let user = renderUserReportEmail(payload, null);
+      if (supabaseUrl && supabaseKey) {
+        const reportId = crypto.randomUUID();
+        const candidateUrl = `https://averde.ai/audit/report/${reportId}`;
+        const candidate = renderUserReportEmail(payload, candidateUrl);
+        try {
+          const supabase = createClient(supabaseUrl, supabaseKey, {
+            auth: { persistSession: false, autoRefreshToken: false },
+          });
+          const { error } = await supabase.from('audit_reports').insert({
+            id: reportId,
+            business_name: payload.name || null,
+            contact_name: payload.contactName || null,
+            email,
+            html: candidate.html,
+          });
+          if (!error) {
+            reportUrl = candidateUrl;
+            user = candidate;
+          } else {
+            console.error('audit_reports insert failed:', error.message);
+          }
+        } catch (err) {
+          console.error('audit_reports insert threw:', err);
+        }
+      }
       await resend.emails.send({
         from: 'Mark Bloomfield <mark@averde.ai>',
         to: [email],
@@ -553,7 +581,7 @@ function renderEmail(args: {
 // ── User-facing report email ─────────────────────────────────────
 // A durable copy of what they saw on screen: score, check results,
 // action plan, and the booking link. Plain, warm, no tricks.
-function renderUserReportEmail(payload: AuditPayload): { html: string; text: string; subject: string } {
+function renderUserReportEmail(payload: AuditPayload, reportUrl: string | null): { html: string; text: string; subject: string } {
   const s = payload.scores || {};
   const checks = payload.checks || [];
   const plan = payload.actionPlan || [];
@@ -569,6 +597,7 @@ function renderUserReportEmail(payload: AuditPayload): { html: string; text: str
     `Hi${firstName ? ' ' + firstName : ''},`,
     '',
     `Here's your AI Visibility Report for ${business}.`,
+    reportUrl ? `View the full report in your browser: ${reportUrl}` : '',
     '',
     s.overall != null
       ? `Score: ${s.overall}/100 (Grade ${s.grade ?? '?'}) — ${s.earned ?? '?'} of ${s.possible ?? '?'} points across automated checks of your live site and AI-search presence.`
@@ -621,7 +650,11 @@ function renderUserReportEmail(payload: AuditPayload): { html: string; text: str
 <body style="margin:0;padding:0;background:#F4F1EA;font:400 14px/1.5 'Helvetica Neue',Arial,sans-serif;color:#1F2937;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F4F1EA;padding:24px 12px;">
     <tr><td align="center">
-      <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:#FFFFFF;border-radius:12px;overflow:hidden;">
+      <table role="presentation" width="720" cellpadding="0" cellspacing="0" style="max-width:720px;background:#FFFFFF;border-radius:12px;overflow:hidden;">
+
+        ${reportUrl ? `<tr><td style="padding:10px 28px;background:#EDE3D0;font:400 12px/1.4 'Helvetica Neue',Arial,sans-serif;color:#6B7280;text-align:center;">
+          Email clipping this, or reading on a small screen? <a href="${reportUrl}" style="color:#9C6A33;font-weight:600;">View the full report in your browser →</a>
+        </td></tr>` : ''}
 
         <tr><td style="padding:26px 28px 18px;background:#2A1B11;color:#F4ECDB;">
           <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#C99356;margin-bottom:8px;">Your AI Visibility Report</div>

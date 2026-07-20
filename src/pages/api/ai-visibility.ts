@@ -81,7 +81,7 @@ async function perplexitySearch(
 }
 
 export const POST: APIRoute = async ({ request }) => {
-  let body: { industry?: string; city?: string; domain?: string; name?: string };
+  let body: { industry?: string; city?: string; domain?: string; name?: string; keywords?: string[] };
   try {
     body = await request.json();
   } catch {
@@ -102,11 +102,20 @@ export const POST: APIRoute = async ({ request }) => {
     return json(200, { ok: true, configured: false, queries: [] });
   }
 
-  // Two queries — covers both "best/top" framing and a more natural buyer phrasing
-  const queries = [
-    `best ${industry.toLowerCase()} in ${city}`,
-    `${industry.toLowerCase()} ${city} recommendations`,
-  ];
+  // Prefer the user's own customer search phrases (step 2 of the form) —
+  // they know what buyers actually type far better than an industry label.
+  // Append the city when a phrase doesn't already mention it. Fall back to
+  // generic industry queries only if no phrases were given.
+  const rawKeywords = Array.isArray(body.keywords) ? body.keywords : [];
+  const keywords = [...new Set(rawKeywords.map(k => String(k).trim()).filter(k => k.length > 2))].slice(0, 10);
+  const cityToken = (city.split(/[\s,]+/)[0] || '').toLowerCase();
+
+  const queries = keywords.length
+    ? keywords.map(k => (cityToken && !k.toLowerCase().includes(cityToken) ? `${k} ${city}` : k))
+    : [
+        `best ${industry.toLowerCase()} in ${city}`,
+        `${industry.toLowerCase()} ${city} recommendations`,
+      ];
 
   const results: QueryResult[] = await Promise.all(
     queries.map(async query => {
@@ -138,6 +147,8 @@ export const POST: APIRoute = async ({ request }) => {
     businessName: businessName || null,
     userHost,
     appeared: anyAppearance,
+    appearedCount: results.filter(r => r.appeared).length,
+    source: keywords.length ? 'keywords' : 'industry',
     queries: results,
   });
 };

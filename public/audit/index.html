@@ -108,6 +108,16 @@
   .vis-badge { display:inline-block; font-family:'Inter Tight',sans-serif; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; padding:5px 12px; border-radius:999px; margin-bottom:12px; }
   .vis-badge.good { background:rgba(58,111,77,.12); color:var(--pass); }
   .vis-badge.bad  { background:rgba(160,67,36,.12); color:var(--fail); }
+  .vis-queries { display:flex; flex-direction:column; gap:8px; margin:16px 0; }
+  .vis-q { border:1px solid var(--bone); border-radius:10px; background:var(--paper); }
+  .vis-q summary { display:flex; align-items:center; gap:10px; padding:10px 14px; cursor:pointer; list-style:none; }
+  .vis-q summary::-webkit-details-marker { display:none; }
+  .vis-q-mark { font-weight:700; flex-shrink:0; }
+  .vis-q-mark.good { color:var(--pass); }
+  .vis-q-mark.bad { color:var(--fail); }
+  .vis-q-text { font-family:'Inter Tight',sans-serif; font-size:14px; font-weight:600; color:var(--ink); flex:1; }
+  .vis-q .vis-results { margin:0; padding:0 14px 12px; }
+  .vis-q[open] .check-chevron { transform:rotate(180deg); }
 
   .plan-list { display:flex; flex-direction:column; gap:16px; }
   .plan-item { border:1px solid var(--bone); border-radius:16px; padding:22px; background:#fff; }
@@ -127,6 +137,9 @@
 
   .pending { display:flex; align-items:center; gap:10px; color:var(--muted); font-size:14px; padding:14px 0; }
   .spinner { width:16px; height:16px; border:2px solid var(--bone); border-top-color:var(--honey-500); border-radius:999px; animation:spin 0.8s linear infinite; flex-shrink:0; }
+  .live-strip { display:flex; align-items:center; gap:10px; font-size:13.5px; color:var(--muted); background:var(--bone); border-radius:10px; padding:10px 14px; margin-bottom:22px; }
+  .live-strip.done { color:var(--ink-700); }
+  .live-strip .tick { color:#3a6f4d; font-weight:700; flex-shrink:0; }
   @keyframes spin { to { transform:rotate(360deg); } }
   .restart { text-align:center; margin-top:28px; }
 </style>
@@ -186,16 +199,20 @@ const state = {
   contactName: '', email: '',
   siteAudit: null,     // null = not fetched yet; {pending:true} = in flight
   aiVisibility: null,
-  checksFired: false,
+  siteFired: false,
+  visFired: false,
   sendStatus: 'idle',  // idle | sending | sent | failed
 };
 
 const TOTAL_STEPS = 4; // basics, keywords, pains, email
 
 // ---------------- real-signal fetches ----------------
-function fireChecks() {
-  if (state.checksFired) return;
-  state.checksFired = true;
+// The site scan starts as soon as we have a URL (end of step 1); the
+// Perplexity queries wait for step 2 so they can use the user's own
+// customer search phrases instead of a generic industry label.
+function fireSiteCheck() {
+  if (state.siteFired) return;
+  state.siteFired = true;
 
   if (state.website && state.website.length > 3) {
     state.siteAudit = { pending: true };
@@ -205,9 +222,22 @@ function fireChecks() {
       body: JSON.stringify({ url: state.website }),
     })
       .then(r => (r.ok ? r.json() : null))
-      .then(r => { state.siteAudit = r || { reachable: false }; rerenderIfReport(); })
-      .catch(() => { state.siteAudit = { reachable: false }; rerenderIfReport(); });
+      .then(r => { state.siteAudit = r || { reachable: false }; checksProgressed(); })
+      .catch(() => { state.siteAudit = { reachable: false }; checksProgressed(); });
   }
+}
+
+function parseKeywords() {
+  return state.keywords
+    .split(/[\n,;]+/)
+    .map(k => k.trim())
+    .filter(k => k.length > 2)
+    .slice(0, 10);
+}
+
+function fireVisibilityCheck() {
+  if (state.visFired) return;
+  state.visFired = true;
 
   if (state.industry && state.city) {
     state.aiVisibility = { pending: true };
@@ -217,16 +247,35 @@ function fireChecks() {
       body: JSON.stringify({
         industry: state.industry, city: state.city,
         domain: state.website || '', name: state.name || '',
+        keywords: parseKeywords(),
       }),
     })
       .then(r => (r.ok ? r.json() : null))
-      .then(r => { state.aiVisibility = r || { configured: false }; rerenderIfReport(); })
-      .catch(() => { state.aiVisibility = { configured: false }; rerenderIfReport(); });
+      .then(r => { state.aiVisibility = r || { configured: false }; checksProgressed(); })
+      .catch(() => { state.aiVisibility = { configured: false }; checksProgressed(); });
   }
 }
 
-function rerenderIfReport() {
-  if (state.step === TOTAL_STEPS + 1) render();
+function checksProgressed() {
+  if (state.step === TOTAL_STEPS + 1) { render(); return; }
+  // Mid-form: refresh the background-status strip in place, without
+  // re-rendering the step (which would clobber focus / in-progress typing).
+  const strip = document.getElementById('live-strip');
+  if (strip) strip.outerHTML = liveStatusStrip();
+}
+
+function liveStatusStrip() {
+  if (!state.siteFired && !state.visFired) return '';
+  const busy = (state.siteAudit && state.siteAudit.pending) || (state.aiVisibility && state.aiVisibility.pending);
+  const parts = [];
+  if (state.siteAudit) parts.push(state.siteAudit.pending ? `scanning ${esc(state.website)}` : `scanned ${esc(state.website)}`);
+  if (state.aiVisibility) parts.push(state.aiVisibility.pending ? 'running your search terms through a live AI engine' : 'AI-search queries done');
+  return `<div class="live-strip${busy ? '' : ' done'}" id="live-strip">
+    ${busy ? '<div class="spinner"></div>' : '<span class="tick">✓</span>'}
+    <span>${busy
+      ? `Working in the background: ${parts.join(' and ')}. Your report is being built while you finish.`
+      : 'Live checks complete — your full report is ready on the final screen.'}</span>
+  </div>`;
 }
 
 /* ================================================================
@@ -358,15 +407,26 @@ function buildChecks() {
 
   // --- AI search visibility (15) ---
   if (av && av.configured) {
-    const q = (av.queries && av.queries[0] && av.queries[0].query) || '';
-    add('aivis', 'Appears in AI search results', av.appeared ? 'pass' : 'fail', av.appeared ? 15 : 0, 15,
-      av.appeared ? `Your business appeared when we asked Perplexity “${q}”.` : `We asked Perplexity “${q}” — your business didn’t appear.`,
+    const qs = av.queries || [];
+    const hits = qs.filter(q => q.appeared).length;
+    const total = qs.length;
+    const status = hits === 0 ? 'fail' : hits === total ? 'pass' : 'warn';
+    const pts = total ? Math.round((15 * hits) / total) : 0;
+    const evidence = total <= 1
+      ? (av.appeared
+          ? `Your business appeared when we asked Perplexity “${(qs[0] && qs[0].query) || ''}”.`
+          : `We asked Perplexity “${(qs[0] && qs[0].query) || ''}” — your business didn’t appear.`)
+      : (hits === 0
+          ? `We ran ${total} live Perplexity searches using your own customer phrases — your business didn’t appear in any of them.`
+          : `Your business appeared in ${hits} of ${total} live Perplexity searches of your own customer phrases.`);
+    add('aivis', 'Appears in AI search results', status, pts, 15,
+      evidence,
       'This is the test that matters: when a buyer asks an AI engine for a recommendation in your market, are you in the answer?',
       'Everything above feeds this — schema, FAQ content, and a complete Google Business Profile are what get you cited. Fix the failed checks and re-run this audit in a few weeks.');
   } else if (av && !av.configured) {
     // check unavailable — leave out entirely
   } else if (state.industry && state.city) {
-    add('aivis', 'Appears in AI search results', 'na', 0, 0, 'Still running live AI-search queries…', '', '');
+    add('aivis', 'Appears in AI search results', 'na', 0, 0, 'Still running your search terms through live AI-search queries…', '', '');
   }
 
   return checks;
@@ -651,8 +711,8 @@ function renderKeywords() {
     progress: progressBar(2),
     eyebrow: 'AI search visibility',
     title: 'What do you most want to be found for?',
-    dek: 'When a potential customer asks ChatGPT or Perplexity for help, what would they type? List 1–3 phrases.',
-    body: `<textarea class="input" id="f-kw" rows="4" placeholder="family dentist in Boulder&#10;emergency dental Boulder CO&#10;Invisalign provider Boulder">${esc(state.keywords)}</textarea>
+    dek: 'When a potential customer asks ChatGPT or Perplexity for help, what would they type? List up to 10 search terms, one per line — we run every one of them through a live AI engine.',
+    body: `<textarea class="input" id="f-kw" rows="6" placeholder="family dentist in Boulder&#10;emergency dental Boulder CO&#10;Invisalign provider Boulder&#10;dentist that takes new patients Boulder">${esc(state.keywords)}</textarea>
       <p class="hint">Tip: think how a real customer would phrase it — not how you describe yourself.</p>`,
     back: true,
     nextDisabled: !state.keywords.trim(),
@@ -669,7 +729,7 @@ function renderPains() {
     eyebrow: 'Where it hurts',
     title: 'Where are you losing time or revenue?',
     dek: 'Check everything that applies. This shapes your action plan — it doesn’t change your score.',
-    body: `<div class="pains-grid">
+    body: `${liveStatusStrip()}<div class="pains-grid">
       ${PAIN_POINTS.map(p => `
         <div class="check-row ${state.pains.indexOf(p.id) !== -1 ? 'selected' : ''}" data-pain="${p.id}">
           <div class="check-box">${state.pains.indexOf(p.id) !== -1 ? '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6.5l2.5 2.5L10 3.5" stroke="#F4ECDB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' : ''}</div>
@@ -682,6 +742,7 @@ function renderPains() {
         <option value="">Choose one…</option>
         ${GOALS.map(g => `<option value="${esc(g)}" ${state.goal === g ? 'selected' : ''}>${esc(g)}</option>`).join('')}
       </select>
+      <p class="hint">This helps me tailor the follow-up — it doesn't change your score.</p>
     </div>`,
     back: true,
     nextDisabled: state.pains.length === 0,
@@ -703,7 +764,7 @@ function renderEmail() {
     eyebrow: 'One last thing',
     title: 'Where should I send your report?',
     dek: 'You’ll see the full report on the next screen either way — the email copy is so you can keep it, forward it, and act on it later.',
-    body: `<div class="field-grid">
+    body: `${liveStatusStrip()}<div class="field-grid">
       <div><label class="label" for="f-cname">Your name</label>
         <input class="input" id="f-cname" value="${esc(state.contactName)}" placeholder="First name is fine" /></div>
       <div><label class="label" for="f-email">Email</label>
@@ -744,24 +805,43 @@ function renderReport() {
   // AI visibility panel
   let visPanel = '';
   if (av && av.configured) {
-    const q = av.queries && av.queries[0];
+    const qs = av.queries || [];
+    const hits = qs.filter(q => q.appeared).length;
+    const fromKeywords = av.source === 'keywords';
+    const badge = hits > 0
+      ? `✓ You appeared in ${hits} of ${qs.length} AI search${qs.length === 1 ? '' : 'es'}`
+      : '✕ Invisible to AI search';
+    const queryBlock = (q, i) => `
+      <details class="vis-q" ${i === 0 ? 'open' : ''}>
+        <summary>
+          <span class="vis-q-mark ${q.appeared ? 'good' : 'bad'}">${q.appeared ? '✓' : '✕'}</span>
+          <span class="vis-q-text">“${esc(q.query)}”</span>
+          <span class="check-chevron">▾</span>
+        </summary>
+        <div class="vis-results">
+          ${(q.results || []).slice(0, 4).map(h => `
+            <div class="vis-hit ${h.isUser ? 'you' : ''}">
+              <div class="t">${h.isUser ? '✓ ' : ''}${esc(h.title)}</div>
+              <div class="h">${esc(h.host || h.url)}</div>
+            </div>`).join('') || '<div class="vis-hit"><div class="h">No sources returned for this query.</div></div>'}
+        </div>
+      </details>`;
     visPanel = `<div class="section-block">
-      <span class="vis-badge ${av.appeared ? 'good' : 'bad'}">${av.appeared ? '✓ You appeared in AI search' : '✕ Invisible to AI search'}</span>
-      <h3>We asked Perplexity: “${esc(q && q.query || '')}”</h3>
-      <p class="section-dek">A live query, run just now — these are the sources the AI engine actually pulled for your market.</p>
-      <div class="vis-results">
-        ${(q && q.results || []).slice(0, 5).map(h => `
-          <div class="vis-hit ${h.isUser ? 'you' : ''}">
-            <div class="t">${h.isUser ? '✓ ' : ''}${esc(h.title)}</div>
-            <div class="h">${esc(h.host || h.url)}</div>
-          </div>`).join('')}
-      </div>
-      <p style="font-size:14px;color:var(--ink-700)">${av.appeared
+      <span class="vis-badge ${hits > 0 ? 'good' : 'bad'}">${badge}</span>
+      <h3>${fromKeywords ? 'We asked Perplexity your own search terms' : `We asked Perplexity: “${esc(qs[0] && qs[0].query || '')}”`}</h3>
+      <p class="section-dek">${fromKeywords
+        ? `Live queries, run just now, using the exact phrases you said your customers type. Open each one to see the sources the AI engine actually pulled.`
+        : 'A live query, run just now — these are the sources the AI engine actually pulled for your market.'}</p>
+      <div class="vis-queries">${qs.map(queryBlock).join('')}</div>
+      <p style="font-size:14px;color:var(--ink-700)">${hits > 0
         ? 'Your business surfaced — that already puts you ahead of most local competitors. The checklist below is how you keep that position.'
         : 'These are the businesses buyers hear about when they ask AI for a recommendation. The checklist below is what gets you into that answer.'}</p>
     </div>`;
   } else if (state.aiVisibility && state.aiVisibility.pending) {
-    visPanel = `<div class="section-block"><div class="pending"><div class="spinner"></div>Running a live AI-search query for “${esc(state.industry.toLowerCase())} in ${esc(state.city)}”… results will appear here.</div></div>`;
+    const kws = parseKeywords();
+    visPanel = `<div class="section-block"><div class="pending"><div class="spinner"></div>${kws.length
+      ? `Running ${kws.length} live AI-search quer${kws.length === 1 ? 'y' : 'ies'} from your own search terms… results will appear here.`
+      : `Running a live AI-search query for “${esc(state.industry.toLowerCase())} in ${esc(state.city)}”… results will appear here.`}</div></div>`;
   }
 
   // Site checks panel
@@ -879,7 +959,8 @@ document.addEventListener('click', e => {
   if (!btn) return;
   const act = btn.getAttribute('data-act');
   if (act === 'next') {
-    if (state.step === 1) fireChecks(); // start real checks as early as possible
+    if (state.step === 1) fireSiteCheck();       // site scan: as early as possible
+    if (state.step === 2) fireVisibilityCheck(); // Perplexity: needs their search terms
     state.step += 1;
     render();
     window.scrollTo({ top: 0 });
@@ -890,7 +971,7 @@ document.addEventListener('click', e => {
     Object.assign(state, {
       step: 0, name:'', website:'', industry:'', city:'', keywords:'',
       pains: [], goal:'', contactName:'', email:'',
-      siteAudit: null, aiVisibility: null, checksFired: false, sendStatus: 'idle',
+      siteAudit: null, aiVisibility: null, siteFired: false, visFired: false, sendStatus: 'idle',
     });
     render();
     window.scrollTo({ top: 0 });
