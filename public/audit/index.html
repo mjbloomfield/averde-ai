@@ -154,6 +154,12 @@
 (function () {
 'use strict';
 
+// When embedded on /ai-audit the page already has Averde branding —
+// the widget's own wordmark only makes sense opened standalone.
+if (window.self !== window.top) {
+  document.querySelector('.wordmark').style.display = 'none';
+}
+
 /* ================================================================
    AI Visibility Audit — honest version.
    Everything scored comes from a verifiable check: we fetch the
