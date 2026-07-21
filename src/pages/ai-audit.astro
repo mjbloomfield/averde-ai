@@ -3,30 +3,68 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout
-  title="Free AI Visibility Audit | Live Checks on Your Real Website"
-  description="We fetch your live website, check the 13 things AI engines actually read, and run a real AI-search query for your market. See exactly what passes, what fails, and how to fix each one — free, in about 3 minutes."
+  title="Free AI Audits | Website Visibility (SEO + AEO) & AI Readiness"
+  description="Two free audits for your business: a live website audit covering SEO and AEO — can customers find you through Google and AI search — and an AI Readiness Audit of where AI could take real work off your plate."
 >
 
   <!-- HERO -->
   <section class="bg-green-deep py-16 text-center">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
       <div class="inline-flex items-center gap-2 bg-sand/20 text-sand text-xs font-semibold px-3 py-1.5 rounded-full mb-5">
-        Free · Live checks on your real site · ~3 minutes · No credit card
+        Free · No credit card · Real checks, not a quiz
       </div>
       <h1 class="text-4xl md:text-5xl font-extrabold text-white-warm leading-tight mb-5">
-        Can AI find your business?
+        Is your business up to speed on AI?
       </h1>
       <p class="text-cream/70 text-lg">
-        This isn't a quiz with a made-up score. The audit fetches your live website, checks the
-        13 things AI engines actually read — <a href="/glossary#schema-markup" class="text-cream underline decoration-dotted underline-offset-4 hover:text-sand">schema markup</a>, page structure, speed, crawl files —
-        and runs a real AI-search query for your market. You'll see exactly what passed, what
-        failed, and how to fix each one yourself.
+        Two free audits, two sides of the question. The <strong class="text-white-warm">Website Audit</strong> checks
+        whether customers can find you — through classic Google search (<a href="/glossary#seo" class="text-cream underline decoration-dotted underline-offset-4 hover:text-sand">SEO</a>)
+        and the AI answers taking its place (<a href="/glossary#aeo" class="text-cream underline decoration-dotted underline-offset-4 hover:text-sand">AEO</a>).
+        The <strong class="text-white-warm">AI Readiness Audit</strong> looks at how you run the business, and where
+        AI could take real work off your plate.
       </p>
     </div>
   </section>
 
+  <!-- TWO AUDITS -->
+  <section class="bg-cream pt-14 pb-4">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <div class="grid md:grid-cols-2 gap-6 items-stretch">
+
+        <div class="bg-white-warm rounded-3xl p-8 shadow-sm flex flex-col">
+          <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">Website Audit · ~3 minutes</p>
+          <h2 class="text-2xl font-extrabold text-green-deep mb-3">Can customers find your business?</h2>
+          <p class="text-muted leading-relaxed mb-6">
+            Your next customer searches two ways now: classic Google (SEO) and AI answers from
+            ChatGPT, Perplexity, and Google AI Overviews (AEO). This audit fetches your live site,
+            runs the 13 checks both kinds of engines care about, and asks a real AI engine about
+            your market — so you see exactly where you show up, and where you don't.
+          </p>
+          <a href="#website-audit" class="mt-auto inline-block text-center bg-green-deep text-white-warm font-semibold px-6 py-3.5 rounded-xl hover:bg-green-mid transition-colors">
+            Run the free website audit →
+          </a>
+        </div>
+
+        <div class="bg-white-warm rounded-3xl p-8 shadow-sm flex flex-col">
+          <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">AI Readiness Audit · Free 30-minute session</p>
+          <h2 class="text-2xl font-extrabold text-green-deep mb-3">Is your business ready to use AI?</h2>
+          <p class="text-muted leading-relaxed mb-6">
+            The website audit is about how AI sees you. This one is about how you could use AI:
+            we go through where your hours actually go — quoting, scheduling, follow-up, the same
+            questions answered over and over — and find the two or three places AI can realistically
+            take work off your plate. You leave with a plan, whether or not you hire me for any of it.
+          </p>
+          <a href="#book" class="mt-auto inline-block text-center bg-green-deep text-white-warm font-semibold px-6 py-3.5 rounded-xl hover:bg-green-mid transition-colors">
+            Book your free readiness audit →
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
   <!-- WIDGET -->
-  <section class="bg-cream pt-10 pb-16">
+  <section id="website-audit" class="bg-cream pt-10 pb-16 scroll-mt-20">
     <div class="max-w-5xl mx-auto px-4 sm:px-6">
       <iframe
         id="audit-frame"
@@ -51,14 +89,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <section id="book" class="bg-white-warm py-16 scroll-mt-20">
     <div class="max-w-4xl mx-auto px-4 sm:px-6">
       <div class="text-center mb-10">
-        <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">Got your report?</p>
+        <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">The free 30-minute session</p>
         <h2 class="text-3xl md:text-4xl font-extrabold text-green-deep mb-4">
           Ready to walk through it together?
         </h2>
         <p class="text-muted text-lg max-w-2xl mx-auto">
-          Pick a time below for a free 30-minute working session with me. I'll go through your
-          report, answer questions, and turn it into a concrete plan you can actually act on —
-          whether or not you hire me for any of it.
+          One booking covers both audits. Ran the website audit? I'll go through your report and
+          turn it into a concrete plan. Here for the AI Readiness Audit? This session is where it
+          happens — we map where your hours go and where AI can actually help. Either way, you
+          leave with next steps you can act on, whether or not you hire me for any of it.
         </p>
       </div>
 
