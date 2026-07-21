@@ -2,7 +2,12 @@
 import SEOHead from '../components/SEOHead.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import { terms } from '../data/glossary';
 import '../styles/global.css';
+
+// Definitions for the glossary hover-tooltips: any <a href="/glossary#slug">
+// anywhere on the site gets a hover/focus tooltip with the definition.
+const glossaryDefs = Object.fromEntries(terms.map((t) => [t.slug, { term: t.term, def: t.def }]));
 
 interface Props {
   title: string;
@@ -41,6 +46,77 @@ const { title, description, canonical, isHome = false, faqItems } = Astro.props;
         targets.forEach((t) => io.observe(t));
       } else {
         targets.forEach((t) => t.classList.add('is-in'));
+      }
+    </script>
+
+    <script type="application/json" id="glossary-defs" set:html={JSON.stringify(glossaryDefs)} />
+    <style is:global>
+      a[href^="/glossary#"] { text-decoration: underline dotted; text-underline-offset: 3px; }
+      #gloss-tip {
+        position: absolute; z-index: 60; max-width: 300px; padding: 12px 14px;
+        background: #2A1B11; color: #F4ECDB; border-radius: 10px;
+        font-size: 13.5px; line-height: 1.5; box-shadow: 0 8px 24px rgba(0,0,0,.18);
+        pointer-events: none; opacity: 0; transition: opacity .12s ease;
+      }
+      #gloss-tip.show { opacity: 1; }
+      #gloss-tip .gt-term { font-weight: 700; display: block; margin-bottom: 3px; }
+      #gloss-tip .gt-more { display: block; margin-top: 6px; font-size: 12px; opacity: .65; }
+    </style>
+    <script>
+      // === Glossary hover-tooltips ===
+      // Enhances links to /glossary#<slug>: hover or keyboard focus shows the
+      // definition in place; click still goes to the glossary page.
+      const defsEl = document.getElementById('glossary-defs');
+      if (defsEl) {
+        const defs = JSON.parse(defsEl.textContent || '{}');
+        let tip: HTMLElement | null = null;
+
+        const show = (link: HTMLAnchorElement) => {
+          const slug = (link.getAttribute('href') || '').split('#')[1];
+          const d = defs[slug];
+          if (!d) return;
+          if (!tip) {
+            tip = document.createElement('div');
+            tip.id = 'gloss-tip';
+            tip.setAttribute('role', 'tooltip');
+            document.body.appendChild(tip);
+          }
+          tip.innerHTML = '';
+          const term = document.createElement('span');
+          term.className = 'gt-term';
+          term.textContent = d.term;
+          const def = document.createTextNode(d.def);
+          const more = document.createElement('span');
+          more.className = 'gt-more';
+          more.textContent = 'Click for the full glossary →';
+          tip.append(term, def, more);
+          const r = link.getBoundingClientRect();
+          tip.style.left = '0px'; tip.style.top = '0px';
+          tip.classList.add('show');
+          const tw = tip.offsetWidth;
+          let x = window.scrollX + r.left + r.width / 2 - tw / 2;
+          x = Math.max(8, Math.min(x, window.scrollX + document.documentElement.clientWidth - tw - 8));
+          const above = r.top > tip.offsetHeight + 16;
+          const y = above
+            ? window.scrollY + r.top - tip.offsetHeight - 10
+            : window.scrollY + r.bottom + 10;
+          tip.style.left = x + 'px';
+          tip.style.top = y + 'px';
+        };
+        const hide = () => { if (tip) tip.classList.remove('show'); };
+
+        document.addEventListener('mouseover', (e) => {
+          const link = (e.target as Element).closest?.('a[href^="/glossary#"]');
+          if (link) show(link as HTMLAnchorElement);
+        });
+        document.addEventListener('mouseout', (e) => {
+          if ((e.target as Element).closest?.('a[href^="/glossary#"]')) hide();
+        });
+        document.addEventListener('focusin', (e) => {
+          const link = (e.target as Element).closest?.('a[href^="/glossary#"]');
+          if (link) show(link as HTMLAnchorElement);
+        });
+        document.addEventListener('focusout', hide);
       }
     </script>
   </body>
