@@ -258,3 +258,28 @@ body::before {
   .hero-card-load, .badge-load { animation: none !important; }
   body::before { animation: none !important; }
 }
+
+/* ── Colorado texture system ──────────────────────────────────────────
+   Wood-grain dark sections: a tuned dark overlay keeps the grain visible
+   (multiply against walnut crushed it to near-black). One grain per page.
+   Overlay strength is per-texture — darker planks need less shade. */
+.wood-medium, .wood-alt, .wood-beam, .wood-pale {
+  background-color: #2A1B11;
+  background-size: cover;
+  background-position: center;
+}
+.wood-medium { background-image: linear-gradient(rgba(42,27,17,.78), rgba(42,27,17,.78)), url('/images/textures/wood-planks-medium.jpg'); }
+.wood-alt    { background-image: linear-gradient(rgba(42,27,17,.78), rgba(42,27,17,.78)), url('/images/textures/wood-planks-alt.jpg'); }
+.wood-beam   { background-image: linear-gradient(rgba(42,27,17,.62), rgba(42,27,17,.62)), url('/images/textures/wood-beam-dark.jpg'); }
+.wood-pale   { background-image: linear-gradient(rgba(42,27,17,.84), rgba(42,27,17,.84)), url('/images/textures/wood-floor-pale.jpg'); }
+
+/* Topo cream sections: one real Colorado peak per page, USGS-faint.
+   Tiles are ~10KB SVGs generated in-repo (nested contours, no crossings). */
+.topo-map { background-size: 1200px 900px; background-repeat: repeat; }
+.topo-bear     { background-image: url('/images/topo/bear-peak.svg'); }
+.topo-green    { background-image: url('/images/topo/green-mountain.svg'); }
+.topo-sboulder { background-image: url('/images/topo/south-boulder-peak.svg'); }
+.topo-flagstaff{ background-image: url('/images/topo/flagstaff.svg'); }
+.topo-sanitas  { background-image: url('/images/topo/mount-sanitas.svg'); }
+.topo-longs    { background-image: url('/images/topo/longs-peak.svg'); }
+.topo-pikes    { background-image: url('/images/topo/pikes-peak.svg'); }

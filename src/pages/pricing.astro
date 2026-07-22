@@ -17,7 +17,7 @@ const plans = pricing?.plans ?? [];
 >
 
   <!-- HERO -->
-  <section class="bg-green-deep py-20 text-center">
+  <section class="wood-medium bg-green-deep py-20 text-center">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
       <h1 class="text-5xl md:text-6xl font-extrabold text-white-warm leading-tight mb-5">
         {heroHeadline}
@@ -27,7 +27,7 @@ const plans = pricing?.plans ?? [];
   </section>
 
   <!-- PRICING CARDS -->
-  <section class="bg-cream py-20">
+  <section class="bg-cream topo-map topo-sanitas py-20">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
         {plans.map((plan: { name: string; price?: string; description: string; ctaLabel: string; featured?: boolean; features: string[] }) => {
