@@ -514,11 +514,12 @@ const ctaMicro    = home?.ctaMicro    ?? 'No commitment · No credit card · Jus
 
   /* ---- WOOD DARK SECTION (tools) ---- */
   .wood-dark {
+    /* dark overlay instead of multiply-against-walnut: multiply crushed the
+       grain to near-black; a tuned overlay keeps the planks readable */
     background-color: var(--walnut-700);
-    background-image: var(--wood-planks);
+    background-image: linear-gradient(rgba(42,27,17,0.72), rgba(42,27,17,0.72)), var(--wood-planks);
     background-size: cover;
     background-position: center;
-    background-blend-mode: multiply;
     position: relative;
   }
   .section-head-split {
@@ -726,11 +727,11 @@ const ctaMicro    = home?.ctaMicro    ?? 'No commitment · No credit card · Jus
 
   /* ---- TESTIMONIAL — real walnut plank photo ---- */
   .testi {
+    /* darker than .wood-dark: the quote sits directly on the planks with no card */
     background-color: var(--walnut-700);
-    background-image: var(--wood-planks);
+    background-image: linear-gradient(rgba(42,27,17,0.8), rgba(42,27,17,0.8)), var(--wood-planks);
     background-size: cover;
     background-position: center;
-    background-blend-mode: multiply;
     padding: 96px 40px; text-align: center;
     position: relative; overflow: hidden;
   }
