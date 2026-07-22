@@ -95,6 +95,15 @@ export default config({
           description: 'Meta description for search engines (150–160 chars)',
           multiline: true,
         }),
+        series: fields.text({
+          label: 'Series name (optional)',
+          description: 'Posts sharing a series name are grouped under one header on the index',
+        }),
+        seriesPart: fields.integer({
+          label: 'Part number within the series',
+          description: 'Leave 0 for standalone posts',
+          defaultValue: 0,
+        }),
         content: fields.markdoc({ label: 'Content' }),
       },
     }),

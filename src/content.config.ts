@@ -10,6 +10,8 @@ const blog = defineCollection({
     publishedDate: z.coerce.string().optional(),
     author: z.string().default('Mark Bloomfield'),
     seoDescription: z.string().optional(),
+    series: z.string().optional(),
+    seriesPart: z.number().optional(),
   }),
 });
 

@@ -275,7 +275,10 @@ body::before {
 
 /* Topo cream sections: one real Colorado peak per page, USGS-faint.
    Tiles are ~10KB SVGs generated in-repo (nested contours, no crossings). */
-.topo-map { background-size: 1200px 900px; background-repeat: repeat; }
+.topo-map { background-size: cover; background-repeat: no-repeat; background-position: center; }
+/* Cards were invisible on cream sections (white-warm === cream, #F4ECDB);
+   the topo lines exposed it. On map sections, lift the cards off the paper. */
+.topo-map .bg-white-warm { background-color: #FFFDF6; border: 1px solid rgba(42, 27, 17, 0.09); }
 .topo-bear     { background-image: url('/images/topo/bear-peak.svg'); }
 .topo-green    { background-image: url('/images/topo/green-mountain.svg'); }
 .topo-sboulder { background-image: url('/images/topo/south-boulder-peak.svg'); }

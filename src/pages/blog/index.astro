@@ -25,6 +25,19 @@ const posts = allPosts
     return dateB - dateA;
   });
 
+// Group multi-part series under their own headers; standalone posts keep the grid.
+type Post = (typeof posts)[number];
+const seriesMap = new Map<string, Post[]>();
+for (const post of posts) {
+  const name = post.data.series;
+  if (!name) continue;
+  if (!seriesMap.has(name)) seriesMap.set(name, []);
+  seriesMap.get(name)!.push(post);
+}
+for (const parts of seriesMap.values()) parts.sort((a, b) => (a.data.seriesPart ?? 0) - (b.data.seriesPart ?? 0));
+const seriesList = [...seriesMap.entries()];
+const standalone = posts.filter(p => !p.data.series);
+
 const categoryColors: Record<string, string> = {
   'Pricing': 'bg-sand/20 text-terracotta',
   'Dental': 'bg-blue-50 text-blue-700',
@@ -37,7 +50,7 @@ const categoryColors: Record<string, string> = {
 ---
 
 <BaseLayout
-  title="Resources — AI for Small Business | Mark Bloomfield"
+  title="Free Resources — AI for Small Business | Mark Bloomfield"
   description="Practical guides on getting your business found in AI search, AEO content, schema markup, and using AI to grow without the hype. From Boulder, CO."
 >
 
@@ -53,9 +66,30 @@ const categoryColors: Record<string, string> = {
   <section class="bg-cream topo-map topo-sboulder py-20">
     <div class="max-w-5xl mx-auto px-4 sm:px-6">
 
-      {posts.length > 0 ? (
+      {seriesList.length > 0 && (
+        <div class="space-y-8 mb-16">
+          {seriesList.map(([name, parts]) => (
+            <div class="bg-white-warm rounded-2xl p-8">
+              <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-2">{parts.length}-part series</p>
+              <h2 class="text-2xl font-extrabold text-green-deep mb-5">{name}</h2>
+              <ol class="space-y-3">
+                {parts.map(part => (
+                  <li>
+                    <a href={`/blog/${part.id}`} class="group flex items-baseline gap-3">
+                      <span class="text-sand font-bold text-sm whitespace-nowrap">Part {part.data.seriesPart}</span>
+                      <span class="text-green-deep font-semibold group-hover:text-green-mid transition-colors">{part.data.title}</span>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {standalone.length > 0 ? (
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-          {posts.map(post => (
+          {standalone.map(post => (
             <article class="bg-white-warm rounded-2xl p-8 flex flex-col hover:shadow-md transition-shadow">
               <div class="flex items-center gap-2 mb-4">
                 <span class={`text-xs font-semibold px-2.5 py-1 rounded-full ${categoryColors[post.data.category] || 'bg-gray-100 text-gray-600'}`}>
@@ -77,11 +111,11 @@ const categoryColors: Record<string, string> = {
             </article>
           ))}
         </div>
-      ) : (
+      ) : posts.length === 0 ? (
         <div class="text-center py-12 mb-16">
           <p class="text-muted text-lg">{header?.emptyState}</p>
         </div>
-      )}
+      ) : null}
 
       <!-- Subscribe nudge -->
       <SubscribeForm
