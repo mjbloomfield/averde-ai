@@ -1,74 +1,29 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
 
-const faqs = [
-  {
-    q: "What does 'AI-Ready Website' actually mean?",
-    a: "Three things working together. (1) Content written for AEO — Answer Engine Optimization — so ChatGPT, Perplexity, and Google AI Overviews can cleanly extract and cite your answers. (2) Schema markup (FAQ, LocalBusiness, Service, Review) so AI engines understand what you do, where, and for whom. (3) Local AI graph presence — Google Business Profile, Apple Maps, Bing, plus the citation network those AI engines pull from. Most small business sites have none of this.",
-  },
-  {
-    q: "How is this different from regular SEO?",
-    a: "Regular SEO optimizes for Google's classic 10-blue-links results. AEO optimizes for AI engines that read your content and answer the question themselves — often without sending the user to your site at all. The user just sees you cited or recommended. I do both, because Google still matters, but AI search is now where your future best customers are starting their search.",
-  },
-  {
-    q: "Will I lose my current Google rankings?",
-    a: "No — almost the opposite. The structured data, fast modern stack, and AEO content I add typically improve your classic Google rankings too. I do a careful rankings baseline before launch and protect everything that's already ranking. If anything dips, I fix it.",
-  },
-  {
-    q: "How long until I show up in ChatGPT / Perplexity / AI Overviews?",
-    a: "AI engines update their indexes on different cadences. You'll usually see Perplexity changes within days, AI Overviews within 2-4 weeks, and ChatGPT model updates more gradually. I monitor your visibility through the 90-day post-launch period and refine the AEO content as the engines respond.",
-  },
-  {
-    q: "Do I have to migrate off my current platform?",
-    a: "Usually yes — most existing sites (Wix, Squarespace, GoDaddy builders) make the schema and performance work I need to do impossible. I rebuild on a modern stack you fully own. You'll still be able to edit your content easily after launch — I set you up with a content editor for ongoing updates.",
-  },
-  {
-    q: "What about my domain, email, and existing content?",
-    a: "All preserved. I migrate your content (improving it for AEO), keep your domain on its current registrar, and don't touch your email setup. There's a brief DNS cutover at launch — usually 5-15 minutes of overlap, no downtime.",
-  },
-  {
-    q: "What's included in the 90 days post-launch?",
-    a: "AI search visibility monitoring, content refinements as I see what's getting cited, schema tweaks, GBP optimization, and direct access to me for any questions. After 90 days, optional ongoing optimization is available, but most clients are in good shape on their own by then.",
-  },
-];
+const reader = createReader(process.cwd(), keystaticConfig);
+const page = await reader.singletons.howItWorks.read();
 
-const included = [
-  {
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 4l8 4-8 4-8-4 8-4zM4 12l8 4 8-4M4 16l8 4 8-4" stroke="#C99356" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-    title: 'Full Schema Markup',
-    body: 'FAQ, LocalBusiness, Service, Review schema so AI engines can read and cite your content.',
-  },
-  {
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#C99356" stroke-width="1.6"/><path d="M9 12l2 2 4-4" stroke="#C99356" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-    title: 'AEO Content Across Every Page',
-    body: "Content written so ChatGPT, Perplexity, and AI Overviews can extract clean, quotable answers.",
-  },
-  {
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8" stroke="#C99356" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="12" r="4" stroke="#C99356" stroke-width="1.5"/></svg>`,
-    title: 'Local AI Graph Setup',
-    body: 'Google Business Profile, Apple Maps, Bing, and the AI citation network all aligned and optimized.',
-  },
-  {
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 20V13M9 20V9M14 20V5M19 20V11" stroke="#C99356" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-    title: 'Visibility Report',
-    body: "Before & after audit showing where your business now appears in AI engines vs. competitors.",
-  },
-  {
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="14" rx="2" stroke="#C99356" stroke-width="1.6"/><path d="M3 8h18M7 12h10M7 15h6" stroke="#C99356" stroke-width="1.4" stroke-linecap="round"/></svg>`,
-    title: '3-Month Content Plan',
-    body: 'Monthly publishing roadmap so your AI visibility keeps compounding instead of going stale.',
-  },
-  {
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#C99356" stroke-width="1.6"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#C99356" stroke-width="1.6" stroke-linecap="round"/></svg>`,
-    title: 'Direct Access to Mark',
-    body: "You're working with the founder, not a ticket queue. 90 days of post-launch support included.",
-  },
-];
+const steps = page?.steps ?? [];
+const included = page?.included ?? [];
+const faqs = (page?.faqs ?? []).map(f => ({ q: f.q, a: f.a }));
+
+// Icon set for the "what's included" cards — selected per-card in Keystatic.
+const ICONS: Record<string, string> = {
+  layers: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 4l8 4-8 4-8-4 8-4zM4 12l8 4 8-4M4 16l8 4 8-4" stroke="#C99356" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  check: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#C99356" stroke-width="1.6"/><path d="M9 12l2 2 4-4" stroke="#C99356" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  compass: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8" stroke="#C99356" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="12" r="4" stroke="#C99356" stroke-width="1.5"/></svg>`,
+  chart: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 20V13M9 20V9M14 20V5M19 20V11" stroke="#C99356" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  doc: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="14" rx="2" stroke="#C99356" stroke-width="1.6"/><path d="M3 8h18M7 12h10M7 15h6" stroke="#C99356" stroke-width="1.4" stroke-linecap="round"/></svg>`,
+  person: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#C99356" stroke-width="1.6"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#C99356" stroke-width="1.6" stroke-linecap="round"/></svg>`,
+};
 ---
 
 <BaseLayout
-  title="How an AI-Ready Website Build Works"
-  description="The exact process for rebuilding your website so it shows up in ChatGPT, Perplexity, and Google AI Overviews. AEO content, schema markup, and local AI optimization."
+  title={page?.seoTitle ?? 'How It Works | Averde AI'}
+  description={page?.seoDescription ?? ''}
   faqItems={faqs}
 >
 
@@ -76,9 +31,9 @@ const included = [
   <section class="bg-green-deep py-20">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
       <h1 class="text-5xl md:text-6xl font-extrabold text-white-warm leading-tight mb-5">
-        How the AI-Ready Website Build Works
+        {page?.heroHeadline}
       </h1>
-      <p class="text-cream/70 text-xl">From discovery to launch in roughly four weeks. AI engines start surfacing your business while I work.</p>
+      <p class="text-cream/70 text-xl">{page?.heroDek}</p>
     </div>
   </section>
 
@@ -86,38 +41,7 @@ const included = [
   <section class="bg-cream py-20">
     <div class="max-w-4xl mx-auto px-4 sm:px-6">
       <div class="space-y-12">
-        {[
-          {
-            num: '01',
-            day: 'Week 0',
-            title: 'Free AI Visibility Audit',
-            body: "Three minutes through the audit widget gives me 80% of what I need. Then we jump on a 30-minute working call together to walk through your report, your goals, and what AI-Ready actually looks like for your business specifically. No commitment.",
-          },
-          {
-            num: '02',
-            day: 'Week 1',
-            title: 'Discovery & Content Audit',
-            body: "I do a deep dive on your existing site, your competitors' AI footprints, what AI engines currently say about your business (and what they say about competitors), and where the easy wins are. You get a written audit + content plan before any building starts.",
-          },
-          {
-            num: '03',
-            day: 'Weeks 2–3',
-            title: 'Build: Content, Schema, Stack',
-            body: "I rebuild your site on a modern, fast stack — AEO-optimized copy across every page, full schema markup (FAQ, LocalBusiness, Service, Review), service-area pages, and the editor you'll use to keep it fresh. You review and approve as I build.",
-          },
-          {
-            num: '04',
-            day: 'Week 4',
-            title: 'Local AI Graph Optimization',
-            body: "Google Business Profile fully optimized, Apple Maps and Bing claimed and aligned, citations across the AI-search network checked and corrected. This is what gets you into the AI engines' local recommendations.",
-          },
-          {
-            num: '05',
-            day: 'Launch',
-            title: 'Go Live + Visibility Monitoring',
-            body: "DNS cutover (5-15 minute overlap, no downtime). I monitor your AI visibility every week for the first 90 days, refining content and schema as ChatGPT, Perplexity, and AI Overviews respond. You see exactly where you're appearing — and where you weren't before.",
-          },
-        ].map(step => (
+        {steps.map(step => (
           <div class="flex gap-8 items-start">
             <div class="flex-shrink-0 w-16 text-right">
               <span class="text-4xl font-extrabold text-green-sage/30" style="font-family: 'Fraunces', serif">{step.num}</span>
@@ -136,11 +60,11 @@ const included = [
   <!-- WHAT'S INCLUDED -->
   <section class="bg-white-warm py-20">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
-      <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-10 text-center">What Every Build Includes</h2>
+      <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-10 text-center">{page?.includedHeadline}</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {included.map(item => (
           <div class="bg-cream rounded-2xl p-6">
-            <div class="mb-3" set:html={item.icon} />
+            <div class="mb-3" set:html={ICONS[item.icon] ?? ICONS.check} />
             <h3 class="font-bold text-green-deep mb-2">{item.title}</h3>
             <p class="text-muted text-sm">{item.body}</p>
           </div>
@@ -152,7 +76,7 @@ const included = [
   <!-- FAQ -->
   <section class="bg-cream py-20">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
-      <h2 class="text-3xl font-bold text-green-deep mb-10 text-center">Common Questions</h2>
+      <h2 class="text-3xl font-bold text-green-deep mb-10 text-center">{page?.faqHeadline}</h2>
       <div class="space-y-3">
         {faqs.map(faq => (
           <details class="bg-white-warm rounded-2xl px-6 group">
@@ -172,10 +96,10 @@ const included = [
   <!-- CTA -->
   <section class="bg-green-deep py-20 text-center">
     <div class="max-w-2xl mx-auto px-4 sm:px-6">
-      <h2 class="text-3xl font-bold text-white-warm mb-5">See Where You Stand</h2>
-      <p class="text-cream/70 mb-8">Run the free 3-minute AI Visibility Audit. You'll know exactly where the wins are.</p>
+      <h2 class="text-3xl font-bold text-white-warm mb-5">{page?.ctaHeadline}</h2>
+      <p class="text-cream/70 mb-8">{page?.ctaDek}</p>
       <a href="/ai-audit" class="inline-flex items-center bg-sand text-green-deep font-bold px-8 py-4 rounded-xl hover:bg-sand/90 transition-colors">
-        Run my free AI audit
+        {page?.ctaButton}
       </a>
     </div>
   </section>

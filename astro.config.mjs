@@ -16,4 +16,11 @@ export default defineConfig({
   output: 'static',
   adapter: vercel(),
   integrations: [react(), markdoc(), keystatic()],
+  // Real 301s (the old page stubs with Astro.redirect prerendered to
+  // meta-refresh pages that returned 200).
+  redirects: {
+    '/dental': { status: 301, destination: '/industries/dental' },
+    '/hvac': { status: 301, destination: '/industries/hvac' },
+    '/real-estate': { status: 301, destination: '/industries/real-estate' },
+  },
 });

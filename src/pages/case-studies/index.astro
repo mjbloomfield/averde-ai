@@ -1,6 +1,11 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../../keystatic.config';
+
+const reader = createReader(process.cwd(), keystaticConfig);
+const header = await reader.singletons.caseStudiesIndex.read();
 
 const studies = (await getCollection('caseStudies'))
   .filter(s => s.data.published !== false)
@@ -15,10 +20,8 @@ const studies = (await getCollection('caseStudies'))
   <!-- HERO -->
   <section class="bg-green-deep py-20 text-center">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
-      <h1 class="text-5xl font-extrabold text-white-warm mb-5">Case Studies</h1>
-      <p class="text-cream/70 text-xl">
-        Real before-and-after rebuilds — measured by how well AI search can read, recommend, and cite the business.
-      </p>
+      <h1 class="text-5xl font-extrabold text-white-warm mb-5">{header?.title ?? 'Case Studies'}</h1>
+      <p class="text-cream/70 text-xl">{header?.dek}</p>
     </div>
   </section>
 
@@ -60,7 +63,7 @@ const studies = (await getCollection('caseStudies'))
           })}
         </div>
       ) : (
-        <p class="text-center text-muted">Case studies coming soon.</p>
+        <p class="text-center text-muted">{header?.emptyState}</p>
       )}
     </div>
   </section>

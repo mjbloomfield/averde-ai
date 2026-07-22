@@ -98,6 +98,70 @@ export default config({
         content: fields.markdoc({ label: 'Content' }),
       },
     }),
+
+    // ── CASE STUDIES ─────────────────────────────────────────────────────────
+    // Mirrors the caseStudies collection in src/content.config.ts.
+    caseStudies: collection({
+      label: 'Case Studies',
+      slugField: 'client',
+      path: 'src/content/case-studies/*',
+      format: { data: 'yaml' },
+      schema: {
+        client: fields.slug({ name: { label: 'Client name (also used in URL)' } }),
+        published: fields.checkbox({ label: 'Published (visible on site)', defaultValue: true }),
+        order: fields.integer({ label: 'Sort order (lower = first)', defaultValue: 0 }),
+        industry: fields.text({ label: 'Industry' }),
+        location: fields.text({ label: 'Location' }),
+        seoTitle: fields.text({ label: 'SEO page title' }),
+        seoDescription: fields.text({ label: 'SEO meta description', multiline: true }),
+        cardSummary: fields.text({ label: 'Index-card summary', multiline: true }),
+        oldUrl: fields.text({ label: 'Old site URL' }),
+        oldPlatform: fields.text({ label: 'Old platform (e.g. WordPress)' }),
+        liveUrl: fields.text({ label: 'Live rebuilt site URL' }),
+        newPlatform: fields.text({ label: 'New platform' }),
+        heroEyebrow: fields.text({ label: 'Hero — eyebrow' }),
+        heroHeadline: fields.text({ label: 'Hero — headline', multiline: true }),
+        heroDek: fields.text({ label: 'Hero — dek', multiline: true }),
+        scores: fields.array(
+          fields.object({
+            label: fields.text({ label: 'Score label' }),
+            sublabel: fields.text({ label: 'Sublabel' }),
+            info: fields.text({ label: 'Info note (optional)', multiline: true }),
+            before: fields.integer({ label: 'Before (0–100)' }),
+            after: fields.integer({ label: 'After (0–100)' }),
+          }),
+          { label: 'Score comparisons', itemLabel: props => props.fields.label.value || 'New score' }
+        ),
+        metrics: fields.array(
+          fields.object({
+            label: fields.text({ label: 'Metric label' }),
+            before: fields.text({ label: 'Before' }),
+            after: fields.text({ label: 'After' }),
+            note: fields.text({ label: 'Plain-English note (optional)', multiline: true }),
+          }),
+          { label: 'By-the-numbers metrics', itemLabel: props => props.fields.label.value || 'New metric' }
+        ),
+        challengeHeadline: fields.text({ label: 'Challenge — headline' }),
+        challengeBody: fields.array(
+          fields.text({ label: 'Paragraph', multiline: true }),
+          { label: 'Challenge — paragraphs', itemLabel: props => (props.value || 'New paragraph').slice(0, 60) }
+        ),
+        approachHeadline: fields.text({ label: 'Approach — headline' }),
+        approach: fields.array(
+          fields.object({
+            title: fields.text({ label: 'Step title' }),
+            body: fields.text({ label: 'Step body', multiline: true }),
+          }),
+          { label: 'Approach steps', itemLabel: props => props.fields.title.value || 'New step' }
+        ),
+        featuresHeadline: fields.text({ label: 'Features — headline' }),
+        features: fields.array(
+          fields.text({ label: 'Feature' }),
+          { label: 'Feature list', itemLabel: props => props.value || 'New feature' }
+        ),
+        methodologyNote: fields.text({ label: 'Methodology fine print', multiline: true }),
+      },
+    }),
   },
 
   singletons: {
@@ -385,18 +449,107 @@ export default config({
       },
     }),
 
+    // ── HOW IT WORKS PAGE ────────────────────────────────────────────────────
+    howItWorks: singleton({
+      label: 'How It Works Page',
+      path: 'src/content/pages/how-it-works',
+      schema: {
+        seoTitle: fields.text({ label: 'SEO page title' }),
+        seoDescription: fields.text({ label: 'SEO meta description', multiline: true }),
+        heroHeadline: fields.text({ label: 'Hero — headline' }),
+        heroDek: fields.text({ label: 'Hero — subheadline', multiline: true }),
+        steps: fields.array(
+          fields.object({
+            num: fields.text({ label: 'Number (e.g. 01)' }),
+            day: fields.text({ label: 'Timing label (e.g. Week 1)' }),
+            title: fields.text({ label: 'Step title' }),
+            body: fields.text({ label: 'Step body', multiline: true }),
+          }),
+          { label: 'Process steps', itemLabel: props => `${props.fields.num.value} ${props.fields.title.value}` }
+        ),
+        includedHeadline: fields.text({ label: "What's included — headline" }),
+        included: fields.array(
+          fields.object({
+            icon: fields.select({
+              label: 'Icon',
+              options: [
+                { label: 'Layers (schema)', value: 'layers' },
+                { label: 'Checkmark circle', value: 'check' },
+                { label: 'Compass (local)', value: 'compass' },
+                { label: 'Bar chart', value: 'chart' },
+                { label: 'Document', value: 'doc' },
+                { label: 'Person', value: 'person' },
+              ],
+              defaultValue: 'check',
+            }),
+            title: fields.text({ label: 'Title' }),
+            body: fields.text({ label: 'Body', multiline: true }),
+          }),
+          { label: "What's included cards", itemLabel: props => props.fields.title.value || 'New card' }
+        ),
+        faqHeadline: fields.text({ label: 'FAQ — headline' }),
+        faqs: fields.array(
+          fields.object({
+            q: fields.text({ label: 'Question' }),
+            a: fields.text({ label: 'Answer', multiline: true }),
+          }),
+          { label: 'FAQs (also emitted as FAQPage schema)', itemLabel: props => props.fields.q.value || 'New question' }
+        ),
+        ctaHeadline: fields.text({ label: 'Bottom CTA — headline' }),
+        ctaDek: fields.text({ label: 'Bottom CTA — paragraph', multiline: true }),
+        ctaButton: fields.text({ label: 'Bottom CTA — button label' }),
+      },
+    }),
+
+    // ── CONTACT PAGE ─────────────────────────────────────────────────────────
+    // Form field labels + status banners stay in code (app chrome, documented
+    // in CLAUDE.md).
+    contact: singleton({
+      label: 'Contact Page',
+      path: 'src/content/pages/contact',
+      schema: {
+        seoTitle: fields.text({ label: 'SEO page title' }),
+        seoDescription: fields.text({ label: 'SEO meta description', multiline: true }),
+        heroHeadline: fields.text({ label: 'Hero — headline' }),
+        heroDek: fields.text({ label: 'Hero — subheadline', multiline: true }),
+        locationLine: fields.text({ label: 'Location line' }),
+        locationNote: fields.text({ label: 'Location note (below the line)' }),
+        fastestTitle: fields.text({ label: 'Fastest-way box — title' }),
+        fastestBody: fields.text({ label: 'Fastest-way box — body', multiline: true }),
+        fastestCta: fields.text({ label: 'Fastest-way box — button label' }),
+        formHeadline: fields.text({ label: 'Form — heading' }),
+        bookHeadline: fields.text({ label: 'Booking column — heading' }),
+        bookCardSub: fields.text({ label: 'Booking card — subtitle' }),
+      },
+    }),
+
+    // ── INDEX-PAGE HEADERS ───────────────────────────────────────────────────
+    blogIndex: singleton({
+      label: 'Blog Index Page',
+      path: 'src/content/pages/blog-index',
+      schema: {
+        title: fields.text({ label: 'Page headline' }),
+        dek: fields.text({ label: 'Subheadline', multiline: true }),
+        emptyState: fields.text({ label: 'Empty-state line (no posts yet)' }),
+      },
+    }),
+    caseStudiesIndex: singleton({
+      label: 'Case Studies Index Page',
+      path: 'src/content/pages/case-studies-index',
+      schema: {
+        title: fields.text({ label: 'Page headline' }),
+        dek: fields.text({ label: 'Subheadline', multiline: true }),
+        emptyState: fields.text({ label: 'Empty-state line (none published)' }),
+      },
+    }),
+
     // ── SITE SETTINGS ─────────────────────────────────────────────────────────
     settings: singleton({
       label: 'Site Settings',
       path: 'src/content/settings',
       schema: {
-        email:      fields.text({ label: 'Contact email', defaultValue: 'mark@averde.ai' }),
-        phone:      fields.text({ label: 'Phone number', defaultValue: '' }),
-        bookingUrl: fields.url({
-          label: 'Booking URL (TidyCal / Calendly)',
-          validation: { isRequired: false },
-        }),
-        location:   fields.text({ label: 'Location', defaultValue: 'Boulder, CO' }),
+        email:    fields.text({ label: 'Contact email', defaultValue: 'mark@averde.ai' }),
+        location: fields.text({ label: 'Location line (footer)', defaultValue: 'Boulder, CO' }),
       },
     }),
   },

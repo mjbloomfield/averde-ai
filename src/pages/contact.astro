@@ -1,19 +1,27 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
+
+const reader = createReader(process.cwd(), keystaticConfig);
+const page = await reader.singletons.contact.read();
+const settings = await reader.singletons.settings.read();
+const email = settings?.email ?? 'mark@averde.ai';
+
 const sent = Astro.url.searchParams.get('sent') === '1';
 const error = Astro.url.searchParams.get('error');
 ---
 
 <BaseLayout
-  title="Contact Mark Bloomfield | Book a Call | Boulder, CO"
-  description="Get in touch. Book a free AI Visibility Audit, ask a question, or just say hi. Based in Boulder, CO — serving small businesses nationwide."
+  title={page?.seoTitle ?? 'Contact | Averde AI'}
+  description={page?.seoDescription ?? ''}
 >
 
   <!-- HERO -->
   <section class="bg-green-deep py-20 text-center">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
-      <h1 class="text-5xl font-extrabold text-white-warm mb-5">Let's Talk</h1>
-      <p class="text-cream/70 text-xl">Whether you have a quick question or want to book your free audit — I'm here.</p>
+      <h1 class="text-5xl font-extrabold text-white-warm mb-5">{page?.heroHeadline}</h1>
+      <p class="text-cream/70 text-xl">{page?.heroDek}</p>
     </div>
   </section>
 
@@ -25,7 +33,7 @@ const error = Astro.url.searchParams.get('error');
   )}
   {error && (
     <div class="bg-rust/10 border-b border-rust/20 py-3 text-center">
-      <p class="text-rust font-semibold text-sm">Something went wrong. Please email <a href="mailto:mark@averde.ai" class="underline">mark@averde.ai</a> directly.</p>
+      <p class="text-rust font-semibold text-sm">Something went wrong. Please email <a href={`mailto:${email}`} class="underline">{email}</a> directly.</p>
     </div>
   )}
 
@@ -44,7 +52,7 @@ const error = Astro.url.searchParams.get('error');
               </div>
               <div>
                 <p class="font-semibold text-green-deep">Email</p>
-                <a href="mailto:mark@averde.ai" class="text-green-mid hover:text-green-deep transition-colors">mark@averde.ai</a>
+                <a href={`mailto:${email}`} class="text-green-mid hover:text-green-deep transition-colors">{email}</a>
               </div>
             </div>
             <div class="flex items-start gap-4">
@@ -53,23 +61,23 @@ const error = Astro.url.searchParams.get('error');
               </div>
               <div>
                 <p class="font-semibold text-green-deep">Location</p>
-                <p class="text-muted">Boulder, Colorado</p>
-                <p class="text-muted text-sm">Serving businesses nationwide — setup is fully remote</p>
+                <p class="text-muted">{page?.locationLine}</p>
+                <p class="text-muted text-sm">{page?.locationNote}</p>
               </div>
             </div>
           </div>
 
           <div class="bg-sand/20 border border-sand/40 rounded-2xl p-6">
-            <p class="font-semibold text-green-deep mb-2">The fastest way to connect</p>
-            <p class="text-muted text-sm mb-4">Run the free 3-minute AI Visibility Audit, then book a 30-minute call to walk through your report together.</p>
+            <p class="font-semibold text-green-deep mb-2">{page?.fastestTitle}</p>
+            <p class="text-muted text-sm mb-4">{page?.fastestBody}</p>
             <a href="/ai-audit" class="inline-flex items-center bg-green-deep text-cream font-semibold px-5 py-2.5 rounded-xl text-sm hover:bg-green-mid transition-colors">
-              Run my free audit →
+              {page?.fastestCta}
             </a>
           </div>
 
           <!-- Simple contact form -->
           <div class="mt-10">
-            <h3 class="text-xl font-bold text-green-deep mb-5">Or send a message</h3>
+            <h3 class="text-xl font-bold text-green-deep mb-5">{page?.formHeadline}</h3>
             <form
               action="/api/contact"
               method="POST"
@@ -140,9 +148,9 @@ const error = Astro.url.searchParams.get('error');
 
         <!-- RIGHT: Google Calendar booking -->
         <div>
-          <h2 class="text-2xl font-bold text-green-deep mb-6">Book a Call</h2>
+          <h2 class="text-2xl font-bold text-green-deep mb-6">{page?.bookHeadline}</h2>
           <div class="bg-white-warm rounded-3xl p-6 shadow-sm">
-            <p class="text-muted text-sm mb-5">Pick a time for a free 30-minute working session.</p>
+            <p class="text-muted text-sm mb-5">{page?.bookCardSub}</p>
             <iframe src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1XF6Cd-RbjfwRu8rZj39AY7nVMemRVBTh2jn945OnAZvRFVeB80FFFRZusXERELC5DecVHma6u?gv=true" style="border:0" width="100%" height="700" frameborder="0" title="Book a call with Mark"></iframe>
           </div>
         </div>

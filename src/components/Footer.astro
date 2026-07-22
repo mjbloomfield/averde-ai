@@ -1,6 +1,13 @@
 ---
 import Logo from './Logo.astro';
 import { getCollection } from 'astro:content';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
+
+const reader = createReader(process.cwd(), keystaticConfig);
+const settings = await reader.singletons.settings.read();
+const email = settings?.email ?? 'mark@averde.ai';
+const location = settings?.location ?? 'Boulder, CO';
 
 const industries = (await getCollection('industries'))
   .filter(i => i.data.published !== false)
@@ -18,9 +25,9 @@ const industries = (await getCollection('industries'))
           AI for small business — practical, honest, and built to last.
         </p>
         <p class="mt-3 text-sm text-cream/70">
-          <a href="mailto:mark@averde.ai" class="hover:text-sand transition-colors">mark@averde.ai</a>
+          <a href={`mailto:${email}`} class="hover:text-sand transition-colors">{email}</a>
         </p>
-        <p class="mt-1 text-sm text-cream/50">Proudly built in Boulder, CO</p>
+        <p class="mt-1 text-sm text-cream/50">Proudly built in {location}</p>
       </div>
 
       <!-- Col 2: Links -->

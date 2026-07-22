@@ -34,7 +34,10 @@ const { title, description, canonical, isHome = false, faqItems } = Astro.props;
     <script>
       // === Scroll-triggered reveals ===
       const targets = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-blur');
-      if ('IntersectionObserver' in window && targets.length) {
+      const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduceMotion) {
+        targets.forEach((t) => t.classList.add('is-in'));
+      } else if ('IntersectionObserver' in window && targets.length) {
         const io = new IntersectionObserver((entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {

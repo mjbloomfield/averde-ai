@@ -2,6 +2,11 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SubscribeForm from '../../components/SubscribeForm.astro';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../../keystatic.config';
+
+const reader = createReader(process.cwd(), keystaticConfig);
+const header = await reader.singletons.blogIndex.read();
 
 const allPosts = await getCollection('blog');
 // Scheduled-publish filter: hide posts whose publishedDate is in the future.
@@ -39,8 +44,8 @@ const categoryColors: Record<string, string> = {
   <!-- HERO -->
   <section class="bg-green-deep py-20 text-center">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
-      <h1 class="text-5xl font-extrabold text-white-warm mb-5">Resources</h1>
-      <p class="text-cream/70 text-xl">Practical guides on getting your business found in AI search and using AI to grow — without the hype.</p>
+      <h1 class="text-5xl font-extrabold text-white-warm mb-5">{header?.title ?? 'Resources'}</h1>
+      <p class="text-cream/70 text-xl">{header?.dek}</p>
     </div>
   </section>
 
@@ -74,7 +79,7 @@ const categoryColors: Record<string, string> = {
         </div>
       ) : (
         <div class="text-center py-12 mb-16">
-          <p class="text-muted text-lg">Posts coming soon — subscribe below to get notified.</p>
+          <p class="text-muted text-lg">{header?.emptyState}</p>
         </div>
       )}
 

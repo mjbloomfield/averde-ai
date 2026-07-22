@@ -130,6 +130,31 @@ if (faqItems && faqItems.length) {
 const jsonLd = { '@context': 'https://schema.org', '@graph': graph };
 // keep prop in signature for back-compat; not currently branching on it
 void isHome;
+
+// BreadcrumbList for nested routes — Home > Section > Page. The last crumb
+// uses the page title (minus any "| Brand" suffix); middle crumbs humanize
+// their URL segment.
+const crumbSegments = new URL(url).pathname.split('/').filter(Boolean);
+const humanize = (slug: string) =>
+  slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+const breadcrumbLd = crumbSegments.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: `${site}/` },
+        ...crumbSegments.map((seg, i) => {
+          const isLast = i === crumbSegments.length - 1;
+          return {
+            '@type': 'ListItem',
+            position: i + 2,
+            name: isLast ? title.split('|')[0].trim() : humanize(seg),
+            item: `${site}/${crumbSegments.slice(0, i + 1).join('/')}`,
+          };
+        }),
+      ],
+    }
+  : null;
 ---
 
 <meta charset="UTF-8" />
@@ -145,19 +170,24 @@ void isHome;
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:site_name" content="Averde AI" />
-<meta property="og:image" content={`${site}/images/textures/mark-headshot.jpg`} />
+<meta property="og:image" content={`${site}/og-default.png`} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Averde AI — plain-English AI for small business" />
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
-<meta name="twitter:image" content={`${site}/images/textures/mark-headshot.jpg`} />
+<meta name="twitter:image" content={`${site}/og-default.png`} />
 
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
 <!-- JSON-LD structured data — every page emits the full @graph for AI engines -->
 <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+{breadcrumbLd && <script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />}
 
 <!-- Analytics — production only, gated on PUBLIC_GA_ID -->
 {gaId && isProduction && (
