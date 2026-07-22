@@ -108,6 +108,9 @@ body::before {
   mix-blend-mode: multiply;
 }
 body > * { position: relative; z-index: 1; }
+/* The blanket rule above flattens the sticky header's z-50 to 1, which put
+   nav dropdowns underneath the page hero. Same specificity, later = wins. */
+body > header { z-index: 50; }
 
 /* In @layer base so Tailwind text-color utilities (e.g. text-white-warm on
    dark heroes) override the default heading color. Tailwind v4 puts utilities
