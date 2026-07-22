@@ -19,6 +19,29 @@ const noIndex = process.env.VERCEL_ENV === 'preview';
 // GA4 measurement id (G-XXXX). Set PUBLIC_GA_ID in Vercel + .env to turn on.
 const gaId = import.meta.env.PUBLIC_GA_ID;
 
+// Layered service area (playbook: areaServed is the local-SEO unlock):
+// metro cities → Front Range → Colorado → US. The US layer keeps
+// "works with businesses anywhere" machine-readable; the visible footer
+// serving line reinforces the same claim in content.
+const SERVICE_AREAS = [
+  { '@type': 'City', name: 'Boulder', '@id': 'https://www.wikidata.org/wiki/Q49236' },
+  { '@type': 'City', name: 'Denver', '@id': 'https://www.wikidata.org/wiki/Q16554' },
+  { '@type': 'City', name: 'Longmont' },
+  { '@type': 'City', name: 'Louisville' },
+  { '@type': 'City', name: 'Lafayette' },
+  { '@type': 'City', name: 'Superior' },
+  { '@type': 'City', name: 'Broomfield' },
+  { '@type': 'City', name: 'Westminster' },
+  { '@type': 'City', name: 'Arvada' },
+  { '@type': 'City', name: 'Golden' },
+  { '@type': 'City', name: 'Fort Collins' },
+  { '@type': 'City', name: 'Loveland' },
+  { '@type': 'City', name: 'Colorado Springs' },
+  { '@type': 'AdministrativeArea', name: 'Colorado Front Range' },
+  { '@type': 'State', name: 'Colorado', '@id': 'https://www.wikidata.org/wiki/Q1261' },
+  { '@type': 'Country', name: 'United States' },
+];
+
 // JSON-LD @graph — multiple cross-referenced entities. Modern best practice
 // for AI search engines (ChatGPT, Perplexity, Google AI Overviews).
 const graph: Record<string, unknown>[] = [
@@ -54,11 +77,7 @@ const graph: Record<string, unknown>[] = [
       addressRegion: 'CO',
       addressCountry: 'US',
     },
-    areaServed: [
-      { '@type': 'City', name: 'Boulder', '@id': 'https://www.wikidata.org/wiki/Q49236' },
-      { '@type': 'State', name: 'Colorado' },
-      { '@type': 'Country', name: 'United States' },
-    ],
+    areaServed: SERVICE_AREAS,
     founder: { '@id': `${site}/#mark` },
   },
   {

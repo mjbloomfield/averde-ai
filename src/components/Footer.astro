@@ -8,6 +8,7 @@ const reader = createReader(process.cwd(), keystaticConfig);
 const settings = await reader.singletons.settings.read();
 const email = settings?.email ?? 'mark@averde.ai';
 const location = settings?.location ?? 'Boulder, CO';
+const servingLine = settings?.servingLine ?? '';
 
 const industries = (await getCollection('industries'))
   .filter(i => i.data.published !== false)
@@ -28,6 +29,7 @@ const industries = (await getCollection('industries'))
           <a href={`mailto:${email}`} class="hover:text-sand transition-colors">{email}</a>
         </p>
         <p class="mt-1 text-sm text-cream/50">Proudly built in {location}</p>
+        {servingLine && <p class="mt-1 text-sm text-cream/50">{servingLine}</p>}
       </div>
 
       <!-- Col 2: Links -->

@@ -550,6 +550,11 @@ export default config({
       schema: {
         email:    fields.text({ label: 'Contact email', defaultValue: 'mark@averde.ai' }),
         location: fields.text({ label: 'Location line (footer)', defaultValue: 'Boulder, CO' }),
+        servingLine: fields.text({
+          label: 'Footer serving line',
+          description: 'Backs up the areaServed schema in visible content',
+          defaultValue: 'Serving Boulder, Denver, and the Colorado Front Range — and businesses anywhere.',
+        }),
       },
     }),
   },
