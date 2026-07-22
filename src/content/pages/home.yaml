@@ -58,9 +58,9 @@ services:
     ctaLabel: "Let's talk →"
     ctaHref: '/contact'
 
-quoteText: '"After Mark rebuilt our site, we started getting calls from people who said ChatGPT recommended us. That had literally never happened before — and it''s now happening every week."'
-quoteName: 'Tasha Reyes'
-quoteRole: 'Owner · Front Range Family Dental · Boulder, CO'
+quoteText: '"Wow — this looks so good. Everything is organized and styled so beautifully and strategically. Love a lot of the wording choices you made... I''m really excited to have a legit website that will be easy for me to edit."'
+quoteName: 'Sharon T.'
+quoteRole: 'Owner · Tissue Alchemy · Boulder, CO'
 
 aboutEyebrow: 'Why work with me'
 aboutHeadline: "I'm not a consultant who learned AI last year."

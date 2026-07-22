@@ -217,15 +217,15 @@ export default config({
         quoteText: fields.text({
           label: 'Testimonial — quote text',
           multiline: true,
-          defaultValue: '"Mark set up our voice agent in four days. It books as many appointments in a weekend as my front desk used to handle in a week — and it\'s cheaper than one hour of my time."',
+          defaultValue: '"Wow — this looks so good. Everything is organized and styled so beautifully and strategically. Love a lot of the wording choices you made... I\'m really excited to have a legit website that will be easy for me to edit."',
         }),
         quoteName: fields.text({
           label: 'Testimonial — person name',
-          defaultValue: 'Dr. Priya Ramanathan',
+          defaultValue: 'Sharon T.',
         }),
         quoteRole: fields.text({
           label: 'Testimonial — role / company',
-          defaultValue: 'Owner · Harbor Dental · Boulder, CO',
+          defaultValue: 'Owner · Tissue Alchemy · Boulder, CO',
         }),
 
         // About Mark
