@@ -1,0 +1,144 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
+
+const reader = createReader(process.cwd(), keystaticConfig);
+const page = await reader.singletons.claudeInstructions.read();
+const settings = await reader.singletons.settings.read();
+const email = settings?.email ?? 'mark@averde.ai';
+
+const includes = page?.includes ?? [];
+const how = page?.how ?? [];
+const paymentUrl = (page?.paymentUrl ?? '').trim();
+const sent = Astro.url.searchParams.get('sent') === '1';
+---
+
+<BaseLayout
+  title={page?.seoTitle ?? 'Custom Instructions for Claude — $27 | Averde AI'}
+  description={page?.seoDescription ?? ''}
+>
+
+  <!-- HERO -->
+  <section class="wood-medium bg-green-deep py-16 text-center">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <h1 class="text-4xl md:text-5xl font-extrabold text-white-warm leading-tight mb-5">
+        {page?.heroHeadline}
+      </h1>
+      <p class="text-cream/70 text-lg">{page?.heroDek}</p>
+    </div>
+  </section>
+
+  {sent && (
+    <div class="bg-sand/20 border-b border-sand/30 py-3 text-center">
+      <p class="text-green-deep font-semibold text-sm">Survey received — your file will land within 2 business days.</p>
+    </div>
+  )}
+
+  <!-- WHAT YOU GET + HOW -->
+  <section class="bg-cream topo-map topo-grays py-16">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 grid md:grid-cols-2 gap-6 items-start">
+      <div class="bg-white-warm rounded-3xl p-8 shadow-sm">
+        <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">What you get · {page?.price}</p>
+        <ul class="space-y-3">
+          {includes.map(item => (
+            <li class="flex gap-3 text-muted leading-relaxed">
+              <span class="text-green-mid font-bold flex-shrink-0">✓</span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+        <div class="mt-8">
+          {paymentUrl ? (
+            <a href={paymentUrl} class="block text-center bg-green-deep text-white-warm font-bold px-6 py-4 rounded-xl hover:bg-green-mid transition-colors">
+              Pay {page?.price} → then fill out the survey
+            </a>
+          ) : (
+            <a href={`mailto:${email}?subject=Custom%20Instructions%20file%20(${encodeURIComponent(page?.price ?? '$27')})`} class="block text-center bg-green-deep text-white-warm font-bold px-6 py-4 rounded-xl hover:bg-green-mid transition-colors">
+              Email me to grab one — checkout is coming online
+            </a>
+          )}
+        </div>
+      </div>
+      <div class="bg-white-warm rounded-3xl p-8 shadow-sm">
+        <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">How it works</p>
+        <ol class="space-y-5">
+          {how.map((step, i) => (
+            <li class="flex gap-4">
+              <span class="text-sand text-2xl font-extrabold flex-shrink-0" style="font-family:'Fraunces',serif">{i + 1}</span>
+              <div>
+                <p class="font-bold text-green-deep">{step.title}</p>
+                <p class="text-muted text-sm leading-relaxed">{step.body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- SURVEY -->
+  <section id="survey" class="bg-white-warm py-16 scroll-mt-20">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-8">
+        <h2 class="text-3xl font-extrabold text-green-deep mb-3">{page?.surveyHeadline}</h2>
+        <p class="text-muted">{page?.surveyDek}</p>
+      </div>
+
+      <form action="/api/instructions-order" method="POST" class="space-y-4 bg-cream rounded-3xl p-6 sm:p-8">
+        <div style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;" aria-hidden="true">
+          <label for="io-website">Website (leave empty)</label>
+          <input type="text" id="io-website" name="website" tabindex="-1" autocomplete="off" />
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="io-name" class="block text-sm font-medium text-dark mb-1.5">Your name *</label>
+            <input type="text" id="io-name" name="name" required class="w-full bg-white-warm border border-green-sage/30 rounded-xl px-4 py-2.5 text-dark text-sm focus:outline-none focus:border-green-sage" />
+          </div>
+          <div>
+            <label for="io-email" class="block text-sm font-medium text-dark mb-1.5">Email (same one you paid with) *</label>
+            <input type="email" id="io-email" name="email" required class="w-full bg-white-warm border border-green-sage/30 rounded-xl px-4 py-2.5 text-dark text-sm focus:outline-none focus:border-green-sage" />
+          </div>
+        </div>
+        <div>
+          <label for="io-business" class="block text-sm font-medium text-dark mb-1.5">Your business — what you do, in a sentence or two *</label>
+          <textarea id="io-business" name="business" required rows={2} class="w-full bg-white-warm border border-green-sage/30 rounded-xl px-4 py-2.5 text-dark text-sm focus:outline-none focus:border-green-sage resize-none"></textarea>
+        </div>
+        <div>
+          <label for="io-audience" class="block text-sm font-medium text-dark mb-1.5">Who you serve — your typical customer *</label>
+          <textarea id="io-audience" name="audience" required rows={2} class="w-full bg-white-warm border border-green-sage/30 rounded-xl px-4 py-2.5 text-dark text-sm focus:outline-none focus:border-green-sage resize-none"></textarea>
+        </div>
+        <div>
+          <label for="io-tone" class="block text-sm font-medium text-dark mb-1.5">How you want to sound — tone, formality, three adjectives if that's easier *</label>
+          <textarea id="io-tone" name="tone" required rows={2} class="w-full bg-white-warm border border-green-sage/30 rounded-xl px-4 py-2.5 text-dark text-sm focus:outline-none focus:border-green-sage resize-none"></textarea>
+        </div>
+        <div>
+          <label for="io-sample" class="block text-sm font-medium text-dark mb-1.5">Paste a sample of your writing you like (an email, a post — optional but gold)</label>
+          <textarea id="io-sample" name="sample" rows={4} class="w-full bg-white-warm border border-green-sage/30 rounded-xl px-4 py-2.5 text-dark text-sm focus:outline-none focus:border-green-sage resize-none"></textarea>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="io-tools" class="block text-sm font-medium text-dark mb-1.5">Tools you use daily</label>
+            <input type="text" id="io-tools" name="tools" placeholder="Gmail, QuickBooks, Square…" class="w-full bg-white-warm border border-green-sage/30 rounded-xl px-4 py-2.5 text-dark text-sm focus:outline-none focus:border-green-sage" />
+          </div>
+          <div>
+            <label for="io-receipt" class="block text-sm font-medium text-dark mb-1.5">Receipt / confirmation number (if handy)</label>
+            <input type="text" id="io-receipt" name="receipt_ref" class="w-full bg-white-warm border border-green-sage/30 rounded-xl px-4 py-2.5 text-dark text-sm focus:outline-none focus:border-green-sage" />
+          </div>
+        </div>
+        <div>
+          <label for="io-donts" class="block text-sm font-medium text-dark mb-1.5">What drives you crazy in AI writing — words, habits, anything Claude should never do</label>
+          <textarea id="io-donts" name="donts" rows={2} placeholder={'"leverage," exclamation points, over-promising…'} class="w-full bg-white-warm border border-green-sage/30 rounded-xl px-4 py-2.5 text-dark text-sm focus:outline-none focus:border-green-sage resize-none"></textarea>
+        </div>
+        <div>
+          <label for="io-notes" class="block text-sm font-medium text-dark mb-1.5">Anything else I should know (optional)</label>
+          <textarea id="io-notes" name="notes" rows={2} class="w-full bg-white-warm border border-green-sage/30 rounded-xl px-4 py-2.5 text-dark text-sm focus:outline-none focus:border-green-sage resize-none"></textarea>
+        </div>
+        <button type="submit" class="w-full bg-green-deep text-cream font-semibold py-3.5 rounded-xl hover:bg-green-mid transition-colors">
+          Send the survey
+        </button>
+      </form>
+    </div>
+  </section>
+
+</BaseLayout>

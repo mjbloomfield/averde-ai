@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
+
+const reader = createReader(process.cwd(), keystaticConfig);
+const page = await reader.singletons.aiConsulting.read();
+const settings = await reader.singletons.settings.read();
+const email = settings?.email ?? 'mark@averde.ai';
+
+const funnel = page?.funnel ?? [];
+---
+
+<BaseLayout
+  title={page?.seoTitle ?? 'AI Consulting | Averde AI'}
+  description={page?.seoDescription ?? ''}
+>
+
+  <!-- HERO -->
+  <section class="wood-beam bg-green-deep py-16 text-center">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <div class="inline-flex items-center gap-2 bg-sand/20 text-sand text-xs font-semibold px-3 py-1.5 rounded-full mb-5">
+        {page?.heroBadge}
+      </div>
+      <h1 class="text-4xl md:text-5xl font-extrabold text-white-warm leading-tight mb-5">
+        {page?.heroHeadline}
+      </h1>
+      <p class="text-cream/70 text-lg">{page?.heroDek}</p>
+    </div>
+  </section>
+
+  <!-- HOW THE FUNNEL WORKS -->
+  <section class="bg-cream topo-map topo-grays pt-14 pb-4">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <div class="grid md:grid-cols-3 gap-6">
+        {funnel.map((step, i) => (
+          <div class="bg-white-warm rounded-3xl p-7 shadow-sm">
+            <p class="text-sand text-4xl font-extrabold mb-3" style="font-family:'Fraunces',serif">{String(i + 1).padStart(2, '0')}</p>
+            <h2 class="text-xl font-extrabold text-green-deep mb-2">{step.title}</h2>
+            <p class="text-muted text-sm leading-relaxed">{step.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- READINESS AUDIT WIDGET -->
+  <section id="readiness-audit" class="bg-cream topo-map topo-grays pt-10 pb-16 scroll-mt-20">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-8">
+        <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">{page?.auditEyebrow}</p>
+        <h2 class="text-3xl md:text-4xl font-extrabold text-green-deep mb-4">{page?.auditHeadline}</h2>
+        <p class="text-muted text-lg max-w-2xl mx-auto">{page?.auditDek}</p>
+      </div>
+      <iframe
+        id="readiness-frame"
+        src="/readiness/index.html"
+        title="AI Business Readiness Audit"
+        style="width:100%; min-height:760px; border:0; display:block; background:transparent;"
+        loading="lazy"
+      ></iframe>
+      <script is:inline>
+        window.addEventListener('message', (e) => {
+          if (e.data && typeof e.data.readinessHeight === 'number') {
+            document.getElementById('readiness-frame').style.minHeight =
+              Math.max(560, e.data.readinessHeight + 40) + 'px';
+          }
+        });
+      </script>
+    </div>
+  </section>
+
+  <!-- $27 OFFER -->
+  <section class="wood-beam bg-green-deep py-16">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+      <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">{page?.offerEyebrow}</p>
+      <h2 class="text-3xl font-extrabold text-white-warm mb-4">{page?.offerTitle}</h2>
+      <p class="text-cream/70 mb-8">{page?.offerBody}</p>
+      <a href="/claude-instructions" class="inline-flex items-center bg-sand text-green-deep font-bold px-8 py-4 rounded-xl hover:bg-sand/90 transition-colors">
+        {page?.offerCta}
+      </a>
+    </div>
+  </section>
+
+  <!-- BOOK THE FREE CALL -->
+  <section id="book" class="bg-white-warm py-16 scroll-mt-20">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-10">
+        <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">{page?.bookEyebrow}</p>
+        <h2 class="text-3xl md:text-4xl font-extrabold text-green-deep mb-4">{page?.bookHeadline}</h2>
+        <p class="text-muted text-lg max-w-2xl mx-auto">{page?.bookDek}</p>
+      </div>
+      <div class="bg-cream rounded-3xl p-6 sm:p-8 shadow-sm">
+        <p class="font-bold text-green-deep text-lg mb-1">{page?.bookCardTitle}</p>
+        <p class="text-muted text-sm mb-5">{page?.bookCardSub}</p>
+        <iframe src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1XF6Cd-RbjfwRu8rZj39AY7nVMemRVBTh2jn945OnAZvRFVeB80FFFRZusXERELC5DecVHma6u?gv=true" style="border:0" width="100%" height="700" frameborder="0" title="Book a call with Mark"></iframe>
+      </div>
+      <p class="mt-6 text-center text-muted text-sm">
+        Or reach out directly: <a href={`mailto:${email}`} class="text-green-mid font-medium hover:text-green-deep">{email}</a>
+      </p>
+    </div>
+  </section>
+
+</BaseLayout>

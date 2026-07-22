@@ -8,7 +8,14 @@ Site: `https://averde.ai` · Stack: Astro + Tailwind + Keystatic + Supabase + Re
 
 ## To do
 
-- **Decide the AI Consulting nav target** — the new Services dropdown points AI Consulting at /pricing for now; it probably deserves its own service page (readiness audit → strategy session funnel).
+- **Readiness-audit follow-on ideas (Mark-approved backlog, 2026-07-22):**
+  - Tailored starter kits — 4-5 pre-built playbooks (Missed-Calls, Quoting, Repeated-Questions, Follow-up) matched to the lead's biggest pain answer.
+  - Personalized "first week with Claude" plan generated from audit answers.
+  - Competitor AI-adoption snapshot (live query on "AI tools for [industry]").
+  - AI-tool shortlist with explicit "skip this" calls.
+  - Recorded 5-minute walkthrough videos, one per pain category, embedded in the matching report.
+  - 90-day AI roadmap draft, pre-filled from answers, refined on the call.
+- **$27 Custom Instructions offer needs a payment link** — page ships with a placeholder; Mark creates a Stripe (or similar) payment link and we drop it into the claudeInstructions singleton. (Supersedes the older "$27 Claude Desktop Toolkit" idea below.)
 
 - **Decide the audit's name** — Mark is leaning toward "AI Website Audit" / "AI Website Readiness Audit" (currently "AI Visibility Audit" site-wide). Scoping it to *website* also clears the name space for the business audit below. Rename is copy-only; keep the /ai-audit URL.
 - **Develop an "AI Business Audit"** — separate product idea: how are you using AI in your business (operations, workflows, tooling), not just how AI sees your website. Would pair with the existing website audit as a two-audit funnel.
@@ -54,3 +61,4 @@ Site: `https://averde.ai` · Stack: Astro + Tailwind + Keystatic + Supabase + Re
 - 2026-07-22 — Topo tiles regenerated at 2000×1400 (one map per section, no tiling repeat); cards on topo sections get a true off-white + hairline border (white-warm was the identical hex to cream — cards were invisible except shadow). Blog renamed Free Resources (nav, page title, footer; /free hub link relabeled Free Tools to avoid collision); multi-part series now grouped on the index under series headers with per-part links (new series/seriesPart frontmatter, CMS-editable).
 - 2026-07-22 — Topo tiles regenerated with edge-to-edge contours (30 rings, elevation label floors at valley level) so tall sections never run out of map; homepage services section gets Longs Peak; case studies moves to new Mount Blue Sky tile; series titles + full rows on /blog now clickable with visible hover.
 - 2026-07-22 — Topo coverage completed (home playbooks/about sections via bone-shorthand fix, About's Olive section, pricing + how-it-works bottom sections); nav How It Works replaced with Services dropdown (AI-Ready Website → /how-it-works, AI Consulting → /pricing pending a dedicated page); AI-Ready posts polished against the July voice rules (four it's-not-X-it's-Y constructions reworked, price-range reassurance added, exact Squarespace click-path).
+- 2026-07-22 — Built the AI Consulting funnel: new /ai-consulting page (funnel steps, embedded AI Business Readiness Audit, $27 offer card, booking) + readiness widget (5-step self-assessment, 5-dimension scoring, hours-back math, top-3 moves) + /api/readiness-lead (readiness_leads table, user report email + web copy + internal summary). Built the $27 Custom Instructions offer: /claude-instructions (sales + survey) + /api/instructions-order (instructions_orders table, Mark notification + buyer confirmation); payment link pending — page shows email-me fallback until the paymentUrl field is filled in Keystatic. Nav AI Consulting → /ai-consulting; Grays Peak topo tile; sitemap + llms.txt updated.

@@ -532,6 +532,68 @@ export default config({
       },
     }),
 
+    // ── AI CONSULTING PAGE (/ai-consulting) ──────────────────────────────────
+    aiConsulting: singleton({
+      label: 'AI Consulting Page',
+      path: 'src/content/pages/ai-consulting',
+      schema: {
+        seoTitle: fields.text({ label: 'SEO page title' }),
+        seoDescription: fields.text({ label: 'SEO meta description', multiline: true }),
+        heroBadge: fields.text({ label: 'Hero — badge line' }),
+        heroHeadline: fields.text({ label: 'Hero — headline' }),
+        heroDek: fields.text({ label: 'Hero — subheadline', multiline: true }),
+        funnel: fields.array(
+          fields.object({
+            title: fields.text({ label: 'Step title' }),
+            body: fields.text({ label: 'Step body', multiline: true }),
+          }),
+          { label: 'How it works — funnel steps', itemLabel: props => props.fields.title.value || 'New step' }
+        ),
+        auditEyebrow: fields.text({ label: 'Audit section — eyebrow' }),
+        auditHeadline: fields.text({ label: 'Audit section — headline' }),
+        auditDek: fields.text({ label: 'Audit section — dek', multiline: true }),
+        offerEyebrow: fields.text({ label: '$27 offer — eyebrow' }),
+        offerTitle: fields.text({ label: '$27 offer — title' }),
+        offerBody: fields.text({ label: '$27 offer — body', multiline: true }),
+        offerCta: fields.text({ label: '$27 offer — button label' }),
+        bookEyebrow: fields.text({ label: 'Booking — eyebrow' }),
+        bookHeadline: fields.text({ label: 'Booking — headline' }),
+        bookDek: fields.text({ label: 'Booking — paragraph', multiline: true }),
+        bookCardTitle: fields.text({ label: 'Booking card — title' }),
+        bookCardSub: fields.text({ label: 'Booking card — subtitle' }),
+      },
+    }),
+
+    // ── $27 CUSTOM INSTRUCTIONS PAGE (/claude-instructions) ─────────────────
+    claudeInstructions: singleton({
+      label: 'Custom Instructions Offer',
+      path: 'src/content/pages/claude-instructions',
+      schema: {
+        seoTitle: fields.text({ label: 'SEO page title' }),
+        seoDescription: fields.text({ label: 'SEO meta description', multiline: true }),
+        heroHeadline: fields.text({ label: 'Hero — headline' }),
+        heroDek: fields.text({ label: 'Hero — subheadline', multiline: true }),
+        price: fields.text({ label: 'Price label (e.g. $27)' }),
+        paymentUrl: fields.text({
+          label: 'Payment link URL',
+          description: 'Stripe (or similar) payment link. Leave empty to show the email-me fallback.',
+        }),
+        includes: fields.array(
+          fields.text({ label: 'Item' }),
+          { label: 'What you get', itemLabel: props => props.value || 'New item' }
+        ),
+        how: fields.array(
+          fields.object({
+            title: fields.text({ label: 'Step title' }),
+            body: fields.text({ label: 'Step body', multiline: true }),
+          }),
+          { label: 'How it works steps', itemLabel: props => props.fields.title.value || 'New step' }
+        ),
+        surveyHeadline: fields.text({ label: 'Survey — headline' }),
+        surveyDek: fields.text({ label: 'Survey — dek', multiline: true }),
+      },
+    }),
+
     // ── INDEX-PAGE HEADERS ───────────────────────────────────────────────────
     blogIndex: singleton({
       label: 'Blog Index Page',

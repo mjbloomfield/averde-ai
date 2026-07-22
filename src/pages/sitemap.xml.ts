@@ -17,6 +17,8 @@ const staticRoutes: Array<{ path: string; priority: number; changefreq: string }
   { path: '/blog',         priority: 0.7,  changefreq: 'weekly' },
   { path: '/case-studies', priority: 0.8,  changefreq: 'monthly' },
   { path: '/free',         priority: 0.8,  changefreq: 'monthly' },
+  { path: '/ai-consulting', priority: 0.9,  changefreq: 'monthly' },
+  { path: '/claude-instructions', priority: 0.7, changefreq: 'monthly' },
   { path: '/free/ai-ready-checklist', priority: 0.8, changefreq: 'monthly' },
   { path: '/free/claude-starter-kit', priority: 0.8, changefreq: 'monthly' },
   { path: '/glossary',     priority: 0.6,  changefreq: 'monthly' },

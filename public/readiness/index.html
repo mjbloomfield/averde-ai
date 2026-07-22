@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI Business Readiness Audit | Averde AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;500;600&family=Source+Serif+4:wght@400;500;600&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --honey-50:#F6E8D0; --honey-100:#E8C896; --honey-300:#C99356; --honey-500:#9C6A33; --honey-700:#6B4520;
+    --walnut-300:#7A5238; --walnut-500:#4F3522; --walnut-700:#2A1B11;
+    --bone:#E5DBC9; --driftwood:#B7A990; --smoke:#7B6E5B;
+    --paper:#F4ECDB; --ink:#1F1A12; --ink-700:#48392A; --muted:#7A6A58;
+    --aged-cream:#EDE3D0;
+    --rust:#A86237;
+    --pass:#3a6f4d; --warn:#9C6A33; --fail:#A04324;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background:var(--paper); color:var(--ink); font-family:'Source Serif 4',Georgia,serif; font-size:16px; line-height:1.55; }
+  h1,h2,h3,h4 { font-family:'Fraunces',Georgia,serif; letter-spacing:-0.02em; line-height:1.15; font-weight:500; margin:0; }
+  p { margin:0; }
+  .shell { min-height:100vh; padding:40px 16px 64px; }
+  .shell-inner { max-width:680px; margin:0 auto; }
+  .shell-inner.wide { max-width:880px; }
+  .wordmark { text-align:center; margin-bottom:32px; font-family:'Fraunces',serif; font-size:24px; color:var(--walnut-700); font-weight:500; letter-spacing:-0.02em; }
+  .wordmark span { color:var(--honey-500); }
+  .card { background:#fff; border:1px solid var(--bone); border-radius:24px; padding:32px; }
+  @media (min-width:640px){ .card { padding:48px; } }
+  .fade-in { animation: fadeIn 0.35s ease both; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(6px);} to { opacity:1; transform:translateY(0);} }
+
+  .eyebrow { font-family:'Inter Tight',sans-serif; font-size:11px; font-weight:600; color:var(--honey-500); text-transform:uppercase; letter-spacing:0.14em; margin-bottom:12px; }
+  .label { font-family:'Inter Tight',sans-serif; font-size:13px; font-weight:600; color:var(--ink-700); text-transform:uppercase; letter-spacing:0.08em; display:block; margin-bottom:8px; }
+  .hint { font-size:14px; color:var(--smoke); margin-top:8px; }
+  .dek { color:var(--muted); font-size:18px; margin:12px 0 32px; }
+
+  .brand-btn { background:var(--walnut-700); color:var(--paper); border:0; border-radius:12px; padding:14px 28px; font-family:'Inter Tight',sans-serif; font-weight:600; font-size:14px; letter-spacing:0.01em; cursor:pointer; transition:background 0.18s; }
+  .brand-btn:hover { background:var(--walnut-500); }
+  .brand-btn:disabled { opacity:0.4; cursor:not-allowed; }
+  .ghost-btn { background:none; border:0; color:var(--ink-700); font-family:'Inter Tight',sans-serif; font-weight:500; font-size:14px; cursor:pointer; padding:8px 0; }
+  .ghost-btn:hover { color:var(--walnut-700); }
+  .step-footer { display:flex; align-items:center; justify-content:space-between; padding-top:24px; margin-top:32px; border-top:1px solid var(--bone); }
+
+  .input { background:#fff; border:1.5px solid var(--driftwood); border-radius:10px; padding:13px 16px; width:100%; font-family:'Source Serif 4',serif; font-size:16px; color:var(--ink); transition:border 0.15s; }
+  .input:focus { outline:none; border-color:var(--honey-300); }
+  textarea.input { resize:vertical; }
+  select.input { appearance:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%237B6E5B' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>"); background-repeat:no-repeat; background-position:right 16px center; padding-right:40px; }
+  .field-grid { display:grid; grid-template-columns:1fr; gap:20px; }
+  @media (min-width:640px){ .field-grid { grid-template-columns:1fr 1fr; } }
+
+  .progress-wrap { margin-bottom:32px; }
+  .progress-labels { display:flex; justify-content:space-between; margin-bottom:8px; }
+  .progress-labels span { font-family:'Inter Tight',sans-serif; font-size:13px; font-weight:600; color:var(--ink-700); text-transform:uppercase; letter-spacing:0.08em; }
+  .progress { background:var(--bone); height:4px; border-radius:99px; overflow:hidden; }
+  .progress-bar { background:var(--honey-300); height:100%; transition:width 0.4s ease; }
+
+  .check-row { display:flex; align-items:flex-start; gap:12px; padding:14px 16px; border:1.5px solid var(--bone); border-radius:12px; cursor:pointer; transition:all 0.15s; background:#fff; }
+  .check-row:hover { border-color:var(--honey-300); }
+  .check-row.selected { border-color:var(--walnut-700); background:var(--aged-cream); }
+  .check-box { flex-shrink:0; width:20px; height:20px; border:1.5px solid var(--driftwood); border-radius:5px; margin-top:2px; display:flex; align-items:center; justify-content:center; }
+  .check-row.selected .check-box { background:var(--walnut-700); border-color:var(--walnut-700); }
+  .pains-grid { display:grid; grid-template-columns:1fr; gap:12px; }
+  @media (min-width:640px){ .pains-grid { grid-template-columns:1fr 1fr; } }
+
+  /* Report styles */
+  .report-head { text-align:center; margin-bottom:40px; }
+  .report-head h1 { font-size:clamp(2rem,5vw,3rem); margin:8px 0; }
+  .report-sub { color:var(--muted); font-size:18px; }
+
+  .score-panel { background:#fff; border:1px solid var(--bone); border-radius:24px; padding:32px; display:flex; flex-direction:column; gap:24px; align-items:center; margin-bottom:24px; }
+  @media (min-width:640px){ .score-panel { flex-direction:row; padding:40px; } }
+  .score-ring-wrap { position:relative; width:140px; height:140px; flex-shrink:0; }
+  .score-ring-wrap svg circle.arc { stroke-linecap:round; transform:rotate(-90deg); transform-origin:center; transition:stroke-dashoffset 0.8s ease; }
+  .score-ring-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .score-ring-num { font-family:'Fraunces',serif; font-size:36px; font-weight:500; }
+  .score-ring-grade { font-family:'Inter Tight',sans-serif; font-size:12px; font-weight:600; }
+  .score-copy h2 { font-size:26px; margin-bottom:10px; }
+  .score-copy p { color:var(--muted); }
+  .score-basis { font-family:'Inter Tight',sans-serif; font-size:12px; color:var(--smoke); margin-top:10px; }
+
+  .section-block { background:#fff; border:1px solid var(--bone); border-radius:20px; padding:28px; margin-bottom:24px; }
+  @media (min-width:640px){ .section-block { padding:32px; } }
+  .section-block h3 { font-size:22px; margin-bottom:6px; }
+  .section-block > .section-dek { color:var(--muted); font-size:15px; margin-bottom:20px; }
+
+  .checks-table { display:flex; flex-direction:column; }
+  .check-item { border-top:1px solid var(--bone); }
+  .check-item:first-child { border-top:0; }
+  .check-item summary { list-style:none; display:flex; align-items:center; gap:12px; padding:13px 4px; cursor:pointer; }
+  .check-item summary::-webkit-details-marker { display:none; }
+  .check-status { flex-shrink:0; width:22px; height:22px; border-radius:999px; display:flex; align-items:center; justify-content:center; font-size:12px; color:#fff; font-family:'Inter Tight',sans-serif; font-weight:700; }
+  .check-status.pass { background:var(--pass); } .check-status.warn { background:var(--warn); }
+  .check-status.fail { background:var(--fail); } .check-status.na { background:var(--driftwood); }
+  .check-name { flex:1; font-size:15px; color:var(--ink); }
+  .check-pts { font-family:'Inter Tight',sans-serif; font-size:12px; font-weight:600; color:var(--smoke); white-space:nowrap; }
+  .check-chevron { color:var(--driftwood); transition:transform 0.15s; font-size:12px; }
+  .check-item[open] .check-chevron { transform:rotate(180deg); }
+  .check-detail { padding:2px 4px 16px 34px; font-size:14px; color:var(--ink-700); }
+  .check-detail .why { margin-bottom:8px; }
+  .check-detail .fix { background:var(--aged-cream); border-radius:8px; padding:10px 14px; }
+  .check-detail .fix strong { font-family:'Inter Tight',sans-serif; font-size:11px; text-transform:uppercase; letter-spacing:0.1em; color:var(--honey-500); display:block; margin-bottom:4px; }
+
+  .vis-results { display:flex; flex-direction:column; gap:8px; margin:16px 0; }
+  .vis-hit { border-radius:10px; padding:10px 14px; background:var(--aged-cream); }
+  .vis-hit.you { background:rgba(58,111,77,.12); border:1px solid rgba(58,111,77,.4); }
+  .vis-hit .t { font-family:'Inter Tight',sans-serif; font-size:14px; font-weight:600; color:var(--ink); }
+  .vis-hit .h { font-size:12px; color:var(--smoke); margin-top:2px; }
+  .vis-badge { display:inline-block; font-family:'Inter Tight',sans-serif; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; padding:5px 12px; border-radius:999px; margin-bottom:12px; }
+  .vis-badge.good { background:rgba(58,111,77,.12); color:var(--pass); }
+  .vis-badge.bad  { background:rgba(160,67,36,.12); color:var(--fail); }
+  .vis-queries { display:flex; flex-direction:column; gap:8px; margin:16px 0; }
+  .vis-q { border:1px solid var(--bone); border-radius:10px; background:var(--paper); }
+  .vis-q summary { display:flex; align-items:center; gap:10px; padding:10px 14px; cursor:pointer; list-style:none; }
+  .vis-q summary::-webkit-details-marker { display:none; }
+  .vis-q-mark { font-weight:700; flex-shrink:0; }
+  .vis-q-mark.good { color:var(--pass); }
+  .vis-q-mark.bad { color:var(--fail); }
+  .vis-q-text { font-family:'Inter Tight',sans-serif; font-size:14px; font-weight:600; color:var(--ink); flex:1; }
+  .vis-q .vis-results { margin:0; padding:0 14px 12px; }
+  .vis-q[open] .check-chevron { transform:rotate(180deg); }
+
+  .plan-list { display:flex; flex-direction:column; gap:16px; }
+  .plan-item { border:1px solid var(--bone); border-radius:16px; padding:22px; background:#fff; }
+  .plan-num { font-family:'Fraunces',serif; font-size:26px; color:var(--driftwood); }
+  .plan-item h4 { font-size:19px; margin:6px 0 8px; }
+  .plan-item .why { font-size:14.5px; color:var(--ink-700); margin-bottom:14px; }
+  .plan-diy { background:var(--aged-cream); border-radius:10px; padding:14px 16px; font-size:14px; color:var(--ink-700); }
+  .plan-diy strong, .plan-short strong { font-family:'Inter Tight',sans-serif; font-size:11px; text-transform:uppercase; letter-spacing:0.1em; color:var(--honey-500); display:block; margin-bottom:6px; }
+  .plan-diy ul { margin:0; padding-left:18px; } .plan-diy li { margin-bottom:4px; }
+  .plan-short { margin-top:10px; font-size:14px; color:var(--ink-700); padding:0 16px; }
+
+  .cta-panel { background:var(--walnut-700); color:var(--paper); border-radius:24px; padding:40px 28px; text-align:center; margin-top:32px; }
+  .cta-panel h2 { color:var(--paper); font-size:clamp(1.6rem,3.5vw,2.2rem); margin-bottom:12px; }
+  .cta-panel p { color:var(--bone); max-width:520px; margin:0 auto 24px; }
+  .cta-btn { display:inline-block; background:var(--honey-300); color:var(--walnut-700); font-family:'Inter Tight',sans-serif; font-weight:600; font-size:15px; padding:15px 30px; border-radius:12px; text-decoration:none; }
+  .cta-note { font-size:13px; color:var(--driftwood); margin-top:16px; }
+
+  .pending { display:flex; align-items:center; gap:10px; color:var(--muted); font-size:14px; padding:14px 0; }
+  .spinner { width:16px; height:16px; border:2px solid var(--bone); border-top-color:var(--honey-500); border-radius:999px; animation:spin 0.8s linear infinite; flex-shrink:0; }
+  .live-strip { display:flex; align-items:center; gap:10px; font-size:13.5px; color:var(--muted); background:var(--bone); border-radius:10px; padding:10px 14px; margin-bottom:22px; }
+  .live-strip.done { color:var(--ink-700); }
+  .live-strip .tick { color:#3a6f4d; font-weight:700; flex-shrink:0; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .restart { text-align:center; margin-top:28px; }
+</style>
+</head>
+<body>
+<div class="shell"><div class="shell-inner" id="shell">
+  <div class="wordmark">Averde<span>.</span></div>
+  <div id="root"></div>
+</div></div>
+
+<script>
+(function () {
+'use strict';
+
+// Embedded on /ai-consulting the page carries the branding already.
+if (window.self !== window.top) {
+  document.querySelector('.wordmark').style.display = 'none';
+}
+
+/* ================================================================
+   AI Business Readiness Audit — a structured self-assessment.
+   Unlike the website audit (live checks), this scores the owner's
+   own answers, and says so plainly. It feeds the free 30-minute
+   call: the report IS the prep material.
+================================================================ */
+
+const INDUSTRIES = [
+  'Dental practice','HVAC / Heating & Cooling','Real estate brokerage',
+  'Med spa / Aesthetic medicine','Veterinary clinic','Law firm',
+  'Home services (plumbing, roofing, landscaping)','Auto repair / Body shop',
+  'Restaurant / Hospitality','Fitness / Gym',
+  'Accounting / Financial advisor','Construction / Contractor',
+  'E-commerce / DTC brand','Other'
+];
+
+const TEAM_SIZES = ['Just me','2–5 people','6–15 people','16+ people'];
+
+// frac = the share of that work AI can realistically absorb — used for the
+// hours-back estimate, deliberately conservative.
+const HOURS_CATS = [
+  { id:'quoting',    label:'Quotes & proposals',                frac:0.5 },
+  { id:'scheduling', label:'Scheduling & calendar juggling',    frac:0.6 },
+  { id:'followup',   label:'Lead & customer follow-up',         frac:0.6 },
+  { id:'questions',  label:'Answering the same questions',      frac:0.7 },
+  { id:'dataentry',  label:'Moving data between systems',       frac:0.7 },
+  { id:'content',    label:'Marketing & content creation',      frac:0.5 },
+];
+const HOUR_OPTS = [
+  { v:'0',   label:'None',        mid:0 },
+  { v:'1-3', label:'1–3 hrs/wk',  mid:2 },
+  { v:'4-7', label:'4–7 hrs/wk',  mid:5.5 },
+  { v:'8+',  label:'8+ hrs/wk',   mid:9 },
+];
+
+const STORAGE_OPTS = [
+  { v:'paper',   label:'Mostly paper, whiteboards, or memory', pts:4 },
+  { v:'files',   label:'Files on one computer',                pts:10 },
+  { v:'sheets',  label:'Spreadsheets (Excel / Google Sheets)', pts:14 },
+  { v:'cloud',   label:'Cloud tools / a CRM',                  pts:20 },
+];
+const PLATFORM_OPTS = [
+  { v:'google',    label:'Google (Gmail / Google Calendar)',   pts:20 },
+  { v:'microsoft', label:'Microsoft 365 (Outlook)',            pts:20 },
+  { v:'mixed',     label:'A mix of both',                      pts:14 },
+  { v:'other',     label:'Something else / not sure',          pts:6 },
+];
+const USAGE_OPTS = [
+  { v:'never',  label:"Haven't really used it",                pts:4 },
+  { v:'tried',  label:'Tried it a few times',                  pts:10 },
+  { v:'weekly', label:'Use it most weeks',                     pts:15 },
+  { v:'daily',  label:"It's part of most days",                pts:20 },
+];
+const APPETITE_OPTS = [
+  { v:'<1',  label:'Less than an hour a week',                 pts:4 },
+  { v:'1-2', label:'1–2 hours a week',                         pts:10 },
+  { v:'3-5', label:'3–5 hours a week',                         pts:16 },
+  { v:'5+',  label:'5+ hours a week',                          pts:20 },
+];
+const WORRY_OPTS = ['Privacy / my data','Getting it wrong in front of customers','Cost','Time to learn it','Not sure where to start','No big worries'];
+
+const MOVES = {
+  quoting: {
+    title: 'Cut quoting from hours to minutes',
+    why: h => `You reported ${h} on quotes and proposals — usually the single fastest AI win for a service business.`,
+    diy: 'Save your three best past quotes as examples, then have Claude draft each new one from a two-line brief in your voice and format. You review, adjust the numbers, send.',
+    call: "On the call we'll map your quoting flow end to end and pick the tool that fits it.",
+  },
+  scheduling: {
+    title: 'Stop juggling the calendar by hand',
+    why: h => `${h} on scheduling is booking-link territory — this one is more setup than AI, and it sticks.`,
+    diy: 'Set up a booking page (you can start free), link it from your site, email signature, and Google Business Profile, and let clients pick their own slots.',
+    call: "On the call we'll untangle what should be self-serve booking vs. what genuinely needs a human.",
+  },
+  followup: {
+    title: 'Close the follow-up gap',
+    why: h => `${h} on follow-up usually means leads are also slipping through untouched — the most expensive kind of admin.`,
+    diy: 'Have Claude draft a simple 3-touch follow-up sequence in your voice (day 1, day 3, day 10), then work it from a basic spreadsheet until it earns automation.',
+    call: "On the call we'll find where leads actually stall and what to automate first.",
+  },
+  questions: {
+    title: 'Answer the repeated questions once',
+    why: h => `${h} answering the same questions means the answers belong on your website and in an assistant, not in your head.`,
+    diy: 'List the 10 questions you answer most, have Claude polish your answers, and publish them as a real FAQ page. That also feeds AI search.',
+    call: "On the call we'll decide which answers belong on the site, in email templates, or in an AI assistant.",
+  },
+  dataentry: {
+    title: 'Connect the systems you re-type between',
+    why: h => `${h} moving data between systems is pure leak — nobody should be the glue between two pieces of software.`,
+    diy: 'Write down each hop (where the data starts, where you re-type it). Even one automated hop — receipts to spreadsheet, form to CRM — pays back weekly.',
+    call: "On the call we'll pick the one connection with the best payback and how to build it.",
+  },
+  content: {
+    title: 'Make content a 30-minute habit',
+    why: h => `${h} on marketing and content — AI drafts, you edit for voice, and the cadence AI search rewards becomes sustainable.`,
+    diy: 'Pick one channel. Have Claude draft next month of posts from your services and FAQs, then edit each until it sounds like you.',
+    call: "On the call we'll set a cadence that survives your busy season.",
+  },
+};
+
+const state = {
+  step: 1,
+  name:'', industry:'', teamSize:'',
+  hours: {},            // catId -> option value
+  storage:'', platform:'', otherTools:'',
+  usage:'', appetite:'', worry:'',
+  contactName:'', email:'',
+  sendStatus: 'idle',
+};
+const TOTAL_STEPS = 5;
+
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const root = document.getElementById('root');
+const shell = document.getElementById('shell');
+
+function midFor(catId) {
+  const opt = HOUR_OPTS.find(o => o.v === (state.hours[catId] || '0'));
+  return opt ? opt.mid : 0;
+}
+function labelFor(catId) {
+  const opt = HOUR_OPTS.find(o => o.v === (state.hours[catId] || '0'));
+  return opt && opt.mid > 0 ? opt.label.replace('/wk', ' a week') : 'no time';
+}
+
+function buildDims() {
+  const totalMid = HOURS_CATS.reduce((n, c) => n + midFor(c.id), 0);
+  const pick = (opts, v) => { const o = opts.find(x => x.v === v); return o ? o.pts : 0; };
+  return [
+    { name: 'AI opportunity', pts: Math.min(20, Math.round(totalMid * 1.1)), max: 20,
+      note: totalMid > 0 ? `~${Math.round(totalMid)} hrs/week reported on work AI can help with — more hours here means more to gain.` : 'You reported almost no repetitive admin — lucky you, or worth a second look on the call.' },
+    { name: 'Digital foundation', pts: pick(STORAGE_OPTS, state.storage), max: 20,
+      note: 'AI works on the information it can reach. Cloud tools and spreadsheets are ready; paper and memory need a home first.' },
+    { name: 'Everyday stack', pts: pick(PLATFORM_OPTS, state.platform), max: 20,
+      note: 'Google Workspace and Microsoft 365 both connect directly to AI assistants today.' },
+    { name: 'AI experience', pts: pick(USAGE_OPTS, state.usage), max: 20,
+      note: 'Existing habits shorten the runway — but starting from zero is a few weeks, not months.' },
+    { name: 'Owner bandwidth', pts: pick(APPETITE_OPTS, state.appetite), max: 20,
+      note: 'The setup phase needs a few hours a week from you. After that it pays you back.' },
+  ];
+}
+function hoursBack() {
+  return Math.round(HOURS_CATS.reduce((n, c) => n + midFor(c.id) * c.frac, 0));
+}
+function grade(score) {
+  return score >= 85 ? 'A' : score >= 70 ? 'B' : score >= 55 ? 'C' : score >= 40 ? 'D' : 'F';
+}
+function gradeColor(g) { return { A:'#3a6f4d', B:'#5b7a5e', C:'#9C6A33', D:'#A86237', F:'#A04324' }[g] || '#9C6A33'; }
+function interpret(score) {
+  if (score >= 85) return 'You are unusually well set up. The work now is picking the highest-payback moves, not getting ready.';
+  if (score >= 70) return 'Solid foundation — a couple of gaps to close, then AI can start returning hours quickly.';
+  if (score >= 55) return 'Partway there. The gaps below are specific, and none of them takes months.';
+  if (score >= 40) return 'Real opportunity, real gaps. The good news: the first fixes are the cheap ones.';
+  return 'Starting from scratch — which means the early wins are big and nothing has to be undone.';
+}
+function topMoves() {
+  return HOURS_CATS
+    .map(c => ({ ...c, mid: midFor(c.id) }))
+    .sort((a, b) => b.mid - a.mid)
+    .slice(0, 3)
+    .filter(c => c.mid > 0)
+    .map(c => ({ id: c.id, hoursLabel: labelFor(c.id), ...MOVES[c.id] }));
+}
+
+// ---------------- shared UI ----------------
+function progressBar(step) {
+  const pct = Math.round((step / TOTAL_STEPS) * 100);
+  return `<div class="progress-wrap">
+    <div class="progress-labels"><span>Step ${step} of ${TOTAL_STEPS}</span><span>${pct}%</span></div>
+    <div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div>
+  </div>`;
+}
+function stepWrap(o) {
+  return `<div class="fade-in card">
+    ${o.progress || ''}
+    <p class="eyebrow">${o.eyebrow}</p>
+    <h2 style="font-size:clamp(1.6rem,4vw,2.2rem)">${o.title}</h2>
+    <p class="dek">${o.dek}</p>
+    ${o.body}
+    <div class="step-footer">
+      ${o.back ? '<button class="ghost-btn" data-act="back">← Back</button>' : '<span></span>'}
+      <button class="brand-btn" data-act="next" ${o.nextDisabled ? 'disabled' : ''}>${o.nextLabel || 'Continue →'}</button>
+    </div>
+  </div>`;
+}
+function selectField(id, label, opts, value, placeholder) {
+  return `<div><label class="label" for="${id}">${label}</label>
+    <select class="input" id="${id}">
+      <option value="">${placeholder || 'Choose one…'}</option>
+      ${opts.map(o => `<option value="${esc(o.v ?? o)}" ${(o.v ?? o) === value ? 'selected' : ''}>${esc(o.label ?? o)}</option>`).join('')}
+    </select></div>`;
+}
+
+// ---------------- steps ----------------
+function renderBasics() {
+  root.innerHTML = stepWrap({
+    progress: progressBar(1),
+    eyebrow: 'The basics',
+    title: 'Tell me about your business.',
+    dek: 'This audit scores your answers — no website scan, no made-up numbers. Five steps, about three minutes.',
+    body: `<div class="field-grid">
+      <div><label class="label" for="f-name">Business name</label>
+        <input class="input" id="f-name" value="${esc(state.name)}" placeholder="Harbor Dental" /></div>
+      ${selectField('f-ind', 'Industry', INDUSTRIES.map(i => ({ v:i, label:i })), state.industry)}
+      ${selectField('f-team', 'Team size', TEAM_SIZES.map(t => ({ v:t, label:t })), state.teamSize)}
+    </div>`,
+    back: false,
+    nextDisabled: !(state.name && state.industry && state.teamSize),
+  });
+  const sync = () => {
+    state.name = document.getElementById('f-name').value.trim();
+    state.industry = document.getElementById('f-ind').value;
+    state.teamSize = document.getElementById('f-team').value;
+    root.querySelector('[data-act="next"]').disabled = !(state.name && state.industry && state.teamSize);
+  };
+  ['f-name','f-ind','f-team'].forEach(id => document.getElementById(id).addEventListener('input', sync));
+}
+
+function renderHours() {
+  root.innerHTML = stepWrap({
+    progress: progressBar(2),
+    eyebrow: 'Where the hours go',
+    title: 'How much of your week goes to each of these?',
+    dek: "Rough guesses are fine — this is where the report's math comes from.",
+    body: `<div class="field-grid">
+      ${HOURS_CATS.map(c => selectField('h-' + c.id, c.label, HOUR_OPTS, state.hours[c.id] || '0', 'None')).join('')}
+    </div>`,
+    back: true,
+    nextDisabled: false,
+  });
+  HOURS_CATS.forEach(c => {
+    document.getElementById('h-' + c.id).addEventListener('change', e => { state.hours[c.id] = e.target.value; });
+  });
+}
+
+function renderSystems() {
+  root.innerHTML = stepWrap({
+    progress: progressBar(3),
+    eyebrow: 'Your systems',
+    title: 'Where does your business information live?',
+    dek: 'AI can only work with what it can reach — this tells us how much plumbing comes first.',
+    body: `<div class="field-grid">
+      ${selectField('f-storage', 'Customer + job info mostly lives in…', STORAGE_OPTS, state.storage)}
+      ${selectField('f-platform', 'Email & calendar', PLATFORM_OPTS, state.platform)}
+      <div style="grid-column:1/-1"><label class="label" for="f-tools">Other tools you rely on (optional)</label>
+        <input class="input" id="f-tools" value="${esc(state.otherTools)}" placeholder="QuickBooks, Jobber, Square…" /></div>
+    </div>`,
+    back: true,
+    nextDisabled: !(state.storage && state.platform),
+  });
+  const sync = () => {
+    state.storage = document.getElementById('f-storage').value;
+    state.platform = document.getElementById('f-platform').value;
+    state.otherTools = document.getElementById('f-tools').value.trim();
+    root.querySelector('[data-act="next"]').disabled = !(state.storage && state.platform);
+  };
+  ['f-storage','f-platform','f-tools'].forEach(id => document.getElementById(id).addEventListener('input', sync));
+}
+
+function renderAiToday() {
+  root.innerHTML = stepWrap({
+    progress: progressBar(4),
+    eyebrow: 'AI today',
+    title: 'Where are you with AI right now?',
+    dek: "No wrong answers — 'haven't touched it' is the most common one.",
+    body: `<div class="field-grid">
+      ${selectField('f-usage', 'Your current AI use (ChatGPT, Claude, etc.)', USAGE_OPTS, state.usage)}
+      ${selectField('f-appetite', 'Time you could put into setup, per week', APPETITE_OPTS, state.appetite)}
+      <div style="grid-column:1/-1">${selectField('f-worry', 'Biggest hesitation (optional)', WORRY_OPTS.map(w => ({ v:w, label:w })), state.worry, 'Pick one if it fits…')}</div>
+    </div>`,
+    back: true,
+    nextDisabled: !(state.usage && state.appetite),
+  });
+  const sync = () => {
+    state.usage = document.getElementById('f-usage').value;
+    state.appetite = document.getElementById('f-appetite').value;
+    state.worry = document.getElementById('f-worry').value;
+    root.querySelector('[data-act="next"]').disabled = !(state.usage && state.appetite);
+  };
+  ['f-usage','f-appetite','f-worry'].forEach(id => document.getElementById(id).addEventListener('input', sync));
+}
+
+function renderContact() {
+  root.innerHTML = stepWrap({
+    progress: progressBar(5),
+    eyebrow: 'One last thing',
+    title: 'Where should I send your readiness report?',
+    dek: "You'll see the full report on the next screen either way — the email copy is so you can keep it and act on it later.",
+    body: `<div class="field-grid">
+      <div><label class="label" for="f-cname">Your name</label>
+        <input class="input" id="f-cname" value="${esc(state.contactName)}" placeholder="First name is fine" /></div>
+      <div><label class="label" for="f-email">Email</label>
+        <input class="input" id="f-email" type="email" value="${esc(state.email)}" placeholder="you@yourbusiness.com" /></div>
+    </div>
+    <p class="hint">No spam. You get your report and one short follow-up. That's it.</p>`,
+    back: true,
+    nextDisabled: !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email),
+    nextLabel: 'Show my report →',
+  });
+  const sync = () => {
+    state.contactName = document.getElementById('f-cname').value.trim();
+    state.email = document.getElementById('f-email').value.trim();
+    root.querySelector('[data-act="next"]').disabled = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email);
+  };
+  ['f-cname','f-email'].forEach(id => document.getElementById(id).addEventListener('input', sync));
+}
+
+// ---------------- report ----------------
+function submitLead(dims, score, moves) {
+  if (state.sendStatus !== 'idle') return;
+  state.sendStatus = 'sending';
+  fetch('/api/readiness-lead', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      businessName: state.name, industry: state.industry, teamSize: state.teamSize,
+      hours: state.hours, storage: state.storage, platform: state.platform, otherTools: state.otherTools,
+      usage: state.usage, appetite: state.appetite, worry: state.worry,
+      contactName: state.contactName, email: state.email,
+      score, dims, hoursBack: hoursBack(), moves,
+    }),
+  }).then(r => { state.sendStatus = r.ok ? 'sent' : 'failed'; })
+    .catch(() => { state.sendStatus = 'failed'; });
+}
+
+function renderReport() {
+  const dims = buildDims();
+  const score = dims.reduce((n, d) => n + d.pts, 0);
+  const g = grade(score);
+  const color = gradeColor(g);
+  const back = hoursBack();
+  const moves = topMoves();
+  const r = 56, circ = 2 * Math.PI * r;
+  const offset = circ - (score / 100) * circ;
+
+  root.innerHTML = `<div class="fade-in">
+    <div class="report-head">
+      <p class="eyebrow">Your AI Readiness Report</p>
+      <h1>${esc(state.name)}</h1>
+      <p class="report-sub">${esc(state.industry)} · ${esc(state.teamSize)}</p>
+    </div>
+
+    <div class="score-panel">
+      <div class="score-ring-wrap">
+        <svg width="140" height="140">
+          <circle cx="70" cy="70" r="${r}" fill="none" stroke="#E5DBC9" stroke-width="10"/>
+          <circle class="arc" cx="70" cy="70" r="${r}" fill="none" stroke="${color}" stroke-width="10"
+            stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/>
+        </svg>
+        <div class="score-ring-center">
+          <span class="score-ring-num" style="color:${color}">${score}</span>
+          <span class="score-ring-grade" style="color:${color}">Grade ${g}</span>
+        </div>
+      </div>
+      <div class="score-copy">
+        <h2>${interpret(score)}</h2>
+        <p>This is a structured self-assessment — it scores your answers, not a scan. The free 30-minute call is where we pressure-test it together.</p>
+        <p class="score-basis">${score} of 100 across five dimensions, from the answers you just gave.</p>
+      </div>
+    </div>
+
+    ${back > 0 ? `<div class="section-block">
+      <h3>Rough math: ≈ ${back} hours a week back</h3>
+      <p class="section-dek">From your own numbers — the share of each admin category AI can realistically absorb, added up. Deliberately conservative, and we'll check it against reality on the call.</p>
+    </div>` : ''}
+
+    <div class="section-block">
+      <h3>The five dimensions</h3>
+      <p class="section-dek">Each is worth 20 points. The note under each tells you what moves it.</p>
+      ${dims.map(d => `
+        <div style="padding:12px 0;border-top:1px solid var(--bone)">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
+            <strong style="font-family:'Inter Tight',sans-serif;font-size:14px">${esc(d.name)}</strong>
+            <span class="check-pts">${d.pts}/${d.max}</span>
+          </div>
+          <div class="progress" style="margin:8px 0"><div class="progress-bar" style="width:${(d.pts / d.max) * 100}%"></div></div>
+          <p style="font-size:13.5px;color:var(--muted)">${esc(d.note)}</p>
+        </div>`).join('')}
+    </div>
+
+    ${moves.length ? `<div class="section-block">
+      <h3>Your top ${moves.length} moves, in order</h3>
+      <p class="section-dek">Ranked by where your hours actually go.</p>
+      ${moves.map((m, i) => `
+        <div style="padding:16px 0;border-top:1px solid var(--bone)">
+          <p class="eyebrow" style="margin-bottom:4px">Priority ${i + 1}</p>
+          <h4 style="font-size:18px;margin-bottom:6px">${esc(m.title)}</h4>
+          <p style="font-size:14px;color:var(--muted);margin-bottom:8px">${esc(m.why(m.hoursLabel))}</p>
+          <p style="font-size:14px;margin-bottom:6px"><strong>Do it yourself:</strong> ${esc(m.diy)}</p>
+          <p style="font-size:14px;color:var(--ink-700)">${esc(m.call)}</p>
+        </div>`).join('')}
+    </div>` : ''}
+
+    <div class="section-block" style="text-align:center;background:var(--walnut-700);border:0">
+      <h3 style="color:var(--paper)">This report is the prep for your free call.</h3>
+      <p class="section-dek" style="color:rgba(244,236,219,.7)">30 minutes, no charge, no pressure — we walk through your answers and leave you with a plan, whether or not you hire me for any of it.</p>
+      <a class="brand-btn" style="background:var(--honey-300);color:var(--walnut-700);text-decoration:none;display:inline-block" href="/ai-consulting#book" target="_top">Book the free 30-minute call →</a>
+      <p class="hint" style="color:rgba(244,236,219,.5);margin-top:14px">✓ Report sent to ${esc(state.email)}</p>
+    </div>
+
+    <p style="text-align:center;font-size:14px;color:var(--muted);margin-top:8px">
+      Want Claude set up in your voice this week? The <a href="/claude-instructions" target="_top" style="color:var(--honey-500)">$27 Custom Instructions file</a> is written from a 10-minute survey — by me, not a bot.
+    </p>
+
+    <div class="restart"><button class="ghost-btn" data-act="restart">← Start over</button></div>
+  </div>`;
+
+  if (state.sendStatus === 'idle') submitLead(dims, score, moves.map(m => ({ id: m.id, title: m.title })));
+}
+
+// ---------------- router ----------------
+function render() {
+  shell.classList.toggle('wide', state.step === TOTAL_STEPS + 1);
+  if (state.step === 1) renderBasics();
+  else if (state.step === 2) renderHours();
+  else if (state.step === 3) renderSystems();
+  else if (state.step === 4) renderAiToday();
+  else if (state.step === 5) renderContact();
+  else renderReport();
+  try { parent.postMessage({ readinessHeight: document.body.scrollHeight }, '*'); } catch (e) {}
+}
+
+document.addEventListener('click', e => {
+  const btn = e.target.closest('[data-act]');
+  if (!btn) return;
+  const act = btn.getAttribute('data-act');
+  if (act === 'next') { state.step += 1; render(); window.scrollTo({ top: 0 }); }
+  else if (act === 'back') { state.step = Math.max(1, state.step - 1); render(); }
+  else if (act === 'restart') {
+    Object.assign(state, { step:1, name:'', industry:'', teamSize:'', hours:{}, storage:'', platform:'', otherTools:'', usage:'', appetite:'', worry:'', contactName:'', email:'', sendStatus:'idle' });
+    render(); window.scrollTo({ top: 0 });
+  }
+});
+
+render();
+})();
+</script>
+</body>
+</html>
