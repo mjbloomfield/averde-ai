@@ -71,13 +71,15 @@ const categoryColors: Record<string, string> = {
           {seriesList.map(([name, parts]) => (
             <div class="bg-white-warm rounded-2xl p-8">
               <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-2">{parts.length}-part series</p>
-              <h2 class="text-2xl font-extrabold text-green-deep mb-5">{name}</h2>
-              <ol class="space-y-3">
+              <h2 class="text-2xl font-extrabold mb-5">
+                <a href={`/blog/${parts[0].id}`} class="text-green-deep hover:text-green-mid transition-colors">{name}</a>
+              </h2>
+              <ol class="space-y-1">
                 {parts.map(part => (
                   <li>
-                    <a href={`/blog/${part.id}`} class="group flex items-baseline gap-3">
+                    <a href={`/blog/${part.id}`} class="group flex items-baseline gap-3 py-1.5 -mx-2 px-2 rounded-lg hover:bg-cream transition-colors">
                       <span class="text-sand font-bold text-sm whitespace-nowrap">Part {part.data.seriesPart}</span>
-                      <span class="text-green-deep font-semibold group-hover:text-green-mid transition-colors">{part.data.title}</span>
+                      <span class="text-green-deep font-semibold underline decoration-transparent group-hover:decoration-current underline-offset-4 transition-colors">{part.data.title}</span>
                     </a>
                   </li>
                 ))}
