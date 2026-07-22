@@ -17,12 +17,41 @@ const industries = (await getCollection('industries'))
 
     <!-- Desktop Nav -->
     <div class="hidden md:flex items-center gap-6">
-      <a
-        href="/how-it-works"
-        class={`text-sm font-medium transition-colors hover:text-terracotta ${isActive('/how-it-works') ? 'text-dark border-b-2 border-terracotta pb-0.5' : 'text-dark'}`}
-      >
-        How It Works
-      </a>
+      <div class="relative" id="services-menu">
+        <button
+          id="services-btn"
+          class={`text-sm font-medium hover:text-terracotta flex items-center gap-1 transition-colors ${isActive('/how-it-works') ? 'text-dark border-b-2 border-terracotta pb-0.5' : 'text-dark'}`}
+          aria-expanded="false"
+          aria-haspopup="true"
+        >
+          Services
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="mt-0.5" id="services-chevron"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div id="services-dropdown" class="hidden absolute top-full left-0 pt-2 w-52 z-50">
+          <div class="bg-white-warm rounded-xl shadow-lg border border-muted/15 py-2">
+            <a href="/how-it-works" class="block px-4 py-2.5 text-sm text-dark hover:bg-cream hover:text-terracotta transition-colors">AI-Ready Website</a>
+            <a href="/pricing" class="block px-4 py-2.5 text-sm text-dark hover:bg-cream hover:text-terracotta transition-colors">AI Consulting</a>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        const sBtn = document.getElementById('services-btn')!;
+        const sDropdown = document.getElementById('services-dropdown')!;
+        const sChevron = document.getElementById('services-chevron')!;
+        sBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = !sDropdown.classList.contains('hidden');
+          sDropdown.classList.toggle('hidden', isOpen);
+          sBtn.setAttribute('aria-expanded', String(!isOpen));
+          sChevron.style.transform = isOpen ? '' : 'rotate(180deg)';
+        });
+        document.addEventListener('click', () => {
+          sDropdown.classList.add('hidden');
+          sBtn.setAttribute('aria-expanded', 'false');
+          sChevron.style.transform = '';
+        });
+      </script>
 
       <a
         href="/case-studies"
@@ -118,7 +147,9 @@ const industries = (await getCollection('industries'))
   <!-- Mobile Menu -->
   <input type="checkbox" id="nav-toggle" class="hidden" />
   <div id="nav-menu" class="hidden flex-col md:hidden bg-white-warm border-t border-green-sage/10 px-4 pb-4 gap-1">
-    <a href="/how-it-works" class="block py-2.5 text-sm font-medium text-dark hover:text-terracotta border-b border-cream">How It Works</a>
+    <p class="pt-2.5 pb-1 text-xs font-semibold uppercase tracking-widest text-muted">Services</p>
+    <a href="/how-it-works" class="block py-2.5 pl-3 text-sm font-medium text-dark hover:text-terracotta border-b border-cream">AI-Ready Website</a>
+    <a href="/pricing" class="block py-2.5 pl-3 text-sm font-medium text-dark hover:text-terracotta border-b border-cream">AI Consulting</a>
     <a href="/case-studies" class="block py-2.5 text-sm font-medium text-dark hover:text-terracotta border-b border-cream">Case Studies</a>
     {/* Industries tab hidden until refined — uncomment to restore
     {industries.map(ind => (
