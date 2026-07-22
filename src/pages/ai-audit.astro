@@ -1,28 +1,35 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
+import { renderInlineMarkdown } from '../lib/markdown';
+
+const reader = createReader(process.cwd(), keystaticConfig);
+const page = await reader.singletons.aiAudit.read();
+const settings = await reader.singletons.settings.read();
+
+const email = settings?.email ?? 'mark@averde.ai';
+const audits = page?.audits ?? [];
 ---
 
 <BaseLayout
-  title="Free AI Audits | Website Visibility (SEO + AEO) & AI Readiness"
-  description="Two free audits for your business: a live website audit covering SEO and AEO — can customers find you through Google and AI search — and an AI Readiness Audit of where AI could take real work off your plate."
+  title={page?.seoTitle ?? 'Free AI Audits | Averde AI'}
+  description={page?.seoDescription ?? ''}
 >
 
   <!-- HERO -->
   <section class="bg-green-deep py-16 text-center">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
       <div class="inline-flex items-center gap-2 bg-sand/20 text-sand text-xs font-semibold px-3 py-1.5 rounded-full mb-5">
-        Free · No credit card · Real checks, not a quiz
+        {page?.heroBadge}
       </div>
       <h1 class="text-4xl md:text-5xl font-extrabold text-white-warm leading-tight mb-5">
-        Is your business up to speed on AI?
+        {page?.heroHeadline}
       </h1>
-      <p class="text-cream/70 text-lg">
-        Two free audits, two sides of the question. The <strong class="text-white-warm">Website Audit</strong> checks
-        whether customers can find you — through classic Google search (<a href="/glossary#seo" class="text-cream underline decoration-dotted underline-offset-4 hover:text-sand">SEO</a>)
-        and the AI answers taking its place (<a href="/glossary#aeo" class="text-cream underline decoration-dotted underline-offset-4 hover:text-sand">AEO</a>).
-        The <strong class="text-white-warm">AI Readiness Audit</strong> looks at how you run the business, and where
-        AI could take real work off your plate.
-      </p>
+      <p
+        class="text-cream/70 text-lg [&_strong]:text-white-warm [&_a]:text-cream [&_a]:underline [&_a]:decoration-dotted [&_a]:underline-offset-4 [&_a:hover]:text-sand"
+        set:html={renderInlineMarkdown(page?.heroDek ?? '')}
+      />
     </div>
   </section>
 
@@ -30,35 +37,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <section class="bg-cream pt-14 pb-4">
     <div class="max-w-5xl mx-auto px-4 sm:px-6">
       <div class="grid md:grid-cols-2 gap-6 items-stretch">
-
-        <div class="bg-white-warm rounded-3xl p-8 shadow-sm flex flex-col">
-          <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">Website Audit · ~3 minutes</p>
-          <h2 class="text-2xl font-extrabold text-green-deep mb-3">Can customers find your business?</h2>
-          <p class="text-muted leading-relaxed mb-6">
-            Your next customer searches two ways now: classic Google (SEO) and AI answers from
-            ChatGPT, Perplexity, and Google AI Overviews (AEO). This audit fetches your live site,
-            runs the 13 checks both kinds of engines care about, and asks a real AI engine about
-            your market — so you see exactly where you show up, and where you don't.
-          </p>
-          <a href="#website-audit" class="mt-auto inline-block text-center bg-green-deep text-white-warm font-semibold px-6 py-3.5 rounded-xl hover:bg-green-mid transition-colors">
-            Run the free website audit →
-          </a>
-        </div>
-
-        <div class="bg-white-warm rounded-3xl p-8 shadow-sm flex flex-col">
-          <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">AI Readiness Audit · Free 30-minute session</p>
-          <h2 class="text-2xl font-extrabold text-green-deep mb-3">Is your business ready to use AI?</h2>
-          <p class="text-muted leading-relaxed mb-6">
-            The website audit is about how AI sees you. This one is about how you could use AI:
-            we go through where your hours actually go — quoting, scheduling, follow-up, the same
-            questions answered over and over — and find the two or three places AI can realistically
-            take work off your plate. You leave with a plan, whether or not you hire me for any of it.
-          </p>
-          <a href="#book" class="mt-auto inline-block text-center bg-green-deep text-white-warm font-semibold px-6 py-3.5 rounded-xl hover:bg-green-mid transition-colors">
-            Book your free readiness audit →
-          </a>
-        </div>
-
+        {audits.map((a) => (
+          <div class="bg-white-warm rounded-3xl p-8 shadow-sm flex flex-col">
+            <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">{a.eyebrow}</p>
+            <h2 class="text-2xl font-extrabold text-green-deep mb-3">{a.title}</h2>
+            <p class="text-muted leading-relaxed mb-6">{a.body}</p>
+            <a href={a.ctaHref} class="mt-auto inline-block text-center bg-green-deep text-white-warm font-semibold px-6 py-3.5 rounded-xl hover:bg-green-mid transition-colors">
+              {a.ctaLabel}
+            </a>
+          </div>
+        ))}
       </div>
     </div>
   </section>
@@ -89,26 +77,23 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <section id="book" class="bg-white-warm py-16 scroll-mt-20">
     <div class="max-w-4xl mx-auto px-4 sm:px-6">
       <div class="text-center mb-10">
-        <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">The free 30-minute session</p>
+        <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">{page?.bookEyebrow}</p>
         <h2 class="text-3xl md:text-4xl font-extrabold text-green-deep mb-4">
-          Ready to walk through it together?
+          {page?.bookHeadline}
         </h2>
         <p class="text-muted text-lg max-w-2xl mx-auto">
-          One booking covers both audits. Ran the website audit? I'll go through your report and
-          turn it into a concrete plan. Here for the AI Readiness Audit? This session is where it
-          happens — we map where your hours go and where AI can actually help. Either way, you
-          leave with next steps you can act on, whether or not you hire me for any of it.
+          {page?.bookDek}
         </p>
       </div>
 
       <div class="bg-cream rounded-3xl p-6 sm:p-8 shadow-sm">
-        <p class="font-bold text-green-deep text-lg mb-1">Book your free 30-minute review call</p>
-        <p class="text-muted text-sm mb-5">Pick a time that works for you — I'll confirm by email.</p>
+        <p class="font-bold text-green-deep text-lg mb-1">{page?.bookCardTitle}</p>
+        <p class="text-muted text-sm mb-5">{page?.bookCardSub}</p>
         <iframe src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1XF6Cd-RbjfwRu8rZj39AY7nVMemRVBTh2jn945OnAZvRFVeB80FFFRZusXERELC5DecVHma6u?gv=true" style="border:0" width="100%" height="700" frameborder="0" title="Book a call with Mark"></iframe>
       </div>
 
       <p class="mt-6 text-center text-muted text-sm">
-        Or reach out directly: <a href="mailto:mark@averde.ai" class="text-green-mid font-medium hover:text-green-deep">mark@averde.ai</a>
+        {page?.bookAltLine} <a href={`mailto:${email}`} class="text-green-mid font-medium hover:text-green-deep">{email}</a>
       </p>
     </div>
   </section>

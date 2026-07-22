@@ -1,0 +1,45 @@
+seoTitle: Free AI Audits | Website Visibility (SEO + AEO) & AI Readiness
+seoDescription: >-
+  Two free audits for your business: a live website audit covering SEO and AEO
+  — can customers find you through Google and AI search — and an AI Readiness
+  Audit of where AI could take real work off your plate.
+heroBadge: Free · No credit card · Real checks, not a quiz
+heroHeadline: Is your business up to speed on AI?
+heroDek: >-
+  Two free audits, two sides of the question. The **Website Audit** checks
+  whether customers can find you — through classic Google search
+  ([SEO](/glossary#seo)) and the AI answers taking its place
+  ([AEO](/glossary#aeo)). The **AI Readiness Audit** looks at how you run the
+  business, and where AI could take real work off your plate.
+audits:
+  - eyebrow: Website Audit · ~3 minutes
+    title: Can customers find your business?
+    body: >-
+      Your next customer searches two ways now: classic Google (SEO) and AI
+      answers from ChatGPT, Perplexity, and Google AI Overviews (AEO). This
+      audit fetches your live site, runs the 13 checks both kinds of engines
+      care about, and asks a real AI engine about your market — so you see
+      exactly where you show up, and where you don't.
+    ctaLabel: Run the free website audit →
+    ctaHref: '#website-audit'
+  - eyebrow: AI Readiness Audit · Free 30-minute session
+    title: Is your business ready to use AI?
+    body: >-
+      The website audit is about how AI sees you. This one is about how you
+      could use AI: we go through where your hours actually go — quoting,
+      scheduling, follow-up, the same questions answered over and over — and
+      find the two or three places AI can realistically take work off your
+      plate. You leave with a plan, whether or not you hire me for any of it.
+    ctaLabel: Book your free readiness audit →
+    ctaHref: '#book'
+bookEyebrow: The free 30-minute session
+bookHeadline: Ready to walk through it together?
+bookDek: >-
+  One booking covers both audits. Ran the website audit? I'll go through your
+  report and turn it into a concrete plan. Here for the AI Readiness Audit?
+  This session is where it happens — we map where your hours go and where AI
+  can actually help. Either way, you leave with next steps you can act on,
+  whether or not you hire me for any of it.
+bookCardTitle: Book your free 30-minute review call
+bookCardSub: Pick a time that works for you — I'll confirm by email.
+bookAltLine: 'Or reach out directly:'

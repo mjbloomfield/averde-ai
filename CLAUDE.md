@@ -164,6 +164,13 @@ gives you 2 cron jobs free. Not needed yet.
 
 ## Other repo conventions (for future sessions)
 
+- CMS-editability rule (per CLIENT_PLAYBOOK.md Phase 5): visible page copy
+  should be editable in Keystatic — one singleton per page. Deliberate
+  hardcode exceptions: nav/footer link labels, SEO meta on non-singleton
+  pages, the audit widget's copy (public/audit/index.html — it's an app,
+  not page prose), and the Google Calendar booking-embed URL on /ai-audit
+  and /contact.
+
 - Path aliases: none configured; use relative imports
 - Build target: `output: 'static'` — most pages prerendered; API routes opt
   into SSR with `export const prerender = false`. (Was `'hybrid'`, which Astro 5

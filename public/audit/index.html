@@ -198,7 +198,7 @@ const GOALS = [
 
 // ---------------- state ----------------
 const state = {
-  step: 0,
+  step: 1,
   name: '', website: '', industry: '', city: '',
   keywords: '',
   pains: [], goal: '',
@@ -664,22 +664,6 @@ function stepWrap(opts) {
 }
 
 // ---------------- step renderers ----------------
-function renderWelcome() {
-  root.innerHTML = `<div class="fade-in card" style="text-align:center">
-    <p class="eyebrow">Free · Live checks on your real website · ~3 minutes</p>
-    <h1 style="font-size:clamp(2rem,5vw,2.9rem);margin-bottom:16px">Can customers find your business?</h1>
-    <p class="dek" style="max-width:560px;margin-left:auto;margin-right:auto">
-      Your next customer searches two ways now: classic Google (SEO) and AI answers from
-      ChatGPT, Perplexity, and Google AI Overviews (AEO — Answer Engine Optimization).
-      This isn’t a quiz with a made-up score: we fetch your live website, run the
-      ${'13'} checks both kinds of engines care about, and ask a real AI engine about your
-      market. You’ll see exactly what passed, what failed, and how to fix each one — yourself.
-    </p>
-    <button class="brand-btn" data-act="next" style="padding:16px 32px">Run the audit →</button>
-    <p class="hint" style="margin-top:24px">Built by Mark Bloomfield · Averde AI · Boulder, CO</p>
-  </div>`;
-}
-
 function renderBasics() {
   root.innerHTML = stepWrap({
     progress: progressBar(1),
@@ -952,8 +936,7 @@ function renderReport() {
 // ---------------- router ----------------
 function render() {
   shell.classList.toggle('wide', state.step === TOTAL_STEPS + 1);
-  if (state.step === 0) renderWelcome();
-  else if (state.step === 1) renderBasics();
+  if (state.step === 1) renderBasics();
   else if (state.step === 2) renderKeywords();
   else if (state.step === 3) renderPains();
   else if (state.step === 4) renderEmail();
@@ -973,11 +956,11 @@ document.addEventListener('click', e => {
     render();
     window.scrollTo({ top: 0 });
   } else if (act === 'back') {
-    state.step = Math.max(0, state.step - 1);
+    state.step = Math.max(1, state.step - 1);
     render();
   } else if (act === 'restart') {
     Object.assign(state, {
-      step: 0, name:'', website:'', industry:'', city:'', keywords:'',
+      step: 1, name:'', website:'', industry:'', city:'', keywords:'',
       pains: [], goal:'', contactName:'', email:'',
       siteAudit: null, aiVisibility: null, siteFired: false, visFired: false, sendStatus: 'idle',
     });

@@ -347,6 +347,44 @@ export default config({
       },
     }),
 
+    // ── FREE AUDITS PAGE (/ai-audit) ─────────────────────────────────────────
+    // The audit widget itself (public/audit/index.html) is an app, not page
+    // copy — its text stays in code by design (documented in CLAUDE.md).
+    aiAudit: singleton({
+      label: 'Free Audits Page',
+      path: 'src/content/pages/ai-audit',
+      schema: {
+        seoTitle: fields.text({ label: 'SEO page title' }),
+        seoDescription: fields.text({ label: 'SEO meta description', multiline: true }),
+        heroBadge: fields.text({ label: 'Hero — badge line' }),
+        heroHeadline: fields.text({ label: 'Hero — headline' }),
+        heroDek: fields.text({
+          label: 'Hero — subheadline',
+          description: 'Supports **bold** and [links](/path)',
+          multiline: true,
+        }),
+        audits: fields.array(
+          fields.object({
+            eyebrow: fields.text({ label: 'Eyebrow (e.g. "Website Audit · ~3 minutes")' }),
+            title: fields.text({ label: 'Card title' }),
+            body: fields.text({ label: 'Card body', multiline: true }),
+            ctaLabel: fields.text({ label: 'Button label' }),
+            ctaHref: fields.text({ label: 'Button link (e.g. #website-audit or #book)' }),
+          }),
+          {
+            label: 'Audit cards (side by side)',
+            itemLabel: props => props.fields.title.value || 'New audit card',
+          }
+        ),
+        bookEyebrow: fields.text({ label: 'Booking — eyebrow' }),
+        bookHeadline: fields.text({ label: 'Booking — headline' }),
+        bookDek: fields.text({ label: 'Booking — paragraph', multiline: true }),
+        bookCardTitle: fields.text({ label: 'Booking card — title' }),
+        bookCardSub: fields.text({ label: 'Booking card — subtitle' }),
+        bookAltLine: fields.text({ label: 'Booking — "reach out directly" line (email appended)' }),
+      },
+    }),
+
     // ── SITE SETTINGS ─────────────────────────────────────────────────────────
     settings: singleton({
       label: 'Site Settings',
