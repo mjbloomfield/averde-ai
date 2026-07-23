@@ -1,43 +1,35 @@
-seoTitle: How an AI-Ready Website Build Works
+seoTitle: The AI-Ready Website — What It Is and How the Build Works
 seoDescription: >-
   The exact process for rebuilding your website so it shows up in ChatGPT, Perplexity, and Google AI
   Overviews. AEO content, schema markup, and local AI optimization.
-heroHeadline: How the AI-Ready Website Build Works
+heroHeadline: The AI-Ready Website
 heroDek: >-
   From discovery to launch in roughly four weeks. AI engines start surfacing your business while I
   work.
 steps:
-  - num: '01'
-    day: Week 0
-    title: Free AI Visibility Audit
+  - title: Free AI Visibility Audit
     body: >-
       Three minutes through the audit widget gives me 80% of what I need. Then we jump on a
       30-minute working call together to walk through your report, your goals, and what AI-Ready
       actually looks like for your business specifically. No commitment.
-  - num: '02'
-    day: Week 1
-    title: Discovery & Content Audit
+    ctaLabel: Run the free audit →
+    ctaHref: /ai-audit
+  - title: Discovery & Content Audit
     body: >-
       I do a deep dive on your existing site, your competitors' AI footprints, what AI engines
       currently say about your business (and what they say about competitors), and where the easy
       wins are. You get a written audit + content plan before any building starts.
-  - num: '03'
-    day: Weeks 2–3
-    title: 'Build: Content, Schema, Stack'
+  - title: 'Build: Content, Schema, Stack'
     body: >-
       I rebuild your site on a modern, fast stack — AEO-optimized copy across every page, full
       schema markup (FAQ, LocalBusiness, Service, Review), service-area pages, and the editor you'll
       use to keep it fresh. You review and approve as I build.
-  - num: '04'
-    day: Week 4
-    title: Local AI Graph Optimization
+  - title: Local AI Graph Optimization
     body: >-
       Google Business Profile fully optimized, Apple Maps and Bing claimed and aligned, citations
       across the AI-search network checked and corrected. This is what gets you into the AI engines'
       local recommendations.
-  - num: '05'
-    day: Launch
-    title: Go Live + Visibility Monitoring
+  - title: Go Live + Visibility Monitoring
     body: >-
       DNS cutover (5-15 minute overlap, no downtime). I monitor your AI visibility every week for
       the first 90 days, refining content and schema as ChatGPT, Perplexity, and AI Overviews
