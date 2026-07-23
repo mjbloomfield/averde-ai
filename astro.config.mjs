@@ -19,6 +19,7 @@ export default defineConfig({
   // Real 301s (the old page stubs with Astro.redirect prerendered to
   // meta-refresh pages that returned 200).
   redirects: {
+    '/how-it-works': { status: 301, destination: '/websites' },
     '/dental': { status: 301, destination: '/industries/dental' },
     '/hvac': { status: 301, destination: '/industries/hvac' },
     '/real-estate': { status: 301, destination: '/industries/real-estate' },

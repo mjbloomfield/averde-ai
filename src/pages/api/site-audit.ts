@@ -216,7 +216,7 @@ async function pageSpeedSignals(target: string): Promise<{
 // /services) — Google's guidelines actually require that. So we can't judge
 // schema from the homepage alone: pick up to 4 likely schema-bearing pages
 // from the homepage's own links and scan those too.
-const SUBPAGE_KEYWORDS = ['faq', 'question', 'how-it-works', 'service', 'rate', 'pricing', 'price', 'treatment', 'about', 'contact'];
+const SUBPAGE_KEYWORDS = ['faq', 'question', 'how-it-works', 'website', 'service', 'rate', 'pricing', 'price', 'treatment', 'about', 'contact'];
 
 function pickSubpages(html: string, base: URL): URL[] {
   const seen = new Set<string>();

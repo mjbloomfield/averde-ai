@@ -532,6 +532,34 @@ export default config({
       },
     }),
 
+    // ── SERVICES OVERVIEW PAGE (/services) ───────────────────────────────────
+    services: singleton({
+      label: 'Services Page',
+      path: 'src/content/pages/services',
+      schema: {
+        seoTitle: fields.text({ label: 'SEO page title' }),
+        seoDescription: fields.text({ label: 'SEO meta description', multiline: true }),
+        heroBadge: fields.text({ label: 'Hero — badge line' }),
+        heroHeadline: fields.text({ label: 'Hero — headline' }),
+        heroDek: fields.text({ label: 'Hero — subheadline', multiline: true }),
+        cards: fields.array(
+          fields.object({
+            eyebrow: fields.text({ label: 'Eyebrow' }),
+            title: fields.text({ label: 'Card title' }),
+            body: fields.text({ label: 'Card body', multiline: true }),
+            ctaLabel: fields.text({ label: 'Button label' }),
+            ctaHref: fields.text({ label: 'Button link' }),
+          }),
+          { label: 'Service cards (side by side)', itemLabel: props => props.fields.title.value || 'New card' }
+        ),
+        firstEyebrow: fields.text({ label: 'First-step band — eyebrow' }),
+        firstHeadline: fields.text({ label: 'First-step band — headline' }),
+        firstDek: fields.text({ label: 'First-step band — paragraph', multiline: true }),
+        firstCta: fields.text({ label: 'First-step band — button label' }),
+        firstHref: fields.text({ label: 'First-step band — button link' }),
+      },
+    }),
+
     // ── AI CONSULTING PAGE (/ai-consulting) ──────────────────────────────────
     aiConsulting: singleton({
       label: 'AI Consulting Page',

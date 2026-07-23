@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
+
+const reader = createReader(process.cwd(), keystaticConfig);
+const page = await reader.singletons.services.read();
+const cards = page?.cards ?? [];
+---
+
+<BaseLayout
+  title={page?.seoTitle ?? 'Services | Averde AI'}
+  description={page?.seoDescription ?? ''}
+>
+
+  <!-- HERO -->
+  <section class="wood-medium bg-green-deep py-16 text-center">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <div class="inline-flex items-center gap-2 bg-sand/20 text-sand text-xs font-semibold px-3 py-1.5 rounded-full mb-5">
+        {page?.heroBadge}
+      </div>
+      <h1 class="text-4xl md:text-5xl font-extrabold text-white-warm leading-tight mb-5">
+        {page?.heroHeadline}
+      </h1>
+      <p class="text-cream/70 text-lg">{page?.heroDek}</p>
+    </div>
+  </section>
+
+  <!-- THE TWO SERVICES -->
+  <section class="bg-cream topo-map topo-torreys pt-14 pb-16">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <div class="grid md:grid-cols-2 gap-6 items-stretch">
+        {cards.map((c) => (
+          <div class="bg-white-warm rounded-3xl p-8 shadow-sm flex flex-col">
+            <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">{c.eyebrow}</p>
+            <h2 class="text-2xl font-extrabold text-green-deep mb-3">{c.title}</h2>
+            <p class="text-muted leading-relaxed mb-6">{c.body}</p>
+            <a href={c.ctaHref} class="mt-auto inline-block text-center bg-green-deep text-white-warm font-semibold px-6 py-3.5 rounded-xl hover:bg-green-mid transition-colors">
+              {c.ctaLabel}
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FIRST STEP: FREE AUDITS -->
+  <section class="wood-medium bg-green-deep py-16 text-center">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6">
+      <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">{page?.firstEyebrow}</p>
+      <h2 class="text-3xl font-extrabold text-white-warm mb-4">{page?.firstHeadline}</h2>
+      <p class="text-cream/70 mb-8">{page?.firstDek}</p>
+      <a href={page?.firstHref ?? '/ai-audit'} class="inline-flex items-center bg-sand text-green-deep font-bold px-8 py-4 rounded-xl hover:bg-sand/90 transition-colors">
+        {page?.firstCta}
+      </a>
+    </div>
+  </section>
+
+</BaseLayout>

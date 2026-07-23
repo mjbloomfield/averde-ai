@@ -1,0 +1,37 @@
+seoTitle: Services — AI-Ready Websites & AI Consulting | Averde AI
+seoDescription: >-
+  Two services for small businesses: websites rebuilt so customers and AI engines can find you, and
+  AI consulting that hands you hours back. Both start with a free audit.
+heroBadge: Two services · Both start free
+heroHeadline: What I do, in plain English.
+heroDek: >-
+  Two services: I rebuild websites so customers — and the AI engines they ask — can find you, and I
+  help you put AI to work inside the business. Both start with a free audit, so you know exactly
+  where you stand before spending a dollar.
+cards:
+  - eyebrow: AI-Ready Website · From $1,200
+    title: A website AI engines can find and recommend
+    body: >-
+      Your next customer asks Google — and increasingly ChatGPT and Perplexity — who to call. I
+      rebuild your site so both can read it, understand it, and cite it: AEO content, full schema
+      markup, and the local citations behind AI recommendations. Roughly four weeks from discovery
+      to launch, on a modern stack you own, with an editor you can actually use.
+    ctaLabel: See how the build works →
+    ctaHref: /websites
+  - eyebrow: AI Consulting · Free readiness audit
+    title: AI working inside your business
+    body: >-
+      Quoting, follow-up, scheduling, the same questions answered over and over — that's where AI
+      hands hours back. It starts with a free readiness audit that scores where you stand, then a
+      free 30-minute call to turn your report into a plan. Paid work only where it earns its keep —
+      from a $250 strategy session to a custom build.
+    ctaLabel: Explore AI consulting →
+    ctaHref: /ai-consulting
+firstEyebrow: The first step is free
+firstHeadline: Not sure which you need? Start with the audits.
+firstDek: >-
+  Three minutes each: the website audit runs live checks on your actual site, and the readiness
+  audit scores where AI fits in how you run the business. Both end with a report and a free call —
+  and both will tell you plainly if you don't need me.
+firstCta: Run the free audits →
+firstHref: /ai-audit

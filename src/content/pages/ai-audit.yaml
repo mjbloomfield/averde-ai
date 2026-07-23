@@ -22,16 +22,16 @@ audits:
       exactly where you show up, and where you don't.
     ctaLabel: Run the free website audit →
     ctaHref: '#website-audit'
-  - eyebrow: AI Readiness Audit · Free 30-minute session
+  - eyebrow: AI Readiness Audit · ~3 minutes
     title: Is your business ready to use AI?
     body: >-
       The website audit is about how AI sees you. This one is about how you
-      could use AI: we go through where your hours actually go — quoting,
-      scheduling, follow-up, the same questions answered over and over — and
-      find the two or three places AI can realistically take work off your
-      plate. You leave with a plan, whether or not you hire me for any of it.
-    ctaLabel: Book your free readiness audit →
-    ctaHref: '#book'
+      could use AI: a three-minute self-assessment scores where your hours go —
+      quoting, scheduling, follow-up, the same questions answered over and over
+      — and shows the rough math on hours AI could hand back. Your report then
+      becomes the agenda for a free 30-minute call.
+    ctaLabel: Run the free readiness audit →
+    ctaHref: /ai-consulting#readiness-audit
 bookEyebrow: The free 30-minute session
 bookHeadline: Ready to walk through it together?
 bookDek: >-
