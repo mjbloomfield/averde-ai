@@ -162,6 +162,29 @@ gives you 2 cron jobs free. Not needed yet.
 
 ---
 
+## Product rule — segment before you ask (readiness audit + funnel)
+
+One-size-fits-all questions read as tone-deaf the moment they miss. A solo
+massage therapist or bodyworker never writes "quotes & proposals" — asking
+about them signals the audit wasn't built for them. Rule for the readiness
+audit and everything downstream of it (report moves, email playbooks, first
+prompts, the $27 Instructions file): an early answer — business type / how
+they sell — must put people in a bucket, and every later question, canned
+move, and example comes from that bucket's world. Roughly:
+
+- **Appointment-based solo practitioners** (therapists, bodywork, salons,
+  coaches) — intake forms, no-shows, rebooking, session notes, the same
+  client questions. Never "quotes."
+- **Project / quote businesses** (contractors, agencies, trades) — quoting,
+  proposals, job follow-up, scheduling crews.
+- **Retail / e-commerce** — product questions, returns, inventory, listings.
+- **Professional services** (law, accounting) — intake, document drafting,
+  client updates; watch scope-of-practice language.
+
+When adding any audit question or canned recommendation, ask: does this
+exist in every bucket, or does it need a per-bucket variant? If the latter,
+branch it — don't average it.
+
 ## Other repo conventions (for future sessions)
 
 - CMS-editability rule (per CLIENT_PLAYBOOK.md Phase 5): visible page copy

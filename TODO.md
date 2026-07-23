@@ -8,6 +8,11 @@ Site: `https://averde.ai` · Stack: Astro + Tailwind + Keystatic + Supabase + Re
 
 ## To do
 
+- **Readiness audit v2 — business-type decision tree** (per the new CLAUDE.md "segment before you ask" rule): an early business-model question buckets people (appointment-based solo practitioner / project-quote business / retail-ecomm / professional services), and the hours categories, report moves, and email extras all come from the bucket. Prevents "quotes & proposals" landing tone-deaf on a massage therapist.
+- **Readiness report email — value adds (Mark-approved 2026-07-23):**
+  - Attach the mini-playbook matching their #1 move (uses the tailored starter kits below; per-bucket once the decision tree exists).
+  - Include a ready-to-paste "first prompt" pre-filled with their industry and top pain.
+  - Include a 3-item call-prep checklist (recent examples of their top pain, hours guess, tool list).
 - **Readiness-audit follow-on ideas (Mark-approved backlog, 2026-07-22):**
   - Tailored starter kits — 4-5 pre-built playbooks (Missed-Calls, Quoting, Repeated-Questions, Follow-up) matched to the lead's biggest pain answer.
   - Personalized "first week with Claude" plan generated from audit answers.
