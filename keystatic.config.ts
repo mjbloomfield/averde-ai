@@ -623,13 +623,31 @@ export default config({
     }),
 
     // ── INDEX-PAGE HEADERS ───────────────────────────────────────────────────
-    blogIndex: singleton({
-      label: 'Blog Index Page',
-      path: 'src/content/pages/blog-index',
+    freeIndex: singleton({
+      label: 'Free Resources Page',
+      path: 'src/content/pages/free-index',
       schema: {
         title: fields.text({ label: 'Page headline' }),
         dek: fields.text({ label: 'Subheadline', multiline: true }),
-        emptyState: fields.text({ label: 'Empty-state line (no posts yet)' }),
+        auditsEyebrow: fields.text({ label: 'Audits band — eyebrow' }),
+        auditsHeadline: fields.text({ label: 'Audits band — headline' }),
+        auditsDek: fields.text({ label: 'Audits band — paragraph', multiline: true }),
+        auditsCta: fields.text({ label: 'Audits band — button label' }),
+        articlesHeading: fields.text({ label: 'Articles section — heading' }),
+        articlesDek: fields.text({ label: 'Articles section — dek', multiline: true }),
+        downloadsHeading: fields.text({ label: 'Downloads section — heading' }),
+        downloadsDek: fields.text({ label: 'Downloads section — dek', multiline: true }),
+        downloads: fields.array(
+          fields.object({
+            tag: fields.text({ label: 'Tag (e.g. Templates & prompts)' }),
+            title: fields.text({ label: 'Title' }),
+            description: fields.text({ label: 'Description', multiline: true }),
+            ctaLabel: fields.text({ label: 'Link label' }),
+            href: fields.text({ label: 'Link URL' }),
+          }),
+          { label: 'Download / reference cards', itemLabel: props => props.fields.title.value || 'New card' }
+        ),
+        emptyState: fields.text({ label: 'Articles empty-state line' }),
       },
     }),
     caseStudiesIndex: singleton({

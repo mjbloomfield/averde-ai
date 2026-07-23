@@ -23,12 +23,11 @@
 ## Free resources
 
 - [Free resources hub](https://averde.ai/free): All free tools and resources in one place.
-- [AI-Ready Website Checklist](https://averde.ai/free/ai-ready-checklist): The complete 21-item DIY checklist for making a small business website visible to AI engines — content, schema markup, and the citation graph.
 - [Claude Starter Kit](https://averde.ai/free/claude-starter-kit): A fill-in-the-blanks Instructions template, ten copy-paste prompts for real business tasks, and a five-day first-week plan for small business owners setting up Claude.
 
 ## Writing
 
-- [Blog](https://averde.ai/blog): Plain-English writing on AI search, AEO, and practical AI for small business.
+- [Blog](https://averde.ai/free): Plain-English writing on AI search, AEO, and practical AI for small business.
 - [Glossary](https://averde.ai/glossary): Plain-English definitions of AI search terms — AEO, SEO, schema markup, AI Overviews, LLMs, and more.
 
 ## Services

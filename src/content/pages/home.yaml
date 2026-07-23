@@ -2,8 +2,8 @@ heroEyebrow: 'Boulder, CO · Serving businesses nationwide'
 heroHeadline: 'Your Personal'
 heroHeadlineEmphasis: 'AI Guy.'
 heroSub: "I'm Mark Bloomfield — engineer, founder, and the person who explains AI to small businesses without the jargon or the hype. I help you figure out what's real, what's worth it, and how to actually make it work for you."
-heroPrimaryCta: 'Run my free AI audit'
-heroSecondaryCta: 'See free resources →'
+heroPrimaryCta: Free AI audits
+heroSecondaryCta: Other free resources →
 heroCardItems:
   - 'Get found in ChatGPT, Perplexity & AI search'
   - 'Build websites that AI engines actually surface'
@@ -22,9 +22,9 @@ tools:
     ctaHref: '/ai-audit'
   - published: true
     icon: star
-    tag: 'Checklists · Templates · Free'
+    tag: 'Articles · Templates · Free'
     title: 'Free Resources'
-    description: "The AI-Ready Website Checklist, the Claude Starter Kit, and a plain-English glossary. The real versions, not teasers — use them all without ever talking to me."
+    description: "Practical articles on AI search and using AI, the Claude Starter Kit, and a plain-English glossary. The real versions, not teasers — use them all without ever talking to me."
     ctaLabel: 'Browse the resources →'
     ctaHref: '/free'
   - published: true

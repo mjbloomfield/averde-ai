@@ -1,0 +1,30 @@
+title: Free Resources
+dek: >-
+  Articles, tools, and templates for getting found in AI search and putting AI to work — no email
+  gate on any of it.
+auditsEyebrow: Start here
+auditsHeadline: The free audits
+auditsDek: >-
+  Three minutes each. The website audit runs live checks on your actual site; the readiness audit
+  scores where AI fits in how you run the business. Both end with a report and a free call.
+auditsCta: Run the free audits →
+articlesHeading: Free articles
+articlesDek: Practical guides, in plain English — series first, one-offs below.
+downloadsHeading: Free downloads & reference
+downloadsDek: Take-with-you tools. No email required.
+downloads:
+  - tag: Templates & prompts
+    title: The Claude Starter Kit
+    description: >-
+      Set up Claude like a co-worker instead of a chatbot: a fill-in-the-blanks Instructions
+      template, ten copy-paste prompts for real business tasks, and a five-day first-week plan.
+    ctaLabel: Get the kit →
+    href: /free/claude-starter-kit
+  - tag: Reference
+    title: The Plain-English AI Glossary
+    description: >-
+      AEO, schema markup, AI Overviews, LLMs — every term this site uses, defined in plain English
+      so you can read anything about AI search without a translator.
+    ctaLabel: Browse the glossary →
+    href: /glossary
+emptyState: Articles coming soon — check back shortly.
