@@ -13,9 +13,9 @@ cards:
     title: A website AI engines can find and recommend
     body: >-
       Your next customer asks Google — and increasingly ChatGPT and Perplexity — who to call. I
-      rebuild your site so both can read it, understand it, and cite it: AEO content, full schema
-      markup, and the local citations behind AI recommendations. Roughly four weeks from discovery
-      to launch, on a modern stack you own, with an editor you can actually use.
+      rebuild your site so both can read it, understand it, and cite it: AEO content and full schema
+      markup on a low-cost, modern, fast stack you own. Roughly four weeks from discovery to launch,
+      with an editor you can actually use.
     ctaLabel: See how the build works →
     ctaHref: /websites
   - eyebrow: AI Consulting · Free readiness audit

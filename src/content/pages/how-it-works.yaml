@@ -7,12 +7,13 @@ heroDek: >-
   From discovery to launch in roughly four weeks. AI engines start surfacing your business while I
   work.
 steps:
-  - title: Free AI Visibility Audit
+  - title: Free Website Audit
     body: >-
-      Three minutes through the audit widget gives me 80% of what I need. Then we jump on a
-      30-minute working call together to walk through your report, your goals, and what AI-Ready
-      actually looks like for your business specifically. No commitment.
-    ctaLabel: Run the free audit →
+      Three minutes through the free website audit gives me 80% of what I need: your site's schema,
+      structure, speed, and whether AI search can already find it. Then we jump on a 30-minute call
+      to walk through your report and what AI-Ready looks like for your site specifically. No
+      commitment.
+    ctaLabel: Run the free website audit →
     ctaHref: /ai-audit
   - title: Discovery & Content Audit
     body: >-
@@ -21,14 +22,10 @@ steps:
       wins are. You get a written audit + content plan before any building starts.
   - title: 'Build: Content, Schema, Stack'
     body: >-
-      I rebuild your site on a modern, fast stack — AEO-optimized copy across every page, full
-      schema markup (FAQ, LocalBusiness, Service, Review), service-area pages, and the editor you'll
-      use to keep it fresh. You review and approve as I build.
-  - title: Local AI Graph Optimization
-    body: >-
-      Google Business Profile fully optimized, Apple Maps and Bing claimed and aligned, citations
-      across the AI-search network checked and corrected. This is what gets you into the AI engines'
-      local recommendations.
+      I rebuild your site on a low-cost, modern, fast stack — AEO-optimized copy across every page,
+      full schema markup (FAQ, LocalBusiness, Service, Review), service-area pages, the editor
+      you'll use to keep it fresh, and Google Search Console + Bing Webmaster Tools set up so the
+      new site gets indexed fast. You review and approve as I build.
   - title: Go Live + Visibility Monitoring
     body: >-
       DNS cutover (5-15 minute overlap, no downtime). I monitor your AI visibility every week for
@@ -42,11 +39,6 @@ included:
   - icon: check
     title: AEO Content Across Every Page
     body: Content written so ChatGPT, Perplexity, and AI Overviews can extract clean, quotable answers.
-  - icon: compass
-    title: Local AI Graph Setup
-    body: >-
-      Google Business Profile, Apple Maps, Bing, and the AI citation network all aligned and
-      optimized.
   - icon: chart
     title: Visibility Report
     body: Before & after audit showing where your business now appears in AI engines vs. competitors.
@@ -97,8 +89,8 @@ faqs:
   - q: What's included in the 90 days post-launch?
     a: >-
       AI search visibility monitoring, content refinements as I see what's getting cited, schema
-      tweaks, GBP optimization, and direct access to me for any questions. After 90 days, optional
-      ongoing optimization is available, but most clients are in good shape on their own by then.
+      tweaks, and direct access to me for any questions. After 90 days, optional ongoing
+      optimization is available, but most clients are in good shape on their own by then.
 ctaHeadline: See Where You Stand
-ctaDek: Run the free 3-minute AI Visibility Audit. You'll know exactly where the wins are.
+ctaDek: Run the free 3-minute Website Audit. You'll know exactly where the wins are.
 ctaButton: Run my free AI audit

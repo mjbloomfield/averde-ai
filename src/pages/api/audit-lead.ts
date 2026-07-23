@@ -587,7 +587,7 @@ function renderUserReportEmail(payload: AuditPayload, reportUrl: string | null):
   const plan = payload.actionPlan || [];
   const firstName = (payload.contactName || '').trim().split(/\s+/)[0] || '';
   const business = payload.name || 'your business';
-  const subject = `Your AI Visibility Report — ${business}`;
+  const subject = `Your Website Audit Report — ${business}`;
   const bookUrl = 'https://averde.ai/ai-audit#book';
 
   const statusWord: Record<string, string> = { pass: 'PASS', warn: 'PARTIAL', fail: 'FIX', na: 'n/a' };
@@ -596,7 +596,7 @@ function renderUserReportEmail(payload: AuditPayload, reportUrl: string | null):
   const textLines = [
     `Hi${firstName ? ' ' + firstName : ''},`,
     '',
-    `Here's your AI Visibility Report for ${business}.`,
+    `Here's your Website Audit Report for ${business}.`,
     reportUrl ? `View the full report in your browser: ${reportUrl}` : '',
     '',
     s.overall != null
@@ -657,7 +657,7 @@ function renderUserReportEmail(payload: AuditPayload, reportUrl: string | null):
         </td></tr>` : ''}
 
         <tr><td style="padding:26px 28px 18px;background:#2A1B11;color:#F4ECDB;">
-          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#C99356;margin-bottom:8px;">Your AI Visibility Report</div>
+          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#C99356;margin-bottom:8px;">Your Website Audit Report</div>
           <div style="font:600 22px/1.25 'Helvetica Neue',Arial,sans-serif;">${esc(business)}</div>
           ${payload.city || payload.industry ? `<div style="font:400 14px/1.4 'Helvetica Neue',Arial,sans-serif;color:#D1D5DB;margin-top:4px;">${esc(payload.industry || '')}${payload.city ? ' · ' + esc(payload.city) : ''}</div>` : ''}
         </td></tr>
@@ -671,7 +671,7 @@ function renderUserReportEmail(payload: AuditPayload, reportUrl: string | null):
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${gradeBg};border-radius:10px;">
             <tr>
               <td style="padding:16px 22px;color:#fff;">
-                <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;opacity:.85;">AI Visibility Score</div>
+                <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;opacity:.85;">Website Audit Score</div>
                 <div style="font:700 30px/1.1 'Helvetica Neue',Arial,sans-serif;margin-top:6px;">Grade ${esc(s.grade ?? '?')}</div>
               </td>
               <td style="padding:16px 22px;color:#fff;text-align:right;font:700 34px/1 'Helvetica Neue',Arial,sans-serif;">${esc(s.overall)}<span style="font-weight:400;font-size:17px;opacity:.7;">/100</span></td>

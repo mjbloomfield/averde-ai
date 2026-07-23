@@ -16,7 +16,7 @@ tools:
   - published: true
     icon: checklist
     tag: 'Interactive · ~3 minutes · Free'
-    title: 'AI Visibility Audit'
+    title: 'Website Audit'
     description: "We fetch your live website, run 13 real checks on what AI engines actually read, and run a live AI-search query for your market. Transparent score, fix-it-yourself action plan."
     ctaLabel: 'Run the audit →'
     ctaHref: '/ai-audit'

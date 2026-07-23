@@ -10,7 +10,7 @@
 - [About](https://averde.ai/about): Mark Bloomfield — engineer and founder, based in Boulder, CO.
 - [AI Consulting + free AI Business Readiness Audit](https://averde.ai/ai-consulting): A free scored self-assessment of where AI can hand a small business hours back, feeding a free 30-minute planning call.
 - [Custom Instructions for Claude — $27](https://averde.ai/claude-instructions): A 10-minute survey, then a Custom Instructions file written personally by Mark Bloomfield.
-- [Free AI Visibility Audit](https://averde.ai/ai-audit): A free 3-minute audit that fetches a business's live website, runs 13 real checks on what AI engines read, and runs a live AI-search query for its market.
+- [Free Website Audit](https://averde.ai/ai-audit): A free 3-minute audit that fetches a business's live website, runs 13 real checks on what AI engines read, and runs a live AI-search query for its market.
 - [Case Studies](https://averde.ai/case-studies): Before-and-after AI-Ready Website rebuilds with measured AEO and SEO improvements.
 - [Contact](https://averde.ai/contact): Get in touch or book a strategy call.
 

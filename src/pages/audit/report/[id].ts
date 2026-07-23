@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 
 export const prerender = false;
 
-// Serves the stored web copy of an emailed AI Visibility Report.
+// Serves the stored web copy of an emailed Website Audit Report.
 // Rows are written by /api/audit-lead; the unguessable UUID is the
 // only access control, so keep these pages out of search indexes.
 export const GET: APIRoute = async ({ params }) => {
