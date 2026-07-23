@@ -166,27 +166,47 @@ if (window.self !== window.top) {
    call: the report IS the prep material.
 ================================================================ */
 
-const INDUSTRIES = [
-  'Dental practice','HVAC / Heating & Cooling','Real estate brokerage',
-  'Med spa / Aesthetic medicine','Veterinary clinic','Law firm',
-  'Home services (plumbing, roofing, landscaping)','Auto repair / Body shop',
-  'Restaurant / Hospitality','Fitness / Gym',
-  'Accounting / Financial advisor','Construction / Contractor',
-  'E-commerce / DTC brand','Other'
-];
-
 const TEAM_SIZES = ['Just me','2–5 people','6–15 people','16+ people'];
 
-// frac = the share of that work AI can realistically absorb — used for the
-// hours-back estimate, deliberately conservative.
-const HOURS_CATS = [
-  { id:'quoting',    label:'Quotes & proposals',                frac:0.5 },
-  { id:'scheduling', label:'Scheduling & calendar juggling',    frac:0.6 },
-  { id:'followup',   label:'Lead & customer follow-up',         frac:0.6 },
-  { id:'questions',  label:'Answering the same questions',      frac:0.7 },
-  { id:'dataentry',  label:'Moving data between systems',       frac:0.7 },
-  { id:'content',    label:'Marketing & content creation',      frac:0.5 },
-];
+// Question buckets per CLAUDE.md "segment before you ask": the classifier
+// (/api/classify-business, NAICS-derived type list) picks the bucket, and
+// every hours category + report move comes from that bucket's world.
+// frac = share of that work AI can realistically absorb (conservative).
+const BUCKET_CATS = {
+  appointment: [
+    { id:'intake',     label:'Intake forms & client paperwork',      frac:0.6 },
+    { id:'scheduling', label:'Scheduling, rebooking & reminders',    frac:0.6 },
+    { id:'questions',  label:'Answering the same client questions',  frac:0.7 },
+    { id:'notes',      label:'Session notes & records',              frac:0.5 },
+    { id:'dataentry',  label:'Moving info between systems',          frac:0.7 },
+    { id:'content',    label:'Marketing & content creation',         frac:0.5 },
+  ],
+  project: [
+    { id:'quoting',    label:'Quotes & proposals',                   frac:0.5 },
+    { id:'scheduling', label:'Scheduling jobs & crews',              frac:0.6 },
+    { id:'followup',   label:'Lead & customer follow-up',            frac:0.6 },
+    { id:'questions',  label:'Answering the same questions',         frac:0.7 },
+    { id:'dataentry',  label:'Moving data between systems',          frac:0.7 },
+    { id:'content',    label:'Marketing & content creation',         frac:0.5 },
+  ],
+  retail: [
+    { id:'productq',   label:'Answering product questions',          frac:0.7 },
+    { id:'orders',     label:'Orders, returns & refunds',            frac:0.6 },
+    { id:'inventory',  label:'Inventory, listings & menus',          frac:0.6 },
+    { id:'followup',   label:'Customer follow-up & reviews',         frac:0.6 },
+    { id:'dataentry',  label:'Moving data between systems',          frac:0.7 },
+    { id:'content',    label:'Marketing & content creation',         frac:0.5 },
+  ],
+  professional: [
+    { id:'intakepro',  label:'Client intake & onboarding',           frac:0.6 },
+    { id:'drafting',   label:'Drafting documents & letters',         frac:0.6 },
+    { id:'updates',    label:'Client updates & status emails',       frac:0.6 },
+    { id:'questions',  label:'Answering the same questions',         frac:0.7 },
+    { id:'dataentry',  label:'Moving data between systems',          frac:0.7 },
+    { id:'content',    label:'Marketing & content creation',         frac:0.5 },
+  ],
+};
+function cats() { return BUCKET_CATS[state.bucket] || BUCKET_CATS.project; }
 const HOUR_OPTS = [
   { v:'0',   label:'None',        mid:0 },
   { v:'1-3', label:'1–3 hrs/wk',  mid:2 },
@@ -251,6 +271,54 @@ const MOVES = {
     diy: 'Write down each hop (where the data starts, where you re-type it). Even one automated hop — receipts to spreadsheet, form to CRM — pays back weekly.',
     call: "On the call we'll pick the one connection with the best payback and how to build it.",
   },
+  intake: {
+    title: 'Let clients fill out intake before they arrive',
+    why: h => `You reported ${h} on intake forms and paperwork — the classic before-and-after-session time sink.`,
+    diy: 'Move your intake to a simple online form clients complete when they book. Have Claude draft the form questions from your current paper version, and a friendly reminder message to go with it.',
+    call: "On the call we'll pick a form tool that fits how you book and where the answers should land.",
+  },
+  notes: {
+    title: 'Cut session-note time in half',
+    why: h => `${h} on notes and records — the work that eats your evenings after the hands-on work is done.`,
+    diy: 'Draft a note template with Claude (structure, common phrasings, your abbreviations), then dictate rough notes and have Claude clean them into the template. You review and file.',
+    call: "On the call we'll set this up around your privacy obligations — what stays local, what never touches AI.",
+  },
+  productq: {
+    title: 'Answer product questions once',
+    why: h => `${h} answering product questions means those answers belong on product pages and a real FAQ, not in your inbox.`,
+    diy: 'List the 15 questions customers ask most, have Claude polish your answers, and publish them where the question happens — product pages, FAQ, order emails.',
+    call: "On the call we'll decide what belongs on the site vs. in an assistant that answers for you.",
+  },
+  orders: {
+    title: 'Take the friction out of orders & returns',
+    why: h => `${h} on orders, returns, and refunds — high-stakes work that still follows the same few patterns.`,
+    diy: 'Have Claude draft your five standard replies (order status, return steps, refund confirmation, delay apology, exchange) in your voice, so each one becomes a 30-second edit instead of a fresh email.',
+    call: "On the call we'll look at whether your store platform can automate the routine half outright.",
+  },
+  inventory: {
+    title: 'Make listings and menus a batch job',
+    why: h => `${h} on inventory, listings, and menus — repetitive writing AI is genuinely good at.`,
+    diy: 'Give Claude three of your best product descriptions as examples, then feed it the raw details for new items and edit its drafts. Same for seasonal menu or listing updates.',
+    call: "On the call we'll see what can flow straight from your inventory system instead of being retyped.",
+  },
+  intakepro: {
+    title: 'Standardize client intake & onboarding',
+    why: h => `${h} on intake and onboarding — every new client shouldn't restart the same email thread.`,
+    diy: 'Have Claude turn your current back-and-forth into one welcome packet: what you need from them, what happens next, and a checklist. Send it once, on engagement.',
+    call: "On the call we'll map your onboarding steps and pick which ones a form or automation should own.",
+  },
+  drafting: {
+    title: 'Draft documents from your own templates',
+    why: h => `${h} drafting documents and letters — the highest-value AI use in advice businesses, done carefully.`,
+    diy: 'Pick your three most-repeated documents. Give Claude a strong past example of each plus the new matter\'s details, and edit its draft. You stay the author; it does the keystrokes.',
+    call: "On the call we'll set the guardrails — what's safe to draft with AI in your field and what isn't.",
+  },
+  updates: {
+    title: 'Send client updates without writing them from scratch',
+    why: h => `${h} on status updates — necessary, appreciated, and almost entirely formulaic.`,
+    diy: 'Have Claude build an update template (what changed, what\'s next, what we need from you), then draft each one from your two-line summary. Clients get more updates; you spend less time on them.',
+    call: "On the call we'll decide the cadence and where updates should send from.",
+  },
   content: {
     title: 'Make content a 30-minute habit',
     why: h => `${h} on marketing and content — AI drafts, you edit for voice, and the cadence AI search rewards becomes sustainable.`,
@@ -261,7 +329,8 @@ const MOVES = {
 
 const state = {
   step: 1,
-  name:'', industry:'', teamSize:'',
+  name:'', description:'', teamSize:'',
+  businessType:'', bucket:'', classifiedFor:'',
   hours: {},            // catId -> option value
   storage:'', platform:'', otherTools:'',
   usage:'', appetite:'', worry:'',
@@ -284,7 +353,7 @@ function labelFor(catId) {
 }
 
 function buildDims() {
-  const totalMid = HOURS_CATS.reduce((n, c) => n + midFor(c.id), 0);
+  const totalMid = cats().reduce((n, c) => n + midFor(c.id), 0);
   const pick = (opts, v) => { const o = opts.find(x => x.v === v); return o ? o.pts : 0; };
   return [
     { name: 'AI opportunity', pts: Math.min(20, Math.round(totalMid * 1.1)), max: 20,
@@ -300,7 +369,7 @@ function buildDims() {
   ];
 }
 function hoursBack() {
-  return Math.round(HOURS_CATS.reduce((n, c) => n + midFor(c.id) * c.frac, 0));
+  return Math.round(cats().reduce((n, c) => n + midFor(c.id) * c.frac, 0));
 }
 function grade(score) {
   return score >= 85 ? 'A' : score >= 70 ? 'B' : score >= 55 ? 'C' : score >= 40 ? 'D' : 'F';
@@ -314,7 +383,7 @@ function interpret(score) {
   return 'Starting from scratch — which means the early wins are big and nothing has to be undone.';
 }
 function topMoves() {
-  return HOURS_CATS
+  return cats()
     .map(c => ({ ...c, mid: midFor(c.id) }))
     .sort((a, b) => b.mid - a.mid)
     .slice(0, 3)
@@ -361,19 +430,21 @@ function renderBasics() {
     body: `<div class="field-grid">
       <div><label class="label" for="f-name">Business name</label>
         <input class="input" id="f-name" value="${esc(state.name)}" placeholder="Harbor Dental" /></div>
-      ${selectField('f-ind', 'Industry', INDUSTRIES.map(i => ({ v:i, label:i })), state.industry)}
       ${selectField('f-team', 'Team size', TEAM_SIZES.map(t => ({ v:t, label:t })), state.teamSize)}
+      <div style="grid-column:1/-1"><label class="label" for="f-desc">What does your business do?</label>
+        <input class="input" id="f-desc" value="${esc(state.description)}" placeholder="e.g. massage therapy studio · custom awnings · family law · coffee shop" />
+        <p class="hint">A few words is plenty — this decides which questions you get next.</p></div>
     </div>`,
     back: false,
-    nextDisabled: !(state.name && state.industry && state.teamSize),
+    nextDisabled: !(state.name && state.description.trim().length > 2 && state.teamSize),
   });
   const sync = () => {
     state.name = document.getElementById('f-name').value.trim();
-    state.industry = document.getElementById('f-ind').value;
+    state.description = document.getElementById('f-desc').value;
     state.teamSize = document.getElementById('f-team').value;
-    root.querySelector('[data-act="next"]').disabled = !(state.name && state.industry && state.teamSize);
+    root.querySelector('[data-act="next"]').disabled = !(state.name && state.description.trim().length > 2 && state.teamSize);
   };
-  ['f-name','f-ind','f-team'].forEach(id => document.getElementById(id).addEventListener('input', sync));
+  ['f-name','f-desc','f-team'].forEach(id => document.getElementById(id).addEventListener('input', sync));
 }
 
 function renderHours() {
@@ -383,12 +454,12 @@ function renderHours() {
     title: 'How much of your week goes to each of these?',
     dek: "Rough guesses are fine — this is where the report's math comes from.",
     body: `<div class="field-grid">
-      ${HOURS_CATS.map(c => selectField('h-' + c.id, c.label, HOUR_OPTS, state.hours[c.id] || '0', 'None')).join('')}
+      ${cats().map(c => selectField('h-' + c.id, c.label, HOUR_OPTS, state.hours[c.id] || '0', 'None')).join('')}
     </div>`,
     back: true,
     nextDisabled: false,
   });
-  HOURS_CATS.forEach(c => {
+  cats().forEach(c => {
     document.getElementById('h-' + c.id).addEventListener('change', e => { state.hours[c.id] = e.target.value; });
   });
 }
@@ -473,7 +544,9 @@ function submitLead(dims, score, moves) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      businessName: state.name, industry: state.industry, teamSize: state.teamSize,
+      businessName: state.name, teamSize: state.teamSize,
+      businessDescription: state.description.trim(), businessType: state.businessType, bucket: state.bucket,
+      industry: state.businessType,
       hours: state.hours, storage: state.storage, platform: state.platform, otherTools: state.otherTools,
       usage: state.usage, appetite: state.appetite, worry: state.worry,
       contactName: state.contactName, email: state.email,
@@ -497,7 +570,7 @@ function renderReport() {
     <div class="report-head">
       <p class="eyebrow">Your AI Readiness Report</p>
       <h1>${esc(state.name)}</h1>
-      <p class="report-sub">${esc(state.industry)} · ${esc(state.teamSize)}</p>
+      <p class="report-sub">${esc(state.businessType)} · ${esc(state.teamSize)}</p>
     </div>
 
     <div class="score-panel">
@@ -580,14 +653,51 @@ function render() {
   try { parent.postMessage({ readinessHeight: document.body.scrollHeight }, '*'); } catch (e) {}
 }
 
+function keywordBucket(d) {
+  d = d.toLowerCase();
+  if (/massage|bodywork|therap|counsel|chiro|acupunct|dental|dentist|clinic|salon|barber|spa|aesthet|vet|groom|gym|fitness|yoga|pilates|train(er|ing)|coach|tutor|photograph|childcare|daycare/.test(d)) return 'appointment';
+  if (/law|attorney|legal|account|bookkeep|tax|cpa|financ|advisor|insur|real estate|realtor|broker|property manage|mortgage|title|architect|engineer|consult|recruit|staffing|nonprofit/.test(d)) return 'professional';
+  if (/shop|store|retail|boutique|e-?commerce|online store|florist|restaurant|cafe|coffee|bakery|brewery|bar\b|taproom|food truck|deli/.test(d)) return 'retail';
+  return 'project';
+}
+
+async function classifyThenAdvance(btn) {
+  const desc = state.description.trim();
+  if (state.bucket && state.classifiedFor === desc) { state.step += 1; render(); window.scrollTo({ top: 0 }); return; }
+  btn.disabled = true;
+  const prev = btn.textContent;
+  btn.textContent = 'Reading your business…';
+  let result = null;
+  try {
+    const controller = new AbortController();
+    const t = setTimeout(() => controller.abort(), 7000);
+    const r = await fetch('/api/classify-business', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ description: desc, name: state.name }),
+      signal: controller.signal,
+    });
+    clearTimeout(t);
+    if (r.ok) result = await r.json();
+  } catch (e) { /* fall through to keyword bucket */ }
+  state.bucket = (result && result.bucket) || keywordBucket(desc);
+  state.businessType = (result && result.type) || 'Small business';
+  state.classifiedFor = desc;
+  state.hours = {}; // categories may have changed with the bucket
+  btn.textContent = prev;
+  btn.disabled = false;
+  state.step += 1; render(); window.scrollTo({ top: 0 });
+}
+
 document.addEventListener('click', e => {
   const btn = e.target.closest('[data-act]');
   if (!btn) return;
   const act = btn.getAttribute('data-act');
-  if (act === 'next') { state.step += 1; render(); window.scrollTo({ top: 0 }); }
+  if (act === 'next' && state.step === 1) { classifyThenAdvance(btn); }
+  else if (act === 'next') { state.step += 1; render(); window.scrollTo({ top: 0 }); }
   else if (act === 'back') { state.step = Math.max(1, state.step - 1); render(); }
   else if (act === 'restart') {
-    Object.assign(state, { step:1, name:'', industry:'', teamSize:'', hours:{}, storage:'', platform:'', otherTools:'', usage:'', appetite:'', worry:'', contactName:'', email:'', sendStatus:'idle' });
+    Object.assign(state, { step:1, name:'', description:'', teamSize:'', businessType:'', bucket:'', classifiedFor:'', hours:{}, storage:'', platform:'', otherTools:'', usage:'', appetite:'', worry:'', contactName:'', email:'', sendStatus:'idle' });
     render(); window.scrollTo({ top: 0 });
   }
 });

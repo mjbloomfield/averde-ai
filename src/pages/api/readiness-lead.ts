@@ -9,6 +9,9 @@ type Move = { id: string; title: string };
 
 type Payload = {
   businessName?: string;
+  businessDescription?: string;
+  businessType?: string;
+  bucket?: string;
   industry?: string;
   teamSize?: string;
   hours?: Record<string, string>;
@@ -143,6 +146,7 @@ export const POST: APIRoute = async ({ request }) => {
   const supabaseUrl = import.meta.env.SUPABASE_URL;
   const supabaseKey = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
   let dbStatus: 'inserted' | 'failed' | 'unconfigured' = 'unconfigured';
+  let leadId: string | null = null;
 
   const supabase = supabaseUrl && supabaseKey
     ? createClient(supabaseUrl, supabaseKey, { auth: { persistSession: false, autoRefreshToken: false } })
@@ -150,11 +154,14 @@ export const POST: APIRoute = async ({ request }) => {
 
   if (supabase) {
     try {
-      const { error } = await supabase.from('readiness_leads').insert({
+      const { data: inserted, error } = await supabase.from('readiness_leads').insert({
         business_name: p.businessName || null,
         contact_name: p.contactName || null,
         email,
         industry: p.industry || null,
+        business_description: p.businessDescription || null,
+        business_type: p.businessType || null,
+        bucket: p.bucket || null,
         team_size: p.teamSize || null,
         hours: p.hours ?? {},
         systems: { storage: p.storage || null, platform: p.platform || null, otherTools: p.otherTools || null },
@@ -166,7 +173,8 @@ export const POST: APIRoute = async ({ request }) => {
         hours_back: p.hoursBack ?? null,
         user_agent: request.headers.get('user-agent'),
         referer: request.headers.get('referer'),
-      });
+      }).select('id').single();
+      leadId = inserted?.id ?? null;
       dbStatus = error ? 'failed' : 'inserted';
       if (error) console.error('readiness_leads insert failed:', error.message);
     } catch (err) {
@@ -224,7 +232,8 @@ export const POST: APIRoute = async ({ request }) => {
     // Internal notification — best-effort.
     try {
       const summary = [
-        `Business: ${p.businessName || '?'} (${p.industry || '?'}, ${p.teamSize || '?'})`,
+        `Business: ${p.businessName || '?'} (${p.businessType || '?'} · ${p.bucket || '?'} bucket · ${p.teamSize || '?'})`,
+        `Described as: ${p.businessDescription || '—'}`,
         `Contact: ${p.contactName || '?'} <${email}>`,
         `Score: ${p.score ?? '?'}/100 · Hours back ≈ ${p.hoursBack ?? '?'}h/wk`,
         `AI use: ${p.usage || '?'} · Appetite: ${p.appetite || '?'} · Worry: ${p.worry || '—'}`,
@@ -244,6 +253,12 @@ export const POST: APIRoute = async ({ request }) => {
     } catch (err) {
       console.error('readiness internal email failed:', err);
     }
+  }
+
+  if (leadId && supabase) {
+    try {
+      await supabase.from('readiness_leads').update({ email_status: emailStatus }).eq('id', leadId);
+    } catch { /* best-effort */ }
   }
 
   if (dbStatus === 'inserted' || emailStatus === 'sent') {
