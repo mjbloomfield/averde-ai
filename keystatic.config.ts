@@ -469,12 +469,12 @@ export default config({
         heroDek: fields.text({ label: 'Hero — subheadline', multiline: true }),
         steps: fields.array(
           fields.object({
-            num: fields.text({ label: 'Number (e.g. 01)' }),
-            day: fields.text({ label: 'Timing label (e.g. Week 1)' }),
             title: fields.text({ label: 'Step title' }),
             body: fields.text({ label: 'Step body', multiline: true }),
+            ctaLabel: fields.text({ label: 'Button label (optional)' }),
+            ctaHref: fields.text({ label: 'Button link (optional)' }),
           }),
-          { label: 'Process steps', itemLabel: props => `${props.fields.num.value} ${props.fields.title.value}` }
+          { label: 'Process steps', itemLabel: props => props.fields.title.value || 'New step' }
         ),
         includedHeadline: fields.text({ label: "What's included — headline" }),
         included: fields.array(

@@ -26,7 +26,7 @@ const d = study.data;
       <div class="inline-flex items-center gap-2 bg-green-mid/50 text-sand text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
         {d.heroEyebrow}
       </div>
-      <h1 class="text-4xl md:text-5xl font-extrabold text-white-warm leading-tight tracking-tight mb-6">
+      <h1 class="text-4xl md:text-5xl font-extrabold text-cream leading-tight tracking-tight mb-6">
         {d.heroHeadline}
       </h1>
       <p class="text-cream/80 text-xl leading-relaxed mb-8">{d.heroDek}</p>
@@ -48,7 +48,7 @@ const d = study.data;
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         {d.scores.map(s => (
-          <div class="bg-white-warm rounded-2xl p-7">
+          <div class="bg-cream rounded-2xl p-7">
             <div class="flex items-baseline justify-between mb-1">
               <h3 class="text-lg font-bold text-green-deep flex items-center">{s.label}{s.info && <InfoTip label={s.label} text={s.info} />}</h3>
               <span class="text-xs font-bold text-green-mid bg-green-50 px-2 py-1 rounded-full">+{s.after - s.before}</span>
@@ -82,7 +82,7 @@ const d = study.data;
   </section>
 
   <!-- BY THE NUMBERS -->
-  <section class="bg-white-warm py-20">
+  <section class="bg-cream py-20">
     <div class="max-w-4xl mx-auto px-4 sm:px-6">
       <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-10">By the numbers<InfoTip label="What this section shows" text="The concrete, countable differences between the old site and the rebuild. Every figure is a verifiable on-page fact, not an estimate." /></h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-px bg-green-deep/10 rounded-2xl overflow-hidden">
@@ -112,7 +112,7 @@ const d = study.data;
   </section>
 
   <!-- APPROACH -->
-  <section class="bg-white-warm py-20">
+  <section class="bg-cream py-20">
     <div class="max-w-4xl mx-auto px-4 sm:px-6">
       <h2 class="text-3xl md:text-4xl font-bold text-green-deep mb-10">{d.approachHeadline}<InfoTip label="What this section shows" text="The specific work done in the rebuild to make the site readable, citable, and well-ranked." /></h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -142,7 +142,7 @@ const d = study.data;
   </section>
 
   <!-- METHODOLOGY -->
-  <section class="bg-white-warm pb-16">
+  <section class="bg-cream pb-16">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
       <div class="border-t border-green-deep/10 pt-6">
         <p class="text-xs uppercase tracking-widest text-muted/60 font-semibold mb-2">How we scored this</p>
@@ -154,7 +154,7 @@ const d = study.data;
   <!-- CTA -->
   <section class="wood-pale bg-green-deep py-20">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 text-center">
-      <h2 class="text-3xl md:text-4xl font-bold text-white-warm mb-4">Want to see where your site stands?</h2>
+      <h2 class="text-3xl md:text-4xl font-bold text-cream mb-4">Want to see where your site stands?</h2>
       <p class="text-cream/80 text-lg mb-8">
         Run the free AI Visibility Audit to see how AI search reads your business today — and what a rebuild could change.
       </p>

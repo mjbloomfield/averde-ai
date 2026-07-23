@@ -57,7 +57,7 @@ const categoryColors: Record<string, string> = {
   <!-- HERO -->
   <section class="wood-beam bg-green-deep py-20 text-center">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
-      <h1 class="text-5xl font-extrabold text-white-warm mb-5">{header?.title ?? 'Resources'}</h1>
+      <h1 class="text-5xl font-extrabold text-cream mb-5">{header?.title ?? 'Resources'}</h1>
       <p class="text-cream/70 text-xl">{header?.dek}</p>
     </div>
   </section>
@@ -69,7 +69,7 @@ const categoryColors: Record<string, string> = {
       {seriesList.length > 0 && (
         <div class="space-y-8 mb-16">
           {seriesList.map(([name, parts]) => (
-            <div class="bg-white-warm rounded-2xl p-8">
+            <div class="bg-cream rounded-2xl p-8">
               <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-2">{parts.length}-part series</p>
               <h2 class="text-2xl font-extrabold mb-5">
                 <a href={`/blog/${parts[0].id}`} class="text-green-deep hover:text-green-mid transition-colors">{name}</a>
@@ -92,7 +92,7 @@ const categoryColors: Record<string, string> = {
       {standalone.length > 0 ? (
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
           {standalone.map(post => (
-            <article class="bg-white-warm rounded-2xl p-8 flex flex-col hover:shadow-md transition-shadow">
+            <article class="bg-cream rounded-2xl p-8 flex flex-col hover:shadow-md transition-shadow">
               <div class="flex items-center gap-2 mb-4">
                 <span class={`text-xs font-semibold px-2.5 py-1 rounded-full ${categoryColors[post.data.category] || 'bg-gray-100 text-gray-600'}`}>
                   {post.data.category}

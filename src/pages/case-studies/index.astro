@@ -20,7 +20,7 @@ const studies = (await getCollection('caseStudies'))
   <!-- HERO -->
   <section class="wood-pale bg-green-deep py-20 text-center">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
-      <h1 class="text-5xl font-extrabold text-white-warm mb-5">{header?.title ?? 'Case Studies'}</h1>
+      <h1 class="text-5xl font-extrabold text-cream mb-5">{header?.title ?? 'Case Studies'}</h1>
       <p class="text-cream/70 text-xl">{header?.dek}</p>
     </div>
   </section>
@@ -35,7 +35,7 @@ const studies = (await getCollection('caseStudies'))
             return (
               <a
                 href={`/case-studies/${study.id}`}
-                class="group bg-white-warm rounded-2xl p-8 flex flex-col hover:shadow-md transition-shadow"
+                class="group bg-cream rounded-2xl p-8 flex flex-col hover:shadow-md transition-shadow"
               >
                 <div class="flex items-center gap-2 mb-4">
                   <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-green-50 text-green-700">

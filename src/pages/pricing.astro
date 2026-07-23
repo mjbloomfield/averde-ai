@@ -19,7 +19,7 @@ const plans = pricing?.plans ?? [];
   <!-- HERO -->
   <section class="wood-medium bg-green-deep py-20 text-center">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
-      <h1 class="text-5xl md:text-6xl font-extrabold text-white-warm leading-tight mb-5">
+      <h1 class="text-5xl md:text-6xl font-extrabold text-cream leading-tight mb-5">
         {heroHeadline}
       </h1>
       <p class="text-cream/70 text-xl">{heroDek}</p>
@@ -33,7 +33,7 @@ const plans = pricing?.plans ?? [];
         {plans.map((plan: { name: string; price?: string; description: string; ctaLabel: string; featured?: boolean; features: string[] }) => {
           const displayPrice = plan.price?.trim() || 'Contact for pricing';
           return (
-            <div class={`rounded-3xl p-7 flex flex-col h-full ${plan.featured ? 'bg-green-deep text-cream ring-2 ring-sand' : 'bg-white-warm'}`}>
+            <div class={`rounded-3xl p-7 flex flex-col h-full ${plan.featured ? 'bg-green-deep text-cream ring-2 ring-sand' : 'bg-cream'}`}>
               {plan.featured && (
                 <div class="inline-flex self-start items-center bg-sand text-green-deep text-xs font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-wide">
                   Recommended
@@ -80,7 +80,7 @@ const plans = pricing?.plans ?? [];
   </section>
 
   <!-- ADD-ON: AUDIT -->
-  <section class="bg-white-warm py-16">
+  <section class="bg-cream py-16">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
       <div class="bg-sand/20 border border-sand/40 rounded-3xl p-10 text-center">
         <p class="text-sand font-bold text-sm uppercase tracking-wide mb-3">Start here</p>

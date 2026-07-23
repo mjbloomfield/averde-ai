@@ -23,11 +23,11 @@ const audits = page?.audits ?? [];
       <div class="inline-flex items-center gap-2 bg-sand/20 text-sand text-xs font-semibold px-3 py-1.5 rounded-full mb-5">
         {page?.heroBadge}
       </div>
-      <h1 class="text-4xl md:text-5xl font-extrabold text-white-warm leading-tight mb-5">
+      <h1 class="text-4xl md:text-5xl font-extrabold text-cream leading-tight mb-5">
         {page?.heroHeadline}
       </h1>
       <p
-        class="text-cream/70 text-lg [&_strong]:text-white-warm [&_a]:text-cream [&_a]:underline [&_a]:decoration-dotted [&_a]:underline-offset-4 [&_a:hover]:text-sand"
+        class="text-cream/70 text-lg [&_strong]:text-cream [&_a]:text-cream [&_a]:underline [&_a]:decoration-dotted [&_a]:underline-offset-4 [&_a:hover]:text-sand"
         set:html={renderInlineMarkdown(page?.heroDek ?? '')}
       />
     </div>
@@ -38,11 +38,11 @@ const audits = page?.audits ?? [];
     <div class="max-w-5xl mx-auto px-4 sm:px-6">
       <div class="grid md:grid-cols-2 gap-6 items-stretch">
         {audits.map((a) => (
-          <div class="bg-white-warm rounded-3xl p-8 shadow-sm flex flex-col">
+          <div class="bg-cream rounded-3xl p-8 shadow-sm flex flex-col">
             <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">{a.eyebrow}</p>
             <h2 class="text-2xl font-extrabold text-green-deep mb-3">{a.title}</h2>
             <p class="text-muted leading-relaxed mb-6">{a.body}</p>
-            <a href={a.ctaHref} class="mt-auto inline-block text-center bg-green-deep text-white-warm font-semibold px-6 py-3.5 rounded-xl hover:bg-green-mid transition-colors">
+            <a href={a.ctaHref} class="mt-auto inline-block text-center bg-green-deep text-cream font-semibold px-6 py-3.5 rounded-xl hover:bg-green-mid transition-colors">
               {a.ctaLabel}
             </a>
           </div>
@@ -74,7 +74,7 @@ const audits = page?.audits ?? [];
   </section>
 
   <!-- BOOK A REVIEW CALL -->
-  <section id="book" class="bg-white-warm py-16 scroll-mt-20">
+  <section id="book" class="bg-cream py-16 scroll-mt-20">
     <div class="max-w-4xl mx-auto px-4 sm:px-6">
       <div class="text-center mb-10">
         <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">{page?.bookEyebrow}</p>

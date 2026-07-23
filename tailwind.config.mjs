@@ -15,7 +15,6 @@ export default {
         'cream':       '#F4ECDB',   // paper
         'dark':        '#1F1A12',   // ink
         'muted':       '#7A6A58',
-        'white-warm':  '#F4ECDB',   // paper
         // Extended palette
         'honey-50':    '#F6E8D0',
         'honey-100':   '#E8C896',

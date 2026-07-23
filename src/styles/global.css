@@ -73,7 +73,7 @@
   --terracotta: var(--rust);
   --cream:      var(--paper);
   --dark:       var(--ink);
-  --white-warm: var(--paper);
+  --cream: var(--paper);
 
   /* === TYPOGRAPHY STACKS ============================== */
   --font-display: 'Fraunces', Georgia, serif;
@@ -112,7 +112,7 @@ body > * { position: relative; z-index: 1; }
    nav dropdowns underneath the page hero. Same specificity, later = wins. */
 body > header { z-index: 50; }
 
-/* In @layer base so Tailwind text-color utilities (e.g. text-white-warm on
+/* In @layer base so Tailwind text-color utilities (e.g. text-cream on
    dark heroes) override the default heading color. Tailwind v4 puts utilities
    in @layer utilities, which loses to unlayered rules — an unlayered
    `h1{color}` here would make every heading ignore its text-color utility. */
@@ -279,9 +279,8 @@ body::before {
 /* Topo cream sections: one real Colorado peak per page, USGS-faint.
    Tiles are ~10KB SVGs generated in-repo (nested contours, no crossings). */
 .topo-map { background-size: cover; background-repeat: no-repeat; background-position: center; }
-/* Cards were invisible on cream sections (white-warm === cream, #F4ECDB);
+/* Cards were invisible on cream sections (cream === cream, #F4ECDB);
    the topo lines exposed it. On map sections, lift the cards off the paper. */
-.topo-map .bg-white-warm,
 .topo-map .bg-cream { background-color: #FFFDF6; border: 1px solid rgba(42, 27, 17, 0.09); }
 .topo-bear     { background-image: url('/images/topo/bear-peak.svg'); }
 .topo-green    { background-image: url('/images/topo/green-mountain.svg'); }

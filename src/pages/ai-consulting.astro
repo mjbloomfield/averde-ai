@@ -22,7 +22,7 @@ const funnel = page?.funnel ?? [];
       <div class="inline-flex items-center gap-2 bg-sand/20 text-sand text-xs font-semibold px-3 py-1.5 rounded-full mb-5">
         {page?.heroBadge}
       </div>
-      <h1 class="text-4xl md:text-5xl font-extrabold text-white-warm leading-tight mb-5">
+      <h1 class="text-4xl md:text-5xl font-extrabold text-cream leading-tight mb-5">
         {page?.heroHeadline}
       </h1>
       <p class="text-cream/70 text-lg">{page?.heroDek}</p>
@@ -34,7 +34,7 @@ const funnel = page?.funnel ?? [];
     <div class="max-w-5xl mx-auto px-4 sm:px-6">
       <div class="grid md:grid-cols-3 gap-6">
         {funnel.map((step, i) => (
-          <div class="bg-white-warm rounded-3xl p-7 shadow-sm">
+          <div class="bg-cream rounded-3xl p-7 shadow-sm">
             <p class="text-sand text-4xl font-extrabold mb-3" style="font-family:'Fraunces',serif">{String(i + 1).padStart(2, '0')}</p>
             <h2 class="text-xl font-extrabold text-green-deep mb-2">{step.title}</h2>
             <p class="text-muted text-sm leading-relaxed">{step.body}</p>
@@ -74,7 +74,7 @@ const funnel = page?.funnel ?? [];
   <section class="wood-beam bg-green-deep py-16">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 text-center">
       <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">{page?.offerEyebrow}</p>
-      <h2 class="text-3xl font-extrabold text-white-warm mb-4">{page?.offerTitle}</h2>
+      <h2 class="text-3xl font-extrabold text-cream mb-4">{page?.offerTitle}</h2>
       <p class="text-cream/70 mb-8">{page?.offerBody}</p>
       <a href="/claude-instructions" class="inline-flex items-center bg-sand text-green-deep font-bold px-8 py-4 rounded-xl hover:bg-sand/90 transition-colors">
         {page?.offerCta}
@@ -83,7 +83,7 @@ const funnel = page?.funnel ?? [];
   </section>
 
   <!-- BOOK THE FREE CALL -->
-  <section id="book" class="bg-white-warm py-16 scroll-mt-20">
+  <section id="book" class="bg-cream py-16 scroll-mt-20">
     <div class="max-w-4xl mx-auto px-4 sm:px-6">
       <div class="text-center mb-10">
         <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">{page?.bookEyebrow}</p>

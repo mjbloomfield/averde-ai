@@ -26,7 +26,7 @@ const definedTermSet = {
 >
   <section class="wood-medium bg-green-deep py-20">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
-      <h1 class="text-4xl md:text-5xl font-extrabold text-white-warm leading-tight mb-4">Glossary</h1>
+      <h1 class="text-4xl md:text-5xl font-extrabold text-cream leading-tight mb-4">Glossary</h1>
       <p class="text-cream/70 text-lg">The terms behind AI search, in plain English. No jargon — and where a word is unavoidable, it's defined here.</p>
     </div>
   </section>
@@ -35,7 +35,7 @@ const definedTermSet = {
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
       <dl class="space-y-8">
         {terms.map((t) => (
-          <div id={t.slug} class="scroll-mt-24 bg-white-warm rounded-2xl p-7 border-l-2 border-sand/40">
+          <div id={t.slug} class="scroll-mt-24 bg-cream rounded-2xl p-7 border-l-2 border-sand/40">
             <dt class="text-xl font-bold text-green-deep mb-2">{t.term}</dt>
             <dd class="text-dark leading-relaxed">{t.def}</dd>
           </div>

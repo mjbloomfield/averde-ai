@@ -179,7 +179,7 @@ const faqs = [
       <div class="inline-flex items-center gap-2 bg-sand/20 text-sand text-xs font-semibold px-3 py-1.5 rounded-full mb-5">
         Free resource · {totalItems} checks · Progress saves in your browser
       </div>
-      <h1 class="text-4xl md:text-5xl font-extrabold text-white-warm leading-tight mb-5">
+      <h1 class="text-4xl md:text-5xl font-extrabold text-cream leading-tight mb-5">
         The AI-Ready Website Checklist
       </h1>
       <p class="text-cream/70 text-lg">
@@ -204,7 +204,7 @@ const faqs = [
         Budget 30–45 hours total for a typical small business site, with Claude or ChatGPT doing
         most of the keystrokes.
       </p>
-      <div class="mt-8 bg-white-warm rounded-2xl p-5 flex items-center justify-between gap-4">
+      <div class="mt-8 bg-cream rounded-2xl p-5 flex items-center justify-between gap-4">
         <p class="text-sm text-muted"><span id="done-count" class="font-bold text-green-deep">0</span> of {totalItems} done</p>
         <button id="reset-checks" class="text-sm text-terracotta font-semibold hover:underline">Reset</button>
       </div>
@@ -223,7 +223,7 @@ const faqs = [
           <p class="text-muted mb-5">{sec.intro}</p>
           <div class="space-y-3">
             {sec.items.map(item => (
-              <label class="cl-item flex items-start gap-4 bg-white-warm rounded-2xl p-5 cursor-pointer border border-transparent hover:border-sand/40 transition-colors" data-check={item.id}>
+              <label class="cl-item flex items-start gap-4 bg-cream rounded-2xl p-5 cursor-pointer border border-transparent hover:border-sand/40 transition-colors" data-check={item.id}>
                 <input type="checkbox" class="cl-box mt-1 w-5 h-5 accent-green-deep flex-shrink-0" />
                 <span>
                   <span class="cl-task block font-semibold text-green-deep">{item.task}</span>
@@ -238,7 +238,7 @@ const faqs = [
   </section>
 
   <!-- FAQ -->
-  <section class="bg-white-warm py-16">
+  <section class="bg-cream py-16">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
       <h2 class="text-3xl font-bold text-green-deep mb-8 text-center">Common Questions</h2>
       <div class="space-y-3">

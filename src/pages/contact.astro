@@ -20,7 +20,7 @@ const error = Astro.url.searchParams.get('error');
   <!-- HERO -->
   <section class="wood-alt bg-green-deep py-20 text-center">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
-      <h1 class="text-5xl font-extrabold text-white-warm mb-5">{page?.heroHeadline}</h1>
+      <h1 class="text-5xl font-extrabold text-cream mb-5">{page?.heroHeadline}</h1>
       <p class="text-cream/70 text-xl">{page?.heroDek}</p>
     </div>
   </section>
@@ -103,7 +103,7 @@ const error = Astro.url.searchParams.get('error');
                     id="name"
                     name="name"
                     required
-                    class="w-full bg-white-warm border border-green-sage/30 rounded-xl px-4 py-2.5 text-dark text-sm focus:outline-none focus:border-green-sage focus:ring-1 focus:ring-green-sage/30"
+                    class="w-full bg-cream border border-green-sage/30 rounded-xl px-4 py-2.5 text-dark text-sm focus:outline-none focus:border-green-sage focus:ring-1 focus:ring-green-sage/30"
                   />
                 </div>
                 <div>
@@ -113,7 +113,7 @@ const error = Astro.url.searchParams.get('error');
                     id="email"
                     name="email"
                     required
-                    class="w-full bg-white-warm border border-green-sage/30 rounded-xl px-4 py-2.5 text-dark text-sm focus:outline-none focus:border-green-sage focus:ring-1 focus:ring-green-sage/30"
+                    class="w-full bg-cream border border-green-sage/30 rounded-xl px-4 py-2.5 text-dark text-sm focus:outline-none focus:border-green-sage focus:ring-1 focus:ring-green-sage/30"
                   />
                 </div>
               </div>
@@ -123,7 +123,7 @@ const error = Astro.url.searchParams.get('error');
                   type="text"
                   id="company"
                   name="company"
-                  class="w-full bg-white-warm border border-green-sage/30 rounded-xl px-4 py-2.5 text-dark text-sm focus:outline-none focus:border-green-sage focus:ring-1 focus:ring-green-sage/30"
+                  class="w-full bg-cream border border-green-sage/30 rounded-xl px-4 py-2.5 text-dark text-sm focus:outline-none focus:border-green-sage focus:ring-1 focus:ring-green-sage/30"
                 />
               </div>
               <div>
@@ -133,7 +133,7 @@ const error = Astro.url.searchParams.get('error');
                   name="message"
                   required
                   rows={4}
-                  class="w-full bg-white-warm border border-green-sage/30 rounded-xl px-4 py-2.5 text-dark text-sm focus:outline-none focus:border-green-sage focus:ring-1 focus:ring-green-sage/30 resize-none"
+                  class="w-full bg-cream border border-green-sage/30 rounded-xl px-4 py-2.5 text-dark text-sm focus:outline-none focus:border-green-sage focus:ring-1 focus:ring-green-sage/30 resize-none"
                 ></textarea>
               </div>
               <button
@@ -149,7 +149,7 @@ const error = Astro.url.searchParams.get('error');
         <!-- RIGHT: Google Calendar booking -->
         <div>
           <h2 class="text-2xl font-bold text-green-deep mb-6">{page?.bookHeadline}</h2>
-          <div class="bg-white-warm rounded-3xl p-6 shadow-sm">
+          <div class="bg-cream rounded-3xl p-6 shadow-sm">
             <p class="text-muted text-sm mb-5">{page?.bookCardSub}</p>
             <iframe src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1XF6Cd-RbjfwRu8rZj39AY7nVMemRVBTh2jn945OnAZvRFVeB80FFFRZusXERELC5DecVHma6u?gv=true" style="border:0" width="100%" height="700" frameborder="0" title="Book a call with Mark"></iframe>
           </div>
