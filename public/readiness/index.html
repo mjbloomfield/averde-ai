@@ -228,9 +228,16 @@ const PLATFORM_OPTS = [
 ];
 const USAGE_OPTS = [
   { v:'never',  label:"Haven't really used it",                pts:4 },
-  { v:'tried',  label:'Tried it a few times',                  pts:10 },
-  { v:'weekly', label:'Use it most weeks',                     pts:15 },
-  { v:'daily',  label:"It's part of most days",                pts:20 },
+  { v:'tried',  label:'Tried it a few times',                  pts:8 },
+  { v:'weekly', label:'Use it most weeks',                     pts:12 },
+  { v:'daily',  label:"It's part of most days",                pts:14 },
+];
+// Frequency alone says little — daily quick questions isn't the same skill
+// as drafting real work. Depth adds up to 6 points on top of frequency.
+const DEPTH_OPTS = [
+  { v:'quick',    label:'Quick questions & lookups',                    pts:0 },
+  { v:'drafting', label:'Drafting real work (emails, quotes, posts)',   pts:3 },
+  { v:'wired',    label:"It's wired into my tools or workflows",        pts:6 },
 ];
 const APPETITE_OPTS = [
   { v:'<1',  label:'Less than an hour a week',                 pts:4 },
@@ -333,7 +340,7 @@ const state = {
   businessType:'', bucket:'', classifiedFor:'',
   hours: {},            // catId -> option value
   storage:'', platform:'', otherTools:'',
-  usage:'', appetite:'', worry:'',
+  usage:'', depth:'', appetite:'', worry:'',
   contactName:'', email:'',
   sendStatus: 'idle',
 };
@@ -355,15 +362,37 @@ function labelFor(catId) {
 function buildDims() {
   const totalMid = cats().reduce((n, c) => n + midFor(c.id), 0);
   const pick = (opts, v) => { const o = opts.find(x => x.v === v); return o ? o.pts : 0; };
+  // Stack: being on connectable tools is the base; actually using AI with
+  // them is what earns the top of the range. Ready-but-idle caps at 12.
+  const platformBase = { google: 12, microsoft: 12, mixed: 8, other: 4 }[state.platform] || 0;
+  const usageBonus = { never: 0, tried: 3, weekly: 6, daily: 8 }[state.usage] || 0;
+  const stackPts = Math.min(20, platformBase + usageBonus);
+  const stackNote = platformBase >= 12 && usageBonus <= 3
+    ? "You're on tools that connect directly to AI assistants — but they aren't talking to one yet. That's headroom, not a fault."
+    : platformBase >= 12
+      ? "You're on connectable tools and already using AI alongside them — the shortest path to wiring the two together."
+      : 'Google Workspace and Microsoft 365 connect directly to AI assistants; a mixed or custom stack needs a little more plumbing.';
+
+  // Experience: frequency + what the use actually is. Daily quick questions
+  // reads differently than drafting real work or wired-in workflows.
+  const freqPts = pick(USAGE_OPTS, state.usage);
+  const depthPts = state.usage === 'never' ? 0 : (DEPTH_OPTS.find(o => o.v === state.depth)?.pts || 0);
+  const expPts = Math.min(20, freqPts + depthPts);
+  const expNote = state.usage === 'never'
+    ? 'Starting from zero is a few weeks, not months — and you skip everyone else\'s bad habits.'
+    : state.depth === 'quick'
+      ? 'Frequent use, but mostly Q&A so far — the jump to drafting real work is where the hours come back.'
+      : state.depth === 'wired'
+        ? 'AI is already in your workflows — the question is coverage, not adoption.'
+        : 'Drafting real work with AI is the right habit — the next step is standing context so it starts from your business every time.';
+
   return [
     { name: 'AI opportunity', pts: Math.min(20, Math.round(totalMid * 1.1)), max: 20,
       note: totalMid > 0 ? `~${Math.round(totalMid)} hrs/week reported on work AI can help with — more hours here means more to gain.` : 'You reported almost no repetitive admin — lucky you, or worth a second look on the call.' },
     { name: 'Digital foundation', pts: pick(STORAGE_OPTS, state.storage), max: 20,
       note: 'AI works on the information it can reach. Cloud tools and spreadsheets are ready; paper and memory need a home first.' },
-    { name: 'Everyday stack', pts: pick(PLATFORM_OPTS, state.platform), max: 20,
-      note: 'Google Workspace and Microsoft 365 both connect directly to AI assistants today.' },
-    { name: 'AI experience', pts: pick(USAGE_OPTS, state.usage), max: 20,
-      note: 'Existing habits shorten the runway — but starting from zero is a few weeks, not months.' },
+    { name: 'Everyday stack', pts: stackPts, max: 20, note: stackNote },
+    { name: 'AI experience', pts: expPts, max: 20, note: expNote },
     { name: 'Owner bandwidth', pts: pick(APPETITE_OPTS, state.appetite), max: 20,
       note: 'The setup phase needs a few hours a week from you. After that it pays you back.' },
   ];
@@ -454,7 +483,7 @@ function renderHours() {
     title: 'How much of your week goes to each of these?',
     dek: "Rough guesses are fine — this is where the report's math comes from.",
     body: `<div class="field-grid">
-      ${cats().map(c => selectField('h-' + c.id, c.label, HOUR_OPTS, state.hours[c.id] || '0', 'None')).join('')}
+      ${cats().map(c => selectField('h-' + c.id, c.label, HOUR_OPTS.filter(o => o.v !== '0'), state.hours[c.id] || '', 'None')).join('')}
     </div>`,
     back: true,
     nextDisabled: false,
@@ -496,19 +525,21 @@ function renderAiToday() {
     dek: "No wrong answers — 'haven't touched it' is the most common one.",
     body: `<div class="field-grid">
       ${selectField('f-usage', 'Your current AI use (ChatGPT, Claude, etc.)', USAGE_OPTS, state.usage)}
+      ${selectField('f-depth', 'When you do use it, mostly for…', DEPTH_OPTS, state.depth)}
       ${selectField('f-appetite', 'Time you could put into setup, per week', APPETITE_OPTS, state.appetite)}
-      <div style="grid-column:1/-1">${selectField('f-worry', 'Biggest hesitation (optional)', WORRY_OPTS.map(w => ({ v:w, label:w })), state.worry, 'Pick one if it fits…')}</div>
+      ${selectField('f-worry', 'Biggest hesitation (optional)', WORRY_OPTS.map(w => ({ v:w, label:w })), state.worry, 'Pick one if it fits…')}
     </div>`,
     back: true,
-    nextDisabled: !(state.usage && state.appetite),
+    nextDisabled: !(state.usage && state.appetite && (state.usage === 'never' || state.depth)),
   });
   const sync = () => {
     state.usage = document.getElementById('f-usage').value;
+    state.depth = document.getElementById('f-depth').value;
     state.appetite = document.getElementById('f-appetite').value;
     state.worry = document.getElementById('f-worry').value;
-    root.querySelector('[data-act="next"]').disabled = !(state.usage && state.appetite);
+    root.querySelector('[data-act="next"]').disabled = !(state.usage && state.appetite && (state.usage === 'never' || state.depth));
   };
-  ['f-usage','f-appetite','f-worry'].forEach(id => document.getElementById(id).addEventListener('input', sync));
+  ['f-usage','f-depth','f-appetite','f-worry'].forEach(id => document.getElementById(id).addEventListener('input', sync));
 }
 
 function renderContact() {
@@ -548,7 +579,7 @@ function submitLead(dims, score, moves) {
       businessDescription: state.description.trim(), businessType: state.businessType, bucket: state.bucket,
       industry: state.businessType,
       hours: state.hours, storage: state.storage, platform: state.platform, otherTools: state.otherTools,
-      usage: state.usage, appetite: state.appetite, worry: state.worry,
+      usage: state.usage, depth: state.depth, appetite: state.appetite, worry: state.worry,
       contactName: state.contactName, email: state.email,
       score, dims, hoursBack: hoursBack(), moves,
     }),
@@ -697,7 +728,7 @@ document.addEventListener('click', e => {
   else if (act === 'next') { state.step += 1; render(); window.scrollTo({ top: 0 }); }
   else if (act === 'back') { state.step = Math.max(1, state.step - 1); render(); }
   else if (act === 'restart') {
-    Object.assign(state, { step:1, name:'', description:'', teamSize:'', businessType:'', bucket:'', classifiedFor:'', hours:{}, storage:'', platform:'', otherTools:'', usage:'', appetite:'', worry:'', contactName:'', email:'', sendStatus:'idle' });
+    Object.assign(state, { step:1, name:'', description:'', teamSize:'', businessType:'', bucket:'', classifiedFor:'', hours:{}, storage:'', platform:'', otherTools:'', usage:'', depth:'', appetite:'', worry:'', contactName:'', email:'', sendStatus:'idle' });
     render(); window.scrollTo({ top: 0 });
   }
 });

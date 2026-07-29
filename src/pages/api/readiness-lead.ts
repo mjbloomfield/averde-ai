@@ -19,6 +19,7 @@ type Payload = {
   platform?: string;
   otherTools?: string;
   usage?: string;
+  depth?: string;
   appetite?: string;
   worry?: string;
   contactName?: string;
@@ -166,6 +167,7 @@ export const POST: APIRoute = async ({ request }) => {
         hours: p.hours ?? {},
         systems: { storage: p.storage || null, platform: p.platform || null, otherTools: p.otherTools || null },
         ai_usage: p.usage || null,
+        ai_depth: p.depth || null,
         appetite: p.appetite || null,
         worry: p.worry || null,
         score: p.score ?? null,
@@ -229,25 +231,31 @@ export const POST: APIRoute = async ({ request }) => {
       emailStatus = 'failed';
     }
 
-    // Internal notification — best-effort.
+    // Internal notification — best-effort. Sent from a distinct address
+    // (self-addressed mail tends to skip the Gmail inbox) and carries every
+    // entry plus the exact report the lead received, embedded below.
     try {
       const summary = [
         `Business: ${p.businessName || '?'} (${p.businessType || '?'} · ${p.bucket || '?'} bucket · ${p.teamSize || '?'})`,
         `Described as: ${p.businessDescription || '—'}`,
         `Contact: ${p.contactName || '?'} <${email}>`,
         `Score: ${p.score ?? '?'}/100 · Hours back ≈ ${p.hoursBack ?? '?'}h/wk`,
-        `AI use: ${p.usage || '?'} · Appetite: ${p.appetite || '?'} · Worry: ${p.worry || '—'}`,
+        `Dimensions: ${(p.dims ?? []).map(d => `${d.name} ${d.pts}/${d.max}`).join(' · ') || '—'}`,
+        `AI use: ${p.usage || '?'} (${p.depth || 'depth n/a'}) · Appetite: ${p.appetite || '?'} · Worry: ${p.worry || '—'}`,
         `Systems: ${p.storage || '?'} / ${p.platform || '?'}${p.otherTools ? ' / ' + p.otherTools : ''}`,
         `Hours: ${Object.entries(p.hours ?? {}).map(([k, v]) => `${k}=${v}`).join(', ') || '—'}`,
         `Top moves: ${(p.moves ?? []).map(m => m.title).join(' | ') || '—'}`,
-        reportUrl ? `Report: ${reportUrl}` : '',
-        `Supabase: ${dbStatus}`,
+        reportUrl ? `Report web copy: ${reportUrl}` : '',
+        `Supabase: ${dbStatus} · User email: ${emailStatus}`,
       ].filter(Boolean).join('\n');
+      const detailsBlock = `<div style="max-width:720px;margin:0 auto 16px;background:#FFF7E8;border:1px solid #E5DBC9;padding:16px 20px;border-radius:10px;font:12px/1.7 ui-monospace,Menlo,monospace;color:#1F1A12;white-space:pre-wrap;">${summary.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]!))}</div><div style="max-width:720px;margin:0 auto 8px;font:600 12px 'Helvetica Neue',Arial,sans-serif;color:#6B7280;text-align:center;">— the report they received: —</div>`;
+      const internalHtml = user.html.replace(/<body([^>]*)>/, (m0, attrs) => `<body${attrs}>${detailsBlock}`);
       await resend.emails.send({
-        from: 'Averde AI Audit <mark@averde.ai>',
+        from: 'Averde Audits <audits@averde.ai>',
         to: ['mark@averde.ai'],
         replyTo: email,
-        subject: `Readiness Audit Lead: ${p.businessName || 'Anonymous'} (${p.score ?? '?'}/100)`,
+        subject: `Readiness lead: ${p.businessName || 'Anonymous'} — ${p.score ?? '?'}/100 (${p.bucket || '?'})`,
+        html: internalHtml,
         text: summary,
       });
     } catch (err) {
