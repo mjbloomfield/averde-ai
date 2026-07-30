@@ -74,6 +74,8 @@ Hard rules — every one of them matters:
 - Use the tools they already named where possible. Do not tell them to buy new software.
 - If they flagged a hesitation (privacy, cost, time, etc.), the most-relevant move must address it head-on in plain terms.
 - Plain English. No buzzwords (leverage, transform, revolutionize, seamless, game-changing, unlock, empower). No exclamation points. No "it's not X, it's Y" constructions.
+- Be specific to THIS business or don't ship it: every move's title or firstStep must name something only this business would recognize — a tool they listed, their kind of document or client, their own words from the description. If a title could appear in any small business's report, rewrite it until it can't.
+- Every "why" must cite at least one concrete answer of theirs (an hours figure, a named tool, their storage setup).
 - Each move: "title" (max 8 words, direct), "why" (1–2 sentences that reference their actual answers), "firstStep" (one concrete action doable this week), "callNote" (one sentence on what we would dig into together on the free 30-minute call).
 - Keep the entire reply under 250 words. Short beats thorough here.
 

@@ -30,6 +30,8 @@ type Payload = {
   hoursBack?: number;
   moves?: Move[];
   recsSource?: string;
+  classifierModel?: string;
+  recsModel?: string;
 };
 
 const json = (status: number, body: Record<string, unknown>) =>
@@ -182,6 +184,8 @@ export const POST: APIRoute = async ({ request }) => {
         hours_back: p.hoursBack ?? null,
         recs: p.moves ?? [],
         recs_source: p.recsSource || null,
+        classifier_model: p.classifierModel || null,
+        recs_model: p.recsModel || null,
         user_agent: request.headers.get('user-agent'),
         referer: request.headers.get('referer'),
       }).select('id').single();
@@ -255,6 +259,7 @@ export const POST: APIRoute = async ({ request }) => {
         `Hours: ${Object.entries(p.hours ?? {}).map(([k, v]) => `${k}=${v}`).join(', ') || '—'}`,
         `Top moves: ${(p.moves ?? []).map(m => m.title).join(' | ') || '—'}`,
         reportUrl ? `Report web copy: ${reportUrl}` : '',
+        `Models — classifier: ${p.classifierModel || '?'} · recommendations: ${p.recsSource === 'llm' ? (p.recsModel || 'llm') : 'canned fallback'}`,
         `Supabase: ${dbStatus} · User email: ${emailStatus}`,
       ].filter(Boolean).join('\n');
       const detailsBlock = `<div style="max-width:720px;margin:0 auto 16px;background:#FFF7E8;border:1px solid #E5DBC9;padding:16px 20px;border-radius:10px;font:12px/1.7 ui-monospace,Menlo,monospace;color:#1F1A12;white-space:pre-wrap;">${summary.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]!))}</div><div style="max-width:720px;margin:0 auto 8px;font:600 12px 'Helvetica Neue',Arial,sans-serif;color:#6B7280;text-align:center;">— the report they received: —</div>`;

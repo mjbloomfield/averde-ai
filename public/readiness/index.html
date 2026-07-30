@@ -345,7 +345,7 @@ const MOVES = {
 const state = {
   step: 1,
   name:'', description:'', teamSize:'',
-  businessType:'', bucket:'', classifiedFor:'',
+  businessType:'', bucket:'', classifiedFor:'', classifierModel:'', recsModel:'',
   hours: {},            // catId -> option value
   storage:'', platform:'', otherTools:'',
   usage:'', depth:'', teamShare:'', appetite:'', worry:'',
@@ -605,7 +605,7 @@ function fireRecommend() {
   })
     .then(r => (r.ok ? r.json() : null))
     .then(d => {
-      if (d && d.moves && d.moves.length >= 2) done(d.moves, 'llm');
+      if (d && d.moves && d.moves.length >= 2) { state.recsModel = d.model || ''; done(d.moves, 'llm'); }
       else done(cannedMoves(), 'canned');
     })
     .catch(() => done(cannedMoves(), 'canned'))
@@ -626,6 +626,7 @@ function submitLead(dims, score, moves, recsSource) {
       usage: state.usage, depth: state.depth, teamShare: state.teamShare, appetite: state.appetite, worry: state.worry,
       contactName: state.contactName, email: state.email,
       score, dims, hoursBack: hoursBack(), moves, recsSource,
+      classifierModel: state.classifierModel, recsModel: state.recsModel,
     }),
   }).then(r => { state.sendStatus = r.ok ? 'sent' : 'failed'; })
     .catch(() => { state.sendStatus = 'failed'; });
@@ -770,6 +771,7 @@ async function classifyThenAdvance(btn) {
   } catch (e) { /* fall through to keyword bucket */ }
   state.bucket = (result && result.bucket) || keywordBucket(desc);
   state.businessType = (result && result.type) || 'Small business';
+  state.classifierModel = (result && result.model) || 'keyword-fallback';
   state.classifiedFor = desc;
   state.hours = {}; // categories may have changed with the bucket
   btn.textContent = prev;
@@ -785,7 +787,7 @@ document.addEventListener('click', e => {
   else if (act === 'next') { state.step += 1; render(); window.scrollTo({ top: 0 }); }
   else if (act === 'back') { state.step = Math.max(1, state.step - 1); render(); }
   else if (act === 'restart') {
-    Object.assign(state, { step:1, name:'', description:'', teamSize:'', businessType:'', bucket:'', classifiedFor:'', hours:{}, storage:'', platform:'', otherTools:'', usage:'', depth:'', teamShare:'', appetite:'', worry:'', contactName:'', email:'', recs:null, sendStatus:'idle' });
+    Object.assign(state, { step:1, name:'', description:'', teamSize:'', businessType:'', bucket:'', classifiedFor:'', classifierModel:'', recsModel:'', hours:{}, storage:'', platform:'', otherTools:'', usage:'', depth:'', teamShare:'', appetite:'', worry:'', contactName:'', email:'', recs:null, sendStatus:'idle' });
     render(); window.scrollTo({ top: 0 });
   }
 });
