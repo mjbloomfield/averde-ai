@@ -167,6 +167,14 @@ if (window.self !== window.top) {
 ================================================================ */
 
 const TEAM_SIZES = ['Just me','2–5 people','6–15 people','16+ people'];
+// Company mode: with a team, questions ask about the company, not the owner.
+function co() { return !!state.teamSize && state.teamSize !== 'Just me'; }
+const TEAM_SHARE_OPTS = [
+  { v:'none',  label:'Nobody, really' },
+  { v:'few',   label:'A person or two' },
+  { v:'some',  label:'Some of the team' },
+  { v:'most',  label:'Most of the team' },
+];
 
 // Question buckets per CLAUDE.md "segment before you ask": the classifier
 // (/api/classify-business, NAICS-derived type list) picks the bucket, and
@@ -340,7 +348,7 @@ const state = {
   businessType:'', bucket:'', classifiedFor:'',
   hours: {},            // catId -> option value
   storage:'', platform:'', otherTools:'',
-  usage:'', depth:'', appetite:'', worry:'',
+  usage:'', depth:'', teamShare:'', appetite:'', worry:'',
   contactName:'', email:'',
   recs: null,          // null = not requested; {pending:true}; {moves, source}
   sendStatus: 'idle',
@@ -482,8 +490,8 @@ function renderHours() {
   root.innerHTML = stepWrap({
     progress: progressBar(2),
     eyebrow: 'Where the hours go',
-    title: 'How much of your week goes to each of these?',
-    dek: "Rough guesses are fine — this is where the report's math comes from.",
+    title: co() ? "How much of your company's week goes to each of these?" : 'How much of your week goes to each of these?',
+    dek: co() ? "Rough guesses are fine — add up everyone's time, not just yours." : "Rough guesses are fine — this is where the report's math comes from.",
     body: `<div class="field-grid">
       ${cats().map(c => selectField('h-' + c.id, c.label, HOUR_OPTS.filter(o => o.v !== '0'), state.hours[c.id] || '', 'None')).join('')}
     </div>`,
@@ -523,25 +531,28 @@ function renderAiToday() {
   root.innerHTML = stepWrap({
     progress: progressBar(4),
     eyebrow: 'AI today',
-    title: 'Where are you with AI right now?',
+    title: co() ? 'Where is your company with AI right now?' : 'Where are you with AI right now?',
     dek: "No wrong answers — 'haven't touched it' is the most common one.",
     body: `<div class="field-grid">
-      ${selectField('f-usage', 'Your current AI use (ChatGPT, Claude, etc.)', USAGE_OPTS, state.usage)}
-      ${selectField('f-depth', 'When you do use it, mostly for…', DEPTH_OPTS, state.depth)}
-      ${selectField('f-appetite', 'Time you could put into setup, per week', APPETITE_OPTS, state.appetite)}
+      ${selectField('f-usage', co() ? "The company's AI use (ChatGPT, Claude, etc.)" : 'Your current AI use (ChatGPT, Claude, etc.)', USAGE_OPTS, state.usage)}
+      ${selectField('f-depth', co() ? 'When the team uses it, mostly for…' : 'When you do use it, mostly for…', DEPTH_OPTS, state.depth)}
+      ${co() ? selectField('f-share', 'How much of the team uses AI regularly?', TEAM_SHARE_OPTS, state.teamShare) : ''}
+      ${selectField('f-appetite', co() ? 'Time you (or someone on the team) could put into setup, weekly' : 'Time you could put into setup, per week', APPETITE_OPTS, state.appetite)}
       ${selectField('f-worry', 'Biggest hesitation (optional)', WORRY_OPTS.map(w => ({ v:w, label:w })), state.worry, 'Pick one if it fits…')}
     </div>`,
     back: true,
-    nextDisabled: !(state.usage && state.appetite && (state.usage === 'never' || state.depth)),
+    nextDisabled: !(state.usage && state.appetite && (state.usage === 'never' || state.depth) && (!co() || state.teamShare)),
   });
   const sync = () => {
     state.usage = document.getElementById('f-usage').value;
     state.depth = document.getElementById('f-depth').value;
+    const share = document.getElementById('f-share');
+    if (share) state.teamShare = share.value;
     state.appetite = document.getElementById('f-appetite').value;
     state.worry = document.getElementById('f-worry').value;
-    root.querySelector('[data-act="next"]').disabled = !(state.usage && state.appetite && (state.usage === 'never' || state.depth));
+    root.querySelector('[data-act="next"]').disabled = !(state.usage && state.appetite && (state.usage === 'never' || state.depth) && (!co() || state.teamShare));
   };
-  ['f-usage','f-depth','f-appetite','f-worry'].forEach(id => document.getElementById(id).addEventListener('input', sync));
+  ['f-usage','f-depth','f-share','f-appetite','f-worry'].forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener('input', sync); });
 }
 
 function renderContact() {
@@ -588,7 +599,7 @@ function fireRecommend() {
       businessType: state.businessType, bucket: state.bucket, teamSize: state.teamSize,
       hours: state.hours, hourLabels: Object.fromEntries(cats().map(c => [c.id, c.label])),
       storage: state.storage, platform: state.platform, otherTools: state.otherTools,
-      usage: state.usage, depth: state.depth, appetite: state.appetite, worry: state.worry,
+      usage: state.usage, depth: state.depth, teamShare: state.teamShare, appetite: state.appetite, worry: state.worry,
     }),
     signal: controller.signal,
   })
@@ -612,7 +623,7 @@ function submitLead(dims, score, moves, recsSource) {
       businessDescription: state.description.trim(), businessType: state.businessType, bucket: state.bucket,
       industry: state.businessType,
       hours: state.hours, storage: state.storage, platform: state.platform, otherTools: state.otherTools,
-      usage: state.usage, depth: state.depth, appetite: state.appetite, worry: state.worry,
+      usage: state.usage, depth: state.depth, teamShare: state.teamShare, appetite: state.appetite, worry: state.worry,
       contactName: state.contactName, email: state.email,
       score, dims, hoursBack: hoursBack(), moves, recsSource,
     }),
@@ -774,7 +785,7 @@ document.addEventListener('click', e => {
   else if (act === 'next') { state.step += 1; render(); window.scrollTo({ top: 0 }); }
   else if (act === 'back') { state.step = Math.max(1, state.step - 1); render(); }
   else if (act === 'restart') {
-    Object.assign(state, { step:1, name:'', description:'', teamSize:'', businessType:'', bucket:'', classifiedFor:'', hours:{}, storage:'', platform:'', otherTools:'', usage:'', depth:'', appetite:'', worry:'', contactName:'', email:'', recs:null, sendStatus:'idle' });
+    Object.assign(state, { step:1, name:'', description:'', teamSize:'', businessType:'', bucket:'', classifiedFor:'', hours:{}, storage:'', platform:'', otherTools:'', usage:'', depth:'', teamShare:'', appetite:'', worry:'', contactName:'', email:'', recs:null, sendStatus:'idle' });
     render(); window.scrollTo({ top: 0 });
   }
 });

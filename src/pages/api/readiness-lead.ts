@@ -20,6 +20,7 @@ type Payload = {
   otherTools?: string;
   usage?: string;
   depth?: string;
+  teamShare?: string;
   appetite?: string;
   worry?: string;
   contactName?: string;
@@ -173,6 +174,7 @@ export const POST: APIRoute = async ({ request }) => {
         systems: { storage: p.storage || null, platform: p.platform || null, otherTools: p.otherTools || null },
         ai_usage: p.usage || null,
         ai_depth: p.depth || null,
+        ai_team_share: p.teamShare || null,
         appetite: p.appetite || null,
         worry: p.worry || null,
         score: p.score ?? null,
@@ -248,7 +250,7 @@ export const POST: APIRoute = async ({ request }) => {
         `Contact: ${p.contactName || '?'} <${email}>`,
         `Score: ${p.score ?? '?'}/100 · Hours back ≈ ${p.hoursBack ?? '?'}h/wk`,
         `Dimensions: ${(p.dims ?? []).map(d => `${d.name} ${d.pts}/${d.max}`).join(' · ') || '—'}`,
-        `AI use: ${p.usage || '?'} (${p.depth || 'depth n/a'}) · Appetite: ${p.appetite || '?'} · Worry: ${p.worry || '—'}`,
+        `AI use: ${p.usage || '?'} (${p.depth || 'depth n/a'})${p.teamShare ? ` · Team share: ${p.teamShare}` : ''} · Appetite: ${p.appetite || '?'} · Worry: ${p.worry || '—'}`,
         `Systems: ${p.storage || '?'} / ${p.platform || '?'}${p.otherTools ? ' / ' + p.otherTools : ''}`,
         `Hours: ${Object.entries(p.hours ?? {}).map(([k, v]) => `${k}=${v}`).join(', ') || '—'}`,
         `Top moves: ${(p.moves ?? []).map(m => m.title).join(' | ') || '—'}`,

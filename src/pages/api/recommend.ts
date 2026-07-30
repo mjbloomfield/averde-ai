@@ -25,6 +25,7 @@ type Payload = {
   otherTools?: string;
   usage?: string;
   depth?: string;
+  teamShare?: string;
   appetite?: string;
   worry?: string;
 };
@@ -69,6 +70,7 @@ Hard rules — every one of them matters:
 - Under-promise, always. Say "can", "often", "worth testing" — never "will", never promised savings, percentages, or outcomes.
 - Every move must be relevant to THIS business type. Never mention work this kind of business doesn't do.
 - Size each move to the time they said they can invest. If they said under 2 hours a week, no move may need more than that to start.
+- If this is a team (not "Just me"), write for the company — "your team", "your front desk" — and if few of the team use AI, at least one move should be about getting one more person productive with it, not just the owner.
 - Use the tools they already named where possible. Do not tell them to buy new software.
 - If they flagged a hesitation (privacy, cost, time, etc.), the most-relevant move must address it head-on in plain terms.
 - Plain English. No buzzwords (leverage, transform, revolutionize, seamless, game-changing, unlock, empower). No exclamation points. No "it's not X, it's Y" constructions.
@@ -84,7 +86,7 @@ Where their week goes:
 ${hourLines}
 
 Systems: business info lives in ${p.storage || 'unknown'}; email/calendar is ${p.platform || 'unknown'}${p.otherTools ? `; other tools: ${clean(p.otherTools, 120)}` : ''}
-AI today: uses AI ${p.usage || 'unknown'}${p.depth ? `, mostly for ${p.depth}` : ''}
+AI today: uses AI ${p.usage || 'unknown'}${p.depth ? `, mostly for ${p.depth}` : ''}${p.teamShare ? `; share of team using AI regularly: ${p.teamShare}` : ''}
 Time they can invest in setup: ${p.appetite || 'unknown'} hours/week
 Biggest hesitation: ${p.worry || 'none stated'}`;
 
