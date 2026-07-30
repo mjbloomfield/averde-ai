@@ -33,11 +33,14 @@ export const POST: APIRoute = async ({ request }) => {
     openrouterKey && { name: 'openrouter/deepseek-v4-flash', url: 'https://openrouter.ai/api/v1/chat/completions', key: openrouterKey, model: 'deepseek/deepseek-v4-flash', extra: {}, headers: { 'HTTP-Referer': 'https://averde.ai', 'X-Title': 'Averde AI Readiness Audit' } },
   ].filter(Boolean) as Array<{ name: string; url: string; key: string; model: string; extra: Record<string, unknown>; headers: Record<string, string> }>;
 
-  {
-    for (const provider of providers) {
+  // Race all providers; first valid on-list label wins. A serial chain
+  // could take 3x8s while the widget aborts at ~7s — the race answers in
+  // whatever the fastest healthy provider takes.
+  if (providers.length) {
+    const attempts = providers.map(async provider => {
+      const controller = new AbortController();
+      const t = setTimeout(() => controller.abort(), 6_500);
       try {
-        const controller = new AbortController();
-        const t = setTimeout(() => controller.abort(), 8_000);
         const res = await fetch(provider.url, {
           method: 'POST',
           headers: {
@@ -64,19 +67,22 @@ export const POST: APIRoute = async ({ request }) => {
           }),
           signal: controller.signal,
         });
+        if (!res.ok) throw new Error(`${provider.name} ${res.status}`);
+        const data = await res.json();
+        const label = String(data?.choices?.[0]?.message?.content ?? '').trim();
+        const bucket = bucketFor(label);
+        if (!bucket) throw new Error(`${provider.name} off-list: ${label.slice(0, 60)}`);
+        return { label, bucket, provider: provider.name };
+      } finally {
         clearTimeout(t);
-        if (res.ok) {
-          const data = await res.json();
-          const label = String(data?.choices?.[0]?.message?.content ?? '').trim();
-          const bucket = bucketFor(label);
-          if (bucket) return json(200, { ok: true, type: label, bucket, source: 'llm', model: provider.name });
-          console.error('classify-business: off-list label from', provider.name, label.slice(0, 60));
-        } else {
-          console.error('classify-business:', provider.name, res.status);
-        }
-      } catch (err) {
-        console.error('classify-business threw:', err);
       }
+    });
+    try {
+      const win = await Promise.any(attempts);
+      return json(200, { ok: true, type: win.label, bucket: win.bucket, source: 'llm', model: win.provider });
+    } catch (err) {
+      if (err instanceof AggregateError) err.errors.forEach(e => console.error('classify-business:', String(e)));
+      else console.error('classify-business race threw:', err);
     }
   }
 
