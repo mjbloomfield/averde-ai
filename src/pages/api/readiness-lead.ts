@@ -5,7 +5,7 @@ import { Resend } from 'resend';
 export const prerender = false;
 
 type Dim = { name: string; pts: number; max: number; note: string };
-type Move = { id: string; title: string };
+type Move = { id?: string; title: string; why?: string; firstStep?: string; callNote?: string };
 
 type Payload = {
   businessName?: string;
@@ -28,6 +28,7 @@ type Payload = {
   dims?: Dim[];
   hoursBack?: number;
   moves?: Move[];
+  recsSource?: string;
 };
 
 const json = (status: number, body: Record<string, unknown>) =>
@@ -63,7 +64,7 @@ function renderUserEmail(p: Payload, reportUrl: string | null) {
     ...dims.map(d => `  ${d.name}: ${d.pts}/${d.max}`),
     '',
     moves.length ? 'Your top moves:' : '',
-    ...moves.map((m, i) => `  ${i + 1}. ${m.title}`),
+    ...moves.flatMap((m, i) => [`  ${i + 1}. ${m.title}`, m.firstStep ? `     First step: ${m.firstStep}` : ''].filter(Boolean)),
     '',
     `This report is the prep for your free 30-minute call: ${bookUrl}`,
     '',
@@ -111,7 +112,11 @@ function renderUserEmail(p: Payload, reportUrl: string | null) {
         </td></tr>
         ${moves.length ? `<tr><td style="padding:16px 28px 4px;">
           <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#6B7280;margin-bottom:8px;">Your top moves, in order</div>
-          ${moves.map((m, i) => `<div style="font:400 14px/1.6 'Helvetica Neue',Arial,sans-serif;color:#1F2937;">${i + 1}. ${esc(m.title)}</div>`).join('')}
+          ${moves.map((m, i) => `<div style="margin-bottom:12px;">
+            <div style="font:600 14px/1.5 'Helvetica Neue',Arial,sans-serif;color:#1F2937;">${i + 1}. ${esc(m.title)}</div>
+            ${m.why ? `<div style="font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;color:#6B7280;">${esc(m.why)}</div>` : ''}
+            ${m.firstStep ? `<div style="font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;color:#374151;"><strong>First step:</strong> ${esc(m.firstStep)}</div>` : ''}
+          </div>`).join('')}
         </td></tr>` : ''}
         <tr><td style="padding:18px 28px 26px;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F4F1EA;border-radius:10px;">
@@ -173,6 +178,8 @@ export const POST: APIRoute = async ({ request }) => {
         score: p.score ?? null,
         dims: p.dims ?? [],
         hours_back: p.hoursBack ?? null,
+        recs: p.moves ?? [],
+        recs_source: p.recsSource || null,
         user_agent: request.headers.get('user-agent'),
         referer: request.headers.get('referer'),
       }).select('id').single();

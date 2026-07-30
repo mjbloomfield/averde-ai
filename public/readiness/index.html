@@ -342,6 +342,7 @@ const state = {
   storage:'', platform:'', otherTools:'',
   usage:'', depth:'', appetite:'', worry:'',
   contactName:'', email:'',
+  recs: null,          // null = not requested; {pending:true}; {moves, source}
   sendStatus: 'idle',
 };
 const TOTAL_STEPS = 5;
@@ -568,7 +569,38 @@ function renderContact() {
 }
 
 // ---------------- report ----------------
-function submitLead(dims, score, moves) {
+function cannedMoves() {
+  return topMoves().map(m => ({ title: m.title, why: m.why(m.hoursLabel), firstStep: m.diy, callNote: m.call }));
+}
+
+function fireRecommend() {
+  if (state.recs) return;
+  state.recs = { pending: true };
+  const done = (moves, source) => { state.recs = { moves, source }; if (state.step === TOTAL_STEPS + 1) render(); };
+  const controller = new AbortController();
+  const t = setTimeout(() => controller.abort(), 28000);
+  fetch('/api/recommend', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      businessName: state.name, businessDescription: state.description.trim(),
+      businessType: state.businessType, bucket: state.bucket, teamSize: state.teamSize,
+      hours: state.hours, hourLabels: Object.fromEntries(cats().map(c => [c.id, c.label])),
+      storage: state.storage, platform: state.platform, otherTools: state.otherTools,
+      usage: state.usage, depth: state.depth, appetite: state.appetite, worry: state.worry,
+    }),
+    signal: controller.signal,
+  })
+    .then(r => (r.ok ? r.json() : null))
+    .then(d => {
+      if (d && d.moves && d.moves.length >= 2) done(d.moves, 'llm');
+      else done(cannedMoves(), 'canned');
+    })
+    .catch(() => done(cannedMoves(), 'canned'))
+    .finally(() => clearTimeout(t));
+}
+
+function submitLead(dims, score, moves, recsSource) {
   if (state.sendStatus !== 'idle') return;
   state.sendStatus = 'sending';
   fetch('/api/readiness-lead', {
@@ -581,7 +613,7 @@ function submitLead(dims, score, moves) {
       hours: state.hours, storage: state.storage, platform: state.platform, otherTools: state.otherTools,
       usage: state.usage, depth: state.depth, appetite: state.appetite, worry: state.worry,
       contactName: state.contactName, email: state.email,
-      score, dims, hoursBack: hoursBack(), moves,
+      score, dims, hoursBack: hoursBack(), moves, recsSource,
     }),
   }).then(r => { state.sendStatus = r.ok ? 'sent' : 'failed'; })
     .catch(() => { state.sendStatus = 'failed'; });
@@ -593,7 +625,9 @@ function renderReport() {
   const g = grade(score);
   const color = gradeColor(g);
   const back = hoursBack();
-  const moves = topMoves();
+  fireRecommend();
+  const recsReady = state.recs && !state.recs.pending;
+  const moves = recsReady ? state.recs.moves : [];
   const r = 56, circ = 2 * Math.PI * r;
   const offset = circ - (score / 100) * circ;
 
@@ -642,16 +676,17 @@ function renderReport() {
         </div>`).join('')}
     </div>
 
-    ${moves.length ? `<div class="section-block">
+    ${!recsReady ? `<div class="section-block"><div class="pending"><div class="spinner"></div>Writing recommendations for your business — usually 10–20 seconds…</div></div>`
+    : moves.length ? `<div class="section-block">
       <h3>Your top ${moves.length} moves, in order</h3>
-      <p class="section-dek">Ranked by where your hours actually go.</p>
+      <p class="section-dek">Written for ${esc(state.businessType || 'your business')}, from your answers. We pressure-test these on the call.</p>
       ${moves.map((m, i) => `
         <div style="padding:16px 0;border-top:1px solid var(--bone)">
           <p class="eyebrow" style="margin-bottom:4px">Priority ${i + 1}</p>
           <h4 style="font-size:18px;margin-bottom:6px">${esc(m.title)}</h4>
-          <p style="font-size:14px;color:var(--muted);margin-bottom:8px">${esc(m.why(m.hoursLabel))}</p>
-          <p style="font-size:14px;margin-bottom:6px"><strong>Do it yourself:</strong> ${esc(m.diy)}</p>
-          <p style="font-size:14px;color:var(--ink-700)">${esc(m.call)}</p>
+          <p style="font-size:14px;color:var(--muted);margin-bottom:8px">${esc(m.why)}</p>
+          <p style="font-size:14px;margin-bottom:6px"><strong>First step:</strong> ${esc(m.firstStep)}</p>
+          ${m.callNote ? `<p style="font-size:14px;color:var(--ink-700)">${esc(m.callNote)}</p>` : ''}
         </div>`).join('')}
     </div>` : ''}
 
@@ -669,7 +704,7 @@ function renderReport() {
     <div class="restart"><button class="ghost-btn" data-act="restart">← Start over</button></div>
   </div>`;
 
-  if (state.sendStatus === 'idle') submitLead(dims, score, moves.map(m => ({ id: m.id, title: m.title })));
+  if (recsReady && state.sendStatus === 'idle') submitLead(dims, score, moves, state.recs.source);
 }
 
 // ---------------- router ----------------
@@ -728,7 +763,7 @@ document.addEventListener('click', e => {
   else if (act === 'next') { state.step += 1; render(); window.scrollTo({ top: 0 }); }
   else if (act === 'back') { state.step = Math.max(1, state.step - 1); render(); }
   else if (act === 'restart') {
-    Object.assign(state, { step:1, name:'', description:'', teamSize:'', businessType:'', bucket:'', classifiedFor:'', hours:{}, storage:'', platform:'', otherTools:'', usage:'', depth:'', appetite:'', worry:'', contactName:'', email:'', sendStatus:'idle' });
+    Object.assign(state, { step:1, name:'', description:'', teamSize:'', businessType:'', bucket:'', classifiedFor:'', hours:{}, storage:'', platform:'', otherTools:'', usage:'', depth:'', appetite:'', worry:'', contactName:'', email:'', recs:null, sendStatus:'idle' });
     render(); window.scrollTo({ top: 0 });
   }
 });
