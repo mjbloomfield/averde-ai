@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { raceChat } from '../../lib/llm';
+import { seqChat } from '../../lib/llm';
 
 export const prerender = false;
 
@@ -104,12 +104,21 @@ AI today: uses AI ${p.usage || 'unknown'}${p.depth ? `, mostly for ${p.depth}` :
 Time they can invest in setup: ${p.appetite || 'unknown'} hours/week
 Biggest hesitation: ${p.worry || 'none stated'}`;
 
-  const win = await raceChat(
+  // Quality-first, per Mark's model comparison (2026-07-30): v4-pro via
+  // OpenRouter reasons internally and grounds tool use correctly; the fast
+  // tiers are fallbacks. NVIDIA's preview pools are excluded here — too
+  // flaky for a 30-second generation (they stay in the classification race).
+  const win = await seqChat(
+    [
+      { name: 'openrouter/deepseek-v4-pro', timeoutMs: 50_000 },
+      { name: 'openrouter/deepseek-v4-flash', timeoutMs: 15_000 },
+      { name: 'openrouter/deepseek-v3.1', timeoutMs: 15_000 },
+    ],
     [
       { role: 'system', content: system },
       { role: 'user', content: user },
     ],
-    { maxTokens: 1100, temperature: 0.3, timeoutMs: 25_000 },
+    { maxTokens: 3000, temperature: 0.3 },
     parseMoves,
   );
 

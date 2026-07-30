@@ -590,7 +590,7 @@ function fireRecommend() {
   state.recs = { pending: true };
   const done = (moves, source) => { state.recs = { moves, source }; if (state.step === TOTAL_STEPS + 1) render(); };
   const controller = new AbortController();
-  const t = setTimeout(() => controller.abort(), 28000);
+  const t = setTimeout(() => controller.abort(), 85000);
   fetch('/api/recommend', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -699,7 +699,7 @@ function renderReport() {
         </div>`).join('')}
     </div>
 
-    ${!recsReady ? `<div class="section-block"><div class="pending"><div class="spinner"></div>Writing recommendations for your business — usually 10–20 seconds…</div></div>`
+    ${!recsReady ? `<div class="section-block"><div class="pending"><div class="spinner"></div>Writing recommendations for your business specifically — this can take up to a minute, and it's worth it…</div></div>`
     : moves.length ? `<div class="section-block">
       <h3>Your top ${moves.length} moves, in order</h3>
       <p class="section-dek">Written for ${esc(state.businessType || 'your business')}, from your answers. We pressure-test these on the call.</p>

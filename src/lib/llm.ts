@@ -16,6 +16,7 @@ export function providers(): Provider[] {
   return [
     nvidiaKey && { name: 'nvidia/deepseek-v4-pro', url: 'https://integrate.api.nvidia.com/v1/chat/completions', key: nvidiaKey, model: 'deepseek-ai/deepseek-v4-pro', extra: { chat_template_kwargs: { thinking: false } }, headers: {} },
     nvidiaKey && { name: 'nvidia/deepseek-v4-flash', url: 'https://integrate.api.nvidia.com/v1/chat/completions', key: nvidiaKey, model: 'deepseek-ai/deepseek-v4-flash', extra: { chat_template_kwargs: { thinking: false } }, headers: {} },
+    openrouterKey && { name: 'openrouter/deepseek-v4-pro', url: 'https://openrouter.ai/api/v1/chat/completions', key: openrouterKey, model: 'deepseek/deepseek-v4-pro', extra: {}, headers: { 'HTTP-Referer': 'https://averde.ai', 'X-Title': 'Averde AI Readiness Audit' } },
     openrouterKey && { name: 'openrouter/deepseek-v4-flash', url: 'https://openrouter.ai/api/v1/chat/completions', key: openrouterKey, model: 'deepseek/deepseek-v4-flash', extra: {}, headers: { 'HTTP-Referer': 'https://averde.ai', 'X-Title': 'Averde AI Readiness Audit' } },
     openrouterKey && { name: 'openrouter/deepseek-v3.1', url: 'https://openrouter.ai/api/v1/chat/completions', key: openrouterKey, model: 'deepseek/deepseek-chat-v3.1', extra: {}, headers: { 'HTTP-Referer': 'https://averde.ai', 'X-Title': 'Averde AI Readiness Audit' } },
   ].filter(Boolean) as Provider[];
@@ -69,4 +70,45 @@ export async function raceChat<T>(
     else console.error('raceChat threw:', err);
     return null;
   }
+}
+
+// Sequential, quality-first variant: try providers in the given order, each
+// with its own timeout, and return the first valid answer. Used where output
+// quality beats latency (report recommendations).
+export async function seqChat<T>(
+  order: Array<{ name: string; timeoutMs: number }>,
+  messages: ChatMessage[],
+  opts: { maxTokens?: number; temperature?: number },
+  validate: (text: string) => T,
+): Promise<{ result: T; provider: string } | null> {
+  const byName = new Map(providers().map(p => [p.name, p]));
+  for (const step of order) {
+    const provider = byName.get(step.name);
+    if (!provider) continue;
+    const controller = new AbortController();
+    const t = setTimeout(() => controller.abort(), step.timeoutMs);
+    try {
+      const res = await fetch(provider.url, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${provider.key}`, 'Content-Type': 'application/json', ...provider.headers },
+        body: JSON.stringify({
+          model: provider.model,
+          max_tokens: opts.maxTokens ?? 60,
+          temperature: opts.temperature ?? 0,
+          ...provider.extra,
+          messages,
+        }),
+        signal: controller.signal,
+      });
+      if (!res.ok) throw new Error(`${provider.name} ${res.status}`);
+      const data = await res.json();
+      const text = String(data?.choices?.[0]?.message?.content ?? '').trim();
+      return { result: validate(text), provider: provider.name };
+    } catch (err) {
+      console.error('seqChat:', provider.name, String(err).slice(0, 120));
+    } finally {
+      clearTimeout(t);
+    }
+  }
+  return null;
 }
