@@ -22,26 +22,34 @@ export const POST: APIRoute = async ({ request }) => {
   const description = (body.description || '').trim().slice(0, 300);
   if (description.length < 3) return json(400, { ok: false, error: 'missing_description' });
 
-  const apiKey = import.meta.env.NVIDIA_API_KEY;
-  if (apiKey) {
-    // NVIDIA's per-model pools come and go (bodyless 404s when a pool is
-    // down), so try pro first and fall through to flash before giving up.
-    const MODELS = ['deepseek-ai/deepseek-v4-pro', 'deepseek-ai/deepseek-v4-flash'];
-    for (const model of MODELS) {
+  // Provider chain: NVIDIA pro -> NVIDIA flash -> OpenRouter -> keyword
+  // rules. NVIDIA's per-model pools come and go (bodyless 404s when a pool
+  // is down); OpenRouter is the paid-but-stable backstop.
+  const nvidiaKey = import.meta.env.NVIDIA_API_KEY;
+  const openrouterKey = import.meta.env.OPENROUTER_API_KEY;
+  const providers = [
+    nvidiaKey && { name: 'nvidia/deepseek-v4-pro', url: 'https://integrate.api.nvidia.com/v1/chat/completions', key: nvidiaKey, model: 'deepseek-ai/deepseek-v4-pro', extra: { chat_template_kwargs: { thinking: false } }, headers: {} },
+    nvidiaKey && { name: 'nvidia/deepseek-v4-flash', url: 'https://integrate.api.nvidia.com/v1/chat/completions', key: nvidiaKey, model: 'deepseek-ai/deepseek-v4-flash', extra: { chat_template_kwargs: { thinking: false } }, headers: {} },
+    openrouterKey && { name: 'openrouter/deepseek-v4-flash', url: 'https://openrouter.ai/api/v1/chat/completions', key: openrouterKey, model: 'deepseek/deepseek-v4-flash', extra: {}, headers: { 'HTTP-Referer': 'https://averde.ai', 'X-Title': 'Averde AI Readiness Audit' } },
+  ].filter(Boolean) as Array<{ name: string; url: string; key: string; model: string; extra: Record<string, unknown>; headers: Record<string, string> }>;
+
+  {
+    for (const provider of providers) {
       try {
         const controller = new AbortController();
         const t = setTimeout(() => controller.abort(), 8_000);
-        const res = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
+        const res = await fetch(provider.url, {
           method: 'POST',
           headers: {
-            Authorization: `Bearer ${apiKey}`,
+            Authorization: `Bearer ${provider.key}`,
             'Content-Type': 'application/json',
+            ...provider.headers,
           },
           body: JSON.stringify({
-            model,
+            model: provider.model,
             max_tokens: 60,
             temperature: 0,
-            chat_template_kwargs: { thinking: false },
+            ...provider.extra,
             messages: [
               {
                 role: 'system',
@@ -61,10 +69,10 @@ export const POST: APIRoute = async ({ request }) => {
           const data = await res.json();
           const label = String(data?.choices?.[0]?.message?.content ?? '').trim();
           const bucket = bucketFor(label);
-          if (bucket) return json(200, { ok: true, type: label, bucket, source: 'llm', model });
-          console.error('classify-business: off-list label from', model, label.slice(0, 60));
+          if (bucket) return json(200, { ok: true, type: label, bucket, source: 'llm', model: provider.name });
+          console.error('classify-business: off-list label from', provider.name, label.slice(0, 60));
         } else {
-          console.error('classify-business:', model, res.status);
+          console.error('classify-business:', provider.name, res.status);
         }
       } catch (err) {
         console.error('classify-business threw:', err);
