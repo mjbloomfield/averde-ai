@@ -83,6 +83,7 @@ Hard rules — every one of them matters:
 - Size each move to the time they said they can invest. If they said under 2 hours a week, no move may need more than that to start.
 - If this is a team (not "Just me"), write for the company — "your team", "your front desk" — and if few of the team use AI, at least one move should be about getting one more person productive with it, not just the owner.
 - Use the tools they already named where possible. Do not tell them to buy new software.
+- Only mention a named tool if you are confident what it actually does and your suggestion fits that role. Getting a tool's role wrong is worse than not mentioning it — when unsure, refer to their documents or clients instead of the tool.
 - If they flagged a hesitation (privacy, cost, time, etc.), the most-relevant move must address it head-on in plain terms.
 - Plain English. No buzzwords (leverage, transform, revolutionize, seamless, game-changing, unlock, empower). No exclamation points. No "it's not X, it's Y" constructions.
 - Be specific to THIS business or don't ship it: every move's title or firstStep must name something only this business would recognize — a tool they listed, their kind of document or client, their own words from the description. If a title could appear in any small business's report, rewrite it until it can't.
