@@ -23,8 +23,9 @@ type Payload = {
   storage?: string;
   platform?: string;
   otherTools?: string;
-  usage?: string;
-  depth?: string;
+  stage?: number;
+  stageLabel?: string;
+  nextStage?: { n?: number; label?: string; what?: string } | null;
   teamShare?: string;
   appetite?: string;
   worry?: string;
@@ -78,6 +79,7 @@ export const POST: APIRoute = async ({ request }) => {
   const system = `You write the "top 3 moves" section of an AI-readiness report that a small business owner reads right after a self-assessment. You write as Mark Bloomfield, a plain-English AI consultant.
 
 Hard rules — every one of them matters:
+- The FIRST move must be a concrete step toward their next stage on the adoption path (given below), translated into this business's world. The other two moves target where their hours go.
 - Under-promise, always. Say "can", "often", "worth testing" — never "will", never promised savings, percentages, or outcomes.
 - Every move must be relevant to THIS business type. Never mention work this kind of business doesn't do.
 - Size each move to the time they said they can invest. If they said under 2 hours a week, no move may need more than that to start.
@@ -100,7 +102,7 @@ Where their week goes:
 ${hourLines}
 
 Systems: business info lives in ${p.storage || 'unknown'}; email/calendar is ${p.platform || 'unknown'}${p.otherTools ? `; other tools: ${clean(p.otherTools, 120)}` : ''}
-AI today: uses AI ${p.usage || 'unknown'}${p.depth ? `, mostly for ${p.depth}` : ''}${p.teamShare ? `; share of team using AI regularly: ${p.teamShare}` : ''}
+AI adoption stage: ${p.stage ?? '?'} of 5 (${p.stageLabel || 'unknown'})${p.nextStage ? `; their next step on the path is Stage ${p.nextStage.n} — ${p.nextStage.label}: ${p.nextStage.what}` : ' — they are at the top of the path'}${p.teamShare ? `; share of team using AI regularly: ${p.teamShare}` : ''}
 Time they can invest in setup: ${p.appetite || 'unknown'} hours/week
 Biggest hesitation: ${p.worry || 'none stated'}`;
 

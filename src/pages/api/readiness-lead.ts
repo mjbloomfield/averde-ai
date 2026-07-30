@@ -4,7 +4,7 @@ import { Resend } from 'resend';
 
 export const prerender = false;
 
-type Dim = { name: string; pts: number; max: number; note: string };
+type Dim = { name: string; pts?: number; max?: number; note?: string };
 type Move = { id?: string; title: string; why?: string; firstStep?: string; callNote?: string };
 
 type Payload = {
@@ -18,8 +18,9 @@ type Payload = {
   storage?: string;
   platform?: string;
   otherTools?: string;
-  usage?: string;
-  depth?: string;
+  stage?: number;
+  stageLabel?: string;
+  nextStage?: { n?: number; label?: string; what?: string } | null;
   teamShare?: string;
   appetite?: string;
   worry?: string;
@@ -47,11 +48,11 @@ const gradeBg = (g: string) =>
 function renderUserEmail(p: Payload, reportUrl: string | null) {
   const first = (p.contactName || '').trim().split(/\s+/)[0] || '';
   const business = p.businessName || 'your business';
-  const score = p.score ?? 0;
-  const g = gradeOf(score);
+  const stage = p.stage ?? 0;
+  const stageLabel = p.stageLabel || '';
   const dims = p.dims ?? [];
   const moves = p.moves ?? [];
-  const subject = `Your AI Readiness Report — ${business}`;
+  const subject = `Your AI Assessment — ${business}`;
   const bookUrl = 'https://averde.ai/ai-consulting#book';
 
   const text = [
@@ -60,11 +61,11 @@ function renderUserEmail(p: Payload, reportUrl: string | null) {
     `Here's your AI Readiness Report for ${business}.`,
     reportUrl ? `View it in your browser: ${reportUrl}` : '',
     '',
-    `Score: ${score}/100 (Grade ${g}) — capability only; the time-savings opportunity is reported separately.`,
+    `Your stage: ${stage} of 5 — ${stageLabel}. There's no pass or fail; the point is the next step.`,
+    p.nextStage ? `Your next step — Stage ${p.nextStage.n}, ${p.nextStage.label}: ${p.nextStage.what}` : '',
     p.hoursBack ? `Rough math from your numbers: AI could hand back ~${p.hoursBack} hours a week.` : '',
     '',
-    'Dimensions:',
-    ...dims.map(d => `  ${d.name}: ${d.pts}/${d.max}`),
+    ...dims.map(d => `  ${d.name}: ${d.note ?? ''}`),
     '',
     moves.length ? 'Your top moves:' : '',
     ...moves.flatMap((m, i) => [`  ${i + 1}. ${m.title}`, m.firstStep ? `     First step: ${m.firstStep}` : ''].filter(Boolean)),
@@ -85,33 +86,29 @@ function renderUserEmail(p: Payload, reportUrl: string | null) {
           Reading on a small screen? <a href="${reportUrl}" style="color:#9C6A33;font-weight:600;">View the full report in your browser →</a>
         </td></tr>` : ''}
         <tr><td style="padding:26px 28px 18px;background:#2A1B11;color:#F4ECDB;">
-          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#C99356;margin-bottom:8px;">Your AI Readiness Report</div>
+          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#C99356;margin-bottom:8px;">Your AI Assessment</div>
           <div style="font:600 22px/1.25 'Helvetica Neue',Arial,sans-serif;">${esc(business)}</div>
           <div style="font:400 14px/1.4 'Helvetica Neue',Arial,sans-serif;color:#D1D5DB;margin-top:4px;">${esc(p.industry || '')}${p.teamSize ? ' · ' + esc(p.teamSize) : ''}</div>
         </td></tr>
         <tr><td style="padding:22px 28px 6px;">
-          Hi${first ? ' ' + esc(first) : ''} — here's the report you just ran. It scores your answers (no scan, no made-up numbers), and it's the prep material for your free 30-minute call.
+          Hi${first ? ' ' + esc(first) : ''} — here's your AI Assessment. There's no pass or fail: five stages, everyone's on one of them, and this report is about your next step. It's also the prep material for your free 30-minute call.
         </td></tr>
         <tr><td style="padding:14px 28px 4px;">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${gradeBg(g)};border-radius:10px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#2A1B11;border-radius:10px;">
             <tr>
-              <td style="padding:16px 22px;color:#fff;">
-                <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;opacity:.85;">AI Readiness Score</div>
-                <div style="font:700 30px/1.1 'Helvetica Neue',Arial,sans-serif;margin-top:6px;">Grade ${esc(g)}</div>
+              <td style="padding:16px 22px;color:#F4ECDB;">
+                <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#C99356;">Your stage on the AI path</div>
+                <div style="font:700 26px/1.2 'Helvetica Neue',Arial,sans-serif;margin-top:6px;">${esc(stageLabel)}</div>
               </td>
-              <td style="padding:16px 22px;color:#fff;text-align:right;font:700 34px/1 'Helvetica Neue',Arial,sans-serif;">${esc(score)}<span style="font-weight:400;font-size:17px;opacity:.7;">/100</span></td>
+              <td style="padding:16px 22px;color:#F4ECDB;text-align:right;font:700 34px/1 'Helvetica Neue',Arial,sans-serif;">${esc(stage)}<span style="font-weight:400;font-size:17px;opacity:.7;">/5</span></td>
             </tr>
           </table>
+          ${p.nextStage ? `<div style="font:400 13px/1.6 'Helvetica Neue',Arial,sans-serif;color:#374151;margin-top:10px;background:#F4F1EA;border-radius:8px;padding:10px 14px;"><strong>Your next step — Stage ${esc(p.nextStage.n)}, ${esc(p.nextStage.label)}:</strong> ${esc(p.nextStage.what)}</div>` : ''}
           ${p.hoursBack ? `<div style="font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;color:#374151;margin-top:10px;"><strong>Rough math from your numbers:</strong> AI could realistically hand back ≈ ${esc(p.hoursBack)} hours a week.</div>` : ''}
         </td></tr>
         <tr><td style="padding:16px 28px 4px;">
-          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#6B7280;margin-bottom:8px;">The dimensions</div>
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;">
-            ${dims.map(d => `<tr>
-              <td style="padding:6px 12px 6px 0;color:#1F2937;">${esc(d.name)}</td>
-              <td style="padding:6px 0;text-align:right;font-weight:600;color:#6B7280;white-space:nowrap;">${esc(d.pts)}/${esc(d.max)}</td>
-            </tr>`).join('')}
-          </table>
+          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#6B7280;margin-bottom:8px;">What supports the climb</div>
+          ${dims.map(d => `<div style="font:400 13px/1.6 'Helvetica Neue',Arial,sans-serif;color:#374151;margin-bottom:8px;"><strong>${esc(d.name)}:</strong> ${esc(d.note ?? '')}</div>`).join('')}
         </td></tr>
         ${moves.length ? `<tr><td style="padding:16px 28px 4px;">
           <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#6B7280;margin-bottom:8px;">Your top moves, in order</div>
@@ -174,8 +171,8 @@ export const POST: APIRoute = async ({ request }) => {
         team_size: p.teamSize || null,
         hours: p.hours ?? {},
         systems: { storage: p.storage || null, platform: p.platform || null, otherTools: p.otherTools || null },
-        ai_usage: p.usage || null,
-        ai_depth: p.depth || null,
+        stage: p.stage ?? null,
+        stage_label: p.stageLabel || null,
         ai_team_share: p.teamShare || null,
         appetite: p.appetite || null,
         worry: p.worry || null,
@@ -252,9 +249,9 @@ export const POST: APIRoute = async ({ request }) => {
         `Business: ${p.businessName || '?'} (${p.businessType || '?'} · ${p.bucket || '?'} bucket · ${p.teamSize || '?'})`,
         `Described as: ${p.businessDescription || '—'}`,
         `Contact: ${p.contactName || '?'} <${email}>`,
-        `Score: ${p.score ?? '?'}/100 · Hours back ≈ ${p.hoursBack ?? '?'}h/wk`,
-        `Dimensions: ${(p.dims ?? []).map(d => `${d.name} ${d.pts}/${d.max}`).join(' · ') || '—'}`,
-        `AI use: ${p.usage || '?'} (${p.depth || 'depth n/a'})${p.teamShare ? ` · Team share: ${p.teamShare}` : ''} · Appetite: ${p.appetite || '?'} · Worry: ${p.worry || '—'}`,
+        `Stage: ${p.stage ?? '?'}/5 (${p.stageLabel || '?'}) · Hours back ≈ ${p.hoursBack ?? '?'}h/wk`,
+        `Context: ${(p.dims ?? []).map(d => d.name).join(' · ') || '—'}`,
+        `Team share: ${p.teamShare || 'n/a'} · Appetite: ${p.appetite || '?'} · Worry: ${p.worry || '—'}`,
         `Systems: ${p.storage || '?'} / ${p.platform || '?'}${p.otherTools ? ' / ' + p.otherTools : ''}`,
         `Hours: ${Object.entries(p.hours ?? {}).map(([k, v]) => `${k}=${v}`).join(', ') || '—'}`,
         `Top moves: ${(p.moves ?? []).map(m => m.title).join(' | ') || '—'}`,
@@ -268,7 +265,7 @@ export const POST: APIRoute = async ({ request }) => {
         from: 'Averde Audits <audits@averde.ai>',
         to: ['mark@averde.ai'],
         replyTo: email,
-        subject: `Readiness lead: ${p.businessName || 'Anonymous'} — ${p.score ?? '?'}/100 (${p.bucket || '?'})`,
+        subject: `AI Assessment lead: ${p.businessName || 'Anonymous'} — Stage ${p.stage ?? '?'}/5 (${p.bucket || '?'})`,
         html: internalHtml,
         text: summary,
       });

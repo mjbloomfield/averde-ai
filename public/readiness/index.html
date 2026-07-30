@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>AI Business Readiness Audit | Averde AI</title>
+<title>The AI Assessment | Averde AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;500;600&family=Source+Serif+4:wght@400;500;600&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -160,10 +160,10 @@ if (window.self !== window.top) {
 }
 
 /* ================================================================
-   AI Business Readiness Audit — a structured self-assessment.
-   Unlike the website audit (live checks), this scores the owner's
-   own answers, and says so plainly. It feeds the free 30-minute
-   call: the report IS the prep material.
+   The AI Assessment — find your stage on the AI adoption path,
+   get your next moves. No readiness gate: everyone is somewhere,
+   and the report shows the next step from wherever that is. It
+   feeds the free 30-minute call: the report IS the prep material.
 ================================================================ */
 
 const TEAM_SIZES = ['Just me','2–5 people','6–15 people','16+ people'];
@@ -234,18 +234,35 @@ const PLATFORM_OPTS = [
   { v:'mixed',     label:'A mix of both',                      pts:6 },
   { v:'other',     label:'Something else / not sure',          pts:2 },
 ];
-const USAGE_OPTS = [
-  { v:'never',  label:"Haven't really used it",                pts:0 },
-  { v:'tried',  label:'Tried it a few times',                  pts:8 },
-  { v:'weekly', label:'Use it most weeks',                     pts:14 },
-  { v:'daily',  label:"It's part of most days",                pts:18 },
-];
-// Frequency alone says little — daily quick questions isn't the same skill
-// as drafting real work. Depth adds up to 6 points on top of frequency.
-const DEPTH_OPTS = [
-  { v:'quick',    label:'Quick questions & lookups',                    pts:4 },
-  { v:'drafting', label:'Drafting real work (emails, quotes, posts)',   pts:12 },
-  { v:'wired',    label:"It's wired into my tools or workflows",        pts:22 },
+// The five stages of the AI adoption path. The assessment's headline
+// result is which stage they're at — concrete self-descriptions, not
+// frequency ("daily chat" lands at stage 2 of 5, which is honest).
+const STAGES = [
+  { n: 1, label: 'Getting started',
+    solo: "Haven't really used AI yet",
+    team: "Nobody here really uses AI yet",
+    desc: "You haven't started with AI — which means every early win is still on the table, and you skip everyone else's bad habits.",
+    next: 'Start with plain AI chat: pick one real task this week — an email, a draft, a summary — and do it with Claude or ChatGPT.' },
+  { n: 2, label: 'Chat user',
+    solo: 'I use AI chat (ChatGPT, Claude) for questions and drafting',
+    team: 'Some of us use AI chat (ChatGPT, Claude) for questions and drafting',
+    desc: 'You use AI as a chat assistant — real value, and still the shallow end of what it can do.',
+    next: 'Give AI standing context: custom instructions and a project or saved prompts, so every chat starts out already knowing your business.' },
+  { n: 3, label: 'Working with context',
+    solo: "I've set up custom instructions, projects, or saved prompts — AI knows my business",
+    team: 'We have shared instructions, projects, or prompt templates — AI knows our business',
+    desc: 'AI knows your business — drafts start from your reality instead of a blank slate.',
+    next: 'Connect AI to the real work: your files, email, and calendar, so it works with your actual information instead of what you paste in.' },
+  { n: 4, label: 'Connected',
+    solo: 'AI is connected to my files, email, or business tools',
+    team: 'AI is connected to our files, email, or business tools',
+    desc: 'AI works with your actual files, email, and tools — the copy-paste era is over.',
+    next: 'Let AI carry recurring work: scheduled tasks and simple automations for the jobs that repeat every week.' },
+  { n: 5, label: 'Automated',
+    solo: 'AI agents or automations run some of my work on their own',
+    team: 'AI agents or automations run some of our work on their own',
+    desc: 'Agents and automations run parts of the work without you — the front edge of what small businesses are doing.',
+    next: "You're past adoption — the work now is coverage and reliability: more workflows, better checks, and making sure the whole team benefits." },
 ];
 const APPETITE_OPTS = [
   { v:'<1',  label:'Less than an hour a week',                 pts:5 },
@@ -348,7 +365,7 @@ const state = {
   businessType:'', bucket:'', classifiedFor:'', classifierModel:'', recsModel:'',
   hours: {},            // catId -> option value
   storage:'', platform:'', otherTools:'',
-  usage:'', depth:'', teamShare:'', appetite:'', worry:'',
+  stage:0, teamShare:'', appetite:'', worry:'',
   contactName:'', email:'',
   recs: null,          // null = not requested; {pending:true}; {moves, source}
   sendStatus: 'idle',
@@ -368,38 +385,42 @@ function labelFor(catId) {
   return opt && opt.mid > 0 ? opt.label.replace('/wk', ' a week') : 'no time';
 }
 
-function buildDims() {
-  // Capability-only score (Mark, 2026-07-30): opportunity is reported
-  // separately — having lots of admin doesn't make a business AI-capable.
-  // Digital systems 35 (pen-and-paper -> fully cloud, storage + platform
-  // merged) · AI experience 40 (frequency x depth — the differentiator) ·
-  // Owner bandwidth 25. Ready-but-idle calibrates to roughly 50.
-  const pick = (opts, v) => { const o = opts.find(x => x.v === v); return o ? o.pts : 0; };
+function stageInfo() {
+  return STAGES.find(st => st.n === state.stage) || STAGES[0];
+}
+function nextStageInfo() {
+  return STAGES.find(st => st.n === state.stage + 1) || null;
+}
 
-  const digitalPts = Math.min(35, pick(STORAGE_OPTS, state.storage) + pick(PLATFORM_OPTS, state.platform));
-  const digitalNote = state.storage === 'paper'
-    ? 'AI works on the information it can reach — paper and memory need a digital home before anything else pays off.'
-    : state.storage === 'cloud'
-      ? 'Your information already lives where AI can reach it. Little plumbing stands between you and real use.'
-      : 'Spreadsheets and files are workable — cloud tools make every AI move easier, but nothing here blocks you.';
-
-  const freqPts = pick(USAGE_OPTS, state.usage);
-  const depthPts = state.usage === 'never' ? 0 : pick(DEPTH_OPTS, state.depth);
-  const expPts = Math.min(40, freqPts + depthPts);
-  const expNote = state.usage === 'never'
-    ? 'Starting from zero is a few weeks, not months — and you skip everyone else\'s bad habits.'
-    : state.depth === 'quick'
-      ? 'You use AI, but mostly as a question box so far — the jump to drafting real work is where hours come back.'
-      : state.depth === 'wired'
-        ? 'AI is already in your workflows — the question is coverage, not adoption.'
-        : 'Drafting real work with AI is the right habit — standing context is the next step, so it starts from your business every time.';
-
-  return [
-    { name: 'Digital systems', pts: digitalPts, max: 35, note: digitalNote },
-    { name: 'AI experience', pts: expPts, max: 40, note: expNote },
-    { name: 'Owner bandwidth', pts: pick(APPETITE_OPTS, state.appetite), max: 25,
-      note: 'The setup phase needs a few hours a week from you. After that it pays you back.' },
-  ];
+// Supporting context — notes, not scores. The stage is the headline; these
+// say what helps or hinders the climb to the next one.
+function contextNotes() {
+  const notes = [];
+  notes.push({
+    name: 'Digital systems',
+    note: state.storage === 'paper'
+      ? 'Your business information lives on paper and memory — giving it a digital home is part of any next step.'
+      : state.storage === 'cloud'
+        ? 'Your information already lives where AI can reach it — nothing blocks the next step.'
+        : 'Spreadsheets and files are workable — cloud tools make the later stages easier, but nothing here blocks you.',
+  });
+  notes.push({
+    name: 'Time for the next step',
+    note: state.appetite === '<1'
+      ? 'Under an hour a week is tight but workable — the first moves below are sized to fit it.'
+      : 'The setup phase needs a few hours a week. After that it pays you back.',
+  });
+  if (co() && state.teamShare) {
+    notes.push({
+      name: 'Team adoption',
+      note: state.teamShare === 'most'
+        ? 'Most of the team already uses AI — next steps can be team-wide from day one.'
+        : state.teamShare === 'none'
+          ? "Nobody on the team uses AI regularly yet — part of the next step is getting one person genuinely productive with it."
+          : 'A few people use AI — spreading what works to one more person multiplies every move below.',
+    });
+  }
+  return notes;
 }
 function opportunityMid() {
   return HOURS_TOTAL();
@@ -530,29 +551,35 @@ function renderSystems() {
 function renderAiToday() {
   root.innerHTML = stepWrap({
     progress: progressBar(4),
-    eyebrow: 'AI today',
-    title: co() ? 'Where is your company with AI right now?' : 'Where are you with AI right now?',
-    dek: "No wrong answers — 'haven't touched it' is the most common one.",
-    body: `<div class="field-grid">
-      ${selectField('f-usage', co() ? "The company's AI use (ChatGPT, Claude, etc.)" : 'Your current AI use (ChatGPT, Claude, etc.)', USAGE_OPTS, state.usage)}
-      ${selectField('f-depth', co() ? 'When the team uses it, mostly for…' : 'When you do use it, mostly for…', DEPTH_OPTS, state.depth)}
+    eyebrow: 'Where you are with AI',
+    title: co() ? 'Which best describes your company and AI today?' : 'Which best describes you and AI today?',
+    dek: "Pick the closest fit — there's no wrong stage, only a next step.",
+    body: `<div class="pains-grid" style="grid-template-columns:1fr">
+      ${STAGES.map(st => `
+        <div class="check-row ${state.stage === st.n ? 'selected' : ''}" data-stage="${st.n}">
+          <div class="check-box">${state.stage === st.n ? '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6.5l2.5 2.5L10 3.5" stroke="#F4ECDB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' : ''}</div>
+          <span><strong style="font-family:'Inter Tight',sans-serif;font-size:13px">Stage ${st.n}</strong> — ${esc(co() ? st.team : st.solo)}</span>
+        </div>`).join('')}
+    </div>
+    <div class="field-grid" style="margin-top:24px">
       ${co() ? selectField('f-share', 'How much of the team uses AI regularly?', TEAM_SHARE_OPTS, state.teamShare) : ''}
-      ${selectField('f-appetite', co() ? 'Time you (or someone on the team) could put into setup, weekly' : 'Time you could put into setup, per week', APPETITE_OPTS, state.appetite)}
+      ${selectField('f-appetite', co() ? 'Time you (or someone on the team) could put into the next step, weekly' : 'Time you could put into the next step, per week', APPETITE_OPTS, state.appetite)}
       ${selectField('f-worry', 'Biggest hesitation (optional)', WORRY_OPTS.map(w => ({ v:w, label:w })), state.worry, 'Pick one if it fits…')}
     </div>`,
     back: true,
-    nextDisabled: !(state.usage && state.appetite && (state.usage === 'never' || state.depth) && (!co() || state.teamShare)),
+    nextDisabled: !(state.stage && state.appetite && (!co() || state.teamShare)),
+  });
+  root.querySelectorAll('[data-stage]').forEach(row => {
+    row.addEventListener('click', () => { state.stage = Number(row.getAttribute('data-stage')); renderAiToday(); });
   });
   const sync = () => {
-    state.usage = document.getElementById('f-usage').value;
-    state.depth = document.getElementById('f-depth').value;
     const share = document.getElementById('f-share');
     if (share) state.teamShare = share.value;
     state.appetite = document.getElementById('f-appetite').value;
     state.worry = document.getElementById('f-worry').value;
-    root.querySelector('[data-act="next"]').disabled = !(state.usage && state.appetite && (state.usage === 'never' || state.depth) && (!co() || state.teamShare));
+    root.querySelector('[data-act="next"]').disabled = !(state.stage && state.appetite && (!co() || state.teamShare));
   };
-  ['f-usage','f-depth','f-share','f-appetite','f-worry'].forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener('input', sync); });
+  ['f-share','f-appetite','f-worry'].forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener('input', sync); });
 }
 
 function renderContact() {
@@ -599,7 +626,8 @@ function fireRecommend() {
       businessType: state.businessType, bucket: state.bucket, teamSize: state.teamSize,
       hours: state.hours, hourLabels: Object.fromEntries(cats().map(c => [c.id, c.label])),
       storage: state.storage, platform: state.platform, otherTools: state.otherTools,
-      usage: state.usage, depth: state.depth, teamShare: state.teamShare, appetite: state.appetite, worry: state.worry,
+      stage: state.stage, stageLabel: stageInfo().label, nextStage: nextStageInfo() ? { n: nextStageInfo().n, label: nextStageInfo().label, what: stageInfo().next } : null,
+      teamShare: state.teamShare, appetite: state.appetite, worry: state.worry,
     }),
     signal: controller.signal,
   })
@@ -612,9 +640,10 @@ function fireRecommend() {
     .finally(() => clearTimeout(t));
 }
 
-function submitLead(dims, score, moves, recsSource) {
+function submitLead(notes, st, moves, recsSource) {
   if (state.sendStatus !== 'idle') return;
   state.sendStatus = 'sending';
+  const nx = nextStageInfo();
   fetch('/api/readiness-lead', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -623,9 +652,10 @@ function submitLead(dims, score, moves, recsSource) {
       businessDescription: state.description.trim(), businessType: state.businessType, bucket: state.bucket,
       industry: state.businessType,
       hours: state.hours, storage: state.storage, platform: state.platform, otherTools: state.otherTools,
-      usage: state.usage, depth: state.depth, teamShare: state.teamShare, appetite: state.appetite, worry: state.worry,
+      stage: st.n, stageLabel: st.label, nextStage: nx ? { n: nx.n, label: nx.label, what: st.next } : null,
+      teamShare: state.teamShare, appetite: state.appetite, worry: state.worry,
       contactName: state.contactName, email: state.email,
-      score, dims, hoursBack: hoursBack(), moves, recsSource,
+      dims: notes, hoursBack: hoursBack(), moves, recsSource,
       classifierModel: state.classifierModel, recsModel: state.recsModel,
     }),
   }).then(r => { state.sendStatus = r.ok ? 'sent' : 'failed'; })
@@ -633,41 +663,50 @@ function submitLead(dims, score, moves, recsSource) {
 }
 
 function renderReport() {
-  const dims = buildDims();
-  const score = dims.reduce((n, d) => n + d.pts, 0);
-  const g = grade(score);
-  const color = gradeColor(g);
+  const st = stageInfo();
+  const nx = nextStageInfo();
+  const notes = contextNotes();
   const back = hoursBack();
   fireRecommend();
   const recsReady = state.recs && !state.recs.pending;
   const moves = recsReady ? state.recs.moves : [];
-  const r = 56, circ = 2 * Math.PI * r;
-  const offset = circ - (score / 100) * circ;
+  const stageColors = { 1:'#A04324', 2:'#A86237', 3:'#9C6A33', 4:'#5b7a5e', 5:'#3a6f4d' };
+  const color = stageColors[st.n] || '#9C6A33';
 
   root.innerHTML = `<div class="fade-in">
     <div class="report-head">
-      <p class="eyebrow">Your AI Readiness Report</p>
+      <p class="eyebrow">Your AI Assessment</p>
       <h1>${esc(state.name)}</h1>
       <p class="report-sub">${esc(state.businessType)} · ${esc(state.teamSize)}</p>
     </div>
 
     <div class="score-panel">
-      <div class="score-ring-wrap">
-        <svg width="140" height="140">
-          <circle cx="70" cy="70" r="${r}" fill="none" stroke="#E5DBC9" stroke-width="10"/>
-          <circle class="arc" cx="70" cy="70" r="${r}" fill="none" stroke="${color}" stroke-width="10"
-            stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/>
-        </svg>
-        <div class="score-ring-center">
-          <span class="score-ring-num" style="color:${color}">${score}</span>
-          <span class="score-ring-grade" style="color:${color}">Grade ${g}</span>
+      <div class="score-ring-wrap" style="display:flex;align-items:center;justify-content:center">
+        <div style="text-align:center">
+          <div style="font-family:'Fraunces',serif;font-size:52px;line-height:1;color:${color}">${st.n}<span style="font-size:22px;color:var(--driftwood)"> / 5</span></div>
+          <div class="score-ring-grade" style="color:${color};margin-top:6px">${esc(st.label)}</div>
         </div>
       </div>
       <div class="score-copy">
-        <h2>${interpret(score)}</h2>
-        <p>This is a structured self-assessment — it scores your answers, not a scan. The free 30-minute call is where we pressure-test it together.</p>
-        <p class="score-basis">${score} of 100 across three dimensions, from the answers you just gave.</p>
+        <h2>${esc(st.desc)}</h2>
+        <p>There's no pass or fail here — five stages, and everyone's on one of them. The whole point of this report is the next step.</p>
+        <p class="score-basis">Self-described stage, from the answers you just gave. We pressure-test it on the free call.</p>
       </div>
+    </div>
+
+    <div class="section-block">
+      <p class="eyebrow" style="margin-bottom:8px">The path</p>
+      ${STAGES.map(x => `
+        <div style="display:flex;gap:12px;align-items:baseline;padding:9px 0;border-top:1px solid var(--bone);${x.n === st.n ? '' : x.n === st.n + 1 ? '' : 'opacity:.45'}">
+          <span style="font-family:'Inter Tight',sans-serif;font-weight:700;font-size:12px;color:${x.n <= st.n ? color : 'var(--muted)'};white-space:nowrap">${x.n <= st.n ? '●' : '○'} Stage ${x.n}</span>
+          <span style="font-size:14px;${x.n === st.n ? 'font-weight:600' : ''}">${esc(x.label)}${x.n === st.n ? ' — you are here' : x.n === st.n + 1 ? ' <span style="color:var(--honey-500);font-weight:600">← your next step</span>' : ''}</span>
+        </div>`).join('')}
+      ${nx ? `<div style="margin-top:14px;background:var(--aged-cream);border-radius:10px;padding:14px 16px">
+        <strong style="font-family:'Inter Tight',sans-serif;font-size:13px">Your next step — Stage ${nx.n}, ${esc(nx.label)}:</strong>
+        <p style="font-size:14px;color:var(--ink-700);margin-top:4px">${esc(st.next)}</p>
+      </div>` : `<div style="margin-top:14px;background:var(--aged-cream);border-radius:10px;padding:14px 16px">
+        <p style="font-size:14px;color:var(--ink-700)">${esc(st.next)}</p>
+      </div>`}
     </div>
 
     ${(() => {
@@ -676,7 +715,7 @@ function renderReport() {
         : mid >= 4 ? 'There\'s real room to save time with AI'
         : 'You run light on repetitive admin';
       const line = mid >= 4
-        ? `Rough math from your own numbers: the work you described could hand back ≈ ${back} hours a week. Deliberately conservative, and separate from your readiness score — opportunity isn't capability. We check it against reality on the call.`
+        ? `Rough math from your own numbers: the work you described could hand back ≈ ${back} hours a week. Deliberately conservative — we check it against reality on the call.`
         : 'Almost none of your week goes to work AI streamlines well — lucky you, or worth a second look together on the call.';
       return `<div class="section-block">
         <p class="eyebrow" style="margin-bottom:4px">The opportunity</p>
@@ -686,23 +725,18 @@ function renderReport() {
     })()}
 
     <div class="section-block">
-      <h3>The three dimensions</h3>
-      <p class="section-dek">Digital systems (35), AI experience (40), and owner bandwidth (25). The note under each tells you what moves it.</p>
-      ${dims.map(d => `
-        <div style="padding:12px 0;border-top:1px solid var(--bone)">
-          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
-            <strong style="font-family:'Inter Tight',sans-serif;font-size:14px">${esc(d.name)}</strong>
-            <span class="check-pts">${d.pts}/${d.max}</span>
-          </div>
-          <div class="progress" style="margin:8px 0"><div class="progress-bar" style="width:${(d.pts / d.max) * 100}%"></div></div>
-          <p style="font-size:13.5px;color:var(--muted)">${esc(d.note)}</p>
+      <h3>What supports the climb</h3>
+      ${notes.map(d => `
+        <div style="padding:10px 0;border-top:1px solid var(--bone)">
+          <strong style="font-family:'Inter Tight',sans-serif;font-size:13px">${esc(d.name)}</strong>
+          <p style="font-size:13.5px;color:var(--muted);margin-top:2px">${esc(d.note)}</p>
         </div>`).join('')}
     </div>
 
     ${!recsReady ? `<div class="section-block"><div class="pending"><div class="spinner"></div>Writing recommendations for your business specifically — this can take up to a minute, and it's worth it…</div></div>`
     : moves.length ? `<div class="section-block">
       <h3>Your top ${moves.length} moves, in order</h3>
-      <p class="section-dek">Written for ${esc(state.businessType || 'your business')}, from your answers. We pressure-test these on the call.</p>
+      <p class="section-dek">Written for ${esc(state.businessType || 'your business')}, from your answers — starting with the step to Stage ${nx ? nx.n : st.n}.</p>
       ${moves.map((m, i) => `
         <div style="padding:16px 0;border-top:1px solid var(--bone)">
           <p class="eyebrow" style="margin-bottom:4px">Priority ${i + 1}</p>
@@ -715,7 +749,7 @@ function renderReport() {
 
     <div class="section-block" style="text-align:center;background:var(--walnut-700);border:0">
       <h3 style="color:var(--paper)">This report is the prep for your free call.</h3>
-      <p class="section-dek" style="color:rgba(244,236,219,.7)">30 minutes, no charge, no pressure — we walk through your answers and leave you with a plan, whether or not you hire me for any of it.</p>
+      <p class="section-dek" style="color:rgba(244,236,219,.7)">30 minutes, no charge, no pressure — we walk through where you are and plan the next step together, whether or not you hire me for any of it.</p>
       <a class="brand-btn" style="background:var(--honey-300);color:var(--walnut-700);text-decoration:none;display:inline-block" href="/ai-consulting#book" target="_top">Book the free 30-minute call →</a>
       <p class="hint" style="color:rgba(244,236,219,.5);margin-top:14px">✓ Report sent to ${esc(state.email)}</p>
     </div>
@@ -727,7 +761,7 @@ function renderReport() {
     <div class="restart"><button class="ghost-btn" data-act="restart">← Start over</button></div>
   </div>`;
 
-  if (recsReady && state.sendStatus === 'idle') submitLead(dims, score, moves, state.recs.source);
+  if (recsReady && state.sendStatus === 'idle') submitLead(notes, st, moves, state.recs.source);
 }
 
 // ---------------- router ----------------
@@ -787,7 +821,7 @@ document.addEventListener('click', e => {
   else if (act === 'next') { state.step += 1; render(); window.scrollTo({ top: 0 }); }
   else if (act === 'back') { state.step = Math.max(1, state.step - 1); render(); }
   else if (act === 'restart') {
-    Object.assign(state, { step:1, name:'', description:'', teamSize:'', businessType:'', bucket:'', classifiedFor:'', classifierModel:'', recsModel:'', hours:{}, storage:'', platform:'', otherTools:'', usage:'', depth:'', teamShare:'', appetite:'', worry:'', contactName:'', email:'', recs:null, sendStatus:'idle' });
+    Object.assign(state, { step:1, name:'', description:'', teamSize:'', businessType:'', bucket:'', classifiedFor:'', classifierModel:'', recsModel:'', hours:{}, storage:'', platform:'', otherTools:'', stage:0, teamShare:'', appetite:'', worry:'', contactName:'', email:'', recs:null, sendStatus:'idle' });
     render(); window.scrollTo({ top: 0 });
   }
 });
