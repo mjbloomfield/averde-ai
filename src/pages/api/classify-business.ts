@@ -24,45 +24,51 @@ export const POST: APIRoute = async ({ request }) => {
 
   const apiKey = import.meta.env.NVIDIA_API_KEY;
   if (apiKey) {
-    try {
-      const controller = new AbortController();
-      const t = setTimeout(() => controller.abort(), 8_000);
-      const res = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'deepseek-ai/deepseek-v4-pro',
-          max_tokens: 60,
-          temperature: 0,
-          chat_template_kwargs: { thinking: false },
-          messages: [
-            {
-              role: 'system',
-              content:
-                'You classify small businesses into exactly one type from a fixed list. Reply with the single best-matching type label, copied verbatim from the list. Reply with the label only — no punctuation, no explanation.',
-            },
-            {
-              role: 'user',
-              content: `Business${body.name ? ` "${body.name}"` : ''} described by its owner as: "${description}"\n\nTypes:\n${BUSINESS_TYPES.map(x => x.label).join('\n')}`,
-            },
-          ],
-        }),
-        signal: controller.signal,
-      });
-      clearTimeout(t);
-      if (res.ok) {
-        const data = await res.json();
-        const label = String(data?.choices?.[0]?.message?.content ?? '').trim();
-        const bucket = bucketFor(label);
-        if (bucket) return json(200, { ok: true, type: label, bucket, source: 'llm' });
-      } else {
-        console.error('classify-business: nvidia', res.status);
+    // NVIDIA's per-model pools come and go (bodyless 404s when a pool is
+    // down), so try pro first and fall through to flash before giving up.
+    const MODELS = ['deepseek-ai/deepseek-v4-pro', 'deepseek-ai/deepseek-v4-flash'];
+    for (const model of MODELS) {
+      try {
+        const controller = new AbortController();
+        const t = setTimeout(() => controller.abort(), 8_000);
+        const res = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model,
+            max_tokens: 60,
+            temperature: 0,
+            chat_template_kwargs: { thinking: false },
+            messages: [
+              {
+                role: 'system',
+                content:
+                  'You classify small businesses into exactly one type from a fixed list. Reply with the single best-matching type label, copied verbatim from the list. Reply with the label only — no punctuation, no explanation.',
+              },
+              {
+                role: 'user',
+                content: `Business${body.name ? ` "${body.name}"` : ''} described by its owner as: "${description}"\n\nTypes:\n${BUSINESS_TYPES.map(x => x.label).join('\n')}`,
+              },
+            ],
+          }),
+          signal: controller.signal,
+        });
+        clearTimeout(t);
+        if (res.ok) {
+          const data = await res.json();
+          const label = String(data?.choices?.[0]?.message?.content ?? '').trim();
+          const bucket = bucketFor(label);
+          if (bucket) return json(200, { ok: true, type: label, bucket, source: 'llm', model });
+          console.error('classify-business: off-list label from', model, label.slice(0, 60));
+        } else {
+          console.error('classify-business:', model, res.status);
+        }
+      } catch (err) {
+        console.error('classify-business threw:', err);
       }
-    } catch (err) {
-      console.error('classify-business threw:', err);
     }
   }
 
