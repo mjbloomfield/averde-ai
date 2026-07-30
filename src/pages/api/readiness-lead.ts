@@ -57,7 +57,7 @@ function renderUserEmail(p: Payload, reportUrl: string | null) {
     `Here's your AI Readiness Report for ${business}.`,
     reportUrl ? `View it in your browser: ${reportUrl}` : '',
     '',
-    `Score: ${score}/100 (Grade ${g}) — a structured self-assessment from your answers, not a scan.`,
+    `Score: ${score}/100 (Grade ${g}) — capability only; the time-savings opportunity is reported separately.`,
     p.hoursBack ? `Rough math from your numbers: AI could hand back ~${p.hoursBack} hours a week.` : '',
     '',
     'Dimensions:',
@@ -102,7 +102,7 @@ function renderUserEmail(p: Payload, reportUrl: string | null) {
           ${p.hoursBack ? `<div style="font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;color:#374151;margin-top:10px;"><strong>Rough math from your numbers:</strong> AI could realistically hand back ≈ ${esc(p.hoursBack)} hours a week.</div>` : ''}
         </td></tr>
         <tr><td style="padding:16px 28px 4px;">
-          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#6B7280;margin-bottom:8px;">The five dimensions</div>
+          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#6B7280;margin-bottom:8px;">The dimensions</div>
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;">
             ${dims.map(d => `<tr>
               <td style="padding:6px 12px 6px 0;color:#1F2937;">${esc(d.name)}</td>

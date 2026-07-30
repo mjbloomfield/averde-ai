@@ -216,34 +216,34 @@ const HOUR_OPTS = [
 
 const STORAGE_OPTS = [
   { v:'paper',   label:'Mostly paper, whiteboards, or memory', pts:4 },
-  { v:'files',   label:'Files on one computer',                pts:10 },
-  { v:'sheets',  label:'Spreadsheets (Excel / Google Sheets)', pts:14 },
-  { v:'cloud',   label:'Cloud tools / a CRM',                  pts:20 },
+  { v:'files',   label:'Files on one computer',                pts:12 },
+  { v:'sheets',  label:'Spreadsheets (Excel / Google Sheets)', pts:20 },
+  { v:'cloud',   label:'Cloud tools / a CRM',                  pts:25 },
 ];
 const PLATFORM_OPTS = [
-  { v:'google',    label:'Google (Gmail / Google Calendar)',   pts:20 },
-  { v:'microsoft', label:'Microsoft 365 (Outlook)',            pts:20 },
-  { v:'mixed',     label:'A mix of both',                      pts:14 },
-  { v:'other',     label:'Something else / not sure',          pts:6 },
+  { v:'google',    label:'Google (Gmail / Google Calendar)',   pts:10 },
+  { v:'microsoft', label:'Microsoft 365 (Outlook)',            pts:10 },
+  { v:'mixed',     label:'A mix of both',                      pts:6 },
+  { v:'other',     label:'Something else / not sure',          pts:2 },
 ];
 const USAGE_OPTS = [
-  { v:'never',  label:"Haven't really used it",                pts:4 },
+  { v:'never',  label:"Haven't really used it",                pts:0 },
   { v:'tried',  label:'Tried it a few times',                  pts:8 },
-  { v:'weekly', label:'Use it most weeks',                     pts:12 },
-  { v:'daily',  label:"It's part of most days",                pts:14 },
+  { v:'weekly', label:'Use it most weeks',                     pts:14 },
+  { v:'daily',  label:"It's part of most days",                pts:18 },
 ];
 // Frequency alone says little — daily quick questions isn't the same skill
 // as drafting real work. Depth adds up to 6 points on top of frequency.
 const DEPTH_OPTS = [
-  { v:'quick',    label:'Quick questions & lookups',                    pts:0 },
-  { v:'drafting', label:'Drafting real work (emails, quotes, posts)',   pts:3 },
-  { v:'wired',    label:"It's wired into my tools or workflows",        pts:6 },
+  { v:'quick',    label:'Quick questions & lookups',                    pts:4 },
+  { v:'drafting', label:'Drafting real work (emails, quotes, posts)',   pts:12 },
+  { v:'wired',    label:"It's wired into my tools or workflows",        pts:22 },
 ];
 const APPETITE_OPTS = [
-  { v:'<1',  label:'Less than an hour a week',                 pts:4 },
+  { v:'<1',  label:'Less than an hour a week',                 pts:5 },
   { v:'1-2', label:'1–2 hours a week',                         pts:10 },
-  { v:'3-5', label:'3–5 hours a week',                         pts:16 },
-  { v:'5+',  label:'5+ hours a week',                          pts:20 },
+  { v:'3-5', label:'3–5 hours a week',                         pts:18 },
+  { v:'5+',  label:'5+ hours a week',                          pts:25 },
 ];
 const WORRY_OPTS = ['Privacy / my data','Getting it wrong in front of customers','Cost','Time to learn it','Not sure where to start','No big worries'];
 
@@ -361,42 +361,43 @@ function labelFor(catId) {
 }
 
 function buildDims() {
-  const totalMid = cats().reduce((n, c) => n + midFor(c.id), 0);
+  // Capability-only score (Mark, 2026-07-30): opportunity is reported
+  // separately — having lots of admin doesn't make a business AI-capable.
+  // Digital systems 35 (pen-and-paper -> fully cloud, storage + platform
+  // merged) · AI experience 40 (frequency x depth — the differentiator) ·
+  // Owner bandwidth 25. Ready-but-idle calibrates to roughly 50.
   const pick = (opts, v) => { const o = opts.find(x => x.v === v); return o ? o.pts : 0; };
-  // Stack: being on connectable tools is the base; actually using AI with
-  // them is what earns the top of the range. Ready-but-idle caps at 12.
-  const platformBase = { google: 12, microsoft: 12, mixed: 8, other: 4 }[state.platform] || 0;
-  const usageBonus = { never: 0, tried: 3, weekly: 6, daily: 8 }[state.usage] || 0;
-  const stackPts = Math.min(20, platformBase + usageBonus);
-  const stackNote = platformBase >= 12 && usageBonus <= 3
-    ? "You're on tools that connect directly to AI assistants — but they aren't talking to one yet. That's headroom, not a fault."
-    : platformBase >= 12
-      ? "You're on connectable tools and already using AI alongside them — the shortest path to wiring the two together."
-      : 'Google Workspace and Microsoft 365 connect directly to AI assistants; a mixed or custom stack needs a little more plumbing.';
 
-  // Experience: frequency + what the use actually is. Daily quick questions
-  // reads differently than drafting real work or wired-in workflows.
+  const digitalPts = Math.min(35, pick(STORAGE_OPTS, state.storage) + pick(PLATFORM_OPTS, state.platform));
+  const digitalNote = state.storage === 'paper'
+    ? 'AI works on the information it can reach — paper and memory need a digital home before anything else pays off.'
+    : state.storage === 'cloud'
+      ? 'Your information already lives where AI can reach it. Little plumbing stands between you and real use.'
+      : 'Spreadsheets and files are workable — cloud tools make every AI move easier, but nothing here blocks you.';
+
   const freqPts = pick(USAGE_OPTS, state.usage);
-  const depthPts = state.usage === 'never' ? 0 : (DEPTH_OPTS.find(o => o.v === state.depth)?.pts || 0);
-  const expPts = Math.min(20, freqPts + depthPts);
+  const depthPts = state.usage === 'never' ? 0 : pick(DEPTH_OPTS, state.depth);
+  const expPts = Math.min(40, freqPts + depthPts);
   const expNote = state.usage === 'never'
     ? 'Starting from zero is a few weeks, not months — and you skip everyone else\'s bad habits.'
     : state.depth === 'quick'
-      ? 'Frequent use, but mostly Q&A so far — the jump to drafting real work is where the hours come back.'
+      ? 'You use AI, but mostly as a question box so far — the jump to drafting real work is where hours come back.'
       : state.depth === 'wired'
         ? 'AI is already in your workflows — the question is coverage, not adoption.'
-        : 'Drafting real work with AI is the right habit — the next step is standing context so it starts from your business every time.';
+        : 'Drafting real work with AI is the right habit — standing context is the next step, so it starts from your business every time.';
 
   return [
-    { name: 'AI opportunity', pts: Math.min(20, Math.round(totalMid * 1.1)), max: 20,
-      note: totalMid > 0 ? `~${Math.round(totalMid)} hrs/week reported on work AI can help with — more hours here means more to gain.` : 'You reported almost no repetitive admin — lucky you, or worth a second look on the call.' },
-    { name: 'Digital foundation', pts: pick(STORAGE_OPTS, state.storage), max: 20,
-      note: 'AI works on the information it can reach. Cloud tools and spreadsheets are ready; paper and memory need a home first.' },
-    { name: 'Everyday stack', pts: stackPts, max: 20, note: stackNote },
-    { name: 'AI experience', pts: expPts, max: 20, note: expNote },
-    { name: 'Owner bandwidth', pts: pick(APPETITE_OPTS, state.appetite), max: 20,
+    { name: 'Digital systems', pts: digitalPts, max: 35, note: digitalNote },
+    { name: 'AI experience', pts: expPts, max: 40, note: expNote },
+    { name: 'Owner bandwidth', pts: pick(APPETITE_OPTS, state.appetite), max: 25,
       note: 'The setup phase needs a few hours a week from you. After that it pays you back.' },
   ];
+}
+function opportunityMid() {
+  return HOURS_TOTAL();
+}
+function HOURS_TOTAL() {
+  return cats().reduce((n, c) => n + midFor(c.id), 0);
 }
 function hoursBack() {
   return Math.round(cats().reduce((n, c) => n + midFor(c.id) * c.frac, 0));
@@ -653,18 +654,28 @@ function renderReport() {
       <div class="score-copy">
         <h2>${interpret(score)}</h2>
         <p>This is a structured self-assessment — it scores your answers, not a scan. The free 30-minute call is where we pressure-test it together.</p>
-        <p class="score-basis">${score} of 100 across five dimensions, from the answers you just gave.</p>
+        <p class="score-basis">${score} of 100 across three dimensions, from the answers you just gave.</p>
       </div>
     </div>
 
-    ${back > 0 ? `<div class="section-block">
-      <h3>Rough math: ≈ ${back} hours a week back</h3>
-      <p class="section-dek">From your own numbers — the share of each admin category AI can realistically absorb, added up. Deliberately conservative, and we'll check it against reality on the call.</p>
-    </div>` : ''}
+    ${(() => {
+      const mid = HOURS_TOTAL();
+      const headline = mid >= 12 ? 'Your business is ripe for saving time with AI'
+        : mid >= 4 ? 'There\'s real room to save time with AI'
+        : 'You run light on repetitive admin';
+      const line = mid >= 4
+        ? `Rough math from your own numbers: the work you described could hand back ≈ ${back} hours a week. Deliberately conservative, and separate from your readiness score — opportunity isn't capability. We check it against reality on the call.`
+        : 'Almost none of your week goes to work AI streamlines well — lucky you, or worth a second look together on the call.';
+      return `<div class="section-block">
+        <p class="eyebrow" style="margin-bottom:4px">The opportunity</p>
+        <h3>${headline}</h3>
+        <p class="section-dek" style="margin-bottom:0">${line}</p>
+      </div>`;
+    })()}
 
     <div class="section-block">
-      <h3>The five dimensions</h3>
-      <p class="section-dek">Each is worth 20 points. The note under each tells you what moves it.</p>
+      <h3>The three dimensions</h3>
+      <p class="section-dek">Digital systems (35), AI experience (40), and owner bandwidth (25). The note under each tells you what moves it.</p>
       ${dims.map(d => `
         <div style="padding:12px 0;border-top:1px solid var(--bone)">
           <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
