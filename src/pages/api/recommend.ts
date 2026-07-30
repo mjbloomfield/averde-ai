@@ -37,7 +37,18 @@ function parseMoves(text: string): Move[] {
   const start = stripped.indexOf('{');
   const end = stripped.lastIndexOf('}');
   if (start === -1 || end === -1) throw new Error('no JSON object in reply');
-  const parsed = JSON.parse(stripped.slice(start, end + 1));
+  let parsed: { moves?: unknown };
+  try {
+    parsed = JSON.parse(stripped.slice(start, end + 1));
+  } catch {
+    // Models occasionally truncate mid-array. Salvage every complete move
+    // object rather than discarding the whole reply.
+    const objs = [...stripped.matchAll(/\{[^{}]*"title"[^{}]*\}/g)].map(m => {
+      try { return JSON.parse(m[0]); } catch { return null; }
+    }).filter(Boolean);
+    if (!objs.length) throw new Error('unrecoverable JSON');
+    parsed = { moves: objs };
+  }
   const moves = Array.isArray(parsed?.moves) ? parsed.moves : [];
   const out = moves
     .map((m: Record<string, unknown>) => ({
@@ -97,7 +108,7 @@ Biggest hesitation: ${p.worry || 'none stated'}`;
       { role: 'system', content: system },
       { role: 'user', content: user },
     ],
-    { maxTokens: 700, temperature: 0.4, timeoutMs: 25_000 },
+    { maxTokens: 1100, temperature: 0.3, timeoutMs: 25_000 },
     parseMoves,
   );
 
