@@ -110,11 +110,15 @@ Biggest hesitation: ${p.worry || 'none stated'}`;
   // OpenRouter reasons internally and grounds tool use correctly; the fast
   // tiers are fallbacks. NVIDIA's preview pools are excluded here — too
   // flaky for a 30-second generation (they stay in the classification race).
+  //
+  // Budgets (2026-08-03): pro usually lands in 28-46s but a slow OpenRouter
+  // moment blew past the old 50s cap and dropped a real lead to canned. Pro
+  // now gets 65s. v3.1 is the only fallback because it's the one non-reasoning
+  // model — flash reasons too, so it could never finish in the leftover window.
   const win = await seqChat(
     [
-      { name: 'openrouter/deepseek-v4-pro', timeoutMs: 50_000 },
-      { name: 'openrouter/deepseek-v4-flash', timeoutMs: 15_000 },
-      { name: 'openrouter/deepseek-v3.1', timeoutMs: 15_000 },
+      { name: 'openrouter/deepseek-v4-pro', timeoutMs: 65_000 },
+      { name: 'openrouter/deepseek-v3.1', timeoutMs: 25_000 },
     ],
     [
       { role: 'system', content: system },

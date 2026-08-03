@@ -650,7 +650,7 @@ function fireRecommend() {
   state.recs = { pending: true };
   const done = (moves, source) => { state.recs = { moves, source }; if (state.step === TOTAL_STEPS + 1) render(); };
   const controller = new AbortController();
-  const t = setTimeout(() => controller.abort(), 85000);
+  const t = setTimeout(() => controller.abort(), 100000);
   fetch('/api/recommend', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
