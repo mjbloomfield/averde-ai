@@ -43,6 +43,10 @@
 
   .input { background:#fff; border:1.5px solid var(--driftwood); border-radius:10px; padding:13px 16px; width:100%; font-family:'Source Serif 4',serif; font-size:16px; color:var(--ink); transition:border 0.15s; }
   .input:focus { outline:none; border-color:var(--honey-300); }
+  .input::placeholder { color:var(--driftwood); opacity:1; }
+  select.input:has(option[value=""]:checked) { color:var(--driftwood); }
+  .input.input-error { border-color:var(--fail); }
+  .step-err { font-family:'Inter Tight',sans-serif; font-size:14px; font-weight:500; color:var(--fail); margin:16px 0 0; }
   textarea.input { resize:vertical; }
   select.input { appearance:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%237B6E5B' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>"); background-repeat:no-repeat; background-position:right 16px center; padding-right:40px; }
   .field-grid { display:grid; grid-template-columns:1fr; gap:20px; }
@@ -466,11 +470,28 @@ function stepWrap(o) {
     <h2 style="font-size:clamp(1.6rem,4vw,2.2rem)">${o.title}</h2>
     <p class="dek">${o.dek}</p>
     ${o.body}
+    <p class="step-err" id="step-err" hidden></p>
     <div class="step-footer">
       ${o.back ? '<button class="ghost-btn" data-act="back">← Back</button>' : '<span></span>'}
-      <button class="brand-btn" data-act="next" ${o.nextDisabled ? 'disabled' : ''}>${o.nextLabel || 'Continue →'}</button>
+      <button class="brand-btn" data-act="next">${o.nextLabel || 'Continue →'}</button>
     </div>
   </div>`;
+}
+
+// Each step sets stepMissing; clicking Continue shows what's incomplete instead
+// of silently doing nothing. `live` re-checks as the user types, but only once
+// errors are already visible.
+let stepMissing = () => [];
+function showStepErrors(live) {
+  const err = document.getElementById('step-err');
+  if (!err) return true;
+  const missing = stepMissing();
+  if (live && err.hidden) return !missing.length;
+  root.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+  missing.forEach(m => { const el = m.id && document.getElementById(m.id); if (el) el.classList.add('input-error'); });
+  err.textContent = (missing.length === 1 && missing[0].msg) || 'Please fill in the highlighted fields to continue.';
+  err.hidden = !missing.length;
+  return !missing.length;
 }
 function selectField(id, label, opts, value, placeholder) {
   return `<div><label class="label" for="${id}">${label}</label>
@@ -486,7 +507,7 @@ function renderBasics() {
     progress: progressBar(1),
     eyebrow: 'The basics',
     title: 'Tell me about your business.',
-    dek: 'This audit scores your answers — no website scan, no made-up numbers. Five steps, about three minutes.',
+    dek: 'Your answers place you on a five-stage AI path — no scores, no website scan, no made-up numbers. Five steps, about three minutes.',
     body: `<div class="field-grid">
       <div><label class="label" for="f-name">Business name</label>
         <input class="input" id="f-name" value="${esc(state.name)}" placeholder="Harbor Dental" /></div>
@@ -496,13 +517,17 @@ function renderBasics() {
         <p class="hint">A few words is plenty — this decides which questions you get next.</p></div>
     </div>`,
     back: false,
-    nextDisabled: !(state.name && state.description.trim().length > 2 && state.teamSize),
   });
+  stepMissing = () => [
+    !state.name && { id:'f-name' },
+    !(state.description.trim().length > 2) && { id:'f-desc', msg:'A few words about what your business does — that picks your questions.' },
+    !state.teamSize && { id:'f-team' },
+  ].filter(Boolean);
   const sync = () => {
     state.name = document.getElementById('f-name').value.trim();
     state.description = document.getElementById('f-desc').value;
     state.teamSize = document.getElementById('f-team').value;
-    root.querySelector('[data-act="next"]').disabled = !(state.name && state.description.trim().length > 2 && state.teamSize);
+    showStepErrors(true);
   };
   ['f-name','f-desc','f-team'].forEach(id => document.getElementById(id).addEventListener('input', sync));
 }
@@ -517,8 +542,8 @@ function renderHours() {
       ${cats().map(c => selectField('h-' + c.id, c.label, HOUR_OPTS.filter(o => o.v !== '0'), state.hours[c.id] || '', 'None')).join('')}
     </div>`,
     back: true,
-    nextDisabled: false,
   });
+  stepMissing = () => [];
   cats().forEach(c => {
     document.getElementById('h-' + c.id).addEventListener('change', e => { state.hours[c.id] = e.target.value; });
   });
@@ -537,13 +562,16 @@ function renderSystems() {
         <input class="input" id="f-tools" value="${esc(state.otherTools)}" placeholder="QuickBooks, Jobber, Square…" /></div>
     </div>`,
     back: true,
-    nextDisabled: !(state.storage && state.platform),
   });
+  stepMissing = () => [
+    !state.storage && { id:'f-storage' },
+    !state.platform && { id:'f-platform' },
+  ].filter(Boolean);
   const sync = () => {
     state.storage = document.getElementById('f-storage').value;
     state.platform = document.getElementById('f-platform').value;
     state.otherTools = document.getElementById('f-tools').value.trim();
-    root.querySelector('[data-act="next"]').disabled = !(state.storage && state.platform);
+    showStepErrors(true);
   };
   ['f-storage','f-platform','f-tools'].forEach(id => document.getElementById(id).addEventListener('input', sync));
 }
@@ -567,8 +595,12 @@ function renderAiToday() {
       ${selectField('f-worry', 'Biggest hesitation (optional)', WORRY_OPTS.map(w => ({ v:w, label:w })), state.worry, 'Pick one if it fits…')}
     </div>`,
     back: true,
-    nextDisabled: !(state.stage && state.appetite && (!co() || state.teamShare)),
   });
+  stepMissing = () => [
+    !state.stage && { msg:'Pick the stage that fits best — there’s no wrong answer.' },
+    co() && !state.teamShare && { id:'f-share' },
+    !state.appetite && { id:'f-appetite' },
+  ].filter(Boolean);
   root.querySelectorAll('[data-stage]').forEach(row => {
     row.addEventListener('click', () => { state.stage = Number(row.getAttribute('data-stage')); renderAiToday(); });
   });
@@ -577,7 +609,7 @@ function renderAiToday() {
     if (share) state.teamShare = share.value;
     state.appetite = document.getElementById('f-appetite').value;
     state.worry = document.getElementById('f-worry').value;
-    root.querySelector('[data-act="next"]').disabled = !(state.stage && state.appetite && (!co() || state.teamShare));
+    showStepErrors(true);
   };
   ['f-share','f-appetite','f-worry'].forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener('input', sync); });
 }
@@ -596,13 +628,14 @@ function renderContact() {
     </div>
     <p class="hint">No spam. You get your report and one short follow-up. That's it.</p>`,
     back: true,
-    nextDisabled: !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email),
     nextLabel: 'Show my report →',
   });
+  stepMissing = () => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)
+    ? [] : [{ id:'f-email', msg:'Enter a valid email address so I can send your report.' }];
   const sync = () => {
     state.contactName = document.getElementById('f-cname').value.trim();
     state.email = document.getElementById('f-email').value.trim();
-    root.querySelector('[data-act="next"]').disabled = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email);
+    showStepErrors(true);
   };
   ['f-cname','f-email'].forEach(id => document.getElementById(id).addEventListener('input', sync));
 }
@@ -817,6 +850,7 @@ document.addEventListener('click', e => {
   const btn = e.target.closest('[data-act]');
   if (!btn) return;
   const act = btn.getAttribute('data-act');
+  if (act === 'next' && !showStepErrors()) { return; }
   if (act === 'next' && state.step === 1) { classifyThenAdvance(btn); }
   else if (act === 'next') { state.step += 1; render(); window.scrollTo({ top: 0 }); }
   else if (act === 'back') { state.step = Math.max(1, state.step - 1); render(); }

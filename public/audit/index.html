@@ -43,6 +43,10 @@
 
   .input { background:#fff; border:1.5px solid var(--driftwood); border-radius:10px; padding:13px 16px; width:100%; font-family:'Source Serif 4',serif; font-size:16px; color:var(--ink); transition:border 0.15s; }
   .input:focus { outline:none; border-color:var(--honey-300); }
+  .input::placeholder { color:var(--driftwood); opacity:1; }
+  select.input:has(option[value=""]:checked) { color:var(--driftwood); }
+  .input.input-error { border-color:var(--fail); }
+  .step-err { font-family:'Inter Tight',sans-serif; font-size:14px; font-weight:500; color:var(--fail); margin:16px 0 0; }
   textarea.input { resize:vertical; }
   select.input { appearance:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%237B6E5B' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>"); background-repeat:no-repeat; background-position:right 16px center; padding-right:40px; }
   .field-grid { display:grid; grid-template-columns:1fr; gap:20px; }
@@ -655,12 +659,29 @@ function stepWrap(opts) {
       <h2 style="font-size:clamp(1.7rem,4vw,2.3rem)">${opts.title}</h2>
       ${opts.dek ? `<p class="dek">${opts.dek}</p>` : ''}
       <div>${opts.body}</div>
+      <p class="step-err" id="step-err" hidden></p>
       <div class="step-footer">
         ${opts.back ? '<button class="ghost-btn" data-act="back">← Back</button>' : '<span></span>'}
-        <button class="brand-btn" data-act="next" ${opts.nextDisabled ? 'disabled' : ''}>${opts.nextLabel || 'Continue →'}</button>
+        <button class="brand-btn" data-act="next">${opts.nextLabel || 'Continue →'}</button>
       </div>
     </div>
   </div>`;
+}
+
+// Each step sets stepMissing; clicking Continue shows what's incomplete instead
+// of silently doing nothing. `live` re-checks as the user types, but only once
+// errors are already visible.
+let stepMissing = () => [];
+function showStepErrors(live) {
+  const err = document.getElementById('step-err');
+  if (!err) return true;
+  const missing = stepMissing();
+  if (live && err.hidden) return !missing.length;
+  root.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+  missing.forEach(m => { const el = m.id && document.getElementById(m.id); if (el) el.classList.add('input-error'); });
+  err.textContent = (missing.length === 1 && missing[0].msg) || 'Please fill in the highlighted fields to continue.';
+  err.hidden = !missing.length;
+  return !missing.length;
 }
 
 // ---------------- step renderers ----------------
@@ -685,14 +706,18 @@ function renderBasics() {
         <input class="input" id="f-city" value="${esc(state.city)}" placeholder="Boulder, CO" /></div>
     </div>`,
     back: false,
-    nextDisabled: !(state.name && state.industry && state.city),
   });
+  stepMissing = () => [
+    !state.name && { id:'f-name' },
+    !state.industry && { id:'f-ind' },
+    !state.city && { id:'f-city' },
+  ].filter(Boolean);
   const sync = () => {
     state.name = document.getElementById('f-name').value.trim();
     state.website = document.getElementById('f-web').value.trim();
     state.industry = document.getElementById('f-ind').value;
     state.city = document.getElementById('f-city').value.trim();
-    root.querySelector('[data-act="next"]').disabled = !(state.name && state.industry && state.city);
+    showStepErrors(true);
   };
   ['f-name','f-web','f-ind','f-city'].forEach(id =>
     document.getElementById(id).addEventListener('input', sync));
@@ -707,11 +732,12 @@ function renderKeywords() {
     body: `<textarea class="input" id="f-kw" rows="6" placeholder="family dentist in Boulder&#10;emergency dental Boulder CO&#10;Invisalign provider Boulder&#10;dentist that takes new patients Boulder">${esc(state.keywords)}</textarea>
       <p class="hint">Tip: think how a real customer would phrase it — not how you describe yourself.</p>`,
     back: true,
-    nextDisabled: !state.keywords.trim(),
   });
+  stepMissing = () => state.keywords.trim()
+    ? [] : [{ id:'f-kw', msg:'Add at least one search term — one per line.' }];
   document.getElementById('f-kw').addEventListener('input', e => {
     state.keywords = e.target.value;
-    root.querySelector('[data-act="next"]').disabled = !state.keywords.trim();
+    showStepErrors(true);
   });
 }
 
@@ -737,8 +763,9 @@ function renderPains() {
       <p class="hint">This helps me tailor the follow-up — it doesn't change your score.</p>
     </div>`,
     back: true,
-    nextDisabled: state.pains.length === 0,
   });
+  stepMissing = () => state.pains.length
+    ? [] : [{ msg:'Check at least one — even a rough pick shapes your action plan.' }];
   root.querySelectorAll('[data-pain]').forEach(row => {
     row.addEventListener('click', () => {
       const id = row.getAttribute('data-pain');
@@ -764,13 +791,14 @@ function renderEmail() {
     </div>
     <p class="hint">No spam. You get your report and one short follow-up. That’s it.</p>`,
     back: true,
-    nextDisabled: !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email),
     nextLabel: 'Show my report →',
   });
+  stepMissing = () => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)
+    ? [] : [{ id:'f-email', msg:'Enter a valid email address so I can send your report.' }];
   const sync = () => {
     state.contactName = document.getElementById('f-cname').value.trim();
     state.email = document.getElementById('f-email').value.trim();
-    root.querySelector('[data-act="next"]').disabled = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email);
+    showStepErrors(true);
   };
   ['f-cname','f-email'].forEach(id => document.getElementById(id).addEventListener('input', sync));
 }
@@ -950,6 +978,7 @@ document.addEventListener('click', e => {
   if (!btn) return;
   const act = btn.getAttribute('data-act');
   if (act === 'next') {
+    if (!showStepErrors()) return;
     if (state.step === 1) fireSiteCheck();       // site scan: as early as possible
     if (state.step === 2) fireVisibilityCheck(); // Perplexity: needs their search terms
     state.step += 1;
