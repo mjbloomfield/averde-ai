@@ -10,15 +10,21 @@ type Provider = {
   headers: Record<string, string>;
 };
 
+// OpenRouter's default routing picked a slow host for v4-pro (StreamLake,
+// 49-59s on the full report prompt); sorting by throughput lands the same
+// model on a fast one (BaseTen, 12-24s). Measured 2026-08-03 after a real
+// lead timed out into canned recommendations.
+const OR_ROUTING = { provider: { sort: 'throughput' } };
+
 export function providers(): Provider[] {
   const nvidiaKey = import.meta.env.NVIDIA_API_KEY;
   const openrouterKey = import.meta.env.OPENROUTER_API_KEY;
   return [
     nvidiaKey && { name: 'nvidia/deepseek-v4-pro', url: 'https://integrate.api.nvidia.com/v1/chat/completions', key: nvidiaKey, model: 'deepseek-ai/deepseek-v4-pro', extra: { chat_template_kwargs: { thinking: false } }, headers: {} },
     nvidiaKey && { name: 'nvidia/deepseek-v4-flash', url: 'https://integrate.api.nvidia.com/v1/chat/completions', key: nvidiaKey, model: 'deepseek-ai/deepseek-v4-flash', extra: { chat_template_kwargs: { thinking: false } }, headers: {} },
-    openrouterKey && { name: 'openrouter/deepseek-v4-pro', url: 'https://openrouter.ai/api/v1/chat/completions', key: openrouterKey, model: 'deepseek/deepseek-v4-pro', extra: {}, headers: { 'HTTP-Referer': 'https://averde.ai', 'X-Title': 'Averde AI Readiness Audit' } },
-    openrouterKey && { name: 'openrouter/deepseek-v4-flash', url: 'https://openrouter.ai/api/v1/chat/completions', key: openrouterKey, model: 'deepseek/deepseek-v4-flash', extra: {}, headers: { 'HTTP-Referer': 'https://averde.ai', 'X-Title': 'Averde AI Readiness Audit' } },
-    openrouterKey && { name: 'openrouter/deepseek-v3.1', url: 'https://openrouter.ai/api/v1/chat/completions', key: openrouterKey, model: 'deepseek/deepseek-chat-v3.1', extra: {}, headers: { 'HTTP-Referer': 'https://averde.ai', 'X-Title': 'Averde AI Readiness Audit' } },
+    openrouterKey && { name: 'openrouter/deepseek-v4-pro', url: 'https://openrouter.ai/api/v1/chat/completions', key: openrouterKey, model: 'deepseek/deepseek-v4-pro', extra: OR_ROUTING, headers: { 'HTTP-Referer': 'https://averde.ai', 'X-Title': 'Averde AI Readiness Audit' } },
+    openrouterKey && { name: 'openrouter/deepseek-v4-flash', url: 'https://openrouter.ai/api/v1/chat/completions', key: openrouterKey, model: 'deepseek/deepseek-v4-flash', extra: OR_ROUTING, headers: { 'HTTP-Referer': 'https://averde.ai', 'X-Title': 'Averde AI Readiness Audit' } },
+    openrouterKey && { name: 'openrouter/deepseek-v3.1', url: 'https://openrouter.ai/api/v1/chat/completions', key: openrouterKey, model: 'deepseek/deepseek-chat-v3.1', extra: OR_ROUTING, headers: { 'HTTP-Referer': 'https://averde.ai', 'X-Title': 'Averde AI Readiness Audit' } },
   ].filter(Boolean) as Provider[];
 }
 
