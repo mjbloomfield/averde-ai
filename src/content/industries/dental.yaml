@@ -19,7 +19,7 @@ painPoints:
 solutionHeadline: What an AI-Ready Dental Website Looks Like
 solutionDek: Built so AI engines can actually read it, recommend it, and cite it — and so prospective patients can answer their own questions before they ever pick up the phone.
 capabilities:
-  - AEO-optimized service pages for general, cosmetic, hygiene, ortho, emergency
+  - AEO/GEO-optimized service pages for general, cosmetic, hygiene, ortho, emergency
   - FAQ schema markup so ChatGPT and AI Overviews can pull direct answers
   - LocalBusiness + Dentist schema for AI search engines
   - Insurance and pricing transparency pages (huge AI ranking factor)

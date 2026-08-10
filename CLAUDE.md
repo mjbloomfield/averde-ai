@@ -218,7 +218,7 @@ branch it — don't average it.
   before commit. Target: <300KB per image.
 - Schema markup: full @graph in `src/components/SEOHead.astro` (every page)
 - Sitemap: dynamic at `/sitemap.xml` from `src/pages/sitemap.xml.ts`
-- All blog posts should be ~1,200-1,800 words and AEO-shaped (direct
+- All blog posts should be ~1,200-1,800 words and AEO/GEO-shaped (direct
   answer-first paragraphs, FAQ-style sections, real numbers/examples)
 
 ---

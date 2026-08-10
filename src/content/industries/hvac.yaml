@@ -19,7 +19,7 @@ painPoints:
 solutionHeadline: What an AI-Ready Contractor Website Looks Like
 solutionDek: Built so AI engines understand your service area, your specialties, your pricing transparency, and your emergency availability — and recommend you when it counts.
 capabilities:
-  - Service-by-service pages (heating, AC, plumbing, electrical, etc.) optimized for AEO
+  - Service-by-service pages (heating, AC, plumbing, electrical, etc.) optimized for AEO/GEO
   - Service-area pages for every city/zip you cover
   - FAQ schema for the questions customers actually ask AI engines
   - LocalBusiness + Service schema markup

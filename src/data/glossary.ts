@@ -6,9 +6,9 @@ export type GlossaryTerm = { term: string; slug: string; def: string };
 
 export const terms: GlossaryTerm[] = [
   {
-    term: 'AEO (Answer Engine Optimization)',
+    term: 'AEO/GEO (Answer or Generative Engine Optimization)',
     slug: 'aeo',
-    def: "Writing and structuring a website so AI answer engines — ChatGPT, Perplexity, Google AI Overviews — can cleanly extract, recommend, and cite your business when someone asks them a question.",
+    def: "Writing and structuring a website so AI answer engines — ChatGPT, Perplexity, Google AI Overviews — can cleanly extract, recommend, and cite your business when someone asks them a question. Two names for the same work: AEO is the older one, GEO is what you'll see more often now.",
   },
   {
     term: 'SEO (Search Engine Optimization)',
@@ -78,6 +78,6 @@ export const terms: GlossaryTerm[] = [
   {
     term: 'AI-Ready Website',
     slug: 'ai-ready-website',
-    def: "A site built so AI engines can read it, recommend it, and cite it: AEO content, full schema markup, and presence across the local AI citation network. The flagship Averde AI service.",
+    def: "A site built so AI engines can read it, recommend it, and cite it: AEO/GEO content, full schema markup, and presence across the local AI citation network. The flagship Averde AI service.",
   },
 ];

@@ -1,7 +1,7 @@
 seoTitle: The AI-Ready Website — What It Is and How the Build Works
 seoDescription: >-
   The exact process for rebuilding your website so it shows up in ChatGPT, Perplexity, and Google AI
-  Overviews. AEO content, schema markup, and local AI optimization.
+  Overviews. AEO/GEO content, schema markup, and local AI optimization.
 heroHeadline: The AI-Ready Website
 heroDek: >-
   From discovery to launch in roughly four weeks. AI engines start surfacing your business while I
@@ -22,7 +22,7 @@ steps:
       wins are. You get a written audit + content plan before any building starts.
   - title: 'Build: Content, Schema, Stack'
     body: >-
-      I rebuild your site on a low-cost, modern, fast stack — AEO-optimized copy across every page,
+      I rebuild your site on a low-cost, modern, fast stack — AEO/GEO-optimized copy across every page,
       full schema markup (FAQ, LocalBusiness, Service, Review), service-area pages, the editor
       you'll use to keep it fresh, and Google Search Console + Bing Webmaster Tools set up so the
       new site gets indexed fast. You review and approve as I build.
@@ -37,7 +37,7 @@ included:
     title: Full Schema Markup
     body: FAQ, LocalBusiness, Service, Review schema so AI engines can read and cite your content.
   - icon: check
-    title: AEO Content Across Every Page
+    title: AEO/GEO Content Across Every Page
     body: Content written so ChatGPT, Perplexity, and AI Overviews can extract clean, quotable answers.
   - icon: chart
     title: Visibility Report
@@ -52,7 +52,7 @@ faqHeadline: Common Questions
 faqs:
   - q: What does 'AI-Ready Website' actually mean?
     a: >-
-      Three things working together. (1) Content written for AEO — Answer Engine Optimization — so
+      Three things working together. (1) Content written for AEO/GEO — Answer Engine Optimization, also called Generative Engine Optimization — so
       ChatGPT, Perplexity, and Google AI Overviews can cleanly extract and cite your answers. (2)
       Schema markup (FAQ, LocalBusiness, Service, Review) so AI engines understand what you do,
       where, and for whom. (3) Local AI graph presence — Google Business Profile, Apple Maps, Bing,
@@ -60,20 +60,20 @@ faqs:
       this.
   - q: How is this different from regular SEO?
     a: >-
-      Regular SEO optimizes for Google's classic 10-blue-links results. AEO optimizes for AI engines
+      Regular SEO optimizes for Google's classic 10-blue-links results. AEO/GEO optimizes for AI engines
       that read your content and answer the question themselves — often without sending the user to
       your site at all. The user just sees you cited or recommended. I do both, because Google still
       matters, but AI search is now where your future best customers are starting their search.
   - q: Will I lose my current Google rankings?
     a: >-
-      No — almost the opposite. The structured data, fast modern stack, and AEO content I add
+      No — almost the opposite. The structured data, fast modern stack, and AEO/GEO content I add
       typically improve your classic Google rankings too. I do a careful rankings baseline before
       launch and protect everything that's already ranking. If anything dips, I fix it.
   - q: How long until I show up in ChatGPT / Perplexity / AI Overviews?
     a: >-
       AI engines update their indexes on different cadences. You'll usually see Perplexity changes
       within days, AI Overviews within 2-4 weeks, and ChatGPT model updates more gradually. I
-      monitor your visibility through the 90-day post-launch period and refine the AEO content as
+      monitor your visibility through the 90-day post-launch period and refine the AEO/GEO content as
       the engines respond.
   - q: Do I have to migrate off my current platform?
     a: >-
@@ -83,7 +83,7 @@ faqs:
       for ongoing updates.
   - q: What about my domain, email, and existing content?
     a: >-
-      All preserved. I migrate your content (improving it for AEO), keep your domain on its current
+      All preserved. I migrate your content (improving it for AEO/GEO), keep your domain on its current
       registrar, and don't touch your email setup. There's a brief DNS cutover at launch — usually
       5-15 minutes of overlap, no downtime.
   - q: What's included in the 90 days post-launch?

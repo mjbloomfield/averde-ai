@@ -19,7 +19,7 @@ painPoints:
 solutionHeadline: What an AI-Ready Real Estate Site Looks Like
 solutionDek: Built so AI engines understand your specialties, your neighborhoods, your transaction history, and recommend you to the buyers and sellers asking for help.
 capabilities:
-  - Per-neighborhood landing pages optimized for AEO
+  - Per-neighborhood landing pages optimized for AEO/GEO
   - Schema markup for RealEstateAgent + Neighborhood + FAQs
   - Buyer guide and seller guide content that AI engines cite
   - Recent transactions / case studies in AI-readable format

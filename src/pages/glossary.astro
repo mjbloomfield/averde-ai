@@ -9,7 +9,7 @@ const definedTermSet = {
   '@type': 'DefinedTermSet',
   '@id': `${site}/glossary#termset`,
   name: 'Averde AI Glossary',
-  description: 'Plain-English definitions of AI search, AEO, and small-business AI terms.',
+  description: 'Plain-English definitions of AI search, AEO/GEO, and small-business AI terms.',
   hasDefinedTerm: terms.map((t) => ({
     '@type': 'DefinedTerm',
     '@id': `${site}/glossary#${t.slug}`,
@@ -21,8 +21,8 @@ const definedTermSet = {
 ---
 
 <BaseLayout
-  title="AI Search Glossary — AEO, Schema, and Small-Business AI Terms"
-  description="Plain-English definitions of the terms behind AI search: AEO, SEO, AI Overviews, schema markup, LLMs, and more — no jargon."
+  title="AI Search Glossary — AEO/GEO, Schema, and Small-Business AI Terms"
+  description="Plain-English definitions of the terms behind AI search: AEO/GEO, SEO, AI Overviews, schema markup, LLMs, and more — no jargon."
 >
   <section class="wood-medium bg-green-deep py-20">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">

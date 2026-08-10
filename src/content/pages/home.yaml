@@ -42,7 +42,7 @@ services:
   - published: true
     title: 'AI-Ready Website & SEO Overhaul'
     price: 'From $1,200'
-    description: "AI search is rewriting how customers find local businesses. ChatGPT, Perplexity, and Google's AI Overviews now answer questions directly — and most small business sites are completely invisible to them. I rebuild yours to actually show up: AEO content, schema markup, the works."
+    description: "AI search is rewriting how customers find local businesses. ChatGPT, Perplexity, and Google's AI Overviews now answer questions directly — and most small business sites are completely invisible to them. I rebuild yours to actually show up: AEO/GEO content, schema markup, the works."
     ctaLabel: 'Get a quote →'
     ctaHref: '/contact'
   - published: true

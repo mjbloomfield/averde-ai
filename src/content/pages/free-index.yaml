@@ -23,7 +23,7 @@ downloads:
   - tag: Reference
     title: The Plain-English AI Glossary
     description: >-
-      AEO, schema markup, AI Overviews, LLMs — every term this site uses, defined in plain English
+      AEO/GEO, schema markup, AI Overviews, LLMs — every term this site uses, defined in plain English
       so you can read anything about AI search without a translator.
     ctaLabel: Browse the glossary →
     href: /glossary

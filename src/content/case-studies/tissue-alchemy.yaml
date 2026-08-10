@@ -4,8 +4,8 @@ order: 1
 industry: Bodywork & Massage Therapy
 location: Boulder, CO
 seoTitle: "Tissue Alchemy Case Study — AI-Ready Website Rebuild | Averde AI"
-seoDescription: "How a dated WordPress site for a Boulder bodywork practice became an AI-ready, schema-rich website — AEO readiness from roughly 25 to 90, zero structured data to 11 schema types, and 43 purpose-built pages."
-cardSummary: "A dated WordPress site with zero structured data, rebuilt into a schema-rich, AI-readable website. AEO readiness jumped from roughly 25 to 90."
+seoDescription: "How a dated WordPress site for a Boulder bodywork practice became an AI-ready, schema-rich website — AEO/GEO readiness from roughly 25 to 90, zero structured data to 11 schema types, and 43 purpose-built pages."
+cardSummary: "A dated WordPress site with zero structured data, rebuilt into a schema-rich, AI-readable website. AEO/GEO readiness jumped from roughly 25 to 90."
 
 oldUrl: "https://tissuealchemy.com"
 oldPlatform: "WordPress"
@@ -17,9 +17,9 @@ heroHeadline: "From invisible to AI-readable: rebuilding Tissue Alchemy for AI s
 heroDek: "Tissue Alchemy is a Boulder bodywork practice whose dated WordPress site wasn't readable by AI engines. We fixed that. We added structured data, built a robust FAQ, and revived a blog that had been dormant since 2016 — all things AI search engines look for, and all good for standard SEO too."
 
 scores:
-  - label: AEO score
+  - label: AEO/GEO score
     sublabel: How readable & citable the site is to AI engines (ChatGPT, Perplexity, Google AI Overviews)
-    info: "AEO = Answer Engine Optimization: how easily AI assistants can read your site and cite it when they answer questions. Driven by structured data, an llms.txt file, and clear content. It matters because more searches now end in an AI answer instead of a list of links."
+    info: "AEO/GEO = Answer Engine Optimization, also called Generative Engine Optimization: how easily AI assistants can read your site and cite it when they answer questions. Driven by structured data, an llms.txt file, and clear content. It matters because more searches now end in an AI answer instead of a list of links."
     before: 25
     after: 90
   - label: SEO score
