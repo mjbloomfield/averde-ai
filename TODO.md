@@ -22,6 +22,10 @@ Reverse-engineered the competitor scan at `seo-agency.crysblack.com/scan` (Lovab
 
 ### Everything else
 
+- **New service: Executive AI Coaching.** One-on-one coaching for founders, executives, and operators who want to use AI in their own work — not a website build. Reference layout Mark flagged 2026-08-10 (transcribed here because the screenshot was a temp file): italic one-line positioning, a short paragraph on what the sessions do, a checkmark list under "What we can work on:" — building better AI habits and workflows · applying AI to strategic planning and decision support · improving writing, research, and analysis workflows · creating role-specific prompt libraries · evaluating tools and use cases · identifying AI opportunities across a team or function — closing with a "Best for:" line naming the roles.
+  - Decide first: how it differs from the existing $250–$500 Strategy Sessions (one-off vs. recurring engagement), pricing and cadence, whether it lives on `/services` and `/ai-consulting` or earns its own page.
+  - Audience question worth settling before writing copy: the reference targets CMOs, COOs, and chiefs of staff, which is upmarket of the solo-practitioner and trades ICP the rest of the site speaks to. Either the copy segments, or we accept two voices on one site.
+  - Natural funnel fit: the AI Assessment already ends in a free 30-minute call, and coaching is the obvious paid next step for someone sitting at Stage 2–3 who has no one to ask.
 - **Readiness audit: optional voice answer.** "Press the button, spend a minute describing how you use AI" — browser MediaRecorder → STT → transcript feeds classification + recommendations. NVIDIA's OpenAI-compatible endpoint hosts no STT models (verified 2026-07-29); use OpenAI-compatible transcription elsewhere (e.g. whisper via OpenRouter/Groq) or NVIDIA's separate Riva ASR endpoints. Roughly a half-day build.
 - **Readiness report email — value adds (Mark-approved 2026-07-23):**
   - Attach the mini-playbook matching their #1 move (uses the tailored starter kits below; per-bucket once the decision tree exists).
