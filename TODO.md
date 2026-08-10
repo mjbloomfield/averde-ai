@@ -22,7 +22,6 @@ Reverse-engineered the competitor scan at `seo-agency.crysblack.com/scan` (Lovab
 
 ### Everything else
 
-- **Readiness audit: concrete-usage descriptions** — replace/augment frequency+depth with concrete usage statements ("I only use ChatGPT chats to help write emails" tells us more than "daily"). The team-aware half of v3 shipped 2026-07-30.
 - **Readiness audit: optional voice answer.** "Press the button, spend a minute describing how you use AI" — browser MediaRecorder → STT → transcript feeds classification + recommendations. NVIDIA's OpenAI-compatible endpoint hosts no STT models (verified 2026-07-29); use OpenAI-compatible transcription elsewhere (e.g. whisper via OpenRouter/Groq) or NVIDIA's separate Riva ASR endpoints. Roughly a half-day build.
 - **Readiness report email — value adds (Mark-approved 2026-07-23):**
   - Attach the mini-playbook matching their #1 move (uses the tailored starter kits below; per-bucket once the decision tree exists).
@@ -37,8 +36,6 @@ Reverse-engineered the competitor scan at `seo-agency.crysblack.com/scan` (Lovab
   - 90-day AI roadmap draft, pre-filled from answers, refined on the call.
 - **$27 Custom Instructions offer needs a payment link** — page ships with a placeholder; Mark creates a Stripe (or similar) payment link and we drop it into the claudeInstructions singleton. (Supersedes the older "$27 Claude Desktop Toolkit" idea below.)
 
-- **Decide the audit's name** — Mark is leaning toward "AI Website Audit" / "AI Website Readiness Audit" (currently "AI Visibility Audit" site-wide). Scoping it to *website* also clears the name space for the business audit below. Rename is copy-only; keep the /ai-audit URL.
-- **Develop an "AI Business Audit"** — separate product idea: how are you using AI in your business (operations, workflows, tooling), not just how AI sees your website. Would pair with the existing website audit as a two-audit funnel.
 - **Part 3 review pass** — Mark edits `/blog-drafts/02c-connect-claude-to-your-apps-mark-edited.md` (post is drafted, dated 2099/unpublished). On publish: set real date, update Parts 1-2 to say "3-part series" and cross-link Part 3.
 - **Decide if a phone number / tel: CTA should exist on the site** (none does today; settings singleton has no phone field until one is real).
 - **(Optional) CMS-wire the /free pages, /privacy, and glossary terms** — currently documented exceptions in CLAUDE.md; revisit if Mark wants to edit them without code.
@@ -98,3 +95,4 @@ Reverse-engineered the competitor scan at `seo-agency.crysblack.com/scan` (Lovab
 - 2026-08-03 — Widget form UX pass: placeholder/hint text now renders light driftwood (was near-ink, read as filled), unselected "Choose one…" dropdowns match; Continue is always clickable and incomplete steps now show highlighted fields + an inline error instead of a silently dead button (both widgets); assessment intro dek no longer says the audit "scores" answers.
 - 2026-08-03 — Recommendation timeouts retuned after a real lead (Thred) fell back to canned: Vercel logs showed all three rungs aborting on our own caps, not provider errors. v4-pro now gets 65s (was 50s, but real runs land 28-46s and a slow OpenRouter moment blew past it) and v3.1 is the single fallback at 25s — v4-flash was dropped because it reasons too and could never finish in the leftover window. Widget budget 85s → 100s.
 - 2026-08-03 — Root-caused the canned-recommendation fallbacks: OpenRouter's default routing was sending v4-pro to a slow upstream (StreamLake, 49-59s on the full report prompt) while the same model on a fast host (BaseTen) returns in 12-24s. Added provider sort:throughput to all OpenRouter calls; output quality unchanged.
+- 2026-08-10 — Closed three stale To-do items after verifying them against the live site: the audit naming decision (shipped as "Website Audit" site-wide, 86db087; no "AI Visibility Audit" left in source), the "AI Business Audit" product idea (shipped as The AI Assessment, 13fe551), and concrete-usage descriptions for the assessment (the five-stage picker asks "I use AI chat for questions and drafting" rather than a frequency, 13fe551).
