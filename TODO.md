@@ -8,6 +8,20 @@ Site: `https://averde.ai` · Stack: Astro + Tailwind + Keystatic + Supabase + Re
 
 ## To do
 
+### Website Audit — improvements from the Crys Black teardown (2026-08-10)
+
+Reverse-engineered the competitor scan at `seo-agency.crysblack.com/scan` (Lovable + Supabase edge functions; `public-scan` does robots.txt vs 12 AI crawlers, 4-page citability heuristics, schema types, PageSpeed) and tested every idea against tissuealchemy.com. Mockups with real data: artifact `fd4a2f22`.
+
+- **Page discovery: parse the sitemap.** Biggest item. `pickSubpages` keyword-matches homepage links and caps at 4, so Tissue Alchemy scans 5 pages of 44 — it misses all seven `/conditions/*` pages even though they're linked from the homepage, purely because the keyword list has no "condition" entry. Parse `sitemap.xml` (already HEAD-checked in `existsCheck`), handle sitemap-index nesting, cap ~10-12 with a priority rule, keep the link crawl as fallback. ~half a day. Do this *before* adding checks — otherwise we measure the wrong pages more precisely.
+- **Surface LCP and CLS in the report.** `pageSpeedSignals()` already fetches both and the widget renders only the performance/SEO scores. "87 out of 100" isn't actionable; "someone on a phone waits 3.3s for your first content" is. Minutes of work. (PageSpeed itself has been wired since 2026-05-17 with a restricted key in `averde-ai` GCP project — do not rebuild it.)
+- **Evidence strings should quote the page.** The title check already returns `Found: "…"`; the rest just describe results ("Found a meta description."). Extend the existing pattern.
+- **Add two content checks, not four.** Question-shaped text, and a date on article/blog pages. The question check must read `<summary>`, `<dt>`, headings *and* paragraphs — Sharon's condition pages carry proper Q&A inside `<details>` plus FAQPage JSON-LD, and a heading-only test scores them zero. Make the date check page-type aware (a contact page has no author or publish date, and shouldn't be docked). Skip numeric-fact counting, "quotable lines," and author-byline detection — all unreliable. Score FAQPage JSON-LD as a Google signal, not an AI-visibility one: markdown pipelines strip `<script>`, so schema is not what carries FAQ content to an LLM.
+- **Index-coverage check.** Compare the URLs an engine actually knows against the current sitemap (Perplexity had 3 of Sharon's 44, one of them a pre-rebuild URL that now 301s). Frame it as diagnosis, expectation-setting at handoff, and a 60/90-day re-run hook — *not* as a fix we sell. Inbound links and time are the real remedy and we can't shortcut them.
+- **Validate the content proxies against our own data.** None of these signals have published causal evidence. We already record whether a business appeared in live Perplexity search — correlate that against check outcomes to learn which proxies predict citation. Until then present them as improvements, not score deductions.
+- **Prep an answer for their crawler-access penalty.** Their scan marks all 12 AI crawlers "partial" for any robots.txt `Disallow` line. Every Keystatic site we build has `Disallow: /keystatic`, so a prospect running their scan on our work sees ~20 points knocked off for blocking a CMS admin route.
+
+### Everything else
+
 - **Readiness audit: concrete-usage descriptions** — replace/augment frequency+depth with concrete usage statements ("I only use ChatGPT chats to help write emails" tells us more than "daily"). The team-aware half of v3 shipped 2026-07-30.
 - **Readiness audit: optional voice answer.** "Press the button, spend a minute describing how you use AI" — browser MediaRecorder → STT → transcript feeds classification + recommendations. NVIDIA's OpenAI-compatible endpoint hosts no STT models (verified 2026-07-29); use OpenAI-compatible transcription elsewhere (e.g. whisper via OpenRouter/Groq) or NVIDIA's separate Riva ASR endpoints. Roughly a half-day build.
 - **Readiness report email — value adds (Mark-approved 2026-07-23):**
@@ -36,6 +50,7 @@ Site: `https://averde.ai` · Stack: Astro + Tailwind + Keystatic + Supabase + Re
 - **Continue training the voice corpus in `CLAUDE.md`** — next time Mark edits a draft, diff and append observed patterns to the "Mark's voice" section. The voice section should grow.
 - **(Maybe) Vercel daily cron pinging `/api/rebuild`** for scheduled-blog-post precision. Not needed yet per current weekly-commit cadence.
 - **Schema for `tool_downloads` and audit segmentation** — once leads accumulate, build a Keystatic/admin view for who downloaded what and segment outreach.
+- **Add `vercel-env.txt` to `.gitignore`** — `vercel env pull` writes it to the repo root containing `SUPABASE_SERVICE_ROLE_KEY`, and it is not ignored today. One line, prevents a bad `git add .`.
 
 ---
 
