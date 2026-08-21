@@ -1,73 +1,106 @@
-heroEyebrow: 'Boulder, CO · Serving businesses nationwide'
-heroHeadline: 'Your Personal'
-heroHeadlineEmphasis: 'AI Guy.'
-heroSub: "I'm Mark Bloomfield — engineer, founder, and the person who explains AI to small businesses without the jargon or the hype. I help you figure out what's real, what's worth it, and how to actually make it work for you."
+heroEyebrow: Boulder, CO · Serving businesses nationwide
+heroHeadline: Your Personal
+heroHeadlineEmphasis: AI Guy.
+heroSub: >-
+  I'm Mark Bloomfield — engineer, founder, and the person who explains AI to
+  small businesses without the jargon or the hype. I help you figure out what's
+  real, what's worth it, and how to actually make it work for you.
 heroPrimaryCta: Free AI audits
 heroSecondaryCta: Other free resources →
 heroCardItems:
-  - 'Get found in ChatGPT, Perplexity & AI search'
-  - 'Build websites that AI engines actually surface'
-  - 'Add custom AI tools that fit your business'
-
-toolsEyebrow: 'Start here — no cost'
-toolsHeadline: 'Free tools to get you oriented.'
-toolsDek: "Start with the audit — it checks your real website, not your answers to a quiz. Then dig into the free resources or book the call."
+  - Get found in ChatGPT, Perplexity & AI search
+  - Build websites that AI engines actually surface
+  - Add custom AI tools that fit your business
+toolsEyebrow: Start here — no cost
+toolsHeadline: Free tools to get you oriented.
+toolsDek: >-
+  Start with the audit — it checks your real website, not your answers to a
+  quiz. Then dig into the free resources or book the call.
 tools:
   - published: true
     icon: checklist
-    tag: 'Interactive · ~3 minutes · Free'
-    title: 'Website Audit'
-    description: "We fetch your live website, run 13 real checks on what AI engines actually read, and run a live AI-search query for your market. Transparent score, fix-it-yourself action plan."
-    ctaLabel: 'Run the audit →'
-    ctaHref: '/ai-audit'
+    tag: Interactive · ~3 minutes · Free
+    title: Website Audit
+    description: >-
+      We fetch your live website, run 13 real checks on what AI engines actually
+      read, and run a live AI-search query for your market. Transparent score,
+      fix-it-yourself action plan.
+    ctaLabel: Run the audit →
+    ctaHref: /ai-audit
   - published: true
     icon: star
-    tag: 'Articles · Templates · Free'
-    title: 'Free Resources'
-    description: "Practical articles on AI search and using AI, the Claude Starter Kit, and a plain-English glossary. The real versions, not teasers — use them all without ever talking to me."
-    ctaLabel: 'Browse the resources →'
-    ctaHref: '/free'
+    tag: Articles · Templates · Free
+    title: Free Resources
+    description: >-
+      Practical articles on AI search and using AI, the Claude Starter Kit, and
+      a plain-English glossary. The real versions, not teasers — use them all
+      without ever talking to me.
+    ctaLabel: Browse the resources →
+    ctaHref: /free
   - published: true
     icon: clock
-    tag: 'Live · 30 minutes · Free'
-    title: '30-min Strategy Call'
-    description: "Done the audit and want to walk through it together? Book a working session with Mark to turn the report into a concrete plan."
-    ctaLabel: 'Book the call →'
-    ctaHref: '/ai-audit#book'
-
-servicesEyebrow: 'Ready to go deeper'
-servicesHeadline: "When you're ready to actually build something."
-servicesDek: "From a focused strategy session to a custom AI build — I work with you directly, at every stage. The flagship right now is the AI-Ready Website."
+    tag: Live · 30 minutes · Free
+    title: 30-min Strategy Call
+    description: >-
+      Done the audit and want to walk through it together? Book a working
+      session with Mark to turn the report into a concrete plan.
+    ctaLabel: Book the call →
+    ctaHref: /ai-audit#book
+servicesEyebrow: Ready to go deeper
+servicesHeadline: When you're ready to actually build something.
+servicesDek: >-
+  From a focused strategy session to a custom AI build — I work with you
+  directly, at every stage. The flagship right now is the AI-Ready Website.
 services:
   - published: true
-    title: 'AI-Ready Website & SEO Overhaul'
-    price: 'From $1,200'
-    description: "AI search is rewriting how customers find local businesses. ChatGPT, Perplexity, and Google's AI Overviews now answer questions directly — and most small business sites are completely invisible to them. I rebuild yours to actually show up: AEO/GEO content, schema markup, the works."
-    ctaLabel: 'Get a quote →'
-    ctaHref: '/contact'
+    title: AI-Ready Website & SEO Overhaul
+    price: From $1,500
+    description: >-
+      AI search is rewriting how customers find local businesses. ChatGPT,
+      Perplexity, and Google's AI Overviews now answer questions directly — and
+      most small business sites are completely invisible to them. I rebuild
+      yours to actually show up: AEO/GEO content, schema markup, the works.
+    ctaLabel: Get a quote →
+    ctaHref: /contact
   - published: true
-    title: 'Strategy Session'
-    price: '$250 – $500'
-    description: "A focused 90-minute working session where we map out your AI roadmap — what to build, what to buy off the shelf, and what to skip entirely. You leave with a prioritized action plan."
-    ctaLabel: 'Book a session →'
-    ctaHref: '/ai-audit'
+    title: Strategy Session
+    price: $250 – $500
+    description: >-
+      A focused 90-minute working session where we map out your AI roadmap —
+      what to build, what to buy off the shelf, and what to skip entirely. You
+      leave with a prioritized action plan.
+    ctaLabel: Book a session →
+    ctaHref: /ai-audit
   - published: true
-    title: 'Custom AI Builds'
-    price: 'Quote-based'
-    description: "Bespoke AI built around your data, your workflows, and your team. Internal knowledge bases, multi-step automations, fractional Head of AI."
-    ctaLabel: "Let's talk →"
-    ctaHref: '/contact'
-
-quoteText: '"Wow — this looks so good. Everything is organized and styled so beautifully and strategically. Love a lot of the wording choices you made... I''m really excited to have a legit website that will be easy for me to edit."'
-quoteName: 'Sharon T.'
-quoteRole: 'Owner · Tissue Alchemy · Boulder, CO'
-
-aboutEyebrow: 'Why work with me'
-aboutHeadline: "I'm not a consultant who learned AI last year."
-aboutBio1: 'I spent years as a composites research engineer and sustainability consultant before the AI wave hit. When I saw what it could do for small businesses — not the hype, the actual practical tools — I went all in on helping owners cut through the noise.'
-aboutBio2: "Every client works directly with me — I figure out what you actually need, skip the things you don't, and build or deploy it fast. I'm based in Boulder, CO, working with businesses across the country."
-
-ctaHeadline: "Not sure where AI fits?\nRun the audit."
-ctaDek: "3 minutes. Live checks on your real website, a real AI-search query for your market, and an action plan you can execute yourself — or hand to me."
-ctaButton: 'Run my free AI audit'
-ctaMicro: 'No commitment · No credit card · Just clarity'
+    title: Custom AI Builds
+    price: Quote-based
+    description: >-
+      Bespoke AI built around your data, your workflows, and your team. Internal
+      knowledge bases, multi-step automations, fractional Head of AI.
+    ctaLabel: Let's talk →
+    ctaHref: /contact
+quoteText: >-
+  "Wow — this looks so good. Everything is organized and styled so beautifully
+  and strategically. Love a lot of the wording choices you made... I'm really
+  excited to have a legit website that will be easy for me to edit."
+quoteName: Sharon T.
+quoteRole: Owner · Tissue Alchemy · Boulder, CO
+aboutEyebrow: Why work with me
+aboutHeadline: I'm not a consultant who learned AI last year.
+aboutBio1: >-
+  I spent years as a composites research engineer and sustainability consultant
+  before the AI wave hit. When I saw what it could do for small businesses — not
+  the hype, the actual practical tools — I went all in on helping owners cut
+  through the noise.
+aboutBio2: >-
+  Every client works directly with me — I figure out what you actually need,
+  skip the things you don't, and build or deploy it fast. I'm based in Boulder,
+  CO, working with businesses across the country.
+ctaHeadline: |-
+  Not sure where AI fits?
+  Run the audit.
+ctaDek: >-
+  3 minutes. Live checks on your real website, a real AI-search query for your
+  market, and an action plan you can execute yourself — or hand to me.
+ctaButton: Run my free AI audit
+ctaMicro: No commitment · No credit card · Just clarity
