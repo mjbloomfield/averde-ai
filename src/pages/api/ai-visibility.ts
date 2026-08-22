@@ -110,8 +110,17 @@ export const POST: APIRoute = async ({ request }) => {
   const keywords = [...new Set(rawKeywords.map(k => String(k).trim()).filter(k => k.length > 2))].slice(0, 10);
   const cityToken = (city.split(/[\s,]+/)[0] || '').toLowerCase();
 
+  // Only bolt the audit's city onto a phrase that names no place at all.
+  // Testing for our own city isn't enough: someone serving two markets writes
+  // "firmware engineering in san francisco", and appending their home city
+  // produced "…in san francisco Boulder, CO" — a query no buyer would type.
+  const STATES = /\b(a[klrz]|c[aot]|d[ce]|fl|ga|hi|i[adln]|k[sy]|la|m[adeinost]|n[cdehjmvy]|o[hkr]|pa|ri|s[cd]|t[nx]|ut|v[at]|w[aivy])\b/i;
+  const namesAPlace = (k: string) =>
+    /\b(in|near|around|serving|based)\s+\S/i.test(k) || /near me/i.test(k) || STATES.test(k);
+
   const queries = keywords.length
-    ? keywords.map(k => (cityToken && !k.toLowerCase().includes(cityToken) ? `${k} ${city}` : k))
+    ? keywords.map(k =>
+        cityToken && !k.toLowerCase().includes(cityToken) && !namesAPlace(k) ? `${k} ${city}` : k)
     : [
         `best ${industry.toLowerCase()} in ${city}`,
         `${industry.toLowerCase()} ${city} recommendations`,
