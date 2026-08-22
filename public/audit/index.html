@@ -81,6 +81,12 @@
   .score-copy h2 { font-size:26px; margin-bottom:10px; }
   .score-copy p { color:var(--muted); }
   .score-basis { font-family:'Inter Tight',sans-serif; font-size:12px; color:var(--smoke); margin-top:10px; }
+  .halves { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0 4px; }
+  .half { background:var(--paper); border:1px solid var(--bone); border-radius:12px; padding:12px 14px; }
+  .half .k { font-family:'Inter Tight',sans-serif; font-size:10.5px; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--smoke); margin-bottom:5px; }
+  .half .v { font-family:'Fraunces',serif; font-size:24px; line-height:1; }
+  .half .v small { font-size:13px; color:var(--driftwood); }
+  .half .band { font-family:'Inter Tight',sans-serif; font-size:12px; font-weight:600; margin-top:4px; }
 
   .section-block { background:#fff; border:1px solid var(--bone); border-radius:20px; padding:28px; margin-bottom:24px; }
   @media (min-width:640px){ .section-block { padding:32px; } }
@@ -442,6 +448,49 @@ function buildChecks() {
   return checks;
 }
 
+// The overall grade mixes two different jobs: whether Google can crawl you
+// (title, sitemap, speed) and whether AI engines can cite you (schema,
+// llms.txt, appearing in a live search). A fast, crawlable site with no schema
+// scores badly overall, which reads as contradictory unless both halves are
+// shown. These are the AI-side checks; everything else is search basics.
+const AI_CHECK_IDS = ['schema-local', 'schema-faq', 'schema-service', 'llms', 'aivis'];
+
+function splitScores(checks) {
+  const tally = ids => {
+    let earned = 0, possible = 0;
+    checks.forEach(c => {
+      if (c.status === 'na' || c.max <= 0) return;
+      if (ids.indexOf(c.id) !== -1) { earned += c.points; possible += c.max; }
+    });
+    return possible > 0 ? { earned, possible, pct: Math.round((earned / possible) * 100) } : null;
+  };
+  const ai = tally(AI_CHECK_IDS);
+  const search = tally(checks.filter(c => AI_CHECK_IDS.indexOf(c.id) === -1).map(c => c.id));
+  return { search, ai };
+}
+
+// Plain-language verdict for a half-score, so "66" and "0" read as a sentence.
+function bandLabel(pct) {
+  if (pct == null) return '—';
+  return pct >= 85 ? 'Strong' : pct >= 60 ? 'Decent' : pct >= 35 ? 'Weak' : 'Failing';
+}
+
+function bandColor(pct) {
+  if (pct == null) return '#7B6E5B';
+  return pct >= 85 ? '#3a6f4d' : pct >= 60 ? '#5b7a5e' : pct >= 35 ? '#9C6A33' : '#A04324';
+}
+
+// One sentence naming the gap between the two halves — the whole point of
+// splitting them.
+function splitVerdict(h) {
+  if (!h.search || !h.ai) return '';
+  const gap = h.search.pct - h.ai.pct;
+  if (gap >= 30) return 'Google can read your site fine. AI engines can’t place or cite it — that gap is what the plan below closes.';
+  if (gap <= -30) return 'AI engines have something to work with, but the search fundamentals underneath are shaky.';
+  if (h.ai.pct >= 70) return 'Both halves are in good shape — the fixes below are refinements.';
+  return 'Both halves need work; start with the priority fixes below.';
+}
+
 function scoreFromChecks(checks) {
   let earned = 0, possible = 0, ran = 0;
   checks.forEach(c => {
@@ -485,6 +534,7 @@ function buildPlan(checks) {
         'Pick a platform that allows custom code (you’ll want schema markup later) and state what you do, where, in plain English.',
       ],
       shortcut: 'The AI-Ready Website build starts at $1,500 and handles all of this — structure, content, schema — in about 3–4 weeks.',
+      kind: 'fix',
     });
   }
 
@@ -501,6 +551,7 @@ function buildPlan(checks) {
       shortcut: c.id.indexOf('schema') === 0 || c.id === 'aivis' || c.id === 'llms'
         ? 'The AI-Ready Website rebuild covers every check on this list — from $1,500, about 3–4 weeks.'
         : null,
+      kind: 'fix',
     });
   });
 
@@ -517,6 +568,7 @@ function buildPlan(checks) {
         'Set up a free Claude or ChatGPT account and paste your FAQ in when drafting replies — it answers in your words.',
       ],
       shortcut: 'A Strategy Session ($250–$500) can turn this into a full content plan in 90 minutes.',
+      kind: 'rec',
     });
   }
 
@@ -530,6 +582,7 @@ function buildPlan(checks) {
         'If call volume is real, look at an AI receptionist service and have it book directly into your calendar.',
       ],
       shortcut: 'I scope and set these up as a Custom AI Build — quote depends on your phone/calendar stack.',
+      kind: 'rec',
     });
   }
 
@@ -543,6 +596,7 @@ function buildPlan(checks) {
         'For reporting: Google Looker Studio (free) can pull your numbers into one live dashboard.',
       ],
       shortcut: 'Custom automation builds typically run $1,500–$5,000 depending on the systems involved.',
+      kind: 'rec',
     });
   }
 
@@ -556,6 +610,7 @@ function buildPlan(checks) {
         'Draft each new quote by describing the job — you edit the 20% that needs your judgment.',
       ],
       shortcut: null,
+      kind: 'rec',
     });
   }
 
@@ -569,6 +624,7 @@ function buildPlan(checks) {
         'Write two follow-up templates (day 2, day 7) and actually send them.',
       ],
       shortcut: null,
+      kind: 'rec',
     });
   }
 
@@ -579,6 +635,7 @@ function buildPlan(checks) {
       why: 'Your checks look strong and you didn’t flag major pain — the next move is deciding which AI bets compound for your specific business.',
       diy: ['Bring your report to a free 30-minute call and we’ll rank your options together.'],
       shortcut: null,
+      kind: 'rec',
     });
   }
 
@@ -589,8 +646,10 @@ function buildPlan(checks) {
 function submitLead(checks, score, plan) {
   if (state.sendStatus !== 'idle' || !state.email) return;
   state.sendStatus = 'sending';
-  const opportunities = plan.map((p, i) => ({
-    rank: 'Priority ' + (i + 1),
+  let fixNo = 0, recNo = 0;
+  const opportunities = plan.map(p => ({
+    rank: p.kind === 'rec' ? 'Recommendation ' + (++recNo) : 'Priority ' + (++fixNo),
+    kind: p.kind || 'fix',
     title: p.title,
     why: p.why,
     service: p.shortcut || '',
@@ -609,7 +668,7 @@ function submitLead(checks, score, plan) {
       keywords: state.keywords,
       pains: state.pains,
       goal: state.goal,
-      scores: { overall: score.overall, grade: score.grade, earned: score.earned, possible: score.possible },
+      scores: { overall: score.overall, grade: score.grade, earned: score.earned, possible: score.possible, halves: splitScores(checks) },
       checks: checks.map(c => ({ id: c.id, name: c.name, status: c.status, points: c.points, max: c.max, evidence: c.evidence, fix: c.fix })),
       opportunities,
       actionPlan: plan,
@@ -815,6 +874,7 @@ function renderReport() {
   shell.classList.add('wide');
   const checks = buildChecks();
   const score = scoreFromChecks(checks);
+  const halves = splitScores(checks);
   const plan = buildPlan(checks);
   const av = state.aiVisibility && !state.aiVisibility.pending ? state.aiVisibility : null;
   const pendingAny = (state.siteAudit && state.siteAudit.pending) || (state.aiVisibility && state.aiVisibility.pending);
@@ -921,6 +981,20 @@ function renderReport() {
       <div class="score-copy">
         <p class="eyebrow" style="margin-bottom:6px">Website Audit Score</p>
         <h2>${score.overall == null ? 'No automated score without a website.' : interpret(score, checks)}</h2>
+        ${halves.search && halves.ai ? `
+        <div class="halves">
+          <div class="half">
+            <p class="k">Search basics</p>
+            <p class="v" style="color:${bandColor(halves.search.pct)}">${halves.search.pct}<small> / 100</small></p>
+            <p class="band" style="color:${bandColor(halves.search.pct)}">${bandLabel(halves.search.pct)}</p>
+          </div>
+          <div class="half">
+            <p class="k">AI readiness</p>
+            <p class="v" style="color:${bandColor(halves.ai.pct)}">${halves.ai.pct}<small> / 100</small></p>
+            <p class="band" style="color:${bandColor(halves.ai.pct)}">${bandLabel(halves.ai.pct)}</p>
+          </div>
+        </div>
+        <p class="score-basis" style="margin-top:0">${splitVerdict(halves)}</p>` : ''}
         <p class="score-basis">${score.overall == null
           ? 'The action plan below is built from what you told us.'
           : `Transparent math: ${score.earned} of ${score.possible} points across ${score.ran} automated checks of your actual site and AI-search presence. Nothing self-reported is scored.`}

@@ -4,9 +4,12 @@ import { Resend } from 'resend';
 
 export const prerender = false;
 
+type Half = { earned: number; possible: number; pct: number };
+
 type Scores = {
   overall?: number;
   grade?: string;
+  halves?: { search?: Half | null; ai?: Half | null };
   visibility?: number;
   stack?: number;
   opportunity?: number;
@@ -14,6 +17,7 @@ type Scores = {
 
 type Opportunity = {
   rank?: string;
+  kind?: 'fix' | 'rec';
   title?: string;
   service?: string;
   effort?: string;
@@ -293,7 +297,9 @@ function renderEmail(args: {
 }): { html: string; text: string; subject: string } {
   const { payload, name, email, industry, leadId, dbStatus } = args;
   const s = payload.scores || {};
-  const ops = (payload.opportunities || []).slice(0, 3);
+  const allOps = payload.opportunities || [];
+  const fixes = allOps.filter(o => o.kind !== 'rec');
+  const recs = allOps.filter(o => o.kind === 'rec');
   const subject = `Averde AI Audit Lead: ${name || 'Anonymous'} (${industry || 'unknown'})`;
   const checksSummary = payload.checks?.length
     ? {
@@ -376,17 +382,19 @@ function renderEmail(args: {
     siteAuditTextBlock,
     aiVisTextBlock,
     '',
-    `Overall AI Readiness: ${s.grade ?? '?'} (${s.overall ?? '?'} / 100)`,
-    `  AI Search Visibility: ${s.visibility ?? '?'}`,
-    `  Stack Maturity:        ${s.stack ?? '?'}`,
-    `  Opportunity Density:   ${s.opportunity ?? '?'}`,
+    `Overall: ${s.grade ?? '?'} (${s.overall ?? '?'} / 100)`,
+    s.halves?.search ? `  Search basics: ${s.halves.search.pct}/100` : '',
+    s.halves?.ai ? `  AI readiness:  ${s.halves.ai.pct}/100` : '',
     '',
-    'Top 3 opportunities:',
-    ops.length
-      ? ops.map((o, i) => `  ${i + 1}. ${o.title || '(untitled)'}${o.service ? ` — ${o.service}` : ''}`).join('\n')
+    'Priority fixes:',
+    fixes.length
+      ? fixes.map((o, i) => `  ${i + 1}. ${o.title || '(untitled)'}${o.service ? ` — ${o.service}` : ''}`).join('\n')
       : '  (none returned)',
-    '',
-    leadId ? `Lead row: ${leadId}` : `Supabase: ${dbStatus}`,
+    recs.length ? '' : '',
+    recs.length ? 'Recommendations:' : '',
+    recs.length
+      ? recs.map((o, i) => `  ${i + 1}. ${o.title || '(untitled)'}${o.service ? ` — ${o.service}` : ''}`).join('\n')
+      : '',
   ].filter(Boolean).join('\n');
 
   // — HTML email (table-based, inline styles, ~600px max-width) —
@@ -406,6 +414,23 @@ function renderEmail(args: {
       <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:${c.muted};margin-bottom:6px;">${esc(label)}</div>
       <div style="font:700 28px/1 'Helvetica Neue',Arial,sans-serif;color:${c.walnut};">${esc(value ?? '—')}</div>
     </td>`;
+
+  const bandTone = (pct: number) =>
+    pct >= 85 ? '#3a6f4d' : pct >= 60 ? '#5b7a5e' : pct >= 35 ? '#9C6A33' : '#A04324';
+
+  const halfCard = (label: string, pct: number) => `
+    <td width="50%" style="background:${c.paper};border:1px solid ${c.border};border-radius:10px;padding:14px 16px;">
+      <div style="font:600 10px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:${c.muted};">${esc(label)}</div>
+      <div style="font:700 26px/1.1 'Helvetica Neue',Arial,sans-serif;color:${bandTone(pct)};margin-top:6px;">${pct}<span style="font-weight:400;font-size:14px;color:${c.muted};"> / 100</span></div>
+    </td>`;
+
+  const halfVerdict = (search: number, ai: number) => {
+    const gap = search - ai;
+    if (gap >= 30) return 'Google can read the site fine; AI engines cannot place or cite it. That gap is the pitch.';
+    if (gap <= -30) return 'Some AI signals present, but the search fundamentals underneath are shaky.';
+    if (ai >= 70) return 'Both halves in decent shape — refinements rather than a rescue.';
+    return 'Both halves need work.';
+  };
 
   const oppCard = (op: Opportunity, i: number) => `
     <tr><td style="padding:0 0 12px 0;">
@@ -459,7 +484,7 @@ function renderEmail(args: {
               </tr>
               ${sa.platform ? `<tr><td style="padding:10px 14px;color:${c.muted};vertical-align:top;">Platform</td><td style="padding:10px 14px;color:${c.ink};">${esc(sa.platform)}</td></tr>` : ''}
               ${sa.hosting ? `<tr><td style="padding:10px 14px;color:${c.muted};vertical-align:top;">Hosting</td><td style="padding:10px 14px;color:${c.ink};">${esc(sa.hosting)}</td></tr>` : ''}
-              ${sa.pagespeed?.performance != null ? `<tr><td style="padding:10px 14px;color:${c.muted};vertical-align:top;">Mobile perf</td><td style="padding:10px 14px;color:${c.ink};">${sa.pagespeed.performance}/100</td></tr>` : ''}
+              ${sa.pagespeed?.performance != null ? `<tr><td style="padding:10px 14px;color:${c.muted};vertical-align:top;">Mobile performance</td><td style="padding:10px 14px;color:${c.ink};">${sa.pagespeed.performance}/100</td></tr>` : ''}
               ${sa.pagespeed?.seo != null ? `<tr><td style="padding:10px 14px;color:${c.muted};vertical-align:top;">SEO basics</td><td style="padding:10px 14px;color:${c.ink};">${sa.pagespeed.seo}/100</td></tr>` : ''}
               <tr><td style="padding:10px 14px;color:${c.muted};vertical-align:top;">Discoverability</td><td style="padding:10px 14px;color:${c.ink};">${sa.files?.robots ? '✓ robots.txt' : '✗ no robots.txt'} &nbsp;·&nbsp; ${sa.files?.sitemap ? '✓ sitemap.xml' : '✗ no sitemap.xml'}</td></tr>
             </table>
@@ -533,6 +558,19 @@ function renderEmail(args: {
           </table>
         </td></tr>
 
+        <!-- The two halves: a fast, crawlable site with no schema scores badly
+             overall, which reads as contradictory unless both are shown. -->
+        ${s.halves?.search && s.halves?.ai ? `
+        <tr><td style="padding:10px 28px 4px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="6">
+            <tr>
+              ${halfCard('Search basics', s.halves.search.pct)}
+              ${halfCard('AI readiness', s.halves.ai.pct)}
+            </tr>
+          </table>
+          <div style="font:400 12px/1.5 'Helvetica Neue',Arial,sans-serif;color:${c.muted};padding:8px 2px 0;">${esc(halfVerdict(s.halves.search.pct, s.halves.ai.pct))}</div>
+        </td></tr>` : ''}
+
         <!-- Sub-scores -->
         <tr><td style="padding:12px 28px 16px;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="6">
@@ -550,10 +588,15 @@ function renderEmail(args: {
 
         <!-- Opportunities -->
         <tr><td style="padding:8px 28px 16px;">
-          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:${c.muted};margin-bottom:12px;">Top 3 recommended moves</div>
+          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:${c.muted};margin-bottom:12px;">Priority fixes</div>
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-            ${ops.length ? ops.map(oppCard).join('') : '<tr><td style="color:' + c.muted + ';">(none returned)</td></tr>'}
+            ${fixes.length ? fixes.map(oppCard).join('') : '<tr><td style="color:' + c.muted + ';">(none returned)</td></tr>'}
           </table>
+          ${recs.length ? `
+          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:${c.muted};margin:22px 0 12px;">Recommendations</div>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+            ${recs.map(oppCard).join('')}
+          </table>` : ''}
         </td></tr>
 
         <!-- Reply nudge -->
@@ -565,10 +608,6 @@ function renderEmail(args: {
           </table>
         </td></tr>
 
-        <!-- Footer / lead id -->
-        <tr><td style="padding:12px 28px 24px;font:400 11px/1.5 'Helvetica Neue',Arial,sans-serif;color:${c.muted};border-top:1px solid ${c.border};">
-          ${leadId ? `Supabase row: <code style="font:400 11px/1 ui-monospace,Menlo,monospace;color:${c.ink};">${esc(leadId)}</code>` : `Supabase: ${esc(dbStatus)}`}
-        </td></tr>
 
       </table>
     </td></tr>
