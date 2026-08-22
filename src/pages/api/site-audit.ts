@@ -213,48 +213,146 @@ async function pageSpeedSignals(target: string): Promise<{
 }
 
 // Schema often lives on the page it describes (FAQPage on /faq, Service on
-// /services) — Google's guidelines actually require that. So we can't judge
-// schema from the homepage alone: pick up to 4 likely schema-bearing pages
-// from the homepage's own links and scan those too.
-const SUBPAGE_KEYWORDS = ['faq', 'question', 'how-it-works', 'website', 'service', 'rate', 'pricing', 'price', 'treatment', 'about', 'contact'];
+// /services) — Google's guidelines actually require that — so judging schema
+// from the homepage alone misses most of it. The sitemap is the fast path: one
+// request for the whole map. Without one we crawl, because the sites most
+// likely to fail this audit are also the least likely to publish a sitemap.
+const MAX_PAGES = 12;        // pages scanned in addition to the homepage
+const CRAWL_DEPTH = 2;       // homepage links, then one hop further
+const DISCOVERY_MS = 14_000; // hard ceiling; we report what we have when it's hit
+const BATCH = 4;             // concurrent page fetches
 
-function pickSubpages(html: string, base: URL): URL[] {
+const SKIP_PATH =
+  /\.(pdf|jpe?g|png|gif|webp|svg|zip|mp4|mp3|css|js|xml|json|ico|woff2?|ttf)$|^\/(wp-admin|wp-json|wp-content|cdn-cgi|keystatic|admin)\b|\/(tag|tags|category|categories|author|page)\//i;
+
+const norm = (u: URL) => (u.pathname.replace(/\/+$/, '') || '/').toLowerCase();
+const bareHost = (h: string) => h.replace(/^www\./, '');
+
+// Rank candidates so a 12-page budget goes to pages that carry schema and
+// answer buyer questions, not to the fifth page of a blog archive.
+function rankPath(path: string): number {
+  const p = path.toLowerCase();
+  let score = 0;
+  if (/(faq|question)/.test(p)) score += 40;
+  if (/(service|treatment|solution|what-we-do|capabilit)/.test(p)) score += 35;
+  if (/(pricing|price|rate|cost|plan)/.test(p)) score += 30;
+  if (/(about|team|who-we-are|story)/.test(p)) score += 20;
+  if (/(contact|book|schedule|appointment|quote|estimate)/.test(p)) score += 20;
+  if (/(condition|industr|location|area|case-stud|portfolio|work|project)/.test(p)) score += 15;
+  if (/(blog|news|article|post|insight)/.test(p)) score -= 10;
+  if (/(privacy|terms|legal|cookie|sitemap|login|cart|checkout|account)/.test(p)) score -= 40;
+  score -= (p.split('/').filter(Boolean).length - 1) * 8; // prefer shallow
+  return score;
+}
+
+function linksFrom(html: string, base: URL): URL[] {
+  const out: URL[] = [];
   const seen = new Set<string>();
-  const links: URL[] = [];
-  const re = /<a[^>]+href=["']([^"'#]+)["']/gi;
+  const re = /<a[^>]+href=["']([^"'#\s]+)["']/gi;
   let m: RegExpExecArray | null;
   while ((m = re.exec(html))) {
     try {
       const u = new URL(m[1], base);
-      if (u.hostname.replace(/^www\./, '') !== base.hostname.replace(/^www\./, '')) continue;
-      if (u.pathname === '/' || /\.(pdf|jpe?g|png|gif|webp|svg|zip|mp4)$/i.test(u.pathname)) continue;
-      const key = u.pathname.replace(/\/$/, '').toLowerCase();
-      if (seen.has(key)) continue;
+      if (u.protocol !== 'http:' && u.protocol !== 'https:') continue;
+      if (bareHost(u.hostname) !== bareHost(base.hostname)) continue;
+      if (SKIP_PATH.test(u.pathname)) continue;
+      const key = norm(u);
+      if (key === '/' || seen.has(key)) continue;
       seen.add(key);
-      links.push(u);
+      u.hash = '';
+      u.search = '';
+      out.push(u);
     } catch { /* unparseable href */ }
   }
-  const picked: URL[] = [];
-  for (const kw of SUBPAGE_KEYWORDS) {
-    const hit = links.find(l => l.pathname.toLowerCase().includes(kw) && !picked.includes(l));
-    if (hit) picked.push(hit);
-    if (picked.length >= 4) break;
-  }
-  return picked;
+  return out;
 }
 
-// Cheap follow-ups: do robots.txt / sitemap.xml / llms.txt exist?
-async function existsCheck(base: URL): Promise<{ robots: boolean; sitemap: boolean; llms: boolean }> {
+// Returns the sitemap's URLs, or null when there's no usable sitemap. Follows
+// one level of <sitemapindex> nesting, which is how most CMSs split large maps.
+async function sitemapUrls(base: URL): Promise<URL[] | null> {
+  const load = async (target: string): Promise<string | null> => {
+    const res = await fetchWithTimeout(target, 6_000);
+    if (!res || !res.ok) return null;
+    const body = await res.text();
+    return /<(urlset|sitemapindex)/i.test(body) ? body : null;
+  };
+  const root = await load(new URL('/sitemap.xml', base).toString());
+  if (!root) return null;
+
+  const locs = (xml: string) => [...xml.matchAll(/<loc>\s*([^<\s]+)\s*<\/loc>/gi)].map(m => m[1]);
+  let raw = locs(root);
+  if (/<sitemapindex/i.test(root)) {
+    const children = await Promise.all(raw.slice(0, 3).map(load));
+    raw = children.filter(Boolean).flatMap(x => locs(x as string));
+  }
+
+  const seen = new Set<string>();
+  const out: URL[] = [];
+  for (const href of raw) {
+    try {
+      const u = new URL(href);
+      if (bareHost(u.hostname) !== bareHost(base.hostname)) continue;
+      if (SKIP_PATH.test(u.pathname)) continue;
+      const key = norm(u);
+      if (key === '/' || seen.has(key)) continue;
+      seen.add(key);
+      out.push(u);
+    } catch { /* malformed <loc> */ }
+  }
+  return out;
+}
+
+// Walks the site and extracts schema types per page. Sitemap when available,
+// breadth-first crawl otherwise; capped by page count, depth, and wall clock.
+async function scanPages(base: URL, homeHtml: string): Promise<{
+  pages: { path: string; types: string[] }[];
+  sitemap: boolean;
+  method: 'sitemap' | 'crawl';
+}> {
+  const started = Date.now();
+  const pages = [{ path: '/', types: extractSchemaTypes(homeHtml) }];
+  const seen = new Set<string>(['/']);
+
+  const fromMap = await sitemapUrls(base);
+  const crawling = !fromMap;
+  let queue = (fromMap ?? linksFrom(homeHtml, base)).map(url => ({ url, depth: 1 }));
+
+  while (queue.length && pages.length <= MAX_PAGES && Date.now() - started < DISCOVERY_MS) {
+    queue.sort((a, b) => rankPath(b.url.pathname) - rankPath(a.url.pathname));
+    const batch = queue.splice(0, Math.min(BATCH, MAX_PAGES + 1 - pages.length));
+    const results = await Promise.all(batch.map(async ({ url, depth }) => {
+      const key = norm(url);
+      if (seen.has(key)) return null;
+      seen.add(key);
+      const res = await fetchWithTimeout(url.toString(), 5_000);
+      if (!res || !res.ok) return null;
+      if (!/text\/html/i.test(res.headers.get('content-type') || 'text/html')) return null;
+      const html = await res.text();
+      return { path: url.pathname, types: extractSchemaTypes(html), html, depth };
+    }));
+
+    for (const r of results) {
+      if (!r) continue;
+      pages.push({ path: r.path, types: r.types });
+      if (crawling && r.depth < CRAWL_DEPTH) {
+        for (const link of linksFrom(r.html, base)) {
+          if (!seen.has(norm(link))) queue.push({ url: link, depth: r.depth + 1 });
+        }
+      }
+    }
+  }
+
+  return { pages, sitemap: !!fromMap, method: crawling ? 'crawl' : 'sitemap' };
+}
+
+// Cheap follow-ups: do robots.txt / llms.txt exist? (sitemap comes from scanPages)
+async function existsCheck(base: URL): Promise<{ robots: boolean; llms: boolean }> {
   const head = async (path: string) => {
     const res = await fetchWithTimeout(new URL(path, base).toString(), 5_000);
     return !!res && res.ok;
   };
-  const [robots, sitemap, llms] = await Promise.all([
-    head('/robots.txt'),
-    head('/sitemap.xml'),
-    head('/llms.txt'),
-  ]);
-  return { robots, sitemap, llms };
+  const [robots, llms] = await Promise.all([head('/robots.txt'), head('/llms.txt')]);
+  return { robots, llms };
 }
 
 export const POST: APIRoute = async ({ request }) => {
@@ -287,16 +385,8 @@ export const POST: APIRoute = async ({ request }) => {
   // schema.org has a deep inheritance tree (Dentist IS-A LocalBusiness IS-A
   // Organization). We map the user's actual found types to the umbrella
   // categories AI engines care about.
-  const subpages = pickSubpages(html, u);
-  const subpageScans = await Promise.all(subpages.map(async sp => {
-    const res = await fetchWithTimeout(sp.toString(), 5_000);
-    if (!res || !res.ok) return null;
-    return { path: sp.pathname, types: extractSchemaTypes(await res.text()) };
-  }));
-  const pages = [
-    { path: '/', types: extractSchemaTypes(html) },
-    ...subpageScans.filter((p): p is { path: string; types: string[] } => !!p),
-  ];
+  const scan = await scanPages(u, html);
+  const pages = scan.pages;
   const schemaTypes = [...new Set(pages.flatMap(p => p.types))];
   const SCHEMA_INHERITANCE: Record<string, string[]> = {
     LocalBusiness: [
@@ -364,6 +454,7 @@ export const POST: APIRoute = async ({ request }) => {
     },
     pagespeed: null as Awaited<ReturnType<typeof pageSpeedSignals>>,
     files: { robots: false, sitemap: false, llms: false },
+    discovery: { method: scan.method, pagesScanned: pages.length },
   };
 
   // Fan out the two slow checks in parallel
@@ -372,7 +463,7 @@ export const POST: APIRoute = async ({ request }) => {
     existsCheck(u),
   ]);
   findings.pagespeed = ps;
-  findings.files = files;
+  findings.files = { ...files, sitemap: scan.sitemap };
 
   return json(200, findings);
 };
