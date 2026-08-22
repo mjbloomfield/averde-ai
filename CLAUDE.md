@@ -7,7 +7,7 @@ as voice patterns emerge from Mark's edits.
 
 Averde AI is Mark Bloomfield's solo consultancy. The site (this repo) is the
 top of his funnel: free 3-minute AI Readiness Audit → 30-min strategy call
-→ paid engagements (AI-Ready Website rebuild $1,200+, Strategy Sessions
+→ paid engagements (AI-Ready Website rebuild $1,500+, Strategy Sessions
 $250-$500, Voice Agent, Custom AI builds).
 
 The repositioning we did in May 2026 made **AI-Ready Website** the flagship
