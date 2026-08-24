@@ -749,11 +749,11 @@ function renderUserReportEmail(payload: AuditPayload, reportUrl: string | null):
               <div style="font:600 15px/1.4 'Helvetica Neue',Arial,sans-serif;color:#1F2937;margin-bottom:4px;">Start with the free version</div>
               <div style="font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;color:#6B7280;margin-bottom:14px;">Everything above is doable yourself. These two explain the why and the how, in plain English — no signup.</div>
               <div style="border-left:2px solid #C99356;padding-left:14px;margin-bottom:12px;">
-                <a href="https://averde.ai/blog/what-does-ai-ready-website-actually-mean" style="font:600 14px/1.4 'Helvetica Neue',Arial,sans-serif;color:#2A1B11;">What does it actually mean for a website to be &ldquo;AI-Ready&rdquo;?</a>
+                <a href="https://averde.ai/blog/what-does-ai-ready-website-actually-mean" style="font:600 14px/1.4 'Helvetica Neue',Arial,sans-serif;color:#2A1B11;">What does it actually mean for a website to be &ldquo;AI Ready&rdquo;?</a>
                 <div style="font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;color:#6B7280;">The three things AI engines look for, and why most sites miss all three.</div>
               </div>
               <div style="border-left:2px solid #C99356;padding-left:14px;">
-                <a href="https://averde.ai/blog/how-to-make-your-website-ai-ready" style="font:600 14px/1.4 'Helvetica Neue',Arial,sans-serif;color:#2A1B11;">How to make your website AI-Ready</a>
+                <a href="https://averde.ai/blog/how-to-make-your-website-ai-ready" style="font:600 14px/1.4 'Helvetica Neue',Arial,sans-serif;color:#2A1B11;">How to make your website AI Ready</a>
                 <div style="font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;color:#6B7280;">The DIY playbook — roughly 30&ndash;45 hours, with AI doing most of the keystrokes.</div>
               </div>
               <div style="border-top:1px solid #E5E7EB;margin-top:16px;padding-top:14px;font:400 13px/1.6 'Helvetica Neue',Arial,sans-serif;color:#1F2937;">
