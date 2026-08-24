@@ -205,15 +205,13 @@ const INDUSTRIES = [
 ];
 
 const PAIN_POINTS = [
-  { id:'visibility', label:"Competitors show up online when we don't" },
-  { id:'calls',      label:'Phone calls going unanswered' },
-  { id:'leads',      label:'Lead follow-up dropping through the cracks' },
-  { id:'data',       label:'Manual data entry between systems' },
-  { id:'questions',  label:'Same customer questions answered over and over' },
-  { id:'quotes',     label:'Quoting / proposal writing takes too long' },
-  { id:'scheduling', label:'Scheduling complexity, no-shows, or double-bookings' },
-  { id:'content',    label:'Content & marketing creation eats my time' },
-  { id:'reporting',  label:"No clear visibility into what's actually working" },
+  { id:'invisible',   label:"We don't show up when people search" },
+  { id:'noenquiries', label:'People visit but almost nobody gets in touch' },
+  { id:'thin',        label:"It doesn't really explain what we do" },
+  { id:'dated',       label:'It looks dated next to our competitors' },
+  { id:'cantedit',    label:"I can't update it myself" },
+  { id:'slow',        label:'It feels slow, especially on a phone' },
+  { id:'unknown',     label:"No idea whether it's working at all" },
 ];
 
 const GOALS = [
@@ -579,78 +577,8 @@ function buildPlan(checks) {
     });
   });
 
-  // 2. Pain-driven recommendations — real tools, not just services
-  const P = id => state.pains.indexOf(id) !== -1;
-
-  if (P('questions') || P('content')) {
-    plan.push({
-      title: 'Put your repeated answers to work twice',
-      why: 'The questions you answer over and over are exactly what AI engines want on your site. One effort, two payoffs: less repeat work, more AI visibility.',
-      diy: [
-        'Collect the 10–15 questions your inbox and front desk actually get.',
-        'Publish them as a real FAQ page, in plain English, with specific answers (prices, timelines).',
-        'Set up a free Claude or ChatGPT account and paste your FAQ in when drafting replies — it answers in your words.',
-      ],
-      shortcut: 'A Strategy Session ($250–$500) can turn this into a full content plan in 90 minutes.',
-      kind: 'rec',
-    });
-  }
-
-  if (P('calls') || P('scheduling')) {
-    plan.push({
-      title: 'Stop losing the jobs that call after hours',
-      why: 'Missed calls and booking friction are usually the cheapest revenue to recover — the customer already wanted you.',
-      diy: [
-        'Turn on missed-call text-back (many phone providers and Google Business Profile offer this free).',
-        'Add online booking — TidyCal, Calendly, or your industry’s scheduler — and link it from your homepage and Google profile.',
-        'If call volume is real, look at an AI receptionist service and have it book directly into your calendar.',
-      ],
-      shortcut: 'I scope and set these up as a Custom AI Build — quote depends on your phone/calendar stack.',
-      kind: 'rec',
-    });
-  }
-
-  if (P('data') || P('reporting')) {
-    plan.push({
-      title: 'Connect the systems you’re re-typing between',
-      why: 'Manual re-entry between systems is the most common hidden cost in small businesses — and the most automatable.',
-      diy: [
-        'Write down the 3 places the same information gets typed twice.',
-        'Check Zapier or Make — the connection you need probably already exists as a template.',
-        'For reporting: Google Looker Studio (free) can pull your numbers into one live dashboard.',
-      ],
-      shortcut: 'Custom automation builds typically run $1,500–$5,000 depending on the systems involved.',
-      kind: 'rec',
-    });
-  }
-
-  if (P('quotes')) {
-    plan.push({
-      title: 'Cut quoting from hours to minutes',
-      why: 'Proposals are high-leverage AI work: the structure repeats, only the specifics change.',
-      diy: [
-        'Save your 3 best past proposals as examples.',
-        'In Claude, create a Project with those examples plus your price list.',
-        'Draft each new quote by describing the job — you edit the 20% that needs your judgment.',
-      ],
-      shortcut: null,
-      kind: 'rec',
-    });
-  }
-
-  if (P('leads')) {
-    plan.push({
-      title: 'Close the follow-up gap',
-      why: 'Most lost leads aren’t lost to competitors — they’re lost to silence. Speed and consistency beat cleverness here.',
-      diy: [
-        'Set an auto-reply on your contact form / Google profile that promises (and states) a response time.',
-        'Pick one place every lead lands — even a free CRM like HubSpot Free — so nothing lives only in someone’s inbox.',
-        'Write two follow-up templates (day 2, day 7) and actually send them.',
-      ],
-      shortcut: null,
-      kind: 'rec',
-    });
-  }
+  // What they told us shapes the follow-up conversation, not extra cards:
+  // every service we could pitch off these lives in the AI Assessment.
 
   // Fallback if somehow nothing landed
   if (plan.length === 0) {
@@ -860,9 +788,9 @@ function renderKeywords() {
 function renderPains() {
   root.innerHTML = stepWrap({
     progress: progressBar(3),
-    eyebrow: 'Where it hurts',
-    title: 'Where are you losing time or revenue?',
-    dek: 'Check everything that applies. This shapes your action plan — it doesn’t change your score.',
+    eyebrow: 'Your site today',
+    title: "What's not working about your website?",
+    dek: 'Check everything that applies. This tells me what you care about — it doesn’t change your score.',
     body: `${liveStatusStrip()}<div class="pains-grid">
       ${PAIN_POINTS.map(p => `
         <div class="check-row ${state.pains.indexOf(p.id) !== -1 ? 'selected' : ''}" data-pain="${p.id}">
@@ -881,7 +809,7 @@ function renderPains() {
     back: true,
   });
   stepMissing = () => state.pains.length
-    ? [] : [{ msg:'Check at least one — even a rough pick shapes your action plan.' }];
+    ? [] : [{ msg:'Check at least one — or the last option if nothing here fits.' }];
   root.querySelectorAll('[data-pain]').forEach(row => {
     row.addEventListener('click', () => {
       const id = row.getAttribute('data-pain');
