@@ -416,50 +416,6 @@ function renderEmail(args: {
   };
 
   const gradeBg = gradeColor(s.grade);
-  const scoreCard = (label: string, value: number | string | undefined) => `
-    <td style="padding:14px 12px;background:${c.bone};border-radius:8px;text-align:center;width:33%;">
-      <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:${c.muted};margin-bottom:6px;">${esc(label)}</div>
-      <div style="font:700 28px/1 'Helvetica Neue',Arial,sans-serif;color:${c.walnut};">${esc(value ?? '—')}</div>
-    </td>`;
-
-  const bandTone = (pct: number) =>
-    pct >= 85 ? '#3a6f4d' : pct >= 60 ? '#5b7a5e' : pct >= 35 ? '#9C6A33' : '#A04324';
-
-  const halfCard = (label: string, pct: number) => `
-    <td width="50%" style="background:${c.paper};border:1px solid ${c.border};border-radius:10px;padding:14px 16px;">
-      <div style="font:600 10px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:${c.muted};">${esc(label)}</div>
-      <div style="font:700 26px/1.1 'Helvetica Neue',Arial,sans-serif;color:${bandTone(pct)};margin-top:6px;">${pct}<span style="font-weight:400;font-size:14px;color:${c.muted};"> / 100</span></div>
-    </td>`;
-
-  const halfVerdict = (search: number, ai: number) => {
-    const gap = search - ai;
-    if (gap >= 30) return 'Google can read the site fine; AI engines cannot place or cite it. That gap is the pitch.';
-    if (gap <= -30) return 'Some AI signals present, but the search fundamentals underneath are shaky.';
-    if (ai >= 70) return 'Both halves in decent shape — refinements rather than a rescue.';
-    return 'Both halves need work.';
-  };
-
-  const oppCard = (op: Opportunity, i: number) => `
-    <tr><td style="padding:0 0 12px 0;">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${c.paper};border:1px solid ${c.border};border-radius:10px;">
-        <tr><td style="padding:18px 20px;">
-          <div style="font:600 10px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:${c.accent};margin-bottom:4px;">${esc(op.rank || `Opportunity ${i + 1}`)}</div>
-          <div style="font:600 17px/1.3 'Helvetica Neue',Arial,sans-serif;color:${c.ink};margin-bottom:8px;">${esc(op.title || '(untitled)')}</div>
-          ${op.why ? `<div style="font:400 14px/1.5 'Helvetica Neue',Arial,sans-serif;color:${c.muted};margin-bottom:12px;">${esc(op.why)}</div>` : ''}
-          <table role="presentation" cellpadding="0" cellspacing="0" style="font:400 13px/1.4 'Helvetica Neue',Arial,sans-serif;color:${c.ink};">
-            ${op.service ? `<tr><td style="padding:2px 16px 2px 0;color:${c.muted};">Service</td><td style="padding:2px 0;">${esc(op.service)}</td></tr>` : ''}
-            ${op.effort ? `<tr><td style="padding:2px 16px 2px 0;color:${c.muted};">Timeline</td><td style="padding:2px 0;">${esc(op.effort)}</td></tr>` : ''}
-            ${op.invest ? `<tr><td style="padding:2px 16px 2px 0;color:${c.muted};">Investment</td><td style="padding:2px 0;">${esc(op.invest)}</td></tr>` : ''}
-          </table>
-        </td></tr>
-      </table>
-    </td></tr>`;
-
-  const identityRow = (label: string, value?: string) =>
-    value
-      ? `<tr><td style="padding:3px 12px 3px 0;color:${c.muted};white-space:nowrap;vertical-align:top;">${esc(label)}</td><td style="padding:3px 0;color:${c.ink};">${esc(value)}</td></tr>`
-      : '';
-
   const toolsHtmlBlock = stackRows.length
     ? `
         <tr><td style="padding:8px 28px 4px;">
@@ -475,47 +431,12 @@ function renderEmail(args: {
         </td></tr>`
     : '';
 
-  const siteAuditHtmlBlock = sa
-    ? `
-        <tr><td style="padding:8px 28px 4px;">
-          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:${c.muted};margin-bottom:10px;">Real site signals</div>
-          ${!sa.reachable ? `
-            <div style="background:${c.bone};border-left:3px solid ${c.accent};padding:12px 16px;border-radius:6px;color:${c.ink};font-size:13px;">
-              Site was not reachable for analysis.
-            </div>
-          ` : `
-            <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;background:${c.bone};border-radius:8px;">
-              <tr>
-                <td style="padding:10px 14px;color:${c.muted};width:42%;vertical-align:top;">Schema markup</td>
-                <td style="padding:10px 14px;color:${c.ink};">${sa.schema?.present?.length ?? 0} of ${sa.schema?.max ?? '?'} expected${sa.schema?.present?.length ? `<br><span style="color:${c.muted};font-size:12px;">Found: ${esc(sa.schema!.present!.join(', '))}</span>` : ''}${sa.schema?.missing?.length ? `<br><span style="color:#B45309;font-size:12px;">Missing: ${esc(sa.schema!.missing!.join(', '))}</span>` : ''}</td>
-              </tr>
-              ${sa.platform ? `<tr><td style="padding:10px 14px;color:${c.muted};vertical-align:top;">Platform</td><td style="padding:10px 14px;color:${c.ink};">${esc(sa.platform)}</td></tr>` : ''}
-              ${sa.hosting ? `<tr><td style="padding:10px 14px;color:${c.muted};vertical-align:top;">Hosting</td><td style="padding:10px 14px;color:${c.ink};">${esc(sa.hosting)}</td></tr>` : ''}
-              ${sa.pagespeed?.performance != null ? `<tr><td style="padding:10px 14px;color:${c.muted};vertical-align:top;">Mobile performance</td><td style="padding:10px 14px;color:${c.ink};">${sa.pagespeed.performance}/100</td></tr>` : ''}
-              ${sa.pagespeed?.seo != null ? `<tr><td style="padding:10px 14px;color:${c.muted};vertical-align:top;">SEO basics</td><td style="padding:10px 14px;color:${c.ink};">${sa.pagespeed.seo}/100</td></tr>` : ''}
-              <tr><td style="padding:10px 14px;color:${c.muted};vertical-align:top;">Discoverability</td><td style="padding:10px 14px;color:${c.ink};">${sa.files?.robots ? '✓ robots.txt' : '✗ no robots.txt'} &nbsp;·&nbsp; ${sa.files?.sitemap ? '✓ sitemap.xml' : '✗ no sitemap.xml'}</td></tr>
-            </table>
-          `}
-        </td></tr>`
-    : '';
+  // The internal notification is the client's report verbatim, with a
+  // lead-only block bolted on top. One canonical report, no drift.
+  const report = renderUserReportEmail(payload, null);
 
-  const aiVisHtmlBlock = av?.configured
-    ? `
-        <tr><td style="padding:8px 28px 4px;">
-          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:${c.muted};margin-bottom:10px;">AI search visibility</div>
-          <div style="background:${av.appeared ? '#ECFDF5' : c.walnut};color:${av.appeared ? c.ink : c.paper};border-radius:10px;padding:16px 18px;">
-            <div style="font:600 13px/1.2 'Helvetica Neue',Arial,sans-serif;margin-bottom:10px;color:${av.appeared ? '#16A34A' : '#C99356'};">
-              ${av.appeared ? '✓ Appeared in Perplexity search' : '⚠ Did NOT appear in Perplexity search'}
-            </div>
-            ${av.queries?.[0]?.query ? `<div style="font:400 12px/1.4 'Helvetica Neue',Arial,sans-serif;color:${av.appeared ? c.muted : '#D1D5DB'};margin-bottom:10px;">Query: "${esc(av.queries[0].query)}"</div>` : ''}
-            ${(av.queries?.[0]?.results || []).slice(0, 5).map(r => `
-              <div style="padding:8px 10px;margin-bottom:4px;border-radius:6px;background:${r.isUser ? 'rgba(34,197,94,.18)' : (av.appeared ? 'rgba(255,255,255,.6)' : 'rgba(255,255,255,.06)')};">
-                <div style="font:600 13px/1.3 'Helvetica Neue',Arial,sans-serif;color:${av.appeared ? c.ink : c.paper};">${r.isUser ? '✓ ' : ''}${esc(r.title)}</div>
-                <div style="font:400 11px/1.3 'Helvetica Neue',Arial,sans-serif;color:${av.appeared ? c.muted : '#D1D5DB'};margin-top:2px;">${esc(r.host || r.url)}</div>
-              </div>
-            `).join('')}
-          </div>
-        </td></tr>`
+  const infoRow = (label: string, value?: string) => value
+    ? `<tr><td style="padding:5px 14px 5px 0;color:${c.muted};vertical-align:top;white-space:nowrap;">${esc(label)}</td><td style="padding:5px 0;color:${c.ink};">${esc(value)}</td></tr>`
     : '';
 
   const html = `<!DOCTYPE html>
@@ -523,101 +444,45 @@ function renderEmail(args: {
 <body style="margin:0;padding:0;background:${c.bone};font:400 14px/1.5 'Helvetica Neue',Arial,sans-serif;color:${c.ink};">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${c.bone};padding:24px 12px;">
     <tr><td align="center">
-      <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:${c.paper};border-radius:12px;overflow:hidden;">
 
-        <!-- Header -->
-        <tr><td style="padding:24px 28px 16px;background:${c.walnut};color:${c.paper};">
-          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#C99356;margin-bottom:8px;">New audit lead</div>
-          <div style="font:600 22px/1.25 'Helvetica Neue',Arial,sans-serif;">${esc(name || 'Anonymous')}</div>
-          <div style="font:400 14px/1.4 'Helvetica Neue',Arial,sans-serif;color:#D1D5DB;margin-top:4px;">${esc(industry || 'unknown industry')}${payload.city ? ' · ' + esc(payload.city) : ''}</div>
+      <table role="presentation" width="720" cellpadding="0" cellspacing="0" style="max-width:720px;background:${c.paper};border-radius:12px;overflow:hidden;margin-bottom:18px;">
+        <tr><td style="padding:22px 28px 16px;background:${c.walnut};color:${c.paper};">
+          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:${c.accent};margin-bottom:8px;">New audit lead</div>
+          <div style="font:600 21px/1.25 'Helvetica Neue',Arial,sans-serif;">${esc(name || 'Anonymous')}</div>
+          <div style="font:400 14px/1.4 'Helvetica Neue',Arial,sans-serif;color:#D1D5DB;margin-top:4px;">${esc(industry || 'unknown')}${payload.city ? ' · ' + esc(payload.city) : ''}</div>
         </td></tr>
 
-        <!-- Identity -->
-        <tr><td style="padding:20px 28px 8px;">
+        <tr><td style="padding:18px 28px 6px;">
           <table role="presentation" cellpadding="0" cellspacing="0" style="font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;">
-            ${identityRow('Contact', payload.contactName)}
-            ${identityRow('Email', email)}
-            ${identityRow('Website', payload.website)}
-            ${identityRow('Keywords', payload.keywords)}
-            ${identityRow('Searching from', scopeLabel(payload.searchScope))}
-            ${identityRow('Stated goal', payload.goal)}
+            ${infoRow('Contact', payload.contactName)}
+            ${infoRow('Email', email)}
+            ${infoRow('Website', payload.website)}
+            ${infoRow('Searching from', scopeLabel(payload.searchScope))}
+            ${infoRow('Stated goal', payload.goal)}
+            ${infoRow('Platform', sa?.platform || undefined)}
+            ${infoRow('Hosting', sa?.hosting || undefined)}
+            ${infoRow('Pages scanned', sa?.schema?.pagesScanned?.length ? String(sa.schema.pagesScanned.length) : undefined)}
+            ${checksSummary ? `<tr><td style="padding:5px 14px 5px 0;color:${c.muted};vertical-align:top;white-space:nowrap;">Checks</td><td style="padding:5px 0;color:${c.ink};">${checksSummary.pass} passed · ${checksSummary.warn} partial · ${checksSummary.fail} failed</td></tr>` : ''}
           </table>
         </td></tr>
 
-        <!-- Tools / stack -->
-        ${toolsHtmlBlock}
-
-        <!-- Real site signals -->
-        ${siteAuditHtmlBlock}
-
-        <!-- AI search visibility -->
-        ${aiVisHtmlBlock}
-
-        <!-- Overall score banner -->
-        <tr><td style="padding:8px 28px 4px;">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${gradeBg};border-radius:10px;">
-            <tr>
-              <td style="padding:18px 22px;color:#fff;">
-                <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;opacity:.85;">Overall AI Readiness</div>
-                <div style="font:700 32px/1.1 'Helvetica Neue',Arial,sans-serif;margin-top:6px;">${esc(s.grade ?? '?')}</div>
-              </td>
-              <td style="padding:18px 22px;color:#fff;text-align:right;font:700 36px/1 'Helvetica Neue',Arial,sans-serif;">${esc(s.overall ?? '?')}<span style="font-weight:400;font-size:18px;opacity:.7;">/100</span></td>
-            </tr>
-          </table>
-        </td></tr>
-
-        <!-- The two halves: a fast, crawlable site with no schema scores badly
-             overall, which reads as contradictory unless both are shown. -->
-        ${s.halves?.search && s.halves?.ai ? `
-        <tr><td style="padding:10px 28px 4px;">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="6">
-            <tr>
-              ${halfCard('Search basics', s.halves.search.pct)}
-              ${halfCard('AI readiness', s.halves.ai.pct)}
-            </tr>
-          </table>
-          <div style="font:400 12px/1.5 'Helvetica Neue',Arial,sans-serif;color:${c.muted};padding:8px 2px 0;">${esc(halfVerdict(s.halves.search.pct, s.halves.ai.pct))}</div>
+        ${payload.keywords ? `<tr><td style="padding:6px 28px 4px;">
+          <div style="font:600 10px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:${c.muted};margin-bottom:6px;">Phrases they gave us</div>
+          <div style="font:400 13px/1.7 'Helvetica Neue',Arial,sans-serif;color:${c.ink};">${esc(payload.keywords).replace(/\n/g, '<br/>')}</div>
         </td></tr>` : ''}
 
-        <!-- Sub-scores -->
-        <tr><td style="padding:12px 28px 16px;">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="6">
-            <tr>
-              ${checksSummary
-                ? scoreCard('Checks passed', checksSummary.pass) +
-                  scoreCard('Partial', checksSummary.warn) +
-                  scoreCard('Failed', checksSummary.fail)
-                : scoreCard('AI Search Vis.', s.visibility) +
-                  scoreCard('Stack Maturity', s.stack) +
-                  scoreCard('Opportunity', s.opportunity)}
-            </tr>
-          </table>
-        </td></tr>
-
-        <!-- Opportunities -->
-        <tr><td style="padding:8px 28px 16px;">
-          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:${c.muted};margin-bottom:12px;">Priority fixes</div>
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-            ${fixes.length ? fixes.map(oppCard).join('') : '<tr><td style="color:' + c.muted + ';">(none returned)</td></tr>'}
-          </table>
-          ${recs.length ? `
-          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:${c.muted};margin:22px 0 12px;">Recommendations</div>
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-            ${recs.map(oppCard).join('')}
-          </table>` : ''}
-        </td></tr>
-
-        <!-- Reply nudge -->
-        <tr><td style="padding:8px 28px 24px;">
+        <tr><td style="padding:14px 28px 22px;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${c.bone};border-radius:8px;">
-            <tr><td style="padding:14px 18px;font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;color:${c.ink};">
-              Reply to this email to respond directly to <strong>${esc(name || email)}</strong> — Reply-To is set.
+            <tr><td style="padding:13px 16px;font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;color:${c.ink};">
+              Reply to this email to answer <strong>${esc(name || email)}</strong> directly — Reply-To is set.
             </td></tr>
           </table>
         </td></tr>
-
-
       </table>
+
+      <div style="font:600 10px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:${c.muted};padding-bottom:10px;">The report they received</div>
+      ${report.card}
+
     </td></tr>
   </table>
 </body></html>`;
@@ -692,12 +557,7 @@ function renderUserReportEmail(payload: AuditPayload, reportUrl: string | null):
 
   const gradeBg = gradeColor(s.grade);
 
-  const html = `<!DOCTYPE html>
-<html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>${esc(subject)}</title></head>
-<body style="margin:0;padding:0;background:#F4F1EA;font:400 14px/1.5 'Helvetica Neue',Arial,sans-serif;color:#1F2937;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F4F1EA;padding:24px 12px;">
-    <tr><td align="center">
-      <table role="presentation" width="720" cellpadding="0" cellspacing="0" style="max-width:720px;background:#FFFFFF;border-radius:12px;overflow:hidden;">
+  const card = `<table role="presentation" width="720" cellpadding="0" cellspacing="0" style="max-width:720px;background:#FFFFFF;border-radius:12px;overflow:hidden;">
 
         ${reportUrl ? `<tr><td style="padding:10px 28px;background:#EDE3D0;font:400 12px/1.4 'Helvetica Neue',Arial,sans-serif;color:#6B7280;text-align:center;">
           Email clipping this, or reading on a small screen? <a href="${reportUrl}" style="color:#9C6A33;font-weight:600;">View the full report in your browser →</a>
@@ -725,6 +585,24 @@ function renderUserReportEmail(payload: AuditPayload, reportUrl: string | null):
             </tr>
           </table>
           <div style="font:400 11px/1.5 'Helvetica Neue',Arial,sans-serif;color:#6B7280;margin-top:6px;">${esc(String(s.earned ?? '?'))} of ${esc(String(s.possible ?? '?'))} points across automated checks — nothing self-reported is scored.</div>
+        </td></tr>` : ''}
+
+        ${(payload.aiVisibility?.queries || []).length ? `
+        <tr><td style="padding:16px 28px 4px;">
+          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#6B7280;margin-bottom:4px;">AI search visibility</div>
+          <div style="font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;color:#6B7280;margin-bottom:12px;">We ran your own search phrases through Perplexity, live. These are the businesses it named &mdash; the ones your buyers hear about.</div>
+          ${(payload.aiVisibility?.queries || []).map(q => `
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${q.appeared ? '#F0F5F1' : '#FBF7F0'};border:1px solid ${q.appeared ? '#CBDCD0' : '#EDE3D0'};border-radius:8px;margin-bottom:8px;">
+              <tr><td style="padding:12px 14px;">
+                <div style="font:600 13px/1.4 'Helvetica Neue',Arial,sans-serif;color:#1F2937;">
+                  <span style="color:${q.appeared ? '#3a6f4d' : '#A04324'};">${q.appeared ? '&#10003;' : '&#10007;'}</span>
+                  &ldquo;${esc(q.query)}&rdquo;
+                </div>
+                ${(q.results || []).length ? `<div style="font:400 12px/1.7 'Helvetica Neue',Arial,sans-serif;color:#6B7280;margin-top:6px;">${
+                  (q.results || []).slice(0, 5).map(r => `${r.isUser ? '<strong style="color:#3a6f4d;">' : ''}${esc(r.title || r.host || '')}${r.isUser ? '</strong>' : ''} <span style="color:#9CA3AF;">${esc(r.host || '')}</span>`).join('<br/>')
+                }</div>` : ''}
+              </td></tr>
+            </table>`).join('')}
         </td></tr>` : ''}
 
         ${checks.filter(c => c.status !== 'na').length ? `
@@ -777,9 +655,15 @@ function renderUserReportEmail(payload: AuditPayload, reportUrl: string | null):
         </td></tr>
 
       </table>
-    </td></tr>
+`;
+
+  const html = `<!DOCTYPE html>
+<html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>${esc(subject)}</title></head>
+<body style="margin:0;padding:0;background:#F4F1EA;font:400 14px/1.5 'Helvetica Neue',Arial,sans-serif;color:#1F2937;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F4F1EA;padding:24px 12px;">
+    <tr><td align="center">${card}</td></tr>
   </table>
 </body></html>`;
 
-  return { html, text: textLines, subject };
+  return { html, text: textLines, subject, card };
 }
