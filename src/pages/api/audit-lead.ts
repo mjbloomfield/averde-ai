@@ -555,6 +555,62 @@ function renderUserReportEmail(payload: AuditPayload, reportUrl: string | null):
       </table>
     </td></tr>`;
 
+  // Search summary: how many searches named them, and who kept coming back.
+  const queries = payload.aiVisibility?.queries || [];
+  const rivalCount = new Map<string, number>();
+  queries.forEach(q => {
+    const seen = new Set<string>();
+    (q.results || []).forEach(r => {
+      if (!r.host || r.isUser || seen.has(r.host)) return;
+      seen.add(r.host);
+      rivalCount.set(r.host, (rivalCount.get(r.host) || 0) + 1);
+    });
+  });
+  const vis = {
+    total: queries.length,
+    hits: queries.filter(q => q.appeared).length,
+    rivals: [...rivalCount.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5).map(([host, n]) => ({ host, n })),
+  };
+
+  // A themed summary of the findings rather than a replay of all thirteen checks.
+  const sa2 = payload.siteAudit;
+  const byId = (id: string) => checks.find(c => c.id === id);
+  const schemaCount = sa2?.schema?.score ?? 0;
+  const schemaMax = sa2?.schema?.max ?? 6;
+  const missingFiles = [
+    sa2?.files?.sitemap === false ? 'sitemap.xml' : null,
+    sa2?.files?.llms === false ? 'llms.txt' : null,
+  ].filter(Boolean);
+  const basics = [
+    byId('desc')?.status === 'fail' ? 'no meta description' : null,
+    byId('h1')?.status !== 'pass' ? (byId('h1')?.evidence || '').replace(/\.$/, '').toLowerCase() : null,
+    byId('title')?.status === 'fail' ? 'no page title' : null,
+  ].filter(Boolean);
+  const perfScore = sa2?.pagespeed?.performance;
+  const issueLines: Array<{ ok: boolean; text: string }> = ([
+    {
+      ok: schemaCount >= schemaMax - 1,
+      text: schemaCount === 0
+        ? 'No structured data anywhere on the site. AI engines have to guess what you do, where you are, and what you sell.'
+        : `${schemaCount} of ${schemaMax} structured-data types present — the missing ones are what AI engines look for first.`,
+    },
+    missingFiles.length
+      ? { ok: false, text: `Missing ${missingFiles.join(' and ')} — the files that tell crawlers what to read.` }
+      : { ok: true, text: 'Crawlers can find their way around: sitemap and llms.txt are both in place.' },
+    basics.length
+      ? { ok: false, text: `Page basics need work: ${basics.join('; ')}.` }
+      : { ok: true, text: 'Page basics are solid — title, description, and one clear heading.' },
+    perfScore != null
+      ? {
+          ok: perfScore >= 80,
+          text: perfScore >= 80
+            ? `Mobile speed is good (${perfScore}/100).`
+            : `Mobile speed is ${perfScore}/100${sa2?.pagespeed?.lcp ? ` — ${sa2.pagespeed.lcp}s before your first real content appears on a phone` : ''}.`,
+        }
+      : null,
+    vis.total ? { ok: vis.hits > 0, text: `Named in ${vis.hits} of ${vis.total} live AI searches using your own phrases.` } : null,
+  ].filter(Boolean)) as Array<{ ok: boolean; text: string }>;
+
   const gradeBg = gradeColor(s.grade);
 
   const card = `<table role="presentation" width="720" cellpadding="0" cellspacing="0" style="max-width:720px;background:#FFFFFF;border-radius:12px;overflow:hidden;">
@@ -587,29 +643,28 @@ function renderUserReportEmail(payload: AuditPayload, reportUrl: string | null):
           <div style="font:400 11px/1.5 'Helvetica Neue',Arial,sans-serif;color:#6B7280;margin-top:6px;">${esc(String(s.earned ?? '?'))} of ${esc(String(s.possible ?? '?'))} points across automated checks — nothing self-reported is scored.</div>
         </td></tr>` : ''}
 
-        ${(payload.aiVisibility?.queries || []).length ? `
+        ${vis.total ? `
         <tr><td style="padding:16px 28px 4px;">
-          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#6B7280;margin-bottom:4px;">AI search visibility</div>
-          <div style="font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;color:#6B7280;margin-bottom:12px;">We ran your own search phrases through Perplexity, live. These are the businesses it named &mdash; the ones your buyers hear about.</div>
-          ${(payload.aiVisibility?.queries || []).map(q => `
-            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${q.appeared ? '#F0F5F1' : '#FBF7F0'};border:1px solid ${q.appeared ? '#CBDCD0' : '#EDE3D0'};border-radius:8px;margin-bottom:8px;">
-              <tr><td style="padding:12px 14px;">
-                <div style="font:600 13px/1.4 'Helvetica Neue',Arial,sans-serif;color:#1F2937;">
-                  <span style="color:${q.appeared ? '#3a6f4d' : '#A04324'};">${q.appeared ? '&#10003;' : '&#10007;'}</span>
-                  &ldquo;${esc(q.query)}&rdquo;
-                </div>
-                ${(q.results || []).length ? `<div style="font:400 12px/1.7 'Helvetica Neue',Arial,sans-serif;color:#6B7280;margin-top:6px;">${
-                  (q.results || []).slice(0, 5).map(r => `${r.isUser ? '<strong style="color:#3a6f4d;">' : ''}${esc(r.title || r.host || '')}${r.isUser ? '</strong>' : ''} <span style="color:#9CA3AF;">${esc(r.host || '')}</span>`).join('<br/>')
-                }</div>` : ''}
-              </td></tr>
-            </table>`).join('')}
+          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#6B7280;margin-bottom:6px;">AI search</div>
+          <div style="font:400 14px/1.6 'Helvetica Neue',Arial,sans-serif;color:#1F2937;">
+            We ran <strong>${vis.total}</strong> live Perplexity searches using the phrases you gave us. Your site came back in <strong>${vis.hits}</strong> of them.
+          </div>
+          ${vis.rivals.length ? `
+          <div style="font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;color:#6B7280;margin-top:10px;">Who came back instead, most often:</div>
+          <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:6px;font:400 13px/1.7 'Helvetica Neue',Arial,sans-serif;">
+            ${vis.rivals.map(r => `<tr><td style="padding:2px 14px 2px 0;color:#1F2937;">${esc(r.host)}</td><td style="padding:2px 0;color:#9CA3AF;">${r.n} of ${vis.total}</td></tr>`).join('')}
+          </table>
+          <div style="font:400 12px/1.5 'Helvetica Neue',Arial,sans-serif;color:#9CA3AF;margin-top:8px;">Every search and its full results are listed at the end of this report.</div>` : ''}
         </td></tr>` : ''}
 
-        ${checks.filter(c => c.status !== 'na').length ? `
+        ${issueLines.length ? `
         <tr><td style="padding:16px 28px 4px;">
-          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#6B7280;margin-bottom:8px;">Check results</div>
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-            ${checks.filter(c => c.status !== 'na').map(checkRow).join('')}
+          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#6B7280;margin-bottom:8px;">What's holding you back</div>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font:400 14px/1.6 'Helvetica Neue',Arial,sans-serif;">
+            ${issueLines.map(l => `<tr>
+              <td style="padding:5px 10px 5px 0;vertical-align:top;color:${l.ok ? '#3a6f4d' : '#A04324'};font-weight:700;">${l.ok ? '&#10003;' : '&#10007;'}</td>
+              <td style="padding:5px 0;color:#1F2937;">${esc(l.text)}</td>
+            </tr>`).join('')}
           </table>
         </td></tr>` : ''}
 
@@ -624,8 +679,8 @@ function renderUserReportEmail(payload: AuditPayload, reportUrl: string | null):
         <tr><td style="padding:8px 28px 4px;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #E5E7EB;border-radius:10px;">
             <tr><td style="padding:18px 20px;">
-              <div style="font:600 15px/1.4 'Helvetica Neue',Arial,sans-serif;color:#1F2937;margin-bottom:4px;">Start with the free version</div>
-              <div style="font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;color:#6B7280;margin-bottom:14px;">Everything above is doable yourself. These two explain the why and the how, in plain English — no signup.</div>
+              <div style="font:600 15px/1.4 'Helvetica Neue',Arial,sans-serif;color:#1F2937;margin-bottom:4px;">Want to DIY?</div>
+              <div style="font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;color:#6B7280;margin-bottom:14px;">Every fix above is something you can do yourself. These two explain the why and the how, in plain English &mdash; no signup, nothing gated.</div>
               <div style="border-left:2px solid #C99356;padding-left:14px;margin-bottom:12px;">
                 <a href="https://averde.ai/blog/what-does-ai-ready-website-actually-mean" style="font:600 14px/1.4 'Helvetica Neue',Arial,sans-serif;color:#2A1B11;">What does it actually mean for a website to be &ldquo;AI Ready&rdquo;?</a>
                 <div style="font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;color:#6B7280;">The three things AI engines look for, and why most sites miss all three.</div>
@@ -644,11 +699,26 @@ function renderUserReportEmail(payload: AuditPayload, reportUrl: string | null):
         <tr><td style="padding:10px 28px 26px;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F4F1EA;border-radius:10px;">
             <tr><td style="padding:18px 20px;">
-              <div style="font:600 15px/1.4 'Helvetica Neue',Arial,sans-serif;color:#1F2937;margin-bottom:6px;">Want a second pair of eyes on this?</div>
+              <div style="font:600 15px/1.4 'Helvetica Neue',Arial,sans-serif;color:#1F2937;margin-bottom:4px;">Don&rsquo;t want to DIY? I can help.</div>
               <div style="font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;color:#6B7280;margin-bottom:14px;">Book a free 30-minute review call — we'll walk through your report and pick the right first move. No pressure either way; everything above is yours to act on.</div>
               <a href="${bookUrl}" style="display:inline-block;background:#2A1B11;color:#F4ECDB;font:600 14px/1 'Helvetica Neue',Arial,sans-serif;padding:12px 22px;border-radius:8px;text-decoration:none;">Book your free review call</a>
             </td></tr>
           </table>
+          ${vis.total ? `
+          <div style="border-top:1px solid #E5E7EB;margin-top:24px;padding-top:18px;">
+            <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#6B7280;margin-bottom:4px;">Appendix: every search we ran</div>
+            <div style="font:400 12px/1.5 'Helvetica Neue',Arial,sans-serif;color:#9CA3AF;margin-bottom:12px;">Live Perplexity results at the time of the audit. Your own site is bolded where it appears.</div>
+            ${queries.map(q => `
+              <div style="margin-bottom:10px;">
+                <div style="font:600 12px/1.4 'Helvetica Neue',Arial,sans-serif;color:#1F2937;">
+                  <span style="color:${q.appeared ? '#3a6f4d' : '#A04324'};">${q.appeared ? '&#10003;' : '&#10007;'}</span> &ldquo;${esc(q.query)}&rdquo;
+                </div>
+                ${(q.results || []).length ? `<div style="font:400 11px/1.6 'Helvetica Neue',Arial,sans-serif;color:#9CA3AF;padding-left:14px;">${
+                  (q.results || []).slice(0, 4).map(r => `${r.isUser ? '<strong style="color:#3a6f4d;">' : ''}${esc(r.host || r.title || '')}${r.isUser ? '</strong>' : ''}`).join(' · ')
+                }</div>` : ''}
+              </div>`).join('')}
+          </div>` : ''}
+
           <div style="font:400 12px/1.6 'Helvetica Neue',Arial,sans-serif;color:#6B7280;margin-top:18px;">
             — Mark Bloomfield<br/>Averde AI · Boulder, CO · <a href="https://averde.ai" style="color:#9C6A33;">averde.ai</a>
           </div>

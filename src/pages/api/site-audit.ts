@@ -126,7 +126,7 @@ function detectPlatform(html: string, headers: Headers, dnsSig: DnsSignals): str
   if (/wp-content\/|wp-includes\//i.test(html)) return 'WordPress';
   if (/framerusercontent\.com/i.test(html)) return 'Framer';
   if (/js\.hs-scripts\.com|hubspotusercontent/i.test(html)) return 'HubSpot';
-  if (/assets\.website-files\.com/i.test(html)) return 'Webflow';
+  if (/website-files\.com/i.test(html)) return 'Webflow';   // assets. (old) and cdn.prod. (current)
   if (/godaddy|website-builder/i.test(html)) return 'GoDaddy';
   // Response headers
   if (/squarespace/i.test(headers.get('server') || '')) return 'Squarespace';
@@ -366,10 +366,20 @@ export const POST: APIRoute = async ({ request }) => {
   if (!u) return json(400, { ok: false, error: 'invalid_url' });
 
   // DNS runs in parallel with the page fetch — both only need the hostname.
-  const [homeRes, dnsSig] = await Promise.all([
+  // Look up DNS for both the apex and www: platform CNAMEs usually hang off
+  // whichever one the site actually redirects to, and we can't know which
+  // until the fetch resolves.
+  const altHost = u.hostname.startsWith('www.') ? u.hostname.slice(4) : `www.${u.hostname}`;
+  const [homeRes, dnsPrimary, dnsAlt] = await Promise.all([
     fetchWithTimeout(u.toString(), 10_000),
     dnsSignals(u.hostname),
+    dnsSignals(altHost),
   ]);
+  const dnsSig = {
+    a: [...dnsPrimary.a, ...dnsAlt.a],
+    cname: [...dnsPrimary.cname, ...dnsAlt.cname],
+    ns: [...dnsPrimary.ns, ...dnsAlt.ns],
+  };
   if (!homeRes || !homeRes.ok) {
     return json(200, {
       ok: true,
