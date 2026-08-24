@@ -500,7 +500,6 @@ function renderUserReportEmail(payload: AuditPayload, reportUrl: string | null):
   const firstName = (payload.contactName || '').trim().split(/\s+/)[0] || '';
   const business = payload.name || 'your business';
   const subject = `Your Website Audit Report — ${business}`;
-  const bookUrl = 'https://averde.ai/ai-audit#book';
 
   const statusWord: Record<string, string> = { pass: 'PASS', warn: 'PARTIAL', fail: 'FIX', na: 'n/a' };
   const statusColor: Record<string, string> = { pass: '#3a6f4d', warn: '#9C6A33', fail: '#A04324', na: '#B7A990' };
@@ -524,7 +523,7 @@ function renderUserReportEmail(payload: AuditPayload, reportUrl: string | null):
       ...(p.diy || []).map(d => `     - ${d}`),
     ].join('\n')),
     '',
-    `Want to walk through it together? Book a free 30-minute review call: ${bookUrl}`,
+    'Want to walk through it together? Reply to this email and we\'ll set up a call.',
     '',
     'No pressure either way — everything above is yours to act on.',
     '',
@@ -689,9 +688,6 @@ function renderUserReportEmail(payload: AuditPayload, reportUrl: string | null):
                 <a href="https://averde.ai/blog/how-to-make-your-website-ai-ready" style="font:600 14px/1.4 'Helvetica Neue',Arial,sans-serif;color:#2A1B11;">How to make your website AI Ready</a>
                 <div style="font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;color:#6B7280;">The DIY playbook — roughly 30&ndash;45 hours, with AI doing most of the keystrokes.</div>
               </div>
-              <div style="border-top:1px solid #E5E7EB;margin-top:16px;padding-top:14px;font:400 13px/1.6 'Helvetica Neue',Arial,sans-serif;color:#1F2937;">
-                If you'd rather hand it over, the <strong>AI-Ready Website</strong> rebuild covers every fix on this list &mdash; from $1,500, about 3&ndash;4 weeks.
-              </div>
             </td></tr>
           </table>
         </td></tr>
@@ -699,9 +695,13 @@ function renderUserReportEmail(payload: AuditPayload, reportUrl: string | null):
         <tr><td style="padding:10px 28px 26px;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F4F1EA;border-radius:10px;">
             <tr><td style="padding:18px 20px;">
-              <div style="font:600 15px/1.4 'Helvetica Neue',Arial,sans-serif;color:#1F2937;margin-bottom:4px;">Don&rsquo;t want to DIY? I can help.</div>
-              <div style="font:400 13px/1.5 'Helvetica Neue',Arial,sans-serif;color:#6B7280;margin-bottom:14px;">Book a free 30-minute review call — we'll walk through your report and pick the right first move. No pressure either way; everything above is yours to act on.</div>
-              <a href="${bookUrl}" style="display:inline-block;background:#2A1B11;color:#F4ECDB;font:600 14px/1 'Helvetica Neue',Arial,sans-serif;padding:12px 22px;border-radius:8px;text-decoration:none;">Book your free review call</a>
+              <div style="font:600 15px/1.4 'Helvetica Neue',Arial,sans-serif;color:#1F2937;margin-bottom:6px;">Don&rsquo;t want to DIY? I can help.</div>
+              <div style="font:400 13px/1.6 'Helvetica Neue',Arial,sans-serif;color:#1F2937;margin-bottom:10px;">
+                If you'd rather hand it over, the <strong>AI-Ready Website</strong> rebuild covers every fix on this list &mdash; from $1,500, three to four weeks.
+              </div>
+              <div style="font:400 13px/1.6 'Helvetica Neue',Arial,sans-serif;color:#6B7280;">
+                Reply to this email to set up a call. No pressure either way; everything above is yours to act on.
+              </div>
             </td></tr>
           </table>
           ${vis.total ? `
