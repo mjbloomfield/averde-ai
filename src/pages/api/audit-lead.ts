@@ -82,6 +82,7 @@ type AuditPayload = {
   industry?: string;
   city?: string;
   keywords?: string;
+  searchScope?: string[];
   stack?: Stack;
   tools?: ToolsMap; // legacy
   pains?: string[];
@@ -297,6 +298,12 @@ function renderEmail(args: {
 }): { html: string; text: string; subject: string } {
   const { payload, name, email, industry, leadId, dbStatus } = args;
   const s = payload.scores || {};
+  const scopeLabel = (scope?: string[]) => {
+    const local = scope?.includes('local'), national = scope?.includes('national');
+    if (local && national) return 'Near them and nationwide';
+    if (national) return 'Nationwide';
+    return local ? 'Near them' : '';
+  };
   const allOps = payload.opportunities || [];
   const fixes = allOps.filter(o => o.kind !== 'rec');
   const recs = allOps.filter(o => o.kind === 'rec');
@@ -532,6 +539,7 @@ function renderEmail(args: {
             ${identityRow('Email', email)}
             ${identityRow('Website', payload.website)}
             ${identityRow('Keywords', payload.keywords)}
+            ${identityRow('Searching from', scopeLabel(payload.searchScope))}
             ${identityRow('Stated goal', payload.goal)}
           </table>
         </td></tr>

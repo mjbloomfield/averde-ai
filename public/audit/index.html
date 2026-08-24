@@ -211,6 +211,7 @@ const state = {
   step: 1,
   name: '', website: '', industry: '', city: '',
   keywords: '',
+  scope: ['local'],   // 'local' and/or 'national' — how to phrase the AI searches
   pains: [], goal: '',
   contactName: '', email: '',
   siteAudit: null,     // null = not fetched yet; {pending:true} = in flight
@@ -263,7 +264,7 @@ function fireVisibilityCheck() {
       body: JSON.stringify({
         industry: state.industry, city: state.city,
         domain: state.website || '', name: state.name || '',
-        keywords: parseKeywords(),
+        keywords: parseKeywords(), scope: state.scope,
       }),
     })
       .then(r => (r.ok ? r.json() : null))
@@ -666,6 +667,7 @@ function submitLead(checks, score, plan) {
       industry: state.industry,
       city: state.city,
       keywords: state.keywords,
+      searchScope: state.scope,
       pains: state.pains,
       goal: state.goal,
       scores: { overall: score.overall, grade: score.grade, earned: score.earned, possible: score.possible, halves: splitScores(checks) },
@@ -789,14 +791,38 @@ function renderKeywords() {
     title: 'What do you most want to be found for?',
     dek: 'When a potential customer asks ChatGPT or Perplexity for help, what would they type? List up to 10 search terms, one per line — we run every one of them through a live AI engine.',
     body: `<textarea class="input" id="f-kw" rows="6" placeholder="family dentist in Boulder&#10;emergency dental Boulder CO&#10;Invisalign provider Boulder&#10;dentist that takes new patients Boulder">${esc(state.keywords)}</textarea>
-      <p class="hint">Tip: think how a real customer would phrase it — not how you describe yourself.</p>`,
+      <p class="hint">Tip: think how a real customer would phrase it — not how you describe yourself.</p>
+      <div style="margin-top:28px">
+        <label class="label">Where are those customers searching from?</label>
+        <div class="pains-grid" id="scope-grid">
+          ${[
+            { id: 'local', label: `Near me${state.city ? ' — ' + esc(state.city) : ''}` },
+            { id: 'national', label: 'Anywhere — we serve the whole country' },
+          ].map(o => `
+            <div class="check-row ${state.scope.indexOf(o.id) !== -1 ? 'selected' : ''}" data-scope="${o.id}">
+              <div class="check-box">${state.scope.indexOf(o.id) !== -1 ? '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6.5l2.5 2.5L10 3.5" stroke="#F4ECDB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' : ''}</div>
+              <span>${o.label}</span>
+            </div>`).join('')}
+        </div>
+        <p class="hint">Pick both if you sell locally and further afield — we'll run each phrase both ways. A phrase that already names a city or state is left exactly as you wrote it.</p>
+      </div>`,
     back: true,
   });
-  stepMissing = () => state.keywords.trim()
-    ? [] : [{ id:'f-kw', msg:'Add at least one search term — one per line.' }];
+  stepMissing = () => [
+    !state.keywords.trim() && { id: 'f-kw', msg: 'Add at least one search term — one per line.' },
+    !state.scope.length && { msg: 'Pick at least one — near you, anywhere, or both.' },
+  ].filter(Boolean);
   document.getElementById('f-kw').addEventListener('input', e => {
     state.keywords = e.target.value;
     showStepErrors(true);
+  });
+  root.querySelectorAll('[data-scope]').forEach(row => {
+    row.addEventListener('click', () => {
+      const id = row.getAttribute('data-scope');
+      const i = state.scope.indexOf(id);
+      if (i === -1) state.scope.push(id); else state.scope.splice(i, 1);
+      renderKeywords();
+    });
   });
 }
 
@@ -1063,7 +1089,7 @@ document.addEventListener('click', e => {
     render();
   } else if (act === 'restart') {
     Object.assign(state, {
-      step: 1, name:'', website:'', industry:'', city:'', keywords:'',
+      step: 1, name:'', website:'', industry:'', city:'', keywords:'', scope:['local'],
       pains: [], goal:'', contactName:'', email:'',
       siteAudit: null, aiVisibility: null, siteFired: false, visFired: false, sendStatus: 'idle',
     });

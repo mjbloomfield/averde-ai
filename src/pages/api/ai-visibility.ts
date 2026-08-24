@@ -81,7 +81,7 @@ async function perplexitySearch(
 }
 
 export const POST: APIRoute = async ({ request }) => {
-  let body: { industry?: string; city?: string; domain?: string; name?: string; keywords?: string[] };
+  let body: { industry?: string; city?: string; domain?: string; name?: string; keywords?: string[]; scope?: string[] };
   try {
     body = await request.json();
   } catch {
@@ -104,10 +104,10 @@ export const POST: APIRoute = async ({ request }) => {
 
   // Prefer the user's own customer search phrases (step 2 of the form) —
   // they know what buyers actually type far better than an industry label.
-  // Append the city when a phrase doesn't already mention it. Fall back to
-  // generic industry queries only if no phrases were given.
+  // Fall back to generic industry queries only if no phrases were given.
   const rawKeywords = Array.isArray(body.keywords) ? body.keywords : [];
   const keywords = [...new Set(rawKeywords.map(k => String(k).trim()).filter(k => k.length > 2))].slice(0, 10);
+  const MAX_QUERIES = 12; // picking both scopes doubles the phrases; cap the Perplexity spend
   const cityToken = (city.split(/[\s,]+/)[0] || '').toLowerCase();
 
   // Only bolt the audit's city onto a phrase that names no place at all.
@@ -118,9 +118,29 @@ export const POST: APIRoute = async ({ request }) => {
   const namesAPlace = (k: string) =>
     /\b(in|near|around|serving|based)\s+\S/i.test(k) || /near me/i.test(k) || STATES.test(k);
 
+  // Scope comes from the form: near-me, nationwide, or both. A phrase that
+  // already names a place is never rewritten under any scope — the buyer told
+  // us where they meant.
+  const scope = Array.isArray(body.scope) && body.scope.length ? body.scope : ['local'];
+  const wantsLocal = scope.includes('local');
+  const wantsNational = scope.includes('national');
+
+  const variants = (k: string): string[] => {
+    if (!cityToken || namesAPlace(k) || k.toLowerCase().includes(cityToken)) return [k];
+    const out: string[] = [];
+    if (wantsLocal) out.push(`${k} ${city}`);
+    if (wantsNational) out.push(k);
+    return out.length ? out : [k];
+  };
+
+  // Round-robin by variant so the cap trims second variants rather than
+  // dropping a phrase the owner typed.
+  const perPhrase = keywords.map(variants);
+  const widest = Math.max(0, ...perPhrase.map(v => v.length));
   const queries = keywords.length
-    ? keywords.map(k =>
-        cityToken && !k.toLowerCase().includes(cityToken) && !namesAPlace(k) ? `${k} ${city}` : k)
+    ? Array.from({ length: widest })
+        .flatMap((_, i) => perPhrase.map(v => v[i]).filter(Boolean))
+        .slice(0, MAX_QUERIES)
     : [
         `best ${industry.toLowerCase()} in ${city}`,
         `${industry.toLowerCase()} ${city} recommendations`,
