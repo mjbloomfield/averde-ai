@@ -80,6 +80,12 @@
   .score-ring-grade { font-family:'Inter Tight',sans-serif; font-size:12px; font-weight:600; }
   .score-copy h2 { font-size:26px; margin-bottom:10px; }
   .score-copy p { color:var(--muted); }
+  .reads { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:14px; }
+  .reads li { display:flex; flex-direction:column; gap:3px; padding-left:16px; border-left:2px solid var(--honey-300); }
+  .reads a { color:var(--walnut-700); font-family:'Inter Tight',sans-serif; font-weight:600; font-size:15px; text-decoration:none; border-bottom:1px solid var(--honey-300); align-self:flex-start; }
+  .reads a:hover { color:var(--honey-500); }
+  .reads span { font-size:14px; color:var(--ink-700); }
+  .reads-then { margin-top:20px; padding-top:16px; border-top:1px solid var(--bone); font-size:15px; color:var(--ink-700); }
   .score-basis { font-family:'Inter Tight',sans-serif; font-size:12px; color:var(--smoke); margin-top:10px; }
   .halves { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0 4px; }
   .half { background:var(--paper); border:1px solid var(--bone); border-radius:12px; padding:12px 14px; }
@@ -549,9 +555,7 @@ function buildPlan(checks) {
       title: 'Fix: ' + c.name,
       why: c.why,
       diy: [c.fix],
-      shortcut: c.id.indexOf('schema') === 0 || c.id === 'aivis' || c.id === 'llms'
-        ? 'The AI-Ready Website rebuild covers every check on this list — from $1,500, about 3–4 weeks.'
-        : null,
+      shortcut: null,   // the rebuild is pitched once, after the whole list
       kind: 'fix',
     });
   });
@@ -1044,6 +1048,16 @@ function renderReport() {
           <div class="plan-diy"><strong>Do it yourself</strong><ul>${p.diy.map(d => `<li>${esc(d)}</li>`).join('')}</ul></div>
           ${p.shortcut ? `<div class="plan-short"><strong>Shortcut</strong>${esc(p.shortcut)}</div>` : ''}
         </div>`).join('')}
+    </div>
+
+    <div class="section-block">
+      <h3>Start with the free version</h3>
+      <p class="section-dek">Everything above is doable yourself. These two explain the why and the how, in plain English — no signup.</p>
+      <ul class="reads">
+        <li><a href="/blog/what-does-ai-ready-website-actually-mean" target="_top">What does it actually mean for a website to be “AI-Ready”?</a><span>The three things AI engines look for, and why most sites miss all three.</span></li>
+        <li><a href="/blog/how-to-make-your-website-ai-ready" target="_top">How to make your website AI-Ready</a><span>The DIY playbook — roughly 30–45 hours, with AI doing most of the keystrokes.</span></li>
+      </ul>
+      <p class="reads-then">If you'd rather hand it over, the <strong>AI-Ready Website</strong> rebuild covers every fix on this list — from $1,500, about 3–4 weeks.</p>
     </div>
 
     <div class="cta-panel">
