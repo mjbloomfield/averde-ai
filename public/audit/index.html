@@ -184,13 +184,24 @@ if (window.self !== window.top) {
    plan — they never move the score.
 ================================================================ */
 
+// One level of abstraction throughout. The old list mixed single verticals
+// (med spa, dental practice) with whole categories (home services), so anything
+// unnamed fell into Other — which was the most-picked value.
 const INDUSTRIES = [
-  'Dental practice','HVAC / Heating & Cooling','Real estate brokerage',
-  'Med spa / Aesthetic medicine','Veterinary clinic','Law firm',
-  'Home services (plumbing, roofing, landscaping)','Auto repair / Body shop',
-  'Restaurant / Hospitality','Fitness / Gym',
-  'Accounting / Financial advisor','Construction / Contractor',
-  'E-commerce / DTC brand','Other'
+  'Health & medical',
+  'Wellness & beauty',
+  'Home services & trades',
+  'Construction & remodeling',
+  'Auto sales & repair',
+  'Professional services',
+  'Real estate & property',
+  'Engineering & technical',
+  'Marketing & creative',
+  'Retail & e-commerce',
+  'Restaurant & hospitality',
+  'Education & training',
+  'Nonprofit & community',
+  'Other',
 ];
 
 const PAIN_POINTS = [
@@ -212,10 +223,18 @@ const GOALS = [
   'Just understand what AI can actually do for us',
 ];
 
+// What the reader and the lead email should see: their own words when they
+// picked Other and told us, otherwise the category.
+function industryLabel() {
+  return state.industry === 'Other' && state.industryOther.trim()
+    ? state.industryOther.trim()
+    : state.industry;
+}
+
 // ---------------- state ----------------
 const state = {
   step: 1,
-  name: '', website: '', industry: '', city: '',
+  name: '', website: '', industry: '', industryOther: '', city: '',
   keywords: '',
   scope: ['local'],   // 'local' and/or 'national' — how to phrase the AI searches
   pains: [], goal: '',
@@ -268,7 +287,7 @@ function fireVisibilityCheck() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        industry: state.industry, city: state.city,
+        industry: industryLabel(), city: state.city,
         domain: state.website || '', name: state.name || '',
         keywords: parseKeywords(), scope: state.scope,
       }),
@@ -668,7 +687,7 @@ function submitLead(checks, score, plan) {
       contactName: state.contactName,
       email: state.email,
       website: state.website,
-      industry: state.industry,
+      industry: industryLabel(),
       city: state.city,
       keywords: state.keywords,
       searchScope: state.scope,
@@ -766,7 +785,8 @@ function renderBasics() {
         <select class="input" id="f-ind">
           <option value="">Choose one…</option>
           ${INDUSTRIES.map(i => `<option value="${esc(i)}" ${state.industry === i ? 'selected' : ''}>${esc(i)}</option>`).join('')}
-        </select></div>
+        </select>
+        ${state.industry === 'Other' ? `<input class="input" id="f-ind-other" style="margin-top:10px" value="${esc(state.industryOther)}" placeholder="What kind of business? e.g. firmware engineering firm" />` : ''}</div>
       <div><label class="label" for="f-city">City / region you serve</label>
         <input class="input" id="f-city" value="${esc(state.city)}" placeholder="Boulder, CO" /></div>
     </div>`,
@@ -780,12 +800,19 @@ function renderBasics() {
   const sync = () => {
     state.name = document.getElementById('f-name').value.trim();
     state.website = document.getElementById('f-web').value.trim();
+    const wasOther = state.industry === 'Other';
     state.industry = document.getElementById('f-ind').value;
+    const other = document.getElementById('f-ind-other');
+    if (other) state.industryOther = other.value;
     state.city = document.getElementById('f-city').value.trim();
     showStepErrors(true);
+    // Show or hide the follow-up field the moment Other is picked or dropped.
+    if ((state.industry === 'Other') !== wasOther) renderBasics();
   };
-  ['f-name','f-web','f-ind','f-city'].forEach(id =>
-    document.getElementById(id).addEventListener('input', sync));
+  ['f-name','f-web','f-ind','f-city','f-ind-other'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', sync);
+  });
 }
 
 function renderKeywords() {
@@ -951,7 +978,7 @@ function renderReport() {
     const kws = parseKeywords();
     visPanel = `<div class="section-block"><div class="pending"><div class="spinner"></div>${kws.length
       ? `Running ${kws.length} live AI-search quer${kws.length === 1 ? 'y' : 'ies'} from your own search terms… results will appear here.`
-      : `Running a live AI-search query for “${esc(state.industry.toLowerCase())} in ${esc(state.city)}”… results will appear here.`}</div></div>`;
+      : `Running a live AI-search query for “${esc(industryLabel().toLowerCase())} in ${esc(state.city)}”… results will appear here.`}</div></div>`;
   }
 
   // Site checks panel
@@ -993,7 +1020,7 @@ function renderReport() {
     <div class="report-head">
       <p class="eyebrow">Your Website Audit Report</p>
       <h1>${esc(state.name)}</h1>
-      <p class="report-sub">${esc(state.industry)} · ${esc(state.city)}</p>
+      <p class="report-sub">${esc(industryLabel())} · ${esc(state.city)}</p>
     </div>
 
     <div class="score-panel">
@@ -1103,7 +1130,7 @@ document.addEventListener('click', e => {
     render();
   } else if (act === 'restart') {
     Object.assign(state, {
-      step: 1, name:'', website:'', industry:'', city:'', keywords:'', scope:['local'],
+      step: 1, name:'', website:'', industry:'', industryOther:'', city:'', keywords:'', scope:['local'],
       pains: [], goal:'', contactName:'', email:'',
       siteAudit: null, aiVisibility: null, siteFired: false, visFired: false, sendStatus: 'idle',
     });
