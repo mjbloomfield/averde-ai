@@ -3,33 +3,29 @@ title: "Prompting in 2026: six habits that get better answers"
 excerpt: >-
   Most of the prompting tricks people learned a couple of years ago stopped
   mattering. What's left is telling the model the things only you know — and
-  there are about six ways to do that well. Part 4 of the series.
+  there are about six ways to do that well.
 category: Automation
 publishedDate: 2026-08-27
 author: Mark Bloomfield
-series: Claude as your co-worker
-seriesPart: 4
 seoDescription: >-
   A plain-English guide to prompting in 2026 — six habits that reliably get
   better answers out of Claude or ChatGPT, which old tricks stopped working,
   and a before-and-after example you can copy.
 ---
 
-**Part 4 of the series.** Start with [Part 1: Claude, Cowork, and Code →](/blog/claude-cowork)
+Scene: it's Tuesday morning, and you need to write to a customer whose job you had to push a week. You open Claude, type "write a polite email apologizing for the delay," and get back something that starts with "I hope this email finds you well" and reads like it could have come from any business on earth. So you close the tab, write it yourself in four minutes, and file AI under "overhyped."
 
-Scene: it's Tuesday morning, and you need to write to a customer whose job you had to push a week. You open Claude, type "write a polite email apologizing for the delay," and get back something that starts with "I hope this email finds you well" and reads like it could have come from any business on earth. So you close the tab, write it yourself in four minutes, and quietly file AI under "overhyped."
-
-The model wasn't the problem. It answered exactly the question you asked — you just asked a question that could have been about anybody's customer.
+It answered the question you asked. The trouble is you asked a question that could have been about anybody's customer, so you got back an answer that could have gone to anybody.
 
 ## What stopped mattering
 
 If you picked up prompting advice a couple of years ago, some of what you learned is now dead weight.
 
-**The expert costume.** "Act as a world-class marketing strategist with 20 years of experience" genuinely moved results in 2023, when models needed the nudge to take a task seriously. They don't anymore. Telling it "you're writing for homeowners who just got three quotes and have no idea how to compare them" does far more than any job title you hand it.
+**The expert costume.** "Act as a world-class marketing strategist with 20 years of experience" moved results in 2023, when models needed the nudge to take a task seriously. They don't anymore. Telling it "you're writing for homeowners who just got three quotes and have no idea how to compare them" does far more than any job title you hand it.
 
 **"Think step by step."** Working through a problem before answering is built into current models — they do it on their own. On a hard question you can still say "take your time with this one" and get something out of it, but as a magic phrase, it's spent.
 
-**Pressure tactics.** Tipping, deadlines, "this is very important to my career." These were always marginal, and they do nothing now.
+**Pressure tactics.** Offering a tip, inventing a deadline, telling it your career depends on the answer — none of that was reliable back then and none of it does anything now.
 
 **The 400-word template from LinkedIn.** Most of them are ceremony wrapped around about twenty words of actual instruction. Paste the twenty words.
 
@@ -37,7 +33,7 @@ What replaced all of that is unglamorous. The model can't see your inbox, your c
 
 Six habits, in rough order of how much they improve what comes back.
 
-## 1. Give it the real material, not a description of it
+## 1. Give it the real material
 
 Instead of "write a reply to a customer who's annoyed about a delay," paste the customer's actual email. Instead of "summarize my sales last quarter," attach the spreadsheet. Instead of "write a bio in my voice," upload three things you've already written.
 
@@ -45,7 +41,7 @@ This is the single biggest quality jump available to you, and it's less work tha
 
 ## 2. Say who it's for and where it's going
 
-"Write a rescheduling message" and "this is a text to a client I've already rescheduled once and want to keep for the next five years" produce completely different writing. Audience and destination quietly do most of the work that tone instructions are trying to do.
+"Write a rescheduling message" and "this is a text to a client I've already rescheduled once and want to keep for the next five years" produce completely different writing. Audience and destination do most of the work that tone instructions are trying to do.
 
 ## 3. Show one thing you liked
 
@@ -63,13 +59,13 @@ You'll get asked about things you'd never have thought to include — who's actu
 
 ## 5. Say what "done" looks like, and what to avoid
 
-Length, format, what to leave out. "Under 200 words, no bullet points, don't mention pricing" removes a whole round of edits before it happens.
+Tell it how long, what format, and what to leave out. "Under 200 words, no bullet points, don't mention pricing" removes a whole round of edits before it happens.
 
 Banning specific habits works better than describing the ideal. "Don't use 'I hope this finds you well,' don't open with a compliment, never use the words leverage or seamless" beats "write naturally," because "naturally" means nothing to a model and "don't say seamless" is unambiguous.
 
 ## 6. Correct inside the conversation instead of starting over
 
-When the first draft misses, the instinct is to close it and go write a better prompt. Resist that. "Shorter, cut the last paragraph, and the second line still sounds like a brochure" gets you there faster, because everything already in the conversation still counts — the file you pasted, the example, the three things you already fixed.
+When the first draft misses, the instinct is to close it and go write a better prompt, and that's usually the wrong move. "Shorter, cut the last paragraph, and the second line still sounds like a brochure" gets you there faster, because everything already in the conversation still counts — the file you pasted, the example, the three things you already fixed.
 
 And when you notice you're making the same correction for the third time, that correction has outgrown the chat. Move it up into your standing Instructions for Claude ([Part 2](/blog/how-to-set-up-claude) covers where that lives) so every future conversation starts with it already handled.
 
@@ -89,11 +85,11 @@ After:
 >
 > Don't open with "as the weather warms up." Here's a post I wrote last year whose tone I liked: [paste].
 
-The second one took ninety seconds to write, and it's the difference between a draft you throw away and a draft you edit for ten minutes and publish. Length isn't the point — every line in there is a fact about that business the model had no other way to get.
+The second one took ninety seconds to write, and it's the difference between a draft you throw away and a draft you edit for ten minutes and publish. It's longer, and every line of that length is a fact about the business the model had no other way to get.
 
 ## One more thing: check the work
 
-Models still make things up, and they're fluent enough now that a wrong answer looks exactly like a right one. Two habits worth keeping:
+So, the part that hasn't improved: models still make things up, and they're fluent enough now that a wrong answer reads exactly like a right one. Two habits worth keeping:
 
 - When facts matter, ask for sources and then click them. If a link doesn't open, treat it as suspect.
 - Ask "what parts of this are you least sure about?" You'll usually get a straight answer, and it points you at the two sentences worth verifying.
@@ -102,13 +98,13 @@ Neither takes long, and both stay necessary no matter how good the models get.
 
 ## Where this leaves you
 
-None of this is a technique in the "prompt engineering" sense, which is why it's easy to skip past. It's what you'd do briefing a new hire in their first week: hand them the real files, tell them who they're writing for, show them one thing you liked, let them ask questions, be clear about what finished looks like, and correct them as you go.
+Every one of these is what you'd already do briefing a new hire in their first week: hand them the real files, tell them who they're writing for, show them one thing you liked, let them ask questions, be clear about what finished looks like, and correct them as you go. That's why it gets skipped — none of it feels like a technique.
 
-The people getting real work out of AI in 2026 are the ones who tell it enough to work with. That's most of the skill, and you can pick it up this afternoon.
+The people getting real work out of AI are the ones who tell it enough to work with. It costs you the two minutes it takes to say what you already know.
 
 ---
 
-**The series:** [Part 1: Claude, Cowork, and Code →](/blog/claude-cowork) · [Part 2: the setup guide →](/blog/how-to-set-up-claude) · [Part 3: connect your apps →](/blog/connect-claude-to-your-apps)
+**Related:** [Claude, Cowork, and Code — what's the difference? →](/blog/claude-cowork) · [How to set up Claude as your co-worker →](/blog/how-to-set-up-claude)
 
 ---
 
