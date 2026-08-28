@@ -63,6 +63,12 @@ Reverse-engineered the competitor scan at `seo-agency.crysblack.com/scan` (Lovab
 - **Schema for `tool_downloads` and audit segmentation** — once leads accumulate, build a Keystatic/admin view for who downloaded what and segment outreach.
 - **Add `vercel-env.txt` to `.gitignore`** — `vercel env pull` writes it to the repo root containing `SUPABASE_SERVICE_ROLE_KEY`, and it is not ignored today. One line, prevents a bad `git add .`.
 
+- **January 2027 — sweep out the 2026 references.** Things that read fine now and read stale on Jan 1:
+  - `src/components/Footer.astro:79` — `© 2026` is hardcoded on every page. Either bump it or make it dynamic.
+  - Blog: "Prompting in 2026" (title, excerpt, SEO description, closing line), and Part 1's "Last year 6% … this year it's 45%" framing around the BrightLocal survey — reword to name the years, or refresh with the 2027 survey when it lands.
+  - Part 2's urgency close ("the next 12 months," "AI search visibility is still early") — check whether it's still true before leaving it up.
+  - Leave alone: the privacy policy effective date, the Tissue Alchemy "June 2026" methodology note, and dated code comments. Those are records of when something happened, not claims about the present.
+
 ---
 
 ## Project log
