@@ -1,41 +1,42 @@
 ---
-title: "Prompting in 2026: six habits that get better answers"
+title: 'Prompting in 2026: six habits that get better answers'
 excerpt: >-
-  Most of the prompting tricks people learned a couple of years ago stopped
-  mattering. What's left is telling the model the things only you know — and
-  there are about six ways to do that well.
+  Most of the prompting tricks you learned a couple of years ago no longer do
+  much. What's left is telling the model the things only you know — here are six
+  ways to do that well.
 category: Automation
 publishedDate: 2026-08-27
 author: Mark Bloomfield
 seoDescription: >-
   A plain-English guide to prompting in 2026 — six habits that reliably get
-  better answers out of Claude or ChatGPT, which old tricks stopped working,
-  and a before-and-after example you can copy.
+  better answers out of Claude or ChatGPT, which old tricks stopped working, and
+  a before-and-after example you can copy.
 ---
+Imagine: it's Tuesday morning, and you need to write to a customer whose job you had to push a week. You open Claude, type "write a polite email apologizing for the delay," and get back something that starts with "I hope this email finds you well" and reads like it could have come from any business on earth. So you close the tab, write it yourself in four minutes, wishing you hadn't bothered with Claude.
 
-Scene: it's Tuesday morning, and you need to write to a customer whose job you had to push a week. You open Claude, type "write a polite email apologizing for the delay," and get back something that starts with "I hope this email finds you well" and reads like it could have come from any business on earth. So you close the tab, write it yourself in four minutes, and file AI under "overhyped."
+But the issue wasn't Claude - you asked a question that could have been about anybody's customer, so you got back an answer that could have gone to anybody.
 
-It answered the question you asked. The trouble is you asked a question that could have been about anybody's customer, so you got back an answer that could have gone to anybody.
+## What's shifted
 
-## What stopped mattering
+As the frontier models have gotten smarter, so have their understanding of what you are asking.  Which means we need to update our prompting to match.  Here are a few ideas that won't have the same effects these days:
 
-If you picked up prompting advice a couple of years ago, some of what you learned is now dead weight.
+**The expert costume.** "Act as a world-class marketing strategist with 20 years of experience" improved results in 2023, when models needed the nudge to narrow their purview.  They don't anymore. Telling it "you're writing for homeowners who just got three quotes and have no idea how to compare them" does far more than any job title you hand it.
 
-**The expert costume.** "Act as a world-class marketing strategist with 20 years of experience" moved results in 2023, when models needed the nudge to take a task seriously. They don't anymore. Telling it "you're writing for homeowners who just got three quotes and have no idea how to compare them" does far more than any job title you hand it.
-
-**"Think step by step."** Working through a problem before answering is built into current models — they do it on their own. On a hard question you can still say "take your time with this one" and get something out of it, but as a magic phrase, it's spent.
+**"Think step by step."** Working through a problem before answering is now built into the models, without you telling it that explicitly.  On a hard question you can still say "take your time with this one" and get something out of it, but as a magic phrase, it's not working as well as it used to.
 
 **Pressure tactics.** Offering a tip, inventing a deadline, telling it your career depends on the answer — none of that was reliable back then and none of it does anything now.
 
-**The 400-word template from LinkedIn.** Most of them are ceremony wrapped around about twenty words of actual instruction. Paste the twenty words.
+**The 400-word template from LinkedIn.** You know, the ones with a dozen labeled blocks (ROLE, CONTEXT, CONSTRAINTS, TONE, OUTPUT FORMAT, "do not hallucinate," "take a deep breath") wrapped around one actual request. Just make the request.
 
-What replaced all of that is unglamorous. The model can't see your inbox, your customer list, your prices, or the conversation you had on the phone yesterday. Every useful thing you can add to a prompt is a fact about your situation that it has no other way to get.
+What replaced all of that is unglamorous. The model can't see* your inbox, your customer list, your prices, or the conversation you had on the phone yesterday. Every useful thing you can add to a prompt is a fact about your situation that it has no other way to get.
 
-Six habits, in rough order of how much they improve what comes back.
+Six habits, in rough order of how much they improve what comes back.\
+\
+\*yet
 
 ## 1. Give it the real material
 
-Instead of "write a reply to a customer who's annoyed about a delay," paste the customer's actual email. Instead of "summarize my sales last quarter," attach the spreadsheet. Instead of "write a bio in my voice," upload three things you've already written.
+Instead of "write a reply to a customer who's annoyed about a delay," paste the customer's actual email, and some details that explain the delay. Instead of "summarize my sales last quarter," attach the spreadsheet. Instead of "write a bio in my voice," upload three things you've already written.
 
 This is the single biggest quality jump available to you, and it's less work than writing a good description — the file already exists.
 
@@ -78,11 +79,11 @@ Before:
 After:
 
 > I run a residential HVAC company in Longmont, CO — mostly older homes, mostly repeat customers. Write a blog post for homeowners about what to do before they run the AC for the first time this spring.
->
+> 
 > They're handy enough to change a filter but won't touch anything electrical, so don't assume they know what a condenser is. Around 700 words, and lead with what they should do this week.
->
+> 
 > Include the three things we get called about every May: filters nobody changed all winter, outdoor units packed with leaves, and thermostats that were never switched over. Say plainly which of those they can handle themselves and which needs us.
->
+> 
 > Don't open with "as the weather warms up." Here's a post I wrote last year whose tone I liked: [paste].
 
 The second one took ninety seconds to write, and it's the difference between a draft you throw away and a draft you edit for ten minutes and publish. It's longer, and every line of that length is a fact about the business the model had no other way to get.
