@@ -81,9 +81,13 @@ No AI tropes, ever:
   blocks is "five hundred words wrapped around one request", not "ceremony".
 - Clever or teasing headings. Name what the section is about: "What no longer
   works", not "What stopped mattering".
-- Predicting the reader's reaction. "You'll usually get a straight answer",
-  "and file AI under 'overhyped'", "which you probably can't articulate".
-  Give the instruction and stop; let them find out.
+- Predicting the reader's reaction. "And file AI under 'overhyped'", "which
+  you probably can't articulate". Give the instruction and stop; let them find
+  out.
+- Unbacked claims about what the AI will do. "You'll usually get a straight
+  answer" had nothing behind it and contradicted the same post's warning that
+  a wrong answer sounds like a right one. Check any claim about model
+  behavior against the caveats already in the piece.
 - Verdicts standing in for the claim: "it's spent", "dead weight", "the single
   biggest", "never the ingredient that worked". Say what's actually true.
 - Two-sentence setup and reveal — stating a thing so the next sentence can
