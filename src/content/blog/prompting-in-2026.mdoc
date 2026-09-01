@@ -22,17 +22,15 @@ Before we go any further – this is much more easily done with voice dictation.
 
 As the models have gotten smarter, so has their understanding of what you are asking.  Which means we need to update our prompting to match. None of the old advice has stopped working, and Anthropic still recommends most of it for complicated jobs. But for the ordinary one-off tasks you'll use Claude for most days, these four carry less weight than the older guides suggest:
 
-**The expert costume.** "Act as a world-class marketing strategist with 20 years of experience" improved results in 2023, when models needed the nudge to narrow their purview. Roles still help — [Anthropic's own guidance](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices) says a role focuses Claude's tone and behavior, and that even a single sentence makes a difference. But the version they recommend is plain and functional ("You are a helpful coding assistant specializing in Python"), and it belongs in your standing Instructions, where it applies to every conversation, rather than retyped at the top of a one-off request. The world-class-with-20-years part was never the ingredient that worked. For a single task, telling it "you're writing for homeowners who just got three quotes and have no idea how to compare them" does far more than any job title you hand it.
+**The expert costume.** "Act as a world-class marketing strategist with 20 years of experience" improved results in 2023, when models needed the nudge to narrow their purview. Roles still help — [Anthropic's own guidance](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices) says a role focuses Claude's tone and behavior, and that even a single sentence makes a difference. But the version they recommend is plain and functional ("You are a helpful coding assistant specializing in Python"). The world-class-with-20-years part was never the ingredient that worked. For a single task, telling it "you're writing for homeowners who just got three quotes and have no idea how to compare them" does far more than any job title you give it.
 
 **"Think step by step."** Working through a problem before answering is now built into the models, without you telling it that explicitly.  On a hard question you can still say "take your time with this one" and get something out of it, but as a magic phrase, it's not working as well as it used to.
 
 **Pressure tactics.** Offering a tip, inventing a deadline, telling it your career depends on the answer — none of that was reliable back then and none of it does anything now.
 
-**The 400-word template from LinkedIn.** You know, the ones with a dozen labeled blocks (ROLE, CONTEXT, CONSTRAINTS, TONE, OUTPUT FORMAT, "do not hallucinate," "take a deep breath") wrapped around one actual request. Labeled sections do help on a complicated prompt: when you're handing over instructions, a document, examples, and your own numbers all at once, marking which is which keeps them from running together, and Anthropic recommends doing it. For "write a reply to this customer," it's overhead. Just make the request, and add the facts.
+**The structured template.** You know, the ones with a dozen labeled blocks (ROLE, CONTEXT, CONSTRAINTS, TONE, OUTPUT FORMAT, "do not hallucinate," "take a deep breath") wrapped around one actual request. Labeled sections do help on a complicated prompt: when you're handing over instructions, a document, examples, and your own numbers all at once, marking which is which keeps them from running together, and Anthropic recommends doing it. For "write a reply to this customer," it's overhead. Just make the request, and add the facts.
 
-What all four have in common is that none of them tell the model anything about you. It can't see* your inbox, your customer list, your prices, or the conversation you had on the phone yesterday. Every useful thing you can add to a prompt is a fact about your situation that it has no other way to get.
-
-\*yet
+What all four have in common is that none of them tell the model anything about the context. Claude doesn’t know what’s in your inbox, customer records, or files unless you paste it, upload it, or give Claude access to it. Every useful thing you can add to a prompt is a fact about your situation that it has no other way to get.
 
 Ok, enough of what matters less than it used to.
 
@@ -96,18 +94,20 @@ The second one took ninety seconds to write, and it's the difference between a d
 
 ## One more thing: check the work
 
-So, the part that hasn't improved: models still make things up, and they're fluent enough now that a wrong answer sounds a lot like a right one. Two habits to keep:
+So, the part that still requires you: models still make things up, and they're fluent enough now that a wrong answer sounds a lot like a right one. A few habits to keep:
 
-- When facts matter, ask for sources and then check them. If a link doesn't open, treat it as suspect.
-- Ask "what parts of this are you least sure about?" You'll usually get a straight answer, and it points you to what needs verifying.
+- When facts matter, ask for sources and then check the links to make sure they're legit.
+- Ask "what assumptions have you made here?" \
+- Challenge it when something seems off.
+- Drop the response into a different LLM and ask it to critque it.
 
-Neither takes long, and bottom line, you're still responsible for the end result.
+It stress tests the results, and bottom line, you're still responsible for the end result.
 
 ## Where this leaves you
 
 Every one of these is what you'd already do briefing a new hire in their first week: hand them the real files, tell them who they're writing for, show them one thing you liked, let them ask questions, be clear about what finished looks like, and correct them as you go. Treat it just the same here.
 
-The people getting real work out of AI are the ones who give it enough to work with. It costs you the two minutes it takes to say what you already know.
+The people getting real work out of AI are the ones who give it enough to work with. It costs you the two minutes it takes to say what you already know, but it'll save you rounds of edits, or worse yet, abandoning the results to just write your own.
 
 ---
 
