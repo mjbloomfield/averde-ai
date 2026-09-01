@@ -43,7 +43,10 @@ evidence, not extra rules.
 2. **Anti-hype, in both directions.** Don't oversell the tools ("fast and
    pretty good, but still needs your input") and don't oversell Averde.
    Front-load caveats — expectations come *before* the pitch. Admit limits by
-   name; call out sleazy moves by name.
+   name; call out sleazy moves by name. Name a limit and then the remedy —
+   never leave it as a bare fact or a joke. "It can't see your inbox\*… \*yet"
+   became "Claude doesn't know what's in your inbox, customer records, or
+   files unless you paste it, upload it, or give Claude access to it."
 3. **Specific over general.** Real dollar figures, real timelines, real
    examples, exact click-paths ("Click your username in the bottom left →
    Settings → General"). Hedge fuzzy numbers honestly ("+" suffixes, "a couple
@@ -78,6 +81,16 @@ No AI tropes, ever:
   blocks is "five hundred words wrapped around one request", not "ceremony".
 - Clever or teasing headings. Name what the section is about: "What no longer
   works", not "What stopped mattering".
+- Predicting the reader's reaction. "You'll usually get a straight answer",
+  "and file AI under 'overhyped'", "which you probably can't articulate".
+  Give the instruction and stop; let them find out.
+- Verdicts standing in for the claim: "it's spent", "dead weight", "the single
+  biggest", "never the ingredient that worked". Say what's actually true.
+- Two-sentence setup and reveal — stating a thing so the next sentence can
+  correct it. Write the correct version once.
+- Swipes at named companies or platforms. "The 400-word template from
+  LinkedIn" became "the structured template" — the point survives, the
+  sideswipe goes.
 
 ### Structure
 - Open with a concrete scenario, not a thesis statement. Cinematic openers
@@ -90,8 +103,16 @@ No AI tropes, ever:
 - Headings say what's in the section, in customer words. A reader scanning
   the headings alone should get the outline.
 - Say what something *isn't* (defensive prose). Close on the strategic or
-  urgency point, and repeat the brand term as a payoff line ("Your site
-  wasn't AI Ready.").
+  urgency point. The brand-term payoff line ("Your site wasn't AI Ready.")
+  belongs at the end of a sales page — not at the end of every blog section,
+  where it produces neat closing beats that get cut.
+- End a section on an instruction or a concrete consequence, not a line that
+  sounds like a conclusion. "Both stay necessary no matter how good the models
+  get" → "you're still responsible for the end result"; "you can pick it up
+  this afternoon" → "it'll save you rounds of edits, or worse yet, abandoning
+  the results to just write your own."
+- One point per bullet in a list. Don't tack a cross-reference or a second
+  idea onto the end of one — it gets cut.
 - Prices as a value progression with the entry tier reassured ("To start,
   the $20/mo plan should be plenty").
 
