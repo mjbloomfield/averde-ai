@@ -72,6 +72,12 @@ No AI tropes, ever:
   best-in-class, world-class, thought leader, "slick"
 - Hedge words (might / could / potentially) where a direct claim is true
 - Over-promising, padded word count
+- Writerly metaphors for how prose behaves: "ceremony", "scaffolding",
+  "doing work", "does the heavy lifting", "earns its place", "lands", "reads
+  as". Describe the thing plainly — a template full of ROLE/CONTEXT/TONE
+  blocks is "five hundred words wrapped around one request", not "ceremony".
+- Clever or teasing headings. Name what the section is about: "What no longer
+  works", not "What stopped mattering".
 
 ### Structure
 - Open with a concrete scenario, not a thesis statement. Cinematic openers
@@ -81,6 +87,8 @@ No AI tropes, ever:
   imperatives for parallel list headings.
 - Conversational connectors at section breaks ("So,", "Beyond the…",
   "Remember —"); don't open a section with a bare noun.
+- Headings say what's in the section, in customer words. A reader scanning
+  the headings alone should get the outline.
 - Say what something *isn't* (defensive prose). Close on the strategic or
   urgency point, and repeat the brand term as a payoff line ("Your site
   wasn't AI Ready.").
