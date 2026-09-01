@@ -1,4 +1,5 @@
 import { config, fields, collection, singleton } from '@keystatic/core';
+import { wrapper } from '@keystatic/core/content-components';
 
 export default config({
   storage: {
@@ -104,7 +105,18 @@ export default config({
           description: 'Leave 0 for standalone posts',
           defaultValue: 0,
         }),
-        content: fields.markdoc({ label: 'Content' }),
+        content: fields.markdoc({
+          label: 'Content',
+          components: {
+            inset: wrapper({
+              label: 'Inset',
+              description: 'Set-off box for an aside — a tip, a recommendation, a warning',
+              schema: {
+                title: fields.text({ label: 'Label (optional)' }),
+              },
+            }),
+          },
+        }),
       },
     }),
 
