@@ -53,12 +53,16 @@ evidence, not extra rules.
    weeks") and never claim what you can't prove (no speculative moats).
 4. **Mechanism over psychology.** When explaining why people get things wrong,
    give the technical reason, not their vanity.
-5. **Reassure, never dare.** Adoption is a comfort progression: "start small,"
+5. **Don't send readers to standing Instructions for one-off advice.** What
+   goes in Instructions for Claude applies to *every* conversation. A role
+   that suits one kind of task doesn't belong there, and telling people to
+   put it there gives them a setting that misfires on everything else.
+6. **Reassure, never dare.** Adoption is a comfort progression: "start small,"
    "as you get comfortable," "if you're feeling adventurous." Stage the
    reader's inner voice ("maybe you're thinking, 'I wish I could build…'").
    Working with AI is management, not combat: "making corrections," "reining
    it in," force-multiplier — you make the calls.
-6. **Teach by disclosure.** Personal practice as guidance — what I use, what I
+7. **Teach by disclosure.** Personal practice as guidance — what I use, what I
    skip, and why ("there's a feature I *don't* use…"). Describe the real UI,
    warts included ("I know, it's a terrible design").
 
@@ -92,9 +96,10 @@ No AI tropes, ever:
   biggest", "never the ingredient that worked". Say what's actually true.
 - Two-sentence setup and reveal — stating a thing so the next sentence can
   correct it. Write the correct version once.
-- Swipes at named companies or platforms. "The 400-word template from
-  LinkedIn" became "the structured template" — the point survives, the
-  sideswipe goes.
+- Naming a thing by where you saw it instead of what it is. "The 400-word
+  template from LinkedIn" assumed the reader has seen those posts. Most
+  haven't, so it reads as a reference to nothing. It became "the structured
+  template" — describe the thing, then the reader knows what you mean.
 
 ### Structure
 - Open with a concrete scenario, not a thesis statement. Cinematic openers
@@ -115,8 +120,6 @@ No AI tropes, ever:
   get" → "you're still responsible for the end result"; "you can pick it up
   this afternoon" → "it'll save you rounds of edits, or worse yet, abandoning
   the results to just write your own."
-- One point per bullet in a list. Don't tack a cross-reference or a second
-  idea onto the end of one — it gets cut.
 - Prices as a value progression with the entry tier reassured ("To start,
   the $20/mo plan should be plenty").
 
@@ -151,11 +154,16 @@ After Mark edits a post, he says:
 
 I then:
 1. Read both `<NN>-*-claude-draft.md` and `<NN>-*-mark-edited.md`
-2. Diff them mentally
-3. Fold new observations into the unified "Mark's voice" section above,
+2. Diff them and list the changes — what changed, not why
+3. **Ask Mark why, for anything whose reason isn't self-evident from the text
+   itself.** A typo, a banned word, a wrong fact — those explain themselves.
+   Everything else has a reason I can't see from a diff, and guessing it puts
+   a made-up rule in this file that misdirects every future post. Ask, in one
+   batch, before writing anything.
+4. Fold the *confirmed* reasons into the unified "Mark's voice" section above,
    under whichever heading fits (principle, ban list, structure, fingerprints).
    Generalize when possible; don't append dated sections or one-off examples.
-4. The next post I draft pulls from these patterns automatically since this
+5. The next post I draft pulls from these patterns automatically since this
    file is in every session's context
 
 ### Scheduling posts
