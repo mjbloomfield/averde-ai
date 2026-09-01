@@ -20,21 +20,21 @@ Before we go any further – this is much more easily done with voice dictation.
 
 ## What's shifted
 
-As the models have gotten smarter, so has their understanding of what you are asking.  Which means we need to update our prompting to match.  Here are a few ideas that won't have the same effects these days:
+As the models have gotten smarter, so has their understanding of what you are asking.  Which means we need to update our prompting to match. None of the old advice has stopped working, and Anthropic still recommends most of it for complicated jobs. But for the ordinary one-off tasks you'll use Claude for most days, these four carry less weight than the older guides suggest:
 
-**The expert costume.** "Act as a world-class marketing strategist with 20 years of experience" improved results in 2023, when models needed the nudge to narrow their purview.  They don't anymore. Telling it "you're writing for homeowners who just got three quotes and have no idea how to compare them" does far more than any job title you hand it.
+**The expert costume.** "Act as a world-class marketing strategist with 20 years of experience" improved results in 2023, when models needed the nudge to narrow their purview. Roles still help — [Anthropic's own guidance](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices) says a role focuses Claude's tone and behavior, and that even a single sentence makes a difference. But the version they recommend is plain and functional ("You are a helpful coding assistant specializing in Python"), and it belongs in your standing Instructions, where it applies to every conversation, rather than retyped at the top of a one-off request. The world-class-with-20-years part was never the ingredient that worked. For a single task, telling it "you're writing for homeowners who just got three quotes and have no idea how to compare them" does far more than any job title you hand it.
 
 **"Think step by step."** Working through a problem before answering is now built into the models, without you telling it that explicitly.  On a hard question you can still say "take your time with this one" and get something out of it, but as a magic phrase, it's not working as well as it used to.
 
 **Pressure tactics.** Offering a tip, inventing a deadline, telling it your career depends on the answer — none of that was reliable back then and none of it does anything now.
 
-**The 400-word template from LinkedIn.** You know, the ones with a dozen labeled blocks (ROLE, CONTEXT, CONSTRAINTS, TONE, OUTPUT FORMAT, "do not hallucinate," "take a deep breath") wrapped around one actual request. Just make the request.
+**The 400-word template from LinkedIn.** You know, the ones with a dozen labeled blocks (ROLE, CONTEXT, CONSTRAINTS, TONE, OUTPUT FORMAT, "do not hallucinate," "take a deep breath") wrapped around one actual request. Labeled sections do help on a complicated prompt: when you're handing over instructions, a document, examples, and your own numbers all at once, marking which is which keeps them from running together, and Anthropic recommends doing it. For "write a reply to this customer," it's overhead. Just make the request, and add the facts.
 
-What replaced all of that is unglamorous. The model can't see* your inbox, your customer list, your prices, or the conversation you had on the phone yesterday. Every useful thing you can add to a prompt is a fact about your situation that it has no other way to get.
+What all four have in common is that none of them tell the model anything about you. It can't see* your inbox, your customer list, your prices, or the conversation you had on the phone yesterday. Every useful thing you can add to a prompt is a fact about your situation that it has no other way to get.
 
 \*yet
 
-Ok, enough of what doesn't work any more.
+Ok, enough of what matters less than it used to.
 
 ### Here's what actually works to improve your results
 
