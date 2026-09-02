@@ -1,6 +1,6 @@
-seoTitle: AI Consulting for Small Business | Free AI Assessment | Averde AI
+seoTitle: AI Consulting for Small Business | Free AI Business Assessment | Averde AI
 seoDescription: >-
-  Start with the free 3-minute AI Assessment — find your stage on the AI path and your next moves —
+  Start with the free 3-minute AI Business Assessment — find your stage on the AI path and your next moves —
   then a free 30-minute call to plan the next step together.
 heroBadge: Free assessment · Free 30-minute call · No pressure
 heroHeadline: Put AI to work in how you run the business.
@@ -9,7 +9,7 @@ heroDek: >-
   next step is, wherever you're starting from. It begins with a free three-minute assessment, and
   the report becomes the agenda for a free 30-minute call.
 funnel:
-  - title: Take the free AI Assessment
+  - title: Take the free AI Business Assessment
     body: >-
       Three minutes. It places you on a five-stage AI path — from getting started to fully automated
       — from your own answers: where your hours go, what systems you run on, and how you use AI
@@ -24,10 +24,12 @@ funnel:
       you'll know exactly what it is and why. If the next step is all DIY, that's a fine outcome
       too.
 auditEyebrow: Start here
-auditHeadline: The AI Assessment
+auditHeadline: The AI Business Assessment
 auditDek: >-
   Find your stage on the AI path and get your next moves — written for your business specifically.
   Your report is emailed to you and becomes the prep for the free call.
+auditCta: Take the free AI Business Assessment →
+auditHref: /ai-business-assessment
 offerEyebrow: Skip a step · $27
 offerTitle: Claude, set up in your voice this week
 offerBody: >-

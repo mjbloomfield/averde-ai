@@ -52,7 +52,7 @@ function renderUserEmail(p: Payload, reportUrl: string | null) {
   const stageLabel = p.stageLabel || '';
   const dims = p.dims ?? [];
   const moves = p.moves ?? [];
-  const subject = `Your AI Assessment — ${business}`;
+  const subject = `Your AI Business Assessment — ${business}`;
   const bookUrl = 'https://averde.ai/ai-consulting#book';
 
   const text = [
@@ -86,12 +86,12 @@ function renderUserEmail(p: Payload, reportUrl: string | null) {
           Reading on a small screen? <a href="${reportUrl}" style="color:#9C6A33;font-weight:600;">View the full report in your browser →</a>
         </td></tr>` : ''}
         <tr><td style="padding:26px 28px 18px;background:#2A1B11;color:#F4ECDB;">
-          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#C99356;margin-bottom:8px;">Your AI Assessment</div>
+          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#C99356;margin-bottom:8px;">Your AI Business Assessment</div>
           <div style="font:600 22px/1.25 'Helvetica Neue',Arial,sans-serif;">${esc(business)}</div>
           <div style="font:400 14px/1.4 'Helvetica Neue',Arial,sans-serif;color:#D1D5DB;margin-top:4px;">${esc(p.industry || '')}${p.teamSize ? ' · ' + esc(p.teamSize) : ''}</div>
         </td></tr>
         <tr><td style="padding:22px 28px 6px;">
-          Hi${first ? ' ' + esc(first) : ''} — here's your AI Assessment. There's no pass or fail: five stages, everyone's on one of them, and this report is about your next step. It's also the prep material for your free 30-minute call.
+          Hi${first ? ' ' + esc(first) : ''} — here's your AI Business Assessment. There's no pass or fail: five stages, everyone's on one of them, and this report is about your next step. It's also the prep material for your free 30-minute call.
         </td></tr>
         <tr><td style="padding:14px 28px 4px;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#2A1B11;border-radius:10px;">
@@ -265,7 +265,7 @@ export const POST: APIRoute = async ({ request }) => {
         from: 'Averde Audits <audits@averde.ai>',
         to: ['mark@averde.ai'],
         replyTo: email,
-        subject: `AI Assessment lead: ${p.businessName || 'Anonymous'} — Stage ${p.stage ?? '?'}/5 (${p.bucket || '?'})`,
+        subject: `AI Business Assessment lead: ${p.businessName || 'Anonymous'} — Stage ${p.stage ?? '?'}/5 (${p.bucket || '?'})`,
         html: internalHtml,
         text: summary,
       });

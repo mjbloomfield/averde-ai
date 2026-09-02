@@ -1,14 +1,14 @@
-seoTitle: Free AI Audits | Website Audit (SEO + AEO/GEO) & AI Assessment
+seoTitle: Free AI Audits | Website Audit (SEO + AEO/GEO) & AI Business Assessment
 seoDescription: >-
   Two free audits for your business: a live website audit covering SEO and AEO/GEO — can customers find
-  you through Google and AI search — and an AI Assessment that finds your stage on the AI path and
+  you through Google and AI search — and an AI Business Assessment that finds your stage on the AI path and
   your next moves.
 heroBadge: Free · No credit card · Real checks, not a quiz
 heroHeadline: Is your business up to speed on AI?
 heroDek: >-
   Two free audits, two sides of the question. The **Website Audit** checks whether customers can
   find you — through classic Google search ([SEO](/glossary#seo)) and the AI answers taking its
-  place ([AEO/GEO](/glossary#aeo)). The **AI Assessment** finds where you are on the AI path — and what
+  place ([AEO/GEO](/glossary#aeo)). The **AI Business Assessment** finds where you are on the AI path — and what
   your next step is, wherever that turns out to be.
 audits:
   - eyebrow: Website Audit · ~3 minutes
@@ -19,21 +19,21 @@ audits:
       checks both kinds of engines care about, and asks a real AI engine about your market — so you
       see exactly where you show up, and where you don't.
     ctaLabel: Run the free website audit →
-    ctaHref: '#website-audit'
-  - eyebrow: AI Assessment · ~3 minutes
+    ctaHref: /website-audit
+  - eyebrow: AI Business Assessment · ~3 minutes
     title: Where are you on the AI path?
     body: >-
       The website audit is about how AI sees you. This one is about how you use AI: a three-minute
       assessment places you on a five-stage path — from getting started to fully automated — shows
       the rough math on hours AI could hand back, and gives you your next moves. No pass, no fail,
       no readiness gate: wherever you are, there's a next step.
-    ctaLabel: Take the free AI Assessment →
-    ctaHref: /ai-consulting#readiness-audit
+    ctaLabel: Take the free AI Business Assessment →
+    ctaHref: /ai-business-assessment
 bookEyebrow: The free 30-minute session
 bookHeadline: Ready to walk through it together?
 bookDek: >-
   One booking covers both audits. Ran the website audit? I'll go through your report and turn it
-  into a concrete plan. Took the AI Assessment? We walk through your stage and plan the next step
+  into a concrete plan. Took the AI Business Assessment? We walk through your stage and plan the next step
   together. Either way, you leave with next steps you can act on, whether or not you hire me for any
   of it.
 bookCardTitle: Book your free 30-minute review call

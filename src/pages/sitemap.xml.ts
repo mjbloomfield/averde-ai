@@ -10,6 +10,8 @@ const SITE = 'https://averde.ai';
 const staticRoutes: Array<{ path: string; priority: number; changefreq: string }> = [
   { path: '/',             priority: 1.0, changefreq: 'weekly' },
   { path: '/ai-audit',     priority: 0.95, changefreq: 'monthly' },
+  { path: '/website-audit', priority: 0.95, changefreq: 'monthly' },
+  { path: '/ai-business-assessment', priority: 0.95, changefreq: 'monthly' },
   { path: '/websites',     priority: 0.9,  changefreq: 'monthly' },
   { path: '/services',     priority: 0.9,  changefreq: 'monthly' },
   { path: '/pricing',      priority: 0.85, changefreq: 'monthly' },

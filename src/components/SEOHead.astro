@@ -5,8 +5,9 @@ interface Props {
   canonical?: string;
   isHome?: boolean;
   faqItems?: { q: string; a: string }[];
+  noIndex?: boolean;
 }
-const { title, description, canonical, isHome = false, faqItems } = Astro.props;
+const { title, description, canonical, isHome = false, faqItems, noIndex: pageNoIndex = false } = Astro.props;
 const url = canonical || Astro.url.href;
 const site = 'https://averde.ai';
 
@@ -14,7 +15,7 @@ const site = 'https://averde.ai';
 // (VERCEL_ENV === 'preview') get noindexed so they don't compete as duplicate
 // content. This can never accidentally noindex production.
 const isProduction = process.env.VERCEL_ENV === 'production';
-const noIndex = process.env.VERCEL_ENV === 'preview';
+const noIndex = pageNoIndex || process.env.VERCEL_ENV === 'preview';
 
 // GA4 measurement id (G-XXXX). Set PUBLIC_GA_ID in Vercel + .env to turn on.
 const gaId = import.meta.env.PUBLIC_GA_ID;

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>The AI Assessment | Averde AI</title>
+<title>The AI Business Assessment | Averde AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;500;600&family=Source+Serif+4:wght@400;500;600&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -146,6 +146,18 @@
   .live-strip .tick { color:#3a6f4d; font-weight:700; flex-shrink:0; }
   @keyframes spin { to { transform:rotate(360deg); } }
   .restart { text-align:center; margin-top:28px; }
+  /* Reference view (?view=all) — the internal /ai-business-assessment-mark page. */
+  .ref-head { margin:64px 0 20px; }
+  .ref-head:first-of-type { margin-top:0; }
+  .ref-head h2 { font-size:22px; color:var(--walnut-700); }
+  .ref-head p { font-size:14px; color:var(--smoke); margin-top:6px; }
+  .ref-rule { border:0; border-top:1px solid var(--driftwood); margin:56px 0 0; }
+  .ref-table { width:100%; border-collapse:collapse; font-size:14px; background:#fff; border:1px solid var(--bone); border-radius:16px; overflow:hidden; }
+  .ref-table th { text-align:left; font-family:'Inter Tight',sans-serif; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--smoke); padding:12px 14px; border-bottom:1px solid var(--bone); }
+  .ref-table td { padding:12px 14px; border-bottom:1px solid var(--bone); vertical-align:top; }
+  .ref-table tr:last-child td { border-bottom:0; }
+  .ref-id { font-family:ui-monospace,Menlo,monospace; font-size:12px; color:var(--honey-500); white-space:nowrap; }
+  .ref-label { font-family:'Inter Tight',sans-serif; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--honey-500); }
 </style>
 </head>
 <body>
@@ -164,7 +176,7 @@ if (window.self !== window.top) {
 }
 
 /* ================================================================
-   The AI Assessment — find your stage on the AI adoption path,
+   The AI Business Assessment — find your stage on the AI adoption path,
    get your next moves. No readiness gate: everyone is somewhere,
    and the report shows the next step from wherever that is. It
    feeds the free 30-minute call: the report IS the prep material.
@@ -708,7 +720,7 @@ function renderReport() {
 
   root.innerHTML = `<div class="fade-in">
     <div class="report-head">
-      <p class="eyebrow">Your AI Assessment</p>
+      <p class="eyebrow">Your AI Business Assessment</p>
       <h1>${esc(state.name)}</h1>
       <p class="report-sub">${esc(state.businessType)} · ${esc(state.teamSize)}</p>
     </div>
@@ -860,7 +872,96 @@ document.addEventListener('click', e => {
   }
 });
 
-render();
+/* ================================================================
+   Reference view — /ai-business-assessment-mark loads this page with
+   ?view=all. Every step (in all four question buckets, solo and team),
+   the five stages, and the whole move catalog on one scrolling page.
+   It drives the real step renderers, so it can't drift from the
+   assessment a visitor actually takes.
+================================================================ */
+const REF_BUCKETS = ['appointment', 'project', 'retail', 'professional'];
+
+function refHead(label, note) {
+  return `<div class="ref-head"><h2>${esc(label)}</h2>${note ? `<p>${esc(note)}</p>` : ''}</div>`;
+}
+
+function refTable(head, rows) {
+  return `<table class="ref-table"><thead><tr>${head.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function renderAll() {
+  shell.classList.add('wide');
+  const out = [];
+  const grab = (label, note, fn) => { fn(); out.push(refHead(label, note) + root.innerHTML); };
+
+  // Sample answers, so every conditional field renders.
+  Object.assign(state, {
+    name: 'Harbor Dental', description: 'family dental practice', teamSize: 'Just me',
+    businessType: 'Dental practice', bucket: 'appointment',
+    hours: {}, storage: 'sheets', platform: 'google', otherTools: 'QuickBooks',
+    stage: 2, teamShare: 'few', appetite: '1-2', worry: WORRY_OPTS[0],
+    contactName: 'Sam', email: 'sam@harbordental.com',
+    sendStatus: 'sent', // never submits a lead from the reference view
+  });
+
+  out.push('<p class="ref-label">AI Business Assessment — full question reference</p>');
+  grab('Step 1 · The basics', 'The "what does your business do" answer is classified by /api/classify-business into one of four buckets, which decides every question after this.', renderBasics);
+
+  REF_BUCKETS.forEach(b => {
+    state.bucket = b;
+    state.teamSize = 'Just me';
+    grab('Step 2 · Where the hours go — ' + b + ' bucket',
+      'Six categories, each with the share of the work AI can realistically absorb: ' +
+        BUCKET_CATS[b].map(c => c.label + ' ' + Math.round(c.frac * 100) + '%').join(' · '),
+      renderHours);
+  });
+  state.bucket = 'appointment';
+  state.teamSize = '2–5 people';
+  grab('Step 2 · with a team', 'Any team size other than "Just me" switches the wording from you to the company.', renderHours);
+  state.teamSize = 'Just me';
+
+  grab('Step 3 · Your systems', '', renderSystems);
+  grab('Step 4 · Where you are with AI', 'Solo wording.', renderAiToday);
+  state.teamSize = '2–5 people';
+  grab('Step 4 · Where you are with AI, with a team', 'Team wording, plus the extra "how much of the team uses AI" question.', renderAiToday);
+  state.teamSize = 'Just me';
+  grab('Step 5 · One last thing', '', renderContact);
+
+  out.push(refHead('The five stages', 'The headline result. Solo and team wording, plus the next step each stage is told to take.') +
+    refTable(['#', 'Label', 'Solo wording', 'Team wording', 'What the report says', 'Next step'],
+      STAGES.map(st => `<tr>
+        <td class="ref-id">${st.n}</td>
+        <td><strong>${esc(st.label)}</strong></td>
+        <td>${esc(st.solo)}</td>
+        <td>${esc(st.team)}</td>
+        <td>${esc(st.desc)}</td>
+        <td>${esc(st.next)}</td>
+      </tr>`).join('')));
+
+  out.push(refHead('The move catalog', 'The fallback "top 3 moves" when /api/recommend is unavailable. The three categories with the most reported hours win.') +
+    refTable(['id', 'Move', 'Why it matters', 'First step on your own', 'What we do on the call'],
+      Object.keys(MOVES).map(id => {
+        const m = MOVES[id];
+        return `<tr>
+          <td class="ref-id">${esc(id)}</td>
+          <td><strong>${esc(m.title)}</strong></td>
+          <td>${esc(m.why('4–7 hrs a week'))}</td>
+          <td>${esc(m.diy)}</td>
+          <td>${esc(m.call)}</td>
+        </tr>`;
+      }).join('')));
+
+  // The client-facing report, on the sample answers.
+  state.hours = { intake: '4-7', questions: '8+', notes: '1-3' };
+  state.recs = { moves: cannedMoves(), source: 'canned' }; // suppresses the live /api/recommend call
+  grab('The report', 'What the visitor sees on the last screen, and what the emailed copy is built from. Shown with the canned moves; live reports use /api/recommend.', renderReport);
+
+  root.innerHTML = out.map((h, i) => i ? '<hr class="ref-rule" />' + h : h).join('');
+  try { parent.postMessage({ readinessHeight: document.body.scrollHeight }, '*'); } catch (e) {}
+}
+
+if (new URLSearchParams(location.search).get('view') === 'all') renderAll();
+else render();
 })();
 </script>
 </body>

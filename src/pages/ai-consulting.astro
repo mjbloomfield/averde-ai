@@ -45,28 +45,18 @@ const funnel = page?.funnel ?? [];
   </section>
 
   <!-- READINESS AUDIT WIDGET -->
-  <section id="readiness-audit" class="bg-cream topo-map topo-grays pt-10 pb-16 scroll-mt-20">
+  <section id="assessment" class="bg-cream topo-map topo-grays pt-10 pb-16 scroll-mt-20">
     <div class="max-w-5xl mx-auto px-4 sm:px-6">
       <div class="text-center mb-8">
         <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">{page?.auditEyebrow}</p>
         <h2 class="text-3xl md:text-4xl font-extrabold text-green-deep mb-4">{page?.auditHeadline}</h2>
         <p class="text-muted text-lg max-w-2xl mx-auto">{page?.auditDek}</p>
       </div>
-      <iframe
-        id="readiness-frame"
-        src="/readiness/index.html"
-        title="The AI Assessment"
-        style="width:100%; min-height:760px; border:0; display:block; background:transparent;"
-        loading="lazy"
-      ></iframe>
-      <script is:inline>
-        window.addEventListener('message', (e) => {
-          if (e.data && typeof e.data.readinessHeight === 'number') {
-            document.getElementById('readiness-frame').style.minHeight =
-              Math.max(560, e.data.readinessHeight + 40) + 'px';
-          }
-        });
-      </script>
+      <div class="text-center">
+        <a href={page?.auditHref ?? '/ai-business-assessment'} class="inline-flex items-center bg-green-deep text-cream font-semibold px-8 py-4 rounded-xl hover:bg-green-mid transition-colors">
+          {page?.auditCta}
+        </a>
+      </div>
     </div>
   </section>
 

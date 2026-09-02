@@ -1,0 +1,32 @@
+---
+// Internal reference view of the AI Business Assessment — every question, stage,
+// and move on one scrolling page. It loads the same widget the public page
+// loads, in ?view=all mode, so it updates whenever the assessment does.
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="AI Business Assessment — reference" description="Internal reference view of the AI Business Assessment." noIndex={true}>
+  <section class="bg-cream py-10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-2">Internal reference</p>
+      <h1 class="text-3xl font-extrabold text-green-deep mb-2">AI Business Assessment — every question, stage, and move</h1>
+      <p class="text-muted mb-6">
+        Rendered from <code class="text-sm">public/readiness/index.html</code> itself, so it always matches
+        what visitors get. The live assessment is at <a href="/ai-business-assessment" class="text-green-mid font-semibold hover:text-green-deep">/ai-business-assessment</a>.
+      </p>
+      <iframe
+        id="ref-frame"
+        src="/readiness/index.html?view=all"
+        title="AI Business Assessment reference"
+        style="width:100%; min-height:3000px; border:0; display:block; background:transparent;"
+      ></iframe>
+      <script is:inline>
+        window.addEventListener('message', (e) => {
+          if (e.data && typeof e.data.readinessHeight === 'number') {
+            document.getElementById('ref-frame').style.minHeight = e.data.readinessHeight + 40 + 'px';
+          }
+        });
+      </script>
+    </div>
+  </section>
+</BaseLayout>

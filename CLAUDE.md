@@ -232,7 +232,8 @@ branch it — don't average it.
   should be editable in Keystatic — one singleton per page. Wired as of
   2026-07-22: home, about (partial), pricing, ai-audit, how-it-works,
   contact, blog/case-study index headers, settings (email + footer
-  location), plus collections for industries, blog, and case studies.
+  location), website-audit, ai-business-assessment, plus collections for
+  industries, blog, and case studies.
   Deliberate hardcode exceptions (each documented here so they read as
   intentional): nav/footer link labels; SEO meta on non-singleton pages;
   the audit widget's copy (public/audit/index.html — it's an app, not page
@@ -241,6 +242,20 @@ branch it — don't average it.
   tool pages and /privacy (interactive tools + legal text — revisit if Mark
   wants them editable); glossary terms in src/data/glossary.ts (shared by
   the page and the site-wide hover-tooltips; dev-edited).
+
+- The two audit widgets live in `public/` as standalone HTML apps, each
+  embedded on exactly one page: `public/audit/index.html` on
+  `/website-audit`, `public/readiness/index.html` on
+  `/ai-business-assessment`. `/ai-audit` and `/ai-consulting` link to those
+  pages rather than embedding a second copy. Loading either widget with
+  `?view=all` renders the reference view — every step, option, and check
+  stacked on one scrolling page — which is what the internal
+  `/website-audit-mark` and `/ai-business-assessment-mark` pages show. The
+  reference view drives the real step renderers and the real `buildChecks()`,
+  so adding a question or a check shows up there with no extra work; it also
+  sets `sendStatus: 'sent'` and pre-fills `state.recs` so it never sends a
+  lead email or calls `/api/recommend`. Both `-mark` pages are noindex
+  (`noIndex` prop on BaseLayout) and disallowed in robots.txt.
 
 - Path aliases: none configured; use relative imports
 - Build target: `output: 'static'` — most pages prerendered; API routes opt

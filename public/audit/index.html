@@ -158,6 +158,19 @@
   .live-strip .tick { color:#3a6f4d; font-weight:700; flex-shrink:0; }
   @keyframes spin { to { transform:rotate(360deg); } }
   .restart { text-align:center; margin-top:28px; }
+  /* Reference view (?view=all) — the internal /website-audit-mark page. */
+  .ref-head { margin:64px 0 20px; }
+  .ref-head:first-of-type { margin-top:0; }
+  .ref-head h2 { font-size:22px; color:var(--walnut-700); }
+  .ref-head p { font-size:14px; color:var(--smoke); margin-top:6px; }
+  .ref-rule { border:0; border-top:1px solid var(--driftwood); margin:56px 0 0; }
+  .ref-table { width:100%; border-collapse:collapse; font-size:14px; background:#fff; border:1px solid var(--bone); border-radius:16px; overflow:hidden; }
+  .ref-table th { text-align:left; font-family:'Inter Tight',sans-serif; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--smoke); padding:12px 14px; border-bottom:1px solid var(--bone); }
+  .ref-table td { padding:12px 14px; border-bottom:1px solid var(--bone); vertical-align:top; }
+  .ref-table tr:last-child td { border-bottom:0; }
+  .ref-id { font-family:ui-monospace,Menlo,monospace; font-size:12px; color:var(--honey-500); white-space:nowrap; }
+  .ref-pts { font-family:'Inter Tight',sans-serif; font-weight:600; white-space:nowrap; }
+  .ref-label { font-family:'Inter Tight',sans-serif; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--honey-500); }
 </style>
 </head>
 <body>
@@ -578,7 +591,7 @@ function buildPlan(checks) {
   });
 
   // What they told us shapes the follow-up conversation, not extra cards:
-  // every service we could pitch off these lives in the AI Assessment.
+  // every service we could pitch off these lives in the AI Business Assessment.
 
   // Fallback if somehow nothing landed
   if (plan.length === 0) {
@@ -1067,7 +1080,124 @@ document.addEventListener('click', e => {
   }
 });
 
-render();
+/* ================================================================
+   Reference view — /website-audit-mark loads this page with ?view=all.
+   Every step and every check on one scrolling page. It drives the real
+   step renderers and the real buildChecks(), so it can't drift from
+   the audit a visitor actually takes.
+================================================================ */
+const REF_SITES = [
+  { label: 'Every check passing',
+    note: 'What a site that already does the work scores.',
+    website: 'harbordental.com',
+    site: {
+      reachable: true, https: true, platform: 'Squarespace', hosting: 'Squarespace',
+      title: 'Family Dentist in Boulder, CO | Harbor Dental',
+      description: 'Harbor Dental is a family dental practice in Boulder, Colorado.',
+      h1Count: 1,
+      schema: { present: ['LocalBusiness', 'FAQPage', 'Service'], foundOn: { FAQPage: '/faq' }, pagesScanned: ['/', '/services', '/faq'] },
+      files: { sitemap: true, robots: true, llms: true },
+      pagespeed: { performance: 92, seo: 96 },
+    },
+    vis: { configured: true, appeared: true, source: 'keywords', queries: [
+      { query: 'family dentist in Boulder', appeared: true, results: [] },
+      { query: 'emergency dental Boulder CO', appeared: true, results: [] },
+    ] } },
+  { label: 'Every check failing',
+    note: 'The wording most visitors see. Fix text is platform-aware — this one is on WordPress.',
+    website: 'harbordental.com',
+    site: {
+      reachable: true, https: false, platform: 'WordPress', hosting: 'Bluehost',
+      title: '', description: '', h1Count: 0,
+      schema: { present: [], foundOn: {}, pagesScanned: ['/', '/services', '/faq'] },
+      files: { sitemap: false, robots: false, llms: false },
+      pagespeed: { performance: 34, seo: 62 },
+    },
+    vis: { configured: true, appeared: false, source: 'keywords', queries: [
+      { query: 'family dentist in Boulder', appeared: false, results: [] },
+      { query: 'emergency dental Boulder CO', appeared: false, results: [] },
+    ] } },
+  { label: 'Middle band (warn)',
+    note: 'Where the half-credit thresholds land.',
+    website: 'harbordental.com',
+    site: {
+      reachable: true, https: true, platform: '', hosting: 'Cloudflare',
+      title: 'Home', description: 'Welcome.', h1Count: 3,
+      schema: { present: ['LocalBusiness'], foundOn: {}, pagesScanned: ['/', '/services'] },
+      files: { sitemap: true, robots: true, llms: false },
+      pagespeed: { performance: 64, seo: 78 },
+    },
+    vis: { configured: true, appeared: true, source: 'keywords', queries: [
+      { query: 'family dentist in Boulder', appeared: true, results: [] },
+      { query: 'emergency dental Boulder CO', appeared: false, results: [] },
+    ] } },
+  { label: 'Site unreachable',
+    note: 'Everything downstream is skipped.',
+    website: 'harbordental.com',
+    site: { reachable: false }, vis: null },
+  { label: 'No website given',
+    note: 'The blank-website path.',
+    website: '', site: null, vis: null },
+];
+
+function refHead(label, note) {
+  return `<div class="ref-head"><h2>${esc(label)}</h2>${note ? `<p>${esc(note)}</p>` : ''}</div>`;
+}
+
+function refChecks(v) {
+  state.website = v.website;
+  state.siteAudit = v.site;
+  state.aiVisibility = v.vis;
+  const rows = buildChecks().map(c => `<tr>
+    <td class="ref-id">${esc(c.id)}</td>
+    <td><strong>${esc(c.name)}</strong><div style="color:var(--smoke);margin-top:4px">${esc(c.evidence)}</div></td>
+    <td class="ref-pts">${c.status === 'na' ? 'not counted' : c.points + '/' + c.max}</td>
+    <td>${esc(c.why)}</td>
+    <td>${esc(c.fix)}</td>
+  </tr>`).join('');
+  return refHead('Checks · ' + v.label, v.note) +
+    `<table class="ref-table"><thead><tr><th>id</th><th>Check &amp; evidence shown</th><th>Points</th><th>Why it matters</th><th>How to fix it</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function renderAll() {
+  shell.classList.add('wide');
+  const out = [];
+  const grab = (label, note, fn) => { fn(); out.push(refHead(label, note) + root.innerHTML); };
+
+  // Sample answers, so every conditional field renders.
+  Object.assign(state, {
+    name: 'Harbor Dental', website: 'harbordental.com', industry: 'Health & medical',
+    industryOther: '', city: 'Boulder, CO',
+    keywords: 'family dentist in Boulder\nemergency dental Boulder CO',
+    scope: ['local'], pains: ['invisible'], goal: GOALS[0],
+    contactName: 'Sam', email: 'sam@harbordental.com',
+    siteAudit: null, aiVisibility: null, siteFired: false, visFired: false,
+    sendStatus: 'sent', // never submits a lead from the reference view
+  });
+
+  out.push('<p class="ref-label">Website Audit — full question &amp; check reference</p>');
+  grab('Step 1 · The basics', 'Clicking Continue starts the site scan in the background.', renderBasics);
+  state.industry = 'Other';
+  grab('Step 1 · with “Other” industry picked', 'Picking Other reveals a free-text follow-up field.', renderBasics);
+  state.industry = 'Health & medical';
+  grab('Step 2 · AI search visibility', 'Every line becomes a live Perplexity query. Scope decides how each phrase is worded.', renderKeywords);
+  grab('Step 3 · Your site today', 'Self-reported. Shapes the action plan; never moves the score.', renderPains);
+  grab('Step 4 · One last thing', 'Email is required; the report shows either way.', renderEmail);
+
+  REF_SITES.forEach(v => { out.push(refChecks(v)); });
+
+  // The client-facing report, on the failing sample.
+  state.website = REF_SITES[1].website;
+  state.siteAudit = REF_SITES[1].site;
+  state.aiVisibility = REF_SITES[1].vis;
+  grab('The report · every check failing', 'What the visitor sees on the last screen, and what the emailed copy is built from.', renderReport);
+
+  root.innerHTML = out.map((h, i) => i ? '<hr class="ref-rule" />' + h : h).join('');
+  try { parent.postMessage({ auditHeight: document.body.scrollHeight }, '*'); } catch (e) {}
+}
+
+if (new URLSearchParams(location.search).get('view') === 'all') renderAll();
+else render();
 })();
 </script>
 </body>

@@ -1,0 +1,50 @@
+seoTitle: Free Website Audit | SEO and AI Search Visibility Check | Averde AI
+seoDescription: >-
+  A free three-minute website audit. It fetches your live site, runs the checks Google and AI engines
+  both care about, and asks a real AI engine about your market — so you see where you show up and
+  where you don't.
+heroBadge: Free · 3 minutes · Real checks, not a quiz
+heroHeadline: The Website Audit
+heroDek: >-
+  Your next customer searches two ways now: classic Google, and AI answers from ChatGPT, Perplexity,
+  and Google AI Overviews. This audit fetches your live site, runs the checks both kinds of engines
+  care about, and puts your own customer phrases through a real AI engine to see whether you come up.
+useEyebrow: How to use it
+useHeadline: What the audit gives you to work with
+useIntro: >-
+  Nothing you type about yourself moves the score. Every point comes from a check against your actual
+  site or a live search — so the report is something you can hand to whoever maintains your website.
+useItems:
+  - title: See what the engines see
+    body: >-
+      Thirteen checks against your live site — the title and description an engine reads first, your
+      headings, the structured data that tells AI what kind of business you are, your sitemap,
+      robots.txt, llms.txt, and Google's own mobile speed and SEO scores.
+  - title: Find out whether AI recommends you
+    body: >-
+      You list up to ten phrases your customers would actually type. Each one goes through a live
+      Perplexity search, and the report shows which businesses came back — so you can see who is in
+      the answer when a buyer asks for a recommendation in your market.
+  - title: Get two scores, not one
+    body: >-
+      Search basics and AI readiness are scored separately, because they're different jobs. A fast,
+      crawlable site with no structured data scores well on one and badly on the other, and averaging
+      those into a single grade hides the thing you'd want to fix.
+  - title: Take the fixes to whoever runs your site
+    body: >-
+      Every check comes with its evidence, its point value, and instructions written for your
+      platform — the audit detects whether you're on Squarespace, WordPress, Wix, Webflow, or
+      something custom, and the fix text changes accordingly.
+widgetEyebrow: Start here
+widgetHeadline: Run the audit
+widgetDek: >-
+  Three minutes of questions, then the checks run while you finish. Your report appears on the last
+  screen, and a copy goes to your inbox.
+bookEyebrow: The free 30-minute call
+bookHeadline: Want to walk through your report together?
+bookDek: >-
+  Book a time and I'll go through the findings with you, sort them into what's worth doing and what
+  isn't, and turn them into a plan. You leave with next steps whether or not you hire me for any of
+  it.
+bookCta: Book your free 30-minute call →
+bookHref: /ai-audit#book

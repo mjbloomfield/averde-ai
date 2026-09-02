@@ -454,7 +454,7 @@ export default config({
             title: fields.text({ label: 'Card title' }),
             body: fields.text({ label: 'Card body', multiline: true }),
             ctaLabel: fields.text({ label: 'Button label' }),
-            ctaHref: fields.text({ label: 'Button link (e.g. #website-audit or #book)' }),
+            ctaHref: fields.text({ label: 'Button link (e.g. /website-audit or /ai-business-assessment)' }),
           }),
           {
             label: 'Audit cards (side by side)',
@@ -467,6 +467,68 @@ export default config({
         bookCardTitle: fields.text({ label: 'Booking card — title' }),
         bookCardSub: fields.text({ label: 'Booking card — subtitle' }),
         bookAltLine: fields.text({ label: 'Booking — "reach out directly" line (email appended)' }),
+      },
+    }),
+
+    // ── WEBSITE AUDIT PAGE ─────────────────────────────────────────
+    websiteAudit: singleton({
+      label: 'Website Audit Page',
+      path: 'src/content/pages/website-audit',
+      schema: {
+        seoTitle: fields.text({ label: 'SEO page title' }),
+        seoDescription: fields.text({ label: 'SEO meta description', multiline: true }),
+        heroBadge: fields.text({ label: 'Hero — badge line' }),
+        heroHeadline: fields.text({ label: 'Hero — headline' }),
+        heroDek: fields.text({ label: 'Hero — subheadline', multiline: true }),
+        useEyebrow: fields.text({ label: 'How to use it — eyebrow' }),
+        useHeadline: fields.text({ label: 'How to use it — headline' }),
+        useIntro: fields.text({ label: 'How to use it — intro paragraph', multiline: true }),
+        useItems: fields.array(
+          fields.object({
+            title: fields.text({ label: 'Title' }),
+            body: fields.text({ label: 'Body', multiline: true }),
+          }),
+          { label: 'How to use it — cards', itemLabel: props => props.fields.title.value || 'New card' }
+        ),
+        widgetEyebrow: fields.text({ label: 'Audit section — eyebrow' }),
+        widgetHeadline: fields.text({ label: 'Audit section — headline' }),
+        widgetDek: fields.text({ label: 'Audit section — dek', multiline: true }),
+        bookEyebrow: fields.text({ label: 'Booking CTA — eyebrow' }),
+        bookHeadline: fields.text({ label: 'Booking CTA — headline' }),
+        bookDek: fields.text({ label: 'Booking CTA — paragraph', multiline: true }),
+        bookCta: fields.text({ label: 'Booking CTA — button label' }),
+        bookHref: fields.text({ label: 'Booking CTA — button link' }),
+      },
+    }),
+
+    // ── AI BUSINESS ASSESSMENT PAGE ─────────────────────────────────────────
+    aiBusinessAssessment: singleton({
+      label: 'AI Business Assessment Page',
+      path: 'src/content/pages/ai-business-assessment',
+      schema: {
+        seoTitle: fields.text({ label: 'SEO page title' }),
+        seoDescription: fields.text({ label: 'SEO meta description', multiline: true }),
+        heroBadge: fields.text({ label: 'Hero — badge line' }),
+        heroHeadline: fields.text({ label: 'Hero — headline' }),
+        heroDek: fields.text({ label: 'Hero — subheadline', multiline: true }),
+        useEyebrow: fields.text({ label: 'How to use it — eyebrow' }),
+        useHeadline: fields.text({ label: 'How to use it — headline' }),
+        useIntro: fields.text({ label: 'How to use it — intro paragraph', multiline: true }),
+        useItems: fields.array(
+          fields.object({
+            title: fields.text({ label: 'Title' }),
+            body: fields.text({ label: 'Body', multiline: true }),
+          }),
+          { label: 'How to use it — cards', itemLabel: props => props.fields.title.value || 'New card' }
+        ),
+        widgetEyebrow: fields.text({ label: 'Assessment section — eyebrow' }),
+        widgetHeadline: fields.text({ label: 'Assessment section — headline' }),
+        widgetDek: fields.text({ label: 'Assessment section — dek', multiline: true }),
+        bookEyebrow: fields.text({ label: 'Booking CTA — eyebrow' }),
+        bookHeadline: fields.text({ label: 'Booking CTA — headline' }),
+        bookDek: fields.text({ label: 'Booking CTA — paragraph', multiline: true }),
+        bookCta: fields.text({ label: 'Booking CTA — button label' }),
+        bookHref: fields.text({ label: 'Booking CTA — button link' }),
       },
     }),
 
@@ -592,6 +654,8 @@ export default config({
         auditEyebrow: fields.text({ label: 'Audit section — eyebrow' }),
         auditHeadline: fields.text({ label: 'Audit section — headline' }),
         auditDek: fields.text({ label: 'Audit section — dek', multiline: true }),
+        auditCta: fields.text({ label: 'Audit section — button label' }),
+        auditHref: fields.text({ label: 'Audit section — button link' }),
         offerEyebrow: fields.text({ label: '$27 offer — eyebrow' }),
         offerTitle: fields.text({ label: '$27 offer — title' }),
         offerBody: fields.text({ label: '$27 offer — body', multiline: true }),

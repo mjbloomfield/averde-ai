@@ -15,14 +15,15 @@ interface Props {
   canonical?: string;
   isHome?: boolean;
   faqItems?: { q: string; a: string }[];
+  noIndex?: boolean;
 }
-const { title, description, canonical, isHome = false, faqItems } = Astro.props;
+const { title, description, canonical, isHome = false, faqItems, noIndex = false } = Astro.props;
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <SEOHead {title} {description} {canonical} {isHome} {faqItems} />
+    <SEOHead {title} {description} {canonical} {isHome} {faqItems} {noIndex} />
   </head>
   <body class="bg-cream min-h-screen flex flex-col">
     <Nav />

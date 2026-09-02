@@ -1,0 +1,87 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
+
+const reader = createReader(process.cwd(), keystaticConfig);
+const page = await reader.singletons.aiBusinessAssessment.read();
+const items = page?.useItems ?? [];
+---
+
+<BaseLayout
+  title={page?.seoTitle ?? 'Free AI Business Assessment | Averde AI'}
+  description={page?.seoDescription ?? ''}
+>
+
+  <!-- HERO -->
+  <section class="wood-beam bg-green-deep py-16 text-center">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <div class="inline-flex items-center gap-2 bg-sand/20 text-sand text-xs font-semibold px-3 py-1.5 rounded-full mb-5">
+        {page?.heroBadge}
+      </div>
+      <h1 class="text-4xl md:text-5xl font-extrabold text-cream leading-tight mb-5">
+        {page?.heroHeadline}
+      </h1>
+      <p class="text-cream/70 text-lg">{page?.heroDek}</p>
+    </div>
+  </section>
+
+  <!-- HOW TO USE IT -->
+  <section class="bg-cream topo-map topo-grays pt-14 pb-4">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-10">
+        <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">{page?.useEyebrow}</p>
+        <h2 class="text-3xl md:text-4xl font-extrabold text-green-deep mb-4">{page?.useHeadline}</h2>
+        <p class="text-muted text-lg max-w-2xl mx-auto">{page?.useIntro}</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6 items-stretch">
+        {items.map((item) => (
+          <div class="bg-cream rounded-3xl p-7 shadow-sm">
+            <h3 class="text-xl font-extrabold text-green-deep mb-2">{item.title}</h3>
+            <p class="text-muted text-sm leading-relaxed">{item.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- WIDGET -->
+  <section id="assessment" class="bg-cream pt-14 pb-16 scroll-mt-20">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-8">
+        <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">{page?.widgetEyebrow}</p>
+        <h2 class="text-3xl md:text-4xl font-extrabold text-green-deep mb-4">{page?.widgetHeadline}</h2>
+        <p class="text-muted text-lg max-w-2xl mx-auto">{page?.widgetDek}</p>
+      </div>
+      <iframe
+        id="assessment-frame"
+        src="/readiness/index.html"
+        title="The AI Business Assessment"
+        style="width:100%; min-height:760px; border:0; display:block; background:transparent;"
+        loading="lazy"
+      ></iframe>
+      <script is:inline>
+        // The widget posts its height after each render — keep the iframe snug.
+        window.addEventListener('message', (e) => {
+          if (e.data && typeof e.data.readinessHeight === 'number') {
+            document.getElementById('assessment-frame').style.minHeight =
+              Math.max(560, e.data.readinessHeight + 40) + 'px';
+          }
+        });
+      </script>
+    </div>
+  </section>
+
+  <!-- BOOK -->
+  <section class="wood-beam bg-green-deep py-16 text-center">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6">
+      <p class="text-sand text-xs font-semibold uppercase tracking-widest mb-3">{page?.bookEyebrow}</p>
+      <h2 class="text-3xl font-extrabold text-cream mb-4">{page?.bookHeadline}</h2>
+      <p class="text-cream/70 mb-8">{page?.bookDek}</p>
+      <a href={page?.bookHref ?? '/ai-audit#book'} class="inline-flex items-center bg-sand text-green-deep font-bold px-8 py-4 rounded-xl hover:bg-sand/90 transition-colors">
+        {page?.bookCta}
+      </a>
+    </div>
+  </section>
+
+</BaseLayout>
