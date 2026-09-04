@@ -80,6 +80,29 @@ function pickTitle(html: string): string | null {
   return m ? m[1].trim() : null;
 }
 
+// Per-page signals. The crawl below already fetches these pages for schema, so
+// everything here is free — no extra requests. Site-wide checks (duplicate
+// titles, missing descriptions, alt text) can only be judged across pages;
+// the homepage on its own says nothing about them.
+type PageSignals = {
+  title: string | null;
+  description: string | null;
+  imgTotal: number;
+  imgWithAlt: number;
+};
+
+function pageSignals(html: string): PageSignals {
+  const imgs = html.match(/<img\b[^>]*>/gi) || [];
+  // alt="" is the correct markup for a decorative image, so it counts as done.
+  const imgWithAlt = imgs.filter(tag => /\salt\s*=\s*["']/i.test(tag)).length;
+  return {
+    title: pickTitle(html),
+    description: pickMeta(html, 'description'),
+    imgTotal: imgs.length,
+    imgWithAlt,
+  };
+}
+
 // DNS signals — A records, CNAME chain, and nameservers all fingerprint
 // site builders and hosts that hide from HTML sniffing. Best-effort with a
 // short timeout; any lookup that fails just returns empty.
@@ -305,12 +328,12 @@ async function sitemapUrls(base: URL): Promise<URL[] | null> {
 // Walks the site and extracts schema types per page. Sitemap when available,
 // breadth-first crawl otherwise; capped by page count, depth, and wall clock.
 async function scanPages(base: URL, homeHtml: string): Promise<{
-  pages: { path: string; types: string[] }[];
+  pages: ({ path: string; types: string[] } & PageSignals)[];
   sitemap: boolean;
   method: 'sitemap' | 'crawl';
 }> {
   const started = Date.now();
-  const pages = [{ path: '/', types: extractSchemaTypes(homeHtml) }];
+  const pages = [{ path: '/', types: extractSchemaTypes(homeHtml), ...pageSignals(homeHtml) }];
   const seen = new Set<string>(['/']);
 
   const fromMap = await sitemapUrls(base);
@@ -328,12 +351,12 @@ async function scanPages(base: URL, homeHtml: string): Promise<{
       if (!res || !res.ok) return null;
       if (!/text\/html/i.test(res.headers.get('content-type') || 'text/html')) return null;
       const html = await res.text();
-      return { path: url.pathname, types: extractSchemaTypes(html), html, depth };
+      return { path: url.pathname, types: extractSchemaTypes(html), signals: pageSignals(html), html, depth };
     }));
 
     for (const r of results) {
       if (!r) continue;
-      pages.push({ path: r.path, types: r.types });
+      pages.push({ path: r.path, types: r.types, ...r.signals });
       if (crawling && r.depth < CRAWL_DEPTH) {
         for (const link of linksFrom(r.html, base)) {
           if (!seen.has(norm(link))) queue.push({ url: link, depth: r.depth + 1 });
@@ -438,6 +461,26 @@ export const POST: APIRoute = async ({ request }) => {
 
   const h1Count = (html.match(/<h1[\s>]/gi) || []).length;
 
+  // Site-wide signals across every page the crawl reached. Duplicate titles are
+  // the common failure: site builders default every page to the business name,
+  // so an engine can't tell the services page from the contact page.
+  const titleGroups = new Map<string, string[]>();
+  for (const p of pages) {
+    const key = (p.title || '').trim().toLowerCase();
+    if (!key) continue;
+    if (!titleGroups.has(key)) titleGroups.set(key, []);
+    titleGroups.get(key)!.push(p.path);
+  }
+  const duplicateTitles = [...titleGroups.values()].filter(paths => paths.length > 1);
+  const siteWide = {
+    pages: pages.length,
+    missingTitle: pages.filter(p => !p.title).map(p => p.path),
+    duplicateTitles,
+    missingDescription: pages.filter(p => !p.description).map(p => p.path),
+    imgTotal: pages.reduce((n, p) => n + p.imgTotal, 0),
+    imgWithAlt: pages.reduce((n, p) => n + p.imgWithAlt, 0),
+  };
+
   const findings = {
     ok: true as const,
     reachable: true,
@@ -462,6 +505,7 @@ export const POST: APIRoute = async ({ request }) => {
       score: schemaPresent.length, // out of expectedSchemaTypes.length
       max: expectedSchemaTypes.length,
     },
+    siteWide,
     pagespeed: null as Awaited<ReturnType<typeof pageSpeedSignals>>,
     files: { robots: false, sitemap: false, llms: false },
     discovery: { method: scan.method, pagesScanned: pages.length },

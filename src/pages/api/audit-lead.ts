@@ -217,6 +217,10 @@ export const POST: APIRoute = async ({ request }) => {
             contact_name: payload.contactName || null,
             email,
             html: candidate.html,
+            // Kept so the report page can re-check the same site later and say
+            // what changed (see /api/audit-rerun).
+            website: payload.website || null,
+            site_audit: payload.siteAudit ?? null,
           });
           if (!error) {
             reportUrl = candidateUrl;

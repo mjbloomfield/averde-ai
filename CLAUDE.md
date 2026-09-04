@@ -85,9 +85,11 @@ No AI tropes, ever:
   blocks is "five hundred words wrapped around one request", not "ceremony".
 - Clever or teasing headings. Name what the section is about: "What no longer
   works", not "What stopped mattering".
-- Predicting the reader's reaction. "And file AI under 'overhyped'", "which
-  you probably can't articulate". Give the instruction and stop; let them find
-  out.
+- Assigning the reader a verdict or a feeling. "And file AI under 'overhyped'"
+  hands them their conclusion; give the instruction and stop. Naming a
+  condition the reader is genuinely in is fine when it's the reason the advice
+  works — "your tone is made of specifics you probably can't articulate"
+  explains why an example beats a description, so it stays.
 - Unbacked claims about what the AI will do. "You'll usually get a straight
   answer" had nothing behind it and contradicted the same post's warning that
   a wrong answer sounds like a right one. Check any claim about model
@@ -168,9 +170,12 @@ I then:
 
 ### Scheduling posts
 
-Set `publishedDate` to a future date in Keystatic. The blog index
-(src/pages/blog/index.astro) and the slug route (src/pages/blog/[slug].astro)
-both filter by `publishedDate <= now`. Future-dated posts stay invisible
+Set `publishedDate` to a future date in Keystatic. The article hub
+(src/pages/free/index.astro) and the slug route (src/pages/blog/[slug].astro)
+both filter by `publishedDate <= now`. There is no /blog index page — it was
+retired in 4f7e8fa and /blog 301s to /free (astro.config.mjs); posts stay at
+/blog/<slug> so existing links keep working.
+Future-dated posts stay invisible
 until that date passes AND the site is rebuilt. Rebuilds happen on every
 git push, so as long as you commit something at least weekly, scheduled
 posts auto-go-live within ~7 days of their date.
@@ -256,6 +261,11 @@ branch it — don't average it.
   sets `sendStatus: 'sent'` and pre-fills `state.recs` so it never sends a
   lead email or calls `/api/recommend`. Both `-mark` pages are noindex
   (`noIndex` prop on BaseLayout) and disallowed in robots.txt.
+
+- `trailingSlash: 'never'` in astro.config.mjs. The Vercel adapter turns this
+  into a 308 from `/path/` to `/path` ahead of every other route, so the
+  redirects below also work with a trailing slash (`/blog/` was a 404 before).
+  Matches the sitemap and canonicals, which have never used trailing slashes.
 
 - Path aliases: none configured; use relative imports
 - Build target: `output: 'static'` — most pages prerendered; API routes opt

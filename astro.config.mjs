@@ -14,6 +14,7 @@ import vercel from '@astrojs/vercel';
 export default defineConfig({
   site: 'https://averde.ai',
   output: 'static',
+  trailingSlash: 'never',
   adapter: vercel(),
   integrations: [react(), markdoc(), keystatic()],
   // Real 301s (the old page stubs with Astro.redirect prerendered to

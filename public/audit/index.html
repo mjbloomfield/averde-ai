@@ -401,6 +401,42 @@ function buildChecks() {
       'The H1 tells engines what the page is about in one line. Zero or many H1s muddies that signal.',
       'Make your main headline the H1, and say what you do + where — not just a slogan.');
 
+    // Site-wide checks. They only mean something across several pages, so they
+    // sit out when the crawl only ever reached the homepage.
+    const sw = sa.siteWide;
+    if (sw && sw.pages > 1) {
+      const pageWord = n => n + ' page' + (n === 1 ? '' : 's');
+      const dupes = sw.duplicateTitles || [];
+      const missTitle = sw.missingTitle || [];
+      const titleTrouble = dupes.length + missTitle.length;
+      add('titles-unique', 'Every page has its own title', titleTrouble === 0 ? 'pass' : 'fail', titleTrouble === 0 ? 5 : 0, 5,
+        titleTrouble === 0
+          ? `All ${pageWord(sw.pages)} we scanned have a distinct title.`
+          : dupes.length
+            ? `${dupes.length === 1 ? 'One title is' : dupes.length + ' titles are'} reused across pages — e.g. ${dupes[0].slice(0, 3).join(', ')}.`
+            : `${pageWord(missTitle.length)} have no title at all: ${missTitle.slice(0, 3).join(', ')}.`,
+        'A title is how an engine tells your pages apart. When every page says the same thing, none of them can be matched to a specific question.',
+        'Give each page a title naming what is on that page: “Teeth Whitening in Boulder, CO | Harbor Dental”. Every platform has a per-page SEO or page-settings field for this.');
+
+      const missDesc = sw.missingDescription || [];
+      const descOk = sw.pages - missDesc.length;
+      add('descriptions', 'Meta descriptions across the site', missDesc.length === 0 ? 'pass' : missDesc.length <= sw.pages / 2 ? 'warn' : 'fail',
+        missDesc.length === 0 ? 5 : missDesc.length <= sw.pages / 2 ? 3 : 0, 5,
+        missDesc.length === 0
+          ? `All ${pageWord(sw.pages)} we scanned have a description.`
+          : `${descOk} of ${pageWord(sw.pages)} have a description. Missing on ${missDesc.slice(0, 3).join(', ')}${missDesc.length > 3 ? ` and ${missDesc.length - 3} more` : ''}.`,
+        'The homepage description is the one people check. The inside pages are the ones that answer specific questions, and they are the ones engines quote.',
+        'Write one or two sentences per page saying what that page covers. Same SEO settings panel as the title.');
+
+      if (sw.imgTotal > 0) {
+        const pct = Math.round((sw.imgWithAlt / sw.imgTotal) * 100);
+        add('alt-text', 'Images have alt text', pct >= 90 ? 'pass' : pct >= 50 ? 'warn' : 'fail', pct >= 90 ? 5 : pct >= 50 ? 3 : 0, 5,
+          `${sw.imgWithAlt} of ${sw.imgTotal} images across ${pageWord(sw.pages)} have alt text (${pct}%).`,
+          'Alt text is the only description of a picture an AI engine can read. On a site where the offer lives in the photos, missing alt text means the offer is invisible.',
+          'Describe what is in the picture, plainly — “Dr. Chen fitting a clear aligner” beats “image1.jpg”. Leave alt empty only for decoration. Most platforms ask for it in the image settings.');
+      }
+    }
+
     const present = (sa.schema && sa.schema.present) || [];
     const has = n => present.indexOf(n) !== -1;
     const foundOn = (sa.schema && sa.schema.foundOn) || {};
@@ -1096,6 +1132,7 @@ const REF_SITES = [
       description: 'Harbor Dental is a family dental practice in Boulder, Colorado.',
       h1Count: 1,
       schema: { present: ['LocalBusiness', 'FAQPage', 'Service'], foundOn: { FAQPage: '/faq' }, pagesScanned: ['/', '/services', '/faq'] },
+      siteWide: { pages: 3, missingTitle: [], duplicateTitles: [], missingDescription: [], imgTotal: 14, imgWithAlt: 14 },
       files: { sitemap: true, robots: true, llms: true },
       pagespeed: { performance: 92, seo: 96 },
     },
@@ -1110,6 +1147,7 @@ const REF_SITES = [
       reachable: true, https: false, platform: 'WordPress', hosting: 'Bluehost',
       title: '', description: '', h1Count: 0,
       schema: { present: [], foundOn: {}, pagesScanned: ['/', '/services', '/faq'] },
+      siteWide: { pages: 3, missingTitle: ['/faq'], duplicateTitles: [['/', '/services']], missingDescription: ['/', '/services', '/faq'], imgTotal: 18, imgWithAlt: 2 },
       files: { sitemap: false, robots: false, llms: false },
       pagespeed: { performance: 34, seo: 62 },
     },
@@ -1124,6 +1162,7 @@ const REF_SITES = [
       reachable: true, https: true, platform: '', hosting: 'Cloudflare',
       title: 'Home', description: 'Welcome.', h1Count: 3,
       schema: { present: ['LocalBusiness'], foundOn: {}, pagesScanned: ['/', '/services'] },
+      siteWide: { pages: 2, missingTitle: [], duplicateTitles: [], missingDescription: ['/services'], imgTotal: 10, imgWithAlt: 6 },
       files: { sitemap: true, robots: true, llms: false },
       pagespeed: { performance: 64, seo: 78 },
     },
