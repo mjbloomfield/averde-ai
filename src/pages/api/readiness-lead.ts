@@ -246,6 +246,8 @@ export const POST: APIRoute = async ({ request }) => {
     // entry plus the exact report the lead received, embedded below.
     try {
       const summary = [
+        'AI BUSINESS ASSESSMENT — new lead',
+        '',
         `Business: ${p.businessName || '?'} (${p.businessType || '?'} · ${p.bucket || '?'} bucket · ${p.teamSize || '?'})`,
         `Described as: ${p.businessDescription || '—'}`,
         `Contact: ${p.contactName || '?'} <${email}>`,
@@ -259,10 +261,10 @@ export const POST: APIRoute = async ({ request }) => {
         `Models — classifier: ${p.classifierModel || '?'} · recommendations: ${p.recsSource === 'llm' ? (p.recsModel || 'llm') : 'canned fallback'}`,
         `Supabase: ${dbStatus} · User email: ${emailStatus}`,
       ].filter(Boolean).join('\n');
-      const detailsBlock = `<div style="max-width:720px;margin:0 auto 16px;background:#FFF7E8;border:1px solid #E5DBC9;padding:16px 20px;border-radius:10px;font:12px/1.7 ui-monospace,Menlo,monospace;color:#1F1A12;white-space:pre-wrap;">${summary.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]!))}</div><div style="max-width:720px;margin:0 auto 8px;font:600 12px 'Helvetica Neue',Arial,sans-serif;color:#6B7280;text-align:center;">— the report they received: —</div>`;
+      const detailsBlock = `<div style="max-width:720px;margin:0 auto 16px;background:#FFF7E8;border:1px solid #E5DBC9;padding:16px 20px;border-radius:10px;font:12px/1.7 ui-monospace,Menlo,monospace;color:#1F1A12;white-space:pre-wrap;">${summary.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]!))}</div><div style="max-width:720px;margin:0 auto 8px;font:600 12px 'Helvetica Neue',Arial,sans-serif;color:#6B7280;text-align:center;">— the AI Business Assessment they received: —</div>`;
       const internalHtml = user.html.replace(/<body([^>]*)>/, (m0, attrs) => `<body${attrs}>${detailsBlock}`);
       await resend.emails.send({
-        from: 'Averde Audits <audits@averde.ai>',
+        from: 'Averde Business Assessment <audits@averde.ai>',
         to: ['mark@averde.ai'],
         replyTo: email,
         subject: `AI Business Assessment lead: ${p.businessName || 'Anonymous'} — Stage ${p.stage ?? '?'}/5 (${p.bucket || '?'})`,

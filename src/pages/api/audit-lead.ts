@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
+import { seqChat } from '../../lib/llm';
 
 export const prerender = false;
 
@@ -42,6 +43,7 @@ type SiteAuditFindings = {
   schema?: { present?: string[]; missing?: string[]; typesFound?: string[]; score?: number; max?: number };
   pagespeed?: { performance?: number | null; seo?: number | null; accessibility?: number | null; lcp?: number | null; cls?: number | null } | null;
   files?: { robots?: boolean; sitemap?: boolean };
+  excerpt?: string;
 };
 
 type AiVisibilityResult = {
@@ -94,6 +96,52 @@ type AuditPayload = {
   siteAudit?: SiteAuditFindings | null;
   aiVisibility?: AiVisibilityResult | null;
 };
+
+// One paragraph on what the business actually does, read off their homepage.
+// The website audit never asks — it asks for search terms and a goal — so
+// without this Mark opens a lead knowing the score but not the business.
+// Best-effort: no key, no site text, or a slow model just drops the section.
+async function describeBusiness(payload: AuditPayload): Promise<string | null> {
+  const sa = payload.siteAudit;
+  const text = (sa?.excerpt || '').trim();
+  if (!text || text.length < 120) return null;
+
+  const system = `You summarise a small business from its homepage text for Mark Bloomfield, who is about to read their website audit and may call them.
+
+- One paragraph, 40 to 70 words. No heading, no preamble, no bullet points.
+- Say what they sell or do, who they serve, and where they operate, in that order, only where the page actually says so.
+- Use their own words for their services where you can.
+- If the page does not say something, leave it out. Never guess at size, revenue, history, or how long they have been going.
+- Plain English. No marketing adjectives from their own copy — "premier", "trusted", "leading" and the like get dropped, not repeated.
+- Write about them in the third person. Start with the business name.
+
+Reply with the paragraph only.`;
+
+  const user = `Business name: ${payload.name || 'unknown'}
+Website: ${payload.website || 'unknown'}
+Page title: ${sa?.title || '(none)'}
+Meta description: ${sa?.description || '(none)'}
+
+Homepage text:
+${text}`;
+
+  const win = await seqChat(
+    [
+      { name: 'openrouter/deepseek-v3.1', timeoutMs: 20_000 },
+    ],
+    [
+      { role: 'system', content: system },
+      { role: 'user', content: user },
+    ],
+    { maxTokens: 300, temperature: 0.2 },
+    (out: string) => {
+      const para = out.replace(/```/g, '').trim().split(/\n\s*\n/)[0].trim();
+      if (para.length < 60) throw new Error('too short');
+      return para.slice(0, 700);
+    },
+  );
+  return win?.result ?? null;
+}
 
 const json = (status: number, body: Record<string, unknown>) =>
   new Response(JSON.stringify(body), {
@@ -172,12 +220,13 @@ export const POST: APIRoute = async ({ request }) => {
   let emailError: string | null = null;
 
   if (resendKey) {
-    const { html, text, subject } = renderEmail({ payload, name, email, industry, leadId, dbStatus });
+    const about = await describeBusiness(payload);
+    const { html, text, subject } = renderEmail({ payload, name, email, industry, leadId, dbStatus, about });
     const resend = new Resend(resendKey);
 
     try {
       const { error } = await resend.emails.send({
-        from: 'Averde AI Audit <mark@averde.ai>',
+        from: 'Averde Website Audit <mark@averde.ai>',
         to: ['mark@averde.ai'],
         replyTo: email,
         subject,
@@ -299,8 +348,9 @@ function renderEmail(args: {
   industry: string;
   leadId: string | null;
   dbStatus: string;
+  about: string | null;
 }): { html: string; text: string; subject: string } {
-  const { payload, name, email, industry, leadId, dbStatus } = args;
+  const { payload, name, email, industry, leadId, dbStatus, about } = args;
   const s = payload.scores || {};
   const scopeLabel = (scope?: string[]) => {
     const local = scope?.includes('local'), national = scope?.includes('national');
@@ -311,7 +361,7 @@ function renderEmail(args: {
   const allOps = payload.opportunities || [];
   const fixes = allOps.filter(o => o.kind !== 'rec');
   const recs = allOps.filter(o => o.kind === 'rec');
-  const subject = `Averde AI Audit Lead: ${name || 'Anonymous'} (${industry || 'unknown'})`;
+  const subject = `Website Audit lead: ${name || 'Anonymous'}${s.overall != null ? ` \u2014 ${s.overall}/100` : ''} (${industry || 'unknown'})`;
   const checksSummary = payload.checks?.length
     ? {
         pass: payload.checks.filter(c => c.status === 'pass').length,
@@ -383,12 +433,15 @@ function renderEmail(args: {
     : '';
 
   const textLines = [
+    'WEBSITE AUDIT — new lead',
+    '',
     `Name: ${name || '(not given)'}`,
     `Email: ${email}`,
     payload.website ? `Website: ${payload.website}` : '',
     `Industry: ${industry || '(not given)'}`,
     payload.city ? `City: ${payload.city}` : '',
     payload.goal ? `Stated goal: ${payload.goal}` : '',
+    about ? `\nWhat they do (read off their homepage):\n${about}` : '',
     stackTextBlock,
     siteAuditTextBlock,
     aiVisTextBlock,
@@ -451,7 +504,7 @@ function renderEmail(args: {
 
       <table role="presentation" width="720" cellpadding="0" cellspacing="0" style="max-width:720px;background:${c.paper};border-radius:12px;overflow:hidden;margin-bottom:18px;">
         <tr><td style="padding:22px 28px 16px;background:${c.walnut};color:${c.paper};">
-          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:${c.accent};margin-bottom:8px;">New audit lead</div>
+          <div style="font:600 11px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:${c.accent};margin-bottom:8px;">Website Audit \u2014 new lead</div>
           <div style="font:600 21px/1.25 'Helvetica Neue',Arial,sans-serif;">${esc(name || 'Anonymous')}</div>
           <div style="font:400 14px/1.4 'Helvetica Neue',Arial,sans-serif;color:#D1D5DB;margin-top:4px;">${esc(industry || 'unknown')}${payload.city ? ' · ' + esc(payload.city) : ''}</div>
         </td></tr>
@@ -469,6 +522,11 @@ function renderEmail(args: {
             ${checksSummary ? `<tr><td style="padding:5px 14px 5px 0;color:${c.muted};vertical-align:top;white-space:nowrap;">Checks</td><td style="padding:5px 0;color:${c.ink};">${checksSummary.pass} passed · ${checksSummary.warn} partial · ${checksSummary.fail} failed</td></tr>` : ''}
           </table>
         </td></tr>
+
+        ${about ? `<tr><td style="padding:8px 28px 4px;">
+          <div style="font:600 10px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:${c.muted};margin-bottom:6px;">What they do <span style="text-transform:none;letter-spacing:0;font-weight:400;">(read off their homepage)</span></div>
+          <div style="font:400 13px/1.65 'Helvetica Neue',Arial,sans-serif;color:${c.ink};">${esc(about)}</div>
+        </td></tr>` : ''}
 
         ${payload.keywords ? `<tr><td style="padding:6px 28px 4px;">
           <div style="font:600 10px/1 'Helvetica Neue',Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:${c.muted};margin-bottom:6px;">Phrases they gave us</div>

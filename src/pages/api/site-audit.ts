@@ -80,6 +80,22 @@ function pickTitle(html: string): string | null {
   return m ? m[1].trim() : null;
 }
 
+// Readable text from the homepage, for the one-paragraph description of the
+// business in the internal lead email. The website audit never asks what the
+// business does, so this is the only place that answer can come from.
+function visibleText(html: string, max = 1800): string {
+  return html
+    .replace(/<(script|style|noscript|svg)\b[\s\S]*?<\/\1>/gi, ' ')
+    .replace(/<!--[\s\S]*?-->/g, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&#39;|&rsquo;/g, '’')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, max);
+}
+
 // Per-page signals. The crawl below already fetches these pages for schema, so
 // everything here is free — no extra requests. Site-wide checks (duplicate
 // titles, missing descriptions, alt text) can only be judged across pages;
@@ -506,6 +522,7 @@ export const POST: APIRoute = async ({ request }) => {
       max: expectedSchemaTypes.length,
     },
     siteWide,
+    excerpt: visibleText(html),
     pagespeed: null as Awaited<ReturnType<typeof pageSpeedSignals>>,
     files: { robots: false, sitemap: false, llms: false },
     discovery: { method: scan.method, pagesScanned: pages.length },

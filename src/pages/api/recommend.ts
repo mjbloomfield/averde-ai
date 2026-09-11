@@ -86,6 +86,8 @@ Hard rules — every one of them matters:
 - If this is a team (not "Just me"), write for the company — "your team", "your front desk" — and if few of the team use AI, at least one move should be about getting one more person productive with it, not just the owner.
 - Use the tools they already named where possible. Do not tell them to buy new software.
 - Only mention a named tool if you are confident what it actually does and your suggestion fits that role. Getting a tool's role wrong is worse than not mentioning it — when unsure, refer to their documents or clients instead of the tool.
+- When a move needs an AI assistant, call it Claude. Name a different assistant only if they told us they use that one — in which case use theirs. Never write "ChatGPT" or "Gemini" unless it came from their own answers.
+- Never describe an AI assistant's features, settings, menus or privacy behaviour. You do not know them and inventing one is worse than being vague. Say what the reader should do with it, not what it has: "paste your rental policies into Claude and ask for three FAQ answers", never "turn on Claude's private mode".
 - If they flagged a hesitation (privacy, cost, time, etc.), the most-relevant move must address it head-on in plain terms.
 - Plain English. No buzzwords (leverage, transform, revolutionize, seamless, game-changing, unlock, empower). No exclamation points. No "it's not X, it's Y" constructions.
 - Be specific to THIS business or don't ship it: every move's title or firstStep must name something only this business would recognize — a tool they listed, their kind of document or client, their own words from the description. If a title could appear in any small business's report, rewrite it until it can't.
