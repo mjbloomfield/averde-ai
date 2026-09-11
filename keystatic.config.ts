@@ -11,6 +11,29 @@ export default config({
 
   collections: {
 
+    // ── TESTIMONIALS ──────────────────────────────────────────────────────────
+    testimonials: collection({
+      label: 'Testimonials',
+      slugField: 'name',
+      path: 'src/content/testimonials/*',
+      format: { data: 'yaml' },
+      schema: {
+        name: fields.slug({ name: { label: 'Person name', description: 'e.g. "Amanda L."' } }),
+        role: fields.text({ label: 'Role / company', description: 'e.g. "Owner · Tissue Alchemy · Boulder, CO"' }),
+        quote: fields.text({ label: 'Quote', multiline: true, description: 'Include the quotation marks. Around 40 words reads best on the home page.' }),
+        published: fields.checkbox({ label: 'Published (visible on site)', defaultValue: true }),
+        order: fields.integer({ label: 'Order', defaultValue: 0, description: 'Lowest first in the home-page rotation.' }),
+        placements: fields.multiselect({
+          label: 'Show on',
+          options: [
+            { label: 'Home page (rotates)', value: 'home' },
+            { label: 'Website Audit page', value: 'website-audit' },
+          ],
+          defaultValue: ['home'],
+        }),
+      },
+    }),
+
     // ── INDUSTRY PAGES ────────────────────────────────────────────────────────
     industries: collection({
       label: 'Industry Pages',
@@ -297,21 +320,6 @@ export default config({
               `${props.fields.published.value ? '✓' : '○'} ${props.fields.title.value || 'Untitled'} — ${props.fields.price.value || ''}`,
           }
         ),
-
-        // Testimonial
-        quoteText: fields.text({
-          label: 'Testimonial — quote text',
-          multiline: true,
-          defaultValue: '"Wow — this looks so good. Everything is organized and styled so beautifully and strategically. Love a lot of the wording choices you made... I\'m really excited to have a legit website that will be easy for me to edit."',
-        }),
-        quoteName: fields.text({
-          label: 'Testimonial — person name',
-          defaultValue: 'Sharon T.',
-        }),
-        quoteRole: fields.text({
-          label: 'Testimonial — role / company',
-          defaultValue: 'Owner · Tissue Alchemy · Boulder, CO',
-        }),
 
         // About Mark
         aboutEyebrow: fields.text({

@@ -80,4 +80,18 @@ const caseStudies = defineCollection({
   }),
 });
 
-export const collections = { blog, industries, caseStudies };
+const testimonials = defineCollection({
+  loader: glob({ pattern: '**/*.yaml', base: './src/content/testimonials' }),
+  schema: z.object({
+    name: z.string(),
+    role: z.string(),
+    quote: z.string(),
+    published: z.boolean().default(true),
+    order: z.number().default(0),
+    // Which pages may show this one. The home page rotates through everything
+    // tagged 'home'; other pages pin a single quote.
+    placements: z.array(z.enum(['home', 'website-audit'])).default(['home']),
+  }),
+});
+
+export const collections = { blog, industries, caseStudies, testimonials };

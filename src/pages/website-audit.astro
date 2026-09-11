@@ -2,10 +2,15 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { createReader } from '@keystatic/core/reader';
 import keystaticConfig from '../../keystatic.config';
+import { getCollection } from 'astro:content';
 
 const reader = createReader(process.cwd(), keystaticConfig);
 const page = await reader.singletons.websiteAudit.read();
 const items = page?.useItems ?? [];
+
+const quote = (await getCollection('testimonials'))
+  .filter(t => t.data.published !== false && t.data.placements.includes('website-audit'))
+  .sort((a, b) => a.data.order - b.data.order)[0]?.data;
 ---
 
 <BaseLayout
@@ -44,6 +49,23 @@ const items = page?.useItems ?? [];
       </div>
     </div>
   </section>
+
+  <!-- WHAT SOMEONE FOUND -->
+  {quote && (
+    <section class="bg-cream pt-6 pb-2">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6">
+        <figure class="bg-green-deep rounded-3xl px-7 py-8 sm:px-10 sm:py-10 text-center">
+          <blockquote class="text-cream text-lg sm:text-xl leading-relaxed italic font-light">
+            {quote.quote}
+          </blockquote>
+          <figcaption class="mt-6">
+            <div class="text-cream font-semibold">{quote.name}</div>
+            <div class="text-sand text-xs uppercase tracking-widest mt-1">{quote.role}</div>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+  )}
 
   <!-- WIDGET -->
   <section id="audit" class="bg-cream pt-14 pb-16 scroll-mt-20">

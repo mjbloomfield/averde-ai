@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { createReader } from '@keystatic/core/reader';
 import keystaticConfig from '../../keystatic.config';
+import { getCollection } from 'astro:content';
 
 const reader = createReader(process.cwd(), keystaticConfig);
 const home = await reader.singletons.home.read();
@@ -39,9 +40,10 @@ const services = (home?.services ?? [
   { published: true, title: 'Custom AI Builds', price: 'Quote-based', description: '', ctaLabel: "Let's talk →", ctaHref: '/contact' },
 ]).filter((s: { published?: boolean }) => s.published !== false);
 
-const quoteText  = home?.quoteText  ?? '';
-const quoteName  = home?.quoteName  ?? 'Dr. Priya Ramanathan';
-const quoteRole  = home?.quoteRole  ?? 'Owner · Harbor Dental · Boulder, CO';
+const testimonials = (await getCollection('testimonials'))
+  .filter(t => t.data.published !== false && t.data.placements.includes('home'))
+  .sort((a, b) => a.data.order - b.data.order)
+  .map(t => t.data);
 
 const aboutEyebrow  = home?.aboutEyebrow  ?? 'Why work with me';
 const aboutHeadline = home?.aboutHeadline ?? "I'm not a consultant who learned AI last year.";
@@ -244,9 +246,32 @@ const ctaMicro    = home?.ctaMicro    ?? 'No commitment · No credit card · Jus
       <svg width="32" height="24" viewBox="0 0 32 24" fill="none" aria-hidden="true" style="margin-bottom:24px;opacity:.4">
         <path d="M0 24 C0 14 4 6 14 0L16 4 C10 8 8 12 8 16v8H0Z M18 24 C18 14 22 6 32 0L34 4 C28 8 26 12 26 16v8H18Z" fill="#C99356"/>
       </svg>
-      <blockquote>{quoteText}</blockquote>
-      <div class="cite-name">{quoteName}</div>
-      <div class="cite-role">{quoteRole}</div>
+      <div class="testi-stack" data-testi-count={testimonials.length}>
+        {testimonials.map((t, i) => (
+          <figure class="testi-slide" data-testi-slide hidden={i > 0}>
+            <blockquote>{t.quote}</blockquote>
+            <figcaption>
+              <div class="cite-name">{t.name}</div>
+              <div class="cite-role">{t.role}</div>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+
+      {testimonials.length > 1 && (
+        <div class="testi-dots" role="tablist" aria-label="Testimonials">
+          {testimonials.map((t, i) => (
+            <button
+              type="button"
+              class="testi-dot"
+              data-testi-dot
+              role="tab"
+              aria-selected={i === 0 ? 'true' : 'false'}
+              aria-label={`Show what ${t.name} said`}
+            ></button>
+          ))}
+        </div>
+      )}
     </div>
   </section>
 
@@ -748,6 +773,34 @@ const ctaMicro    = home?.ctaMicro    ?? 'No commitment · No credit card · Jus
     color: var(--paper); margin: 0 0 24px;
     text-wrap: balance;
   }
+  /* Slides share one grid cell so the section is as tall as the longest
+     quote and never jumps as it rotates. */
+  .testi-stack { display: grid; }
+  .testi-slide {
+    grid-area: 1 / 1; margin: 0;
+    opacity: 1; visibility: visible;
+    transition: opacity .6s ease, visibility 0s;
+  }
+  /* display:block keeps the grid cell sized to the longest quote; visibility
+     takes the inactive quotes out of the accessibility tree so a screen
+     reader doesn't read all of them at once. */
+  .testi-slide[hidden] {
+    display: block !important;
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: opacity .6s ease, visibility 0s linear .6s;
+  }
+  .testi-dots { display: flex; gap: 10px; justify-content: center; margin-top: 28px; }
+  .testi-dot {
+    width: 8px; height: 8px; padding: 0; border-radius: 50%; cursor: pointer;
+    border: 1px solid rgba(201,147,86,.7); background: transparent;
+    transition: background .3s ease;
+  }
+  .testi-dot[aria-selected='true'] { background: var(--honey-300); }
+  .testi-dot:focus-visible { outline: 2px solid var(--paper); outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) {
+    .testi-slide { transition: none; }
+  }
+
   .cite-name { font-family: 'Fraunces', serif; font-size: 16px; color: var(--paper); margin-top: 20px; }
   .cite-role {
     font-family: var(--font-ui); font-size: 11px;
@@ -827,3 +880,39 @@ const ctaMicro    = home?.ctaMicro    ?? 'No commitment · No credit card · Jus
     color: var(--smoke); margin-top: 18px;
   }
 </style>
+
+<script>
+  // Home-page testimonial rotation. Auto-advance stops on hover, on keyboard
+  // focus, and for anyone who asked for reduced motion — WCAG 2.2.2 wants a
+  // way to pause anything that moves on its own for more than five seconds.
+  const stack = document.querySelector('[data-testi-count]');
+  if (stack) {
+    const slides = [...stack.querySelectorAll('[data-testi-slide]')] as HTMLElement[];
+    const dots = [...document.querySelectorAll('[data-testi-dot]')] as HTMLElement[];
+
+    if (slides.length > 1) {
+      let current = 0;
+      let timer: ReturnType<typeof setInterval> | null = null;
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const show = (next: number) => {
+        current = (next + slides.length) % slides.length;
+        slides.forEach((el, i) => { el.hidden = i !== current; });
+        dots.forEach((el, i) => el.setAttribute('aria-selected', String(i === current)));
+      };
+
+      const start = () => { if (!reduced && !timer) timer = setInterval(() => show(current + 1), 20_000); };
+      const stop = () => { if (timer) { clearInterval(timer); timer = null; } };
+
+      dots.forEach((dot, i) => dot.addEventListener('click', () => { stop(); show(i); start(); }));
+
+      const section = stack.closest('section');
+      section?.addEventListener('mouseenter', stop);
+      section?.addEventListener('mouseleave', start);
+      section?.addEventListener('focusin', stop);
+      section?.addEventListener('focusout', start);
+
+      start();
+    }
+  }
+</script>
