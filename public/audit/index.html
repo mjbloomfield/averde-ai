@@ -252,6 +252,7 @@ const state = {
   contactName: '', email: '',
   siteAudit: null,     // null = not fetched yet; {pending:true} = in flight
   aiVisibility: null,
+  googleVis: null,
   siteFired: false,
   visFired: false,
   sendStatus: 'idle',  // idle | sending | sent | failed
@@ -306,6 +307,21 @@ function fireVisibilityCheck() {
       .then(r => (r.ok ? r.json() : null))
       .then(r => { state.aiVisibility = r || { configured: false }; checksProgressed(); })
       .catch(() => { state.aiVisibility = { configured: false }; checksProgressed(); });
+
+    // Same phrases against Google, so the report can put the two side by side.
+    state.googleVis = { pending: true };
+    fetch('/api/google-visibility', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        industry: industryLabel(), city: state.city,
+        domain: state.website || '', name: state.name || '',
+        keywords: parseKeywords(), scope: state.scope,
+      }),
+    })
+      .then(r => (r.ok ? r.json() : null))
+      .then(r => { state.googleVis = r || { configured: false }; checksProgressed(); })
+      .catch(() => { state.googleVis = { configured: false }; checksProgressed(); });
   }
 }
 
@@ -319,10 +335,11 @@ function checksProgressed() {
 
 function liveStatusStrip() {
   if (!state.siteFired && !state.visFired) return '';
-  const busy = (state.siteAudit && state.siteAudit.pending) || (state.aiVisibility && state.aiVisibility.pending);
+  const busy = (state.siteAudit && state.siteAudit.pending) || (state.aiVisibility && state.aiVisibility.pending) || (state.googleVis && state.googleVis.pending);
   const parts = [];
   if (state.siteAudit) parts.push(state.siteAudit.pending ? `scanning ${esc(state.website)}` : `scanned ${esc(state.website)}`);
   if (state.aiVisibility) parts.push(state.aiVisibility.pending ? 'running your search terms through a live AI engine' : 'AI-search queries done');
+  if (state.googleVis) parts.push(state.googleVis.pending ? 'checking where you land in Google' : 'Google searches done');
   return `<div class="live-strip${busy ? '' : ' done'}" id="live-strip">
     ${busy ? '<div class="spinner"></div>' : '<span class="tick">✓</span>'}
     <span>${busy
@@ -428,6 +445,17 @@ function buildChecks() {
         'The homepage description is the one people check. The inside pages are the ones that answer specific questions, and they are the ones engines quote.',
         'Write one or two sentences per page saying what that page covers. Same SEO settings panel as the title.');
 
+      const empty = sw.emptyPages || [];
+      if (empty.length) {
+        const most = empty.length >= sw.pages / 2;
+        add('readable', 'Pages readable without JavaScript', 'na', 0, 0,
+          `${empty.length} of the ${pageWord(sw.pages)} we scanned returned almost no readable text: ${empty.slice(0, 3).join(', ')}${empty.length > 3 ? ` and ${empty.length - 3} more` : ''}.`,
+          'We read the page the way most AI crawlers do — the HTML your server sends, before a browser runs any code. If the words only appear once JavaScript runs, a crawler that does not run JavaScript sees a blank page.',
+          most
+            ? 'This affects most of your site, so the checks above may be reading an empty page rather than your real content. Worth a conversation about how the site is built — it is the kind of thing a rebuild fixes.'
+            : 'Check those pages in your browser with JavaScript turned off. If the content disappears, that is what a crawler sees. It can also mean the page blocked our request rather than being empty.');
+      }
+
       if (sw.imgTotal > 0) {
         const pct = Math.round((sw.imgWithAlt / sw.imgTotal) * 100);
         add('alt-text', 'Images have alt text', pct >= 90 ? 'pass' : pct >= 50 ? 'warn' : 'fail', pct >= 90 ? 5 : pct >= 50 ? 3 : 0, 5,
@@ -492,6 +520,39 @@ function buildChecks() {
     } else {
       add('seo', 'Technical SEO basics (Google PageSpeed)', 'na', 0, 0, 'SEO test didn’t complete in time — not counted against you.', '', 'Run it yourself free at pagespeed.web.dev.');
     }
+  }
+
+  // --- Google: where they actually land (informational) ---
+  // Not scored. Where someone ranks in Google is not something this audit can
+  // promise to move, and the earlier decision was to stop deducting points for
+  // things we can't attribute. It is still the most concrete thing in the
+  // report, so it goes in as evidence.
+  const gv = state.googleVis && !state.googleVis.pending ? state.googleVis : null;
+  if (gv && gv.configured && gv.queriesRun > 0) {
+    const n = gv.queriesRun;
+    const phrase = n === 1 ? 'search' : 'searches';
+    const missing = gv.queries.filter(q => q.ran && q.userRank == null);
+    const rivals = [...new Set(missing.flatMap(q => q.organic.slice(0, 3).map(h => h.host)))]
+      .filter(h => h && !/google\.|^m\./.test(h)).slice(0, 3);
+
+    const evidence = gv.onPageOne === 0
+      ? `You didn't appear on the first page of Google for any of the ${n} ${phrase} we ran.`
+      : gv.onPageOne === n
+        ? `You're on the first page of Google for all ${n} ${phrase} we ran${gv.bestRank ? `, as high as position ${gv.bestRank}` : ''}.`
+        : `You're on the first page of Google for ${gv.onPageOne} of ${n} ${phrase}${gv.bestRank ? `, as high as position ${gv.bestRank}` : ''}.`;
+
+    const aio = gv.aiOverviewsSeen === 0
+      ? 'Google showed no AI Overview for these searches, so there was nothing to be quoted in.'
+      : gv.aiOverviewsCiting === 0
+        ? `Google showed an AI summary on ${gv.aiOverviewsSeen} of them and quoted someone else every time.`
+        : `Google showed an AI summary on ${gv.aiOverviewsSeen} of them and quoted you in ${gv.aiOverviewsCiting}.`;
+
+    add('google', 'Where you land in Google', 'na', 0, 0,
+      `${evidence} ${aio}`,
+      'This is the search your customers actually run. Positions move and vary by who is searching and where they are, so treat it as a snapshot of the moment we checked, not a fixed score.',
+      rivals.length
+        ? `For the searches you're missing from, Google is currently showing ${rivals.join(', ')}. Worth looking at what those pages answer that yours doesn't.`
+        : 'Keep the pages that are working, and give the phrases you are missing a page of their own that answers the question directly.');
   }
 
   // --- AI search visibility (15) ---
@@ -676,6 +737,7 @@ function submitLead(checks, score, plan) {
       actionPlan: plan,
       siteAudit: state.siteAudit && !state.siteAudit.pending ? state.siteAudit : null,
       aiVisibility: state.aiVisibility && !state.aiVisibility.pending ? state.aiVisibility : null,
+      googleVisibility: state.googleVis && !state.googleVis.pending ? state.googleVis : null,
     }),
   })
     .then(r => { state.sendStatus = r.ok ? 'sent' : 'failed'; updateSendNote(); })
@@ -1139,6 +1201,10 @@ const REF_SITES = [
     vis: { configured: true, appeared: true, source: 'keywords', queries: [
       { query: 'family dentist in Boulder', appeared: true, results: [] },
       { query: 'emergency dental Boulder CO', appeared: true, results: [] },
+    ] },
+    gv: { configured: true, queriesRun: 2, onPageOne: 2, bestRank: 1, aiOverviewsSeen: 2, aiOverviewsCiting: 2, queries: [
+      { query: 'family dentist in Boulder', ran: true, userRank: 1, userPaidRank: null, organic: [], paid: [], aiOverview: { cited: true, sources: [] } },
+      { query: 'emergency dental Boulder CO', ran: true, userRank: 3, userPaidRank: null, organic: [], paid: [], aiOverview: { cited: true, sources: [] } },
     ] } },
   { label: 'Every check failing',
     note: 'The wording most visitors see. Fix text is platform-aware — this one is on WordPress.',
@@ -1154,6 +1220,12 @@ const REF_SITES = [
     vis: { configured: true, appeared: false, source: 'keywords', queries: [
       { query: 'family dentist in Boulder', appeared: false, results: [] },
       { query: 'emergency dental Boulder CO', appeared: false, results: [] },
+    ] },
+    gv: { configured: true, queriesRun: 2, onPageOne: 0, bestRank: null, aiOverviewsSeen: 2, aiOverviewsCiting: 0, queries: [
+      { query: 'family dentist in Boulder', ran: true, userRank: null, userPaidRank: null, aiOverview: { cited: false, sources: [] },
+        organic: [{ rank: 1, host: 'yelp.com', title: '', url: '', isUser: false }, { rank: 2, host: 'zocdoc.com', title: '', url: '', isUser: false }], paid: [] },
+      { query: 'emergency dental Boulder CO', ran: true, userRank: null, userPaidRank: null, aiOverview: { cited: false, sources: [] },
+        organic: [{ rank: 1, host: 'zocdoc.com', title: '', url: '', isUser: false }, { rank: 2, host: 'healthgrades.com', title: '', url: '', isUser: false }], paid: [] },
     ] } },
   { label: 'Middle band (warn)',
     note: 'Where the half-credit thresholds land.',
@@ -1169,6 +1241,11 @@ const REF_SITES = [
     vis: { configured: true, appeared: true, source: 'keywords', queries: [
       { query: 'family dentist in Boulder', appeared: true, results: [] },
       { query: 'emergency dental Boulder CO', appeared: false, results: [] },
+    ] },
+    gv: { configured: true, queriesRun: 2, onPageOne: 1, bestRank: 7, aiOverviewsSeen: 1, aiOverviewsCiting: 0, queries: [
+      { query: 'family dentist in Boulder', ran: true, userRank: 7, userPaidRank: null, organic: [], paid: [], aiOverview: null },
+      { query: 'emergency dental Boulder CO', ran: true, userRank: null, userPaidRank: null, aiOverview: { cited: false, sources: [] },
+        organic: [{ rank: 1, host: 'zocdoc.com', title: '', url: '', isUser: false }], paid: [] },
     ] } },
   { label: 'Site unreachable',
     note: 'Everything downstream is skipped.',
@@ -1229,6 +1306,7 @@ function renderAll() {
   state.website = REF_SITES[1].website;
   state.siteAudit = REF_SITES[1].site;
   state.aiVisibility = REF_SITES[1].vis;
+  state.googleVis = REF_SITES[1].gv;
   grab('The report · every check failing', 'What the visitor sees on the last screen, and what the emailed copy is built from.', renderReport);
 
   root.innerHTML = out.map((h, i) => i ? '<hr class="ref-rule" />' + h : h).join('');

@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { buildQueries, hostsMatch, nameAppears, normalizeHost } from '../../lib/search-queries';
 
 export const prerender = false;
 
@@ -18,30 +19,6 @@ type QueryResult = {
   appeared: boolean;
   results: SearchHit[];
 };
-
-function normalizeHost(input: string): string | null {
-  if (!input) return null;
-  const trimmed = input.trim().toLowerCase();
-  const withScheme = /^https?:\/\//.test(trimmed) ? trimmed : `https://${trimmed}`;
-  try {
-    return new URL(withScheme).hostname.replace(/^www\./, '');
-  } catch {
-    return null;
-  }
-}
-
-function hostsMatch(a: string, b: string): boolean {
-  const A = a.replace(/^www\./, '');
-  const B = b.replace(/^www\./, '');
-  return A === B || A.endsWith('.' + B) || B.endsWith('.' + A);
-}
-
-function nameAppears(name: string, text: string): boolean {
-  const n = name.trim();
-  if (!n || n.length < 4) return false;
-  const escaped = n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  return new RegExp(`\\b${escaped}\\b`, 'i').test(text);
-}
 
 async function perplexitySearch(
   apiKey: string,
@@ -102,49 +79,10 @@ export const POST: APIRoute = async ({ request }) => {
     return json(200, { ok: true, configured: false, queries: [] });
   }
 
-  // Prefer the user's own customer search phrases (step 2 of the form) —
-  // they know what buyers actually type far better than an industry label.
-  // Fall back to generic industry queries only if no phrases were given.
-  const rawKeywords = Array.isArray(body.keywords) ? body.keywords : [];
-  const keywords = [...new Set(rawKeywords.map(k => String(k).trim()).filter(k => k.length > 2))].slice(0, 10);
-  const MAX_QUERIES = 12; // picking both scopes doubles the phrases; cap the Perplexity spend
-  const cityToken = (city.split(/[\s,]+/)[0] || '').toLowerCase();
-
-  // Only bolt the audit's city onto a phrase that names no place at all.
-  // Testing for our own city isn't enough: someone serving two markets writes
-  // "firmware engineering in san francisco", and appending their home city
-  // produced "…in san francisco Boulder, CO" — a query no buyer would type.
-  const STATES = /\b(a[klrz]|c[aot]|d[ce]|fl|ga|hi|i[adln]|k[sy]|la|m[adeinost]|n[cdehjmvy]|o[hkr]|pa|ri|s[cd]|t[nx]|ut|v[at]|w[aivy])\b/i;
-  const namesAPlace = (k: string) =>
-    /\b(in|near|around|serving|based)\s+\S/i.test(k) || /near me/i.test(k) || STATES.test(k);
-
-  // Scope comes from the form: near-me, nationwide, or both. A phrase that
-  // already names a place is never rewritten under any scope — the buyer told
-  // us where they meant.
-  const scope = Array.isArray(body.scope) && body.scope.length ? body.scope : ['local'];
-  const wantsLocal = scope.includes('local');
-  const wantsNational = scope.includes('national');
-
-  const variants = (k: string): string[] => {
-    if (!cityToken || namesAPlace(k) || k.toLowerCase().includes(cityToken)) return [k];
-    const out: string[] = [];
-    if (wantsLocal) out.push(`${k} ${city}`);
-    if (wantsNational) out.push(k);
-    return out.length ? out : [k];
-  };
-
-  // Round-robin by variant so the cap trims second variants rather than
-  // dropping a phrase the owner typed.
-  const perPhrase = keywords.map(variants);
-  const widest = Math.max(0, ...perPhrase.map(v => v.length));
-  const queries = keywords.length
-    ? Array.from({ length: widest })
-        .flatMap((_, i) => perPhrase.map(v => v[i]).filter(Boolean))
-        .slice(0, MAX_QUERIES)
-    : [
-        `best ${industry.toLowerCase()} in ${city}`,
-        `${industry.toLowerCase()} ${city} recommendations`,
-      ];
+  // MAX_QUERIES: picking both scopes doubles the phrases; cap the Perplexity spend.
+  const { queries, source } = buildQueries({
+    industry, city, keywords: body.keywords, scope: body.scope, max: 12,
+  });
 
   const results: QueryResult[] = await Promise.all(
     queries.map(async query => {
@@ -177,7 +115,7 @@ export const POST: APIRoute = async ({ request }) => {
     userHost,
     appeared: anyAppearance,
     appearedCount: results.filter(r => r.appeared).length,
-    source: keywords.length ? 'keywords' : 'industry',
+    source,
     queries: results,
   });
 };

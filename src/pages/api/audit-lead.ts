@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 import { seqChat } from '../../lib/llm';
+import { dfsAuth, dfsPost } from '../../lib/dataforseo';
 
 export const prerender = false;
 
@@ -95,6 +96,7 @@ type AuditPayload = {
   opportunities?: Opportunity[];
   siteAudit?: SiteAuditFindings | null;
   aiVisibility?: AiVisibilityResult | null;
+  googleVisibility?: Record<string, unknown> | null;
 };
 
 // One paragraph on what the business actually does, read off their homepage.
@@ -195,6 +197,7 @@ export const POST: APIRoute = async ({ request }) => {
           opportunities: payload.actionPlan ?? payload.opportunities ?? [],
           site_audit: payload.siteAudit ?? null,
           ai_visibility: payload.aiVisibility ?? null,
+          google_visibility: payload.googleVisibility ?? null,
           user_agent: request.headers.get('user-agent'),
           referer: request.headers.get('referer'),
         })
@@ -274,6 +277,21 @@ export const POST: APIRoute = async ({ request }) => {
           if (!error) {
             reportUrl = candidateUrl;
             user = candidate;
+            // A 100-page crawl for broken links and duplicate content. It runs
+            // for a few minutes, so nothing can wait on it — the report page
+            // collects the answer when someone opens it.
+            if (payload.website && dfsAuth()) {
+              const posted = await dfsPost('on_page/task_post', [{
+                target: payload.website.replace(/^https?:\/\//i, '').replace(/^www\./i, '').split('/')[0],
+                max_crawl_pages: 100,
+                respect_sitemap: true,
+                enable_www_redirect_check: true,
+              }], 15_000);
+              const taskId = ((posted?.tasks as Array<Record<string, unknown>>) || [])[0]?.id;
+              if (taskId) {
+                await supabase.from('audit_reports').update({ onpage_task_id: String(taskId) }).eq('id', reportId);
+              }
+            }
           } else {
             console.error('audit_reports insert failed:', error.message);
           }

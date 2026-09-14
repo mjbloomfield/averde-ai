@@ -36,11 +36,17 @@ const wrap = (body: string, reportId: string) => `<!doctype html>
   }
   .bar button.ghost { background:transparent; color:#F4ECDB; }
   .bar button:focus-visible { outline:2px solid #F4ECDB; outline-offset:2px; }
-  #rerun-out {
+  #rerun-out, #onpage-out {
     max-width:680px; margin:0 auto; padding:0 20px;
     font:400 14px/1.6 'Helvetica Neue',Arial,sans-serif; color:#4F3522;
   }
-  #rerun-out ul { margin:8px 0 0; padding-left:20px; }
+  #rerun-out ul, #onpage-out ul { margin:8px 0 0; padding-left:20px; }
+  #onpage-out .card {
+    background:#FFFDF6; border:1px solid rgba(42,27,17,.12); border-radius:10px;
+    padding:14px 18px; margin:14px 0 0;
+  }
+  #onpage-out h3 { font:600 14px/1.3 'Helvetica Neue',Arial,sans-serif; margin:0 0 6px; color:#2A1B11; }
+  #onpage-out code { font:12px ui-monospace,Menlo,monospace; word-break:break-all; }
 
   @page { margin:14mm 12mm; }
   @media print {
@@ -61,9 +67,50 @@ const wrap = (body: string, reportId: string) => `<!doctype html>
     </span>
   </div>
   <div id="rerun-out"></div>
+  <div id="onpage-out"></div>
   ${body}
 <script>
   document.getElementById('print').addEventListener('click', () => window.print());
+
+  // The deep crawl was started when this report was generated. By the time
+  // anyone opens the page it has normally finished; if not, say so plainly
+  // rather than showing an empty section.
+  (async () => {
+    const out = document.getElementById('onpage-out');
+    try {
+      const res = await fetch('/api/onpage-results', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reportId: ${JSON.stringify(reportId)} }),
+      });
+      const d = await res.json();
+      if (d.state === 'crawling') {
+        out.innerHTML = '<div class="card"><h3>Deeper crawl still running</h3>' +
+          '<p>We\u2019re checking up to 100 pages for broken links and duplicate content (' + (d.pagesCrawled || 0) +
+          ' done so far). Reload this page in a few minutes.</p></div>';
+        return;
+      }
+      if (d.state !== 'ready') return;
+
+      const lines = [];
+      lines.push(d.brokenLinks === 0
+        ? 'No broken links found across the ' + d.pagesCrawled + ' pages we crawled.'
+        : d.brokenLinks + ' broken link' + (d.brokenLinks === 1 ? '' : 's') + ' across ' + d.pagesCrawled + ' pages.');
+      if (d.brokenResources) lines.push(d.brokenResources + ' broken image or file reference' + (d.brokenResources === 1 ? '' : 's') + '.');
+      if (d.duplicateTitle) lines.push(d.duplicateTitle + ' pages share a title with another page.');
+      if (d.duplicateDescription) lines.push(d.duplicateDescription + ' pages share a description with another page.');
+      if (d.nonIndexable) lines.push(d.nonIndexable + ' pages are marked so search engines will not index them. Some of that is normal; worth a look if the number is large.');
+
+      const examples = (d.examples || []).slice(0, 8).map(e =>
+        '<li><code>' + e.to + '</code> &mdash; linked from <code>' + e.from + '</code>' +
+        (e.status ? ' (' + e.status + ')' : '') + '</li>').join('');
+
+      out.innerHTML = '<div class="card"><h3>Deeper crawl \u2014 ' + d.pagesCrawled + ' pages</h3><ul>' +
+        lines.map(l => '<li>' + l + '</li>').join('') + '</ul>' +
+        (examples ? '<p style="margin-top:10px">Broken links found:</p><ul>' + examples + '</ul>' : '') +
+        '</div>';
+    } catch { /* the report is still complete without this section */ }
+  })();
 
   const btn = document.getElementById('rerun');
   const out = document.getElementById('rerun-out');

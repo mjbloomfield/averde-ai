@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { promises as dns } from 'node:dns';
+import { dfsAuth, dfsPost, firstResult } from '../../lib/dataforseo';
 
 export const prerender = false;
 
@@ -103,9 +104,17 @@ function visibleText(html: string, max = 1800): string {
 type PageSignals = {
   title: string | null;
   description: string | null;
+  canonical: string | null;
   imgTotal: number;
   imgWithAlt: number;
+  textLen: number;
 };
+
+function pickCanonical(html: string): string | null {
+  const m = /<link[^>]+rel=["']canonical["'][^>]*href=["']([^"']+)["']/i.exec(html)
+    || /<link[^>]+href=["']([^"']+)["'][^>]*rel=["']canonical["']/i.exec(html);
+  return m ? m[1].trim() : null;
+}
 
 function pageSignals(html: string): PageSignals {
   const imgs = html.match(/<img\b[^>]*>/gi) || [];
@@ -114,8 +123,10 @@ function pageSignals(html: string): PageSignals {
   return {
     title: pickTitle(html),
     description: pickMeta(html, 'description'),
+    canonical: pickCanonical(html),
     imgTotal: imgs.length,
     imgWithAlt,
+    textLen: visibleText(html, 4000).length,
   };
 }
 
@@ -256,10 +267,15 @@ async function pageSpeedSignals(target: string): Promise<{
 // from the homepage alone misses most of it. The sitemap is the fast path: one
 // request for the whole map. Without one we crawl, because the sites most
 // likely to fail this audit are also the least likely to publish a sitemap.
-const MAX_PAGES = 12;        // pages scanned in addition to the homepage
-const CRAWL_DEPTH = 2;       // homepage links, then one hop further
-const DISCOVERY_MS = 14_000; // hard ceiling; we report what we have when it's hit
-const BATCH = 4;             // concurrent page fetches
+const MAX_PAGES = 40;         // pages scanned in addition to the homepage
+const CRAWL_DEPTH = 3;        // homepage links, then two hops further
+const DISCOVERY_MS = 38_000;  // hard ceiling; we report what we have when it's hit
+const BATCH = 4;              // concurrent page fetches
+// We are crawling someone else's site, often on shared hosting. Four at a time
+// with a pause between batches is roughly three requests a second — well under
+// what one browser does loading a single page, and slow enough not to look
+// like an attack to a WAF.
+const BATCH_PAUSE_MS = 350;
 
 const SKIP_PATH =
   /\.(pdf|jpe?g|png|gif|webp|svg|zip|mp4|mp3|css|js|xml|json|ico|woff2?|ttf)$|^\/(wp-admin|wp-json|wp-content|cdn-cgi|keystatic|admin)\b|\/(tag|tags|category|categories|author|page)\//i;
@@ -370,6 +386,8 @@ async function scanPages(base: URL, homeHtml: string): Promise<{
       return { path: url.pathname, types: extractSchemaTypes(html), signals: pageSignals(html), html, depth };
     }));
 
+    if (queue.length) await new Promise(r => setTimeout(r, BATCH_PAUSE_MS));
+
     for (const r of results) {
       if (!r) continue;
       pages.push({ path: r.path, types: r.types, ...r.signals });
@@ -392,6 +410,53 @@ async function existsCheck(base: URL): Promise<{ robots: boolean; llms: boolean 
   };
   const [robots, llms] = await Promise.all([head('/robots.txt'), head('/llms.txt')]);
   return { robots, llms };
+}
+
+// Pages our own fetcher saw as empty get one more look, through a renderer.
+// We read raw HTML, so a site that builds its content in the browser hands us a
+// shell — and every check downstream then reports missing titles and missing
+// schema that are actually there. Capped at three pages: this is to find out
+// whether the site is readable at all, not to re-audit it.
+const RENDER_MAX_PAGES = 3;
+
+type RenderedPage = { path: string; title: string | null; description: string | null; textLen: number };
+
+async function renderEmptyPages(base: URL, paths: string[]): Promise<RenderedPage[] | null> {
+  const auth = dfsAuth();
+  if (!auth || !paths.length) return null;
+
+  const targets = paths.slice(0, RENDER_MAX_PAGES);
+  const data = await dfsPost(
+    'on_page/instant_pages',
+    targets.map(path => ({
+      url: new URL(path, base).toString(),
+      enable_javascript: true,
+      load_resources: true,
+    })),
+    40_000,
+    auth,
+  );
+  if (!data) return null;
+
+  // One task per URL, each with a single page in its items array.
+  const tasks = (data.tasks as Array<Record<string, unknown>>) || [];
+  const out: RenderedPage[] = [];
+  for (const task of tasks) {
+    const result = ((task.result as Array<Record<string, unknown>>) || [])[0];
+    const item = ((result?.items as Array<Record<string, unknown>>) || [])[0];
+    if (!item) continue;
+    const meta = (item.meta as Record<string, unknown>) || {};
+    const content = (meta.content as Record<string, unknown>) || {};
+    let path = '/';
+    try { path = new URL(String(item.url || '')).pathname; } catch { /* keep / */ }
+    out.push({
+      path,
+      title: (meta.title as string) || null,
+      description: (meta.description as string) || null,
+      textLen: Number(content.plain_text_size ?? 0),
+    });
+  }
+  return out.length ? out : null;
 }
 
 export const POST: APIRoute = async ({ request }) => {
@@ -434,6 +499,11 @@ export const POST: APIRoute = async ({ request }) => {
   // schema.org has a deep inheritance tree (Dentist IS-A LocalBusiness IS-A
   // Organization). We map the user's actual found types to the umbrella
   // categories AI engines care about.
+  // PageSpeed regularly takes 20-40s and doesn't depend on the crawl, so start
+  // it here rather than after. The audit's wall clock is now whichever of the
+  // two is slower, not the sum, which is what pays for the larger page budget.
+  const slowChecks = Promise.all([pageSpeedSignals(u.toString()), existsCheck(u)]);
+
   const scan = await scanPages(u, html);
   const pages = scan.pages;
   const schemaTypes = [...new Set(pages.flatMap(p => p.types))];
@@ -480,8 +550,20 @@ export const POST: APIRoute = async ({ request }) => {
   // Site-wide signals across every page the crawl reached. Duplicate titles are
   // the common failure: site builders default every page to the business name,
   // so an engine can't tell the services page from the contact page.
+  // One page served at several URLs (Squarespace's / and /home, trailing-slash
+  // variants, tracking parameters) is not a duplicate-title problem. Where a
+  // canonical tag says two URLs are the same page, judge them once.
+  const seenCanonical = new Set<string>();
+  const distinct = pages.filter(p => {
+    const c = (p.canonical || '').replace(/\/+$/, '').toLowerCase();
+    if (!c) return true;
+    if (seenCanonical.has(c)) return false;
+    seenCanonical.add(c);
+    return true;
+  });
+
   const titleGroups = new Map<string, string[]>();
-  for (const p of pages) {
+  for (const p of distinct) {
     const key = (p.title || '').trim().toLowerCase();
     if (!key) continue;
     if (!titleGroups.has(key)) titleGroups.set(key, []);
@@ -489,12 +571,18 @@ export const POST: APIRoute = async ({ request }) => {
   }
   const duplicateTitles = [...titleGroups.values()].filter(paths => paths.length > 1);
   const siteWide = {
-    pages: pages.length,
-    missingTitle: pages.filter(p => !p.title).map(p => p.path),
+    pages: distinct.length,
+    crawled: pages.length,
+    missingTitle: distinct.filter(p => !p.title).map(p => p.path),
     duplicateTitles,
-    missingDescription: pages.filter(p => !p.description).map(p => p.path),
-    imgTotal: pages.reduce((n, p) => n + p.imgTotal, 0),
-    imgWithAlt: pages.reduce((n, p) => n + p.imgWithAlt, 0),
+    missingDescription: distinct.filter(p => !p.description).map(p => p.path),
+    imgTotal: distinct.reduce((n, p) => n + p.imgTotal, 0),
+    imgWithAlt: distinct.reduce((n, p) => n + p.imgWithAlt, 0),
+    // Pages that returned almost no readable text. Usually a site that builds
+    // its content in the browser: we fetch raw HTML, so we get the empty shell
+    // an AI crawler without a renderer would also get. Worth saying out loud
+    // rather than letting every other check fail on a page nobody can read.
+    emptyPages: distinct.filter(p => p.textLen < 250).map(p => p.path),
   };
 
   const findings = {
@@ -522,17 +610,26 @@ export const POST: APIRoute = async ({ request }) => {
       max: expectedSchemaTypes.length,
     },
     siteWide,
+    rendered: null as RenderedPage[] | null,
+    renderFixes: [] as string[],
     excerpt: visibleText(html),
     pagespeed: null as Awaited<ReturnType<typeof pageSpeedSignals>>,
     files: { robots: false, sitemap: false, llms: false },
     discovery: { method: scan.method, pagesScanned: pages.length },
   };
 
-  // Fan out the two slow checks in parallel
-  const [ps, files] = await Promise.all([
-    pageSpeedSignals(u.toString()),
-    existsCheck(u),
-  ]);
+  // Only spends a DataForSEO call when our own fetch came back empty.
+  if (siteWide.emptyPages.length) {
+    const rendered = await renderEmptyPages(u, siteWide.emptyPages);
+    if (rendered) {
+      findings.rendered = rendered;
+      // A page that has real content once rendered is a JavaScript problem,
+      // not an empty page. Say which, because the fix is different.
+      findings.renderFixes = rendered.filter(r => r.textLen >= 250).map(r => r.path);
+    }
+  }
+
+  const [ps, files] = await slowChecks;
   findings.pagespeed = ps;
   findings.files = { ...files, sitemap: scan.sitemap };
 
