@@ -106,7 +106,7 @@ type PageSignals = {
   description: string | null;
   canonical: string | null;
   imgTotal: number;
-  imgWithAlt: number;
+  imgWithAltText: number;
   textLen: number;
 };
 
@@ -118,14 +118,21 @@ function pickCanonical(html: string): string | null {
 
 function pageSignals(html: string): PageSignals {
   const imgs = html.match(/<img\b[^>]*>/gi) || [];
-  // alt="" is the correct markup for a decorative image, so it counts as done.
-  const imgWithAlt = imgs.filter(tag => /\salt\s*=\s*["']/i.test(tag)).length;
+  // Only alt text that actually says something counts. An empty alt="" is
+  // valid markup for a decorative image, but site builders stamp it on by
+  // default — Squarespace leaves it empty on about four images in ten — so
+  // counting it as done reports a perfect score for a site whose photos are
+  // invisible to anything that can't see them.
+  const imgWithAltText = imgs.filter(tag => {
+    const m = /\salt\s*=\s*("([^"]*)"|'([^']*)')/i.exec(tag);
+    return !!m && (m[2] ?? m[3] ?? '').trim().length > 0;
+  }).length;
   return {
     title: pickTitle(html),
     description: pickMeta(html, 'description'),
     canonical: pickCanonical(html),
     imgTotal: imgs.length,
-    imgWithAlt,
+    imgWithAltText,
     textLen: visibleText(html, 4000).length,
   };
 }
@@ -577,7 +584,7 @@ export const POST: APIRoute = async ({ request }) => {
     duplicateTitles,
     missingDescription: distinct.filter(p => !p.description).map(p => p.path),
     imgTotal: distinct.reduce((n, p) => n + p.imgTotal, 0),
-    imgWithAlt: distinct.reduce((n, p) => n + p.imgWithAlt, 0),
+    imgWithAltText: distinct.reduce((n, p) => n + p.imgWithAltText, 0),
     // Pages that returned almost no readable text. Usually a site that builds
     // its content in the browser: we fetch raw HTML, so we get the empty shell
     // an AI crawler without a renderer would also get. Worth saying out loud

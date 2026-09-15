@@ -457,9 +457,10 @@ function buildChecks() {
       }
 
       if (sw.imgTotal > 0) {
-        const pct = Math.round((sw.imgWithAlt / sw.imgTotal) * 100);
+        const withText = sw.imgWithAltText ?? 0;
+        const pct = Math.round((withText / sw.imgTotal) * 100);
         add('alt-text', 'Images have alt text', pct >= 90 ? 'pass' : pct >= 50 ? 'warn' : 'fail', pct >= 90 ? 5 : pct >= 50 ? 3 : 0, 5,
-          `${sw.imgWithAlt} of ${sw.imgTotal} images across ${pageWord(sw.pages)} have alt text (${pct}%).`,
+          `${withText} of ${sw.imgTotal} images across ${pageWord(sw.pages)} carry a written description (${pct}%).`,
           'Alt text is the only description of a picture an AI engine can read. On a site where the offer lives in the photos, missing alt text means the offer is invisible.',
           'Describe what is in the picture, plainly — “Dr. Chen fitting a clear aligner” beats “image1.jpg”. Leave alt empty only for decoration. Most platforms ask for it in the image settings.');
       }
@@ -1194,7 +1195,7 @@ const REF_SITES = [
       description: 'Harbor Dental is a family dental practice in Boulder, Colorado.',
       h1Count: 1,
       schema: { present: ['LocalBusiness', 'FAQPage', 'Service'], foundOn: { FAQPage: '/faq' }, pagesScanned: ['/', '/services', '/faq'] },
-      siteWide: { pages: 3, missingTitle: [], duplicateTitles: [], missingDescription: [], imgTotal: 14, imgWithAlt: 14 },
+      siteWide: { pages: 3, missingTitle: [], duplicateTitles: [], missingDescription: [], imgTotal: 14, imgWithAltText: 14 },
       files: { sitemap: true, robots: true, llms: true },
       pagespeed: { performance: 92, seo: 96 },
     },
@@ -1213,7 +1214,7 @@ const REF_SITES = [
       reachable: true, https: false, platform: 'WordPress', hosting: 'Bluehost',
       title: '', description: '', h1Count: 0,
       schema: { present: [], foundOn: {}, pagesScanned: ['/', '/services', '/faq'] },
-      siteWide: { pages: 3, missingTitle: ['/faq'], duplicateTitles: [['/', '/services']], missingDescription: ['/', '/services', '/faq'], imgTotal: 18, imgWithAlt: 2 },
+      siteWide: { pages: 3, missingTitle: ['/faq'], duplicateTitles: [['/', '/services']], missingDescription: ['/', '/services', '/faq'], imgTotal: 18, imgWithAltText: 2 },
       files: { sitemap: false, robots: false, llms: false },
       pagespeed: { performance: 34, seo: 62 },
     },
@@ -1234,7 +1235,7 @@ const REF_SITES = [
       reachable: true, https: true, platform: '', hosting: 'Cloudflare',
       title: 'Home', description: 'Welcome.', h1Count: 3,
       schema: { present: ['LocalBusiness'], foundOn: {}, pagesScanned: ['/', '/services'] },
-      siteWide: { pages: 2, missingTitle: [], duplicateTitles: [], missingDescription: ['/services'], imgTotal: 10, imgWithAlt: 6 },
+      siteWide: { pages: 2, missingTitle: [], duplicateTitles: [], missingDescription: ['/services'], imgTotal: 10, imgWithAltText: 6 },
       files: { sitemap: true, robots: true, llms: false },
       pagespeed: { performance: 64, seo: 78 },
     },

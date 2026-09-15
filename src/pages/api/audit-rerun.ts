@@ -26,7 +26,7 @@ type Signals = {
     duplicateTitles?: string[][];
     missingDescription?: string[];
     imgTotal?: number;
-    imgWithAlt?: number;
+    imgWithAltText?: number;
   };
 };
 
@@ -89,8 +89,12 @@ function diffSignals(then: Signals, now: Signals): string[] {
     const missNow = now.siteWide.missingDescription?.length ?? 0;
     if (missNow !== missThen) out.push(`Pages with no description: ${missThen} to ${missNow}.`);
 
+    // Only compare runs that measured the same thing. Reports written before
+    // 2026-09-15 counted any alt attribute, including the empty ones.
     const pct = (s?: Signals['siteWide']) =>
-      s && s.imgTotal ? Math.round(((s.imgWithAlt ?? 0) / s.imgTotal) * 100) : null;
+      s && s.imgTotal && s.imgWithAltText != null
+        ? Math.round((s.imgWithAltText / s.imgTotal) * 100)
+        : null;
     const altThen = pct(then.siteWide);
     const altNow = pct(now.siteWide);
     if (altThen != null && altNow != null && Math.abs(altNow - altThen) >= 5) {
